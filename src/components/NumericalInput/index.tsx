@@ -3,12 +3,10 @@ import styled from 'styled-components'
 import { escapeRegExp } from '../../utils'
 
 const StyledInput = styled.input<{ error?: boolean; fontSize?: string; align?: string }>`
-color: #eff1ff;
-text-shadow: 2px 2px #212421,
-             1px 1px #212021;
-font-family: Verdana, sans-serif;
-margin: 5px 0;
-
+  color: #eff1ff;
+  text-shadow: 2px 2px #212421, 1px 1px #212021;
+  font-family: Verdana, sans-serif;
+  margin: 5px 0;
 
   width: 0;
   position: relative;

@@ -20,10 +20,9 @@ const InfoLink = styled(ExternalLink)`
   text-align: center;
   font-size: 14px;
 
-text-shadow: 2px 2px #212421,
-             1px 1px #212021;
-font-family: Verdana, sans-serif;
-margin: 5px 0;
+  text-shadow: 2px 2px #212421, 1px 1px #212021;
+  font-family: Verdana, sans-serif;
+  margin: 5px 0;
 
   color: ${({ theme }) => theme.text1};
 `

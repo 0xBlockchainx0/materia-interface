@@ -39,7 +39,7 @@ const Web3StatusGeneric = styled(ButtonSecondary)`
   ${({ theme }) => theme.flexRowNoWrap}
   width: 100%;
   height: 30px;
-  border:none;
+  border: none;
 `
 const Web3StatusError = styled(Web3StatusGeneric)`
   background-color: transparent;
@@ -55,18 +55,14 @@ const Web3StatusConnect = styled(Web3StatusGeneric)<{ faded?: boolean }>`
   border: none;
   color: ${({ theme }) => theme.primaryText1};
   font-weight: 500;
-  ${({ faded }) =>
-    faded &&
-    css`
-    `}
+  ${({ faded }) => faded && css``}
 `
 
 const Web3StatusConnected = styled(Web3StatusGeneric)<{ pending?: boolean }>`
   background-color: transparent;
 
   color: #eff1ff;
-  text-shadow: 2px 2px #212421,
-               1px 1px #212021;
+  text-shadow: 2px 2px #212421, 1px 1px #212021;
   font-family: Verdana, sans-serif;
   font-weight: normal;
 `

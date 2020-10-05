@@ -18,8 +18,7 @@ const Base = styled(RebassButton)<{
   text-align: center;
   outline: none;
 
-  text-shadow: 2px 2px #212421,
-             1px 1px #212021;
+  text-shadow: 2px 2px #212421, 1px 1px #212021;
   font-family: Verdana, sans-serif;
   margin: 5px 0;
 
@@ -66,27 +65,21 @@ export const ButtonPrimary = styled(Base)`
   }
 
   border: solid 1px #424542;
-  box-shadow: 1px 1px #e7dfe7,
-              -1px -1px #e7dfe7,
-              1px -1px #e7dfe7,
-              -1px 1px #e7dfe7,
-              0 -2px #9c9a9c,
-              -2px 0 #7b757b,
-              0 2px #424542;
+  box-shadow: 1px 1px #e7dfe7, -1px -1px #e7dfe7, 1px -1px #e7dfe7, -1px 1px #e7dfe7, 0 -2px #9c9a9c, -2px 0 #7b757b,
+    0 2px #424542;
 
-background: #700e9c;
-background: -moz-linear-gradient(top,  #700e9c 0%, #6c1237 100%);
-background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#700e9c), color-stop(100%,#6c1237));
-background: -webkit-linear-gradient(top,  #700e9c 0%,#6c1237 100%);
-background: -o-linear-gradient(top,  #700e9c 0%,#6c1237 100%);
-background: -ms-linear-gradient(top,  #700e9c 0%,#6c1237 100%);
-background: linear-gradient(to bottom,  #700e9c 0%,#6c1237 100%);
-filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#700e9c', endColorstr='#6c1237',GradientType=0 );
+  background: #700e9c;
+  background: -moz-linear-gradient(top, #700e9c 0%, #6c1237 100%);
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #700e9c), color-stop(100%, #6c1237));
+  background: -webkit-linear-gradient(top, #700e9c 0%, #6c1237 100%);
+  background: -o-linear-gradient(top, #700e9c 0%, #6c1237 100%);
+  background: -ms-linear-gradient(top, #700e9c 0%, #6c1237 100%);
+  background: linear-gradient(to bottom, #700e9c 0%, #6c1237 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#700e9c', endColorstr='#6c1237',GradientType=0 );
 
-
--webkit-border-radius: 7px;
--moz-border-radius: 7px;
-border-radius: 10px;
+  -webkit-border-radius: 7px;
+  -moz-border-radius: 7px;
+  border-radius: 10px;
 `
 
 export const ButtonLight = styled(Base)`
@@ -116,27 +109,21 @@ export const ButtonLight = styled(Base)`
   }
 
   border: solid 1px #424542;
-  box-shadow: 1px 1px #e7dfe7,
-              -1px -1px #e7dfe7,
-              1px -1px #e7dfe7,
-              -1px 1px #e7dfe7,
-              0 -2px #9c9a9c,
-              -2px 0 #7b757b,
-              0 2px #424542;
+  box-shadow: 1px 1px #e7dfe7, -1px -1px #e7dfe7, 1px -1px #e7dfe7, -1px 1px #e7dfe7, 0 -2px #9c9a9c, -2px 0 #7b757b,
+    0 2px #424542;
 
-background: #700e9c;
-background: -moz-linear-gradient(top,  #700e9c 0%, #6c1237 100%);
-background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#700e9c), color-stop(100%,#6c1237));
-background: -webkit-linear-gradient(top,  #700e9c 0%,#6c1237 100%);
-background: -o-linear-gradient(top,  #700e9c 0%,#6c1237 100%);
-background: -ms-linear-gradient(top,  #700e9c 0%,#6c1237 100%);
-background: linear-gradient(to bottom,  #700e9c 0%,#6c1237 100%);
-filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#700e9c', endColorstr='#6c1237',GradientType=0 );
+  background: #700e9c;
+  background: -moz-linear-gradient(top, #700e9c 0%, #6c1237 100%);
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #700e9c), color-stop(100%, #6c1237));
+  background: -webkit-linear-gradient(top, #700e9c 0%, #6c1237 100%);
+  background: -o-linear-gradient(top, #700e9c 0%, #6c1237 100%);
+  background: -ms-linear-gradient(top, #700e9c 0%, #6c1237 100%);
+  background: linear-gradient(to bottom, #700e9c 0%, #6c1237 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#700e9c', endColorstr='#6c1237',GradientType=0 );
 
-
--webkit-border-radius: 7px;
--moz-border-radius: 7px;
-border-radius: 10px;
+  -webkit-border-radius: 7px;
+  -moz-border-radius: 7px;
+  border-radius: 10px;
 `
 
 export const ButtonGray = styled(Base)`
@@ -207,27 +194,21 @@ export const ButtonPink = styled(Base)`
   }
 
   border: solid 1px #424542;
-  box-shadow: 1px 1px #e7dfe7,
-              -1px -1px #e7dfe7,
-              1px -1px #e7dfe7,
-              -1px 1px #e7dfe7,
-              0 -2px #9c9a9c,
-              -2px 0 #7b757b,
-              0 2px #424542;
+  box-shadow: 1px 1px #e7dfe7, -1px -1px #e7dfe7, 1px -1px #e7dfe7, -1px 1px #e7dfe7, 0 -2px #9c9a9c, -2px 0 #7b757b,
+    0 2px #424542;
 
-background: #700e9c;
-background: -moz-linear-gradient(top,  #700e9c 0%, #6c1237 100%);
-background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#700e9c), color-stop(100%,#6c1237));
-background: -webkit-linear-gradient(top,  #700e9c 0%,#6c1237 100%);
-background: -o-linear-gradient(top,  #700e9c 0%,#6c1237 100%);
-background: -ms-linear-gradient(top,  #700e9c 0%,#6c1237 100%);
-background: linear-gradient(to bottom,  #700e9c 0%,#6c1237 100%);
-filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#700e9c', endColorstr='#6c1237',GradientType=0 );
+  background: #700e9c;
+  background: -moz-linear-gradient(top, #700e9c 0%, #6c1237 100%);
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #700e9c), color-stop(100%, #6c1237));
+  background: -webkit-linear-gradient(top, #700e9c 0%, #6c1237 100%);
+  background: -o-linear-gradient(top, #700e9c 0%, #6c1237 100%);
+  background: -ms-linear-gradient(top, #700e9c 0%, #6c1237 100%);
+  background: linear-gradient(to bottom, #700e9c 0%, #6c1237 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#700e9c', endColorstr='#6c1237',GradientType=0 );
 
-
--webkit-border-radius: 7px;
--moz-border-radius: 7px;
-border-radius: 10px;
+  -webkit-border-radius: 7px;
+  -moz-border-radius: 7px;
+  border-radius: 10px;
 `
 
 export const ButtonOutlined = styled(Base)`
@@ -305,28 +286,22 @@ const ButtonConfirmedStyle = styled(Base)`
 `
 
 const ButtonErrorStyle = styled(Base)`
-border: solid 1px #424542;
-  box-shadow: 1px 1px #e7dfe7,
-              -1px -1px #e7dfe7,
-              1px -1px #e7dfe7,
-              -1px 1px #e7dfe7,
-              0 -2px #9c9a9c,
-              -2px 0 #7b757b,
-              0 2px #424542;
+  border: solid 1px #424542;
+  box-shadow: 1px 1px #e7dfe7, -1px -1px #e7dfe7, 1px -1px #e7dfe7, -1px 1px #e7dfe7, 0 -2px #9c9a9c, -2px 0 #7b757b,
+    0 2px #424542;
 
-background: #700e9c;
-background: -moz-linear-gradient(top,  #700e9c 0%, #6c1237 100%);
-background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#700e9c), color-stop(100%,#6c1237));
-background: -webkit-linear-gradient(top,  #700e9c 0%,#6c1237 100%);
-background: -o-linear-gradient(top,  #700e9c 0%,#6c1237 100%);
-background: -ms-linear-gradient(top,  #700e9c 0%,#6c1237 100%);
-background: linear-gradient(to bottom,  #700e9c 0%,#6c1237 100%);
-filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#700e9c', endColorstr='#6c1237',GradientType=0 );
+  background: #700e9c;
+  background: -moz-linear-gradient(top, #700e9c 0%, #6c1237 100%);
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #700e9c), color-stop(100%, #6c1237));
+  background: -webkit-linear-gradient(top, #700e9c 0%, #6c1237 100%);
+  background: -o-linear-gradient(top, #700e9c 0%, #6c1237 100%);
+  background: -ms-linear-gradient(top, #700e9c 0%, #6c1237 100%);
+  background: linear-gradient(to bottom, #700e9c 0%, #6c1237 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#700e9c', endColorstr='#6c1237',GradientType=0 );
 
-
--webkit-border-radius: 7px;
--moz-border-radius: 7px;
-border-radius: 10px;
+  -webkit-border-radius: 7px;
+  -moz-border-radius: 7px;
+  border-radius: 10px;
 `
 
 export function ButtonConfirmed({

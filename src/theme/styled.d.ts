@@ -22,7 +22,6 @@ export interface Colors {
   bg5: Color
   bg6: Color
 
-
   modalBG: Color
   advancedBG: Color
 

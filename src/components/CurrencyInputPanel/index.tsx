@@ -21,10 +21,9 @@ const InputRow = styled.div<{ selected: boolean }>`
 `
 
 const CurrencySelect = styled.button<{ selected: boolean }>`
-text-shadow: 2px 2px #212421,
-             1px 1px #212021;
-font-family: Verdana, sans-serif;
-margin: 5px 0;
+  text-shadow: 2px 2px #212421, 1px 1px #212021;
+  font-family: Verdana, sans-serif;
+  margin: 5px 0;
 
   align-items: center;
   height: 2.2rem;
@@ -37,11 +36,11 @@ margin: 5px 0;
   outline: none;
   cursor: pointer;
   user-select: none;
-  border:none;
+  border: none;
   border-bottom: 1px solid white;
   padding: 0 0.5rem;
 
-  :focus,
+  :focus, ;
 `
 
 const LabelRow = styled.div`
