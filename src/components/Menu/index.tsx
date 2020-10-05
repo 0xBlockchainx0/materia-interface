@@ -10,7 +10,7 @@ import { ExternalLink } from '../../theme'
 
 const StyledMenuIcon = styled(MenuIcon)`
   path {
-    stroke: ${({ theme }) => theme.text4};
+    stroke: ${({ theme }) => theme.text1};
   }
 `
 

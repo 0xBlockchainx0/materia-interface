@@ -31,6 +31,7 @@ const StyledToggle = styled.button<{ isActive?: boolean; activeElement?: boolean
   display: flex;
   width: fit-content;
   cursor: pointer;
+  text-shadow:none;
   outline: none;
   padding: 0;
   /* background-color: transparent; */

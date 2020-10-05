@@ -25,7 +25,7 @@ const StyledMenuIcon = styled(Settings)`
   width: 20px;
 
   > * {
-    stroke: ${({ theme }) => theme.text4};
+    stroke: ${({ theme }) => theme.text1};
   }
 `
 
@@ -37,7 +37,7 @@ const StyledCloseIcon = styled(X)`
   }
 
   > * {
-    stroke: ${({ theme }) => theme.text4};
+    stroke: ${({ theme }) => theme.text1};
   }
 `
 
