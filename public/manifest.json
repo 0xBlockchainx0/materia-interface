@@ -1,9 +1,7 @@
 {
   "short_name": "Materia",
   "name": "Materia",
-  "icons": [
-
-  ],
+  "icons": [],
   "orientation": "portrait",
   "display": "standalone",
   "theme_color": "#ff007a",

@@ -21,7 +21,7 @@ export const Popup = styled.div`
   display: inline-block;
   width: 100%;
   padding: 1em;
-  
+
   border: solid 1px #424542;
   box-shadow: 1px 1px #e7dfe7, -1px -1px #e7dfe7, 1px -1px #e7dfe7, -1px 1px #e7dfe7, 0 -2px #9c9a9c, -2px 0 #7b757b,
     0 2px #424542;
@@ -38,7 +38,6 @@ export const Popup = styled.div`
   -webkit-border-radius: 7px;
   -moz-border-radius: 7px;
   border-radius: 10px;
-  
 
   position: relative;
   padding: 20px;
