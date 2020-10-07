@@ -19,7 +19,7 @@ function useAllCommonPairs(currencyA?: Currency, currencyB?: Currency): Pair[] {
     return (Object.values(allTokens))
   }, [allTokens])
   
-  const slicedTokens: Token[] = filteredTokens.slice(0,25)
+  const slicedTokens: Token[] = filteredTokens.slice(0,200)
   slicedTokens.push(new Token(ChainId.MAINNET, '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', 6, 'USDC', 'USD//C'))
   // const bases: Token[] = chainId ? BASES_TO_CHECK_TRADES_AGAINST[chainId] : []
   const bases: Token[] = chainId ? slicedTokens : []

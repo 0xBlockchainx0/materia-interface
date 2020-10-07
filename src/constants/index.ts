@@ -61,8 +61,8 @@ const WETH_ONLY: ChainTokenList = {
  */
 export const CUSTOM_BASES: { [chainId in ChainId]?: { [tokenAddress: string]: Token[] } } = {
   [ChainId.MAINNET]: {
-    //[AMPL.address]: [DAI, WETH[ChainId.MAINNET]]
-    [AMPL.address]: [USD]
+    [AMPL.address]: [DAI, WETH[ChainId.MAINNET]]
+    //[AMPL.address]: [USD]
   }
 }
 
