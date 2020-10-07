@@ -30,9 +30,9 @@ const InfoLink = styled(ExternalLink)`
 function TradeSummary({ trade, allowedSlippage }: { trade: Trade; allowedSlippage: number }) {
   const theme = useContext(ThemeContext)
   const { priceImpactWithoutFee, realizedLPFee } = computeTradePriceBreakdown(trade)
+
   const isExactIn = trade.tradeType === TradeType.EXACT_INPUT
   const slippageAdjustedAmounts = computeSlippageAdjustedAmounts(trade, allowedSlippage)
-
   return (
     <>
       <AutoColumn style={{ padding: '0 20px' }}>

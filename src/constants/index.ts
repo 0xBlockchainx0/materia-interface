@@ -11,7 +11,7 @@ export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 type ChainTokenList = {
   readonly [chainId in ChainId]: Token[]
 }
-
+export const USD = new Token(ChainId.MAINNET, '0x44086035439E676c02D411880FcCb9837CE37c57', 18, 'uSD', 'unified Stable Dollar')
 export const DAI = new Token(ChainId.MAINNET, '0x6B175474E89094C44Da98b954EedeAC495271d0F', 18, 'DAI', 'Dai Stablecoin')
 export const USDC = new Token(ChainId.MAINNET, '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', 6, 'USDC', 'USD//C')
 export const USDT = new Token(ChainId.MAINNET, '0xdAC17F958D2ee523a2206206994597C13D831ec7', 6, 'USDT', 'Tether USD')
@@ -19,23 +19,7 @@ export const COMP = new Token(ChainId.MAINNET, '0xc00e94Cb662C3520282E6f57172140
 export const MKR = new Token(ChainId.MAINNET, '0x9f8F72aA9304c8B593d555F12eF6589cC3A579A2', 18, 'MKR', 'Maker')
 export const AMPL = new Token(ChainId.MAINNET, '0xD46bA6D942050d489DBd938a2C909A5d5039A161', 9, 'AMPL', 'Ampleforth')
 export const WBTC = new Token(ChainId.MAINNET, '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599', 18, 'WBTC', 'Wrapped BTC')
-export const BUIDL = new Token(ChainId.MAINNET, '0x7b123f53421b1bF8533339BFBdc7C98aA94163db', 18, 'buidl', 'dfohub')
-export const ARTE = new Token(ChainId.MAINNET, '0x34612903Db071e888a4dADcaA416d3EE263a87b9', 18, 'arte', 'ethart')
-export const USD = new Token(
-  ChainId.MAINNET,
-  '0x44086035439E676c02D411880FcCb9837CE37c57',
-  18,
-  'uSD',
-  'unified Stable Dollar'
-)
-export const UNIFI = new Token(ChainId.MAINNET, '0x9E78b8274e1D6a76a0dBbf90418894DF27cBCEb5', 18, 'UniFI', 'UniFi')
-export const SSJ = new Token(
-  ChainId.MAINNET,
-  '0xB4ae194a0DCF1B4080b164C1d775ee06E0817305',
-  18,
-  'SSJ',
-  'Super Saiya-jin token'
-)
+
 
 // TODO this is only approximate, it's actually based on blocks
 export const PROPOSAL_LENGTH_IN_DAYS = 7
@@ -64,12 +48,12 @@ const WETH_ONLY: ChainTokenList = {
   [ChainId.KOVAN]: [WETH[ChainId.KOVAN]]
 }
 
-// used to construct intermediary pairs for trading
-export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
-  ...WETH_ONLY,
-  // [ChainId.MAINNET]: [...WETH_ONLY[ChainId.MAINNET], DAI, USDC, USDT, COMP, MKR]
-  [ChainId.MAINNET]: [...WETH_ONLY[ChainId.MAINNET], DAI, USDC, USDT, COMP, MKR, SSJ, BUIDL, ARTE, UNIFI, USD]
-}
+// // used to construct intermediary pairs for trading
+// export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
+//   ...WETH_ONLY,
+//   // [ChainId.MAINNET]: [...WETH_ONLY[ChainId.MAINNET], DAI, USDC, USDT, COMP, MKR]
+//   [ChainId.MAINNET]: [...WETH_ONLY[ChainId.MAINNET], DAI, USDC, USDT, COMP, MKR, SSJ, BUIDL, ARTE, UNIFI, USD]
+// }
 
 /**
  * Some tokens can only be swapped via certain pairs, so we override the list of bases that are considered for these
@@ -77,7 +61,8 @@ export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
  */
 export const CUSTOM_BASES: { [chainId in ChainId]?: { [tokenAddress: string]: Token[] } } = {
   [ChainId.MAINNET]: {
-    [AMPL.address]: [DAI, WETH[ChainId.MAINNET]]
+    //[AMPL.address]: [DAI, WETH[ChainId.MAINNET]]
+    [AMPL.address]: [USD]
   }
 }
 
