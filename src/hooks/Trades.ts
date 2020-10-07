@@ -1,7 +1,7 @@
 import { ChainId, Currency, CurrencyAmount, Pair, Token, Trade } from '@uniswap/sdk'
 import flatMap from 'lodash.flatmap'
 import { useMemo } from 'react'
- import { useAllTokens } from './Tokens'
+import { useAllTokens } from './Tokens'
 
 //import { BASES_TO_CHECK_TRADES_AGAINST } from '../constants'
 import { CUSTOM_BASES } from '../constants'
@@ -16,10 +16,10 @@ function useAllCommonPairs(currencyA?: Currency, currencyB?: Currency): Pair[] {
   const allTokens = useAllTokens()
 
   const filteredTokens: Token[] = useMemo(() => {
-    return (Object.values(allTokens))
+    return Object.values(allTokens)
   }, [allTokens])
-  
-  const slicedTokens: Token[] = filteredTokens.slice(0,25)
+
+  const slicedTokens: Token[] = filteredTokens.slice(0, 25)
   slicedTokens.push(new Token(ChainId.MAINNET, '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', 6, 'USDC', 'USD//C'))
   // const bases: Token[] = chainId ? BASES_TO_CHECK_TRADES_AGAINST[chainId] : []
   const bases: Token[] = chainId ? slicedTokens : []
