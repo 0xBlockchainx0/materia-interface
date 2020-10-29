@@ -10,6 +10,7 @@ import { RowBetween } from '../Row'
 import { TYPE } from '../../theme'
 import { Input as NumericalInput } from '../NumericalInput'
 import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
+import tokenbackground from '../../assets/images/token-background.png'
 
 import { useActiveWeb3React } from '../../hooks'
 import { useTranslation } from 'react-i18next'
@@ -58,6 +59,18 @@ const Aligner = styled.span`
   display: flex;
   align-items: center;
   justify-content: space-between;
+`
+
+const TokenImage = styled.div`
+  background: url(${tokenbackground}) no-repeat;
+  background-size: contain;
+  padding: 6rem;
+  background-position: center;
+`
+
+const TokenImageContainer = styled.div`
+  float: none;
+  margin: 0 auto;
 `
 
 const StyledDropDown = styled(DropDown)<{ selected: boolean }>`
@@ -161,6 +174,7 @@ export default function CurrencyInputPanel({
   }, [setModalOpen])
 
   return (
+    <>
     <InputPanel id={id}>
       <Container hideInput={hideInput}>
         {!hideInput && (
@@ -211,11 +225,6 @@ export default function CurrencyInputPanel({
           >
             <Aligner>
               {pair ? (
-                <DoubleCurrencyLogo currency0={pair.token0} currency1={pair.token1} size={24} margin={true} />
-              ) : currency ? (
-                <CurrencyLogo currency={currency} size={'24px'} />
-              ) : null}
-              {pair ? (
                 <StyledTokenName className="pair-name-container">
                   {pair?.token0.symbol}:{pair?.token1.symbol}
                 </StyledTokenName>
@@ -244,5 +253,15 @@ export default function CurrencyInputPanel({
         />
       )}
     </InputPanel>
+          <TokenImageContainer>
+          <TokenImage>
+          {pair ? (
+                    <DoubleCurrencyLogo currency0={pair.token0} currency1={pair.token1} size={24} margin={true} />
+                  ) : currency ? (
+                    <CurrencyLogo currency={currency} size={'110px'} />
+                  ) : null}
+          </TokenImage>
+          </TokenImageContainer>
+  </>
   )
 }
