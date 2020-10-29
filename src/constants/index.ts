@@ -15,7 +15,7 @@ export const USD = new Token(
   ChainId.MAINNET,
   '0x44086035439E676c02D411880FcCb9837CE37c57',
   18,
-  'uSD',
+  'USD',
   'unified Stable Dollar'
 )
 export const DAI = new Token(ChainId.MAINNET, '0x6B175474E89094C44Da98b954EedeAC495271d0F', 18, 'DAI', 'Dai Stablecoin')
@@ -53,12 +53,12 @@ const WETH_ONLY: ChainTokenList = {
   [ChainId.KOVAN]: [WETH[ChainId.KOVAN]]
 }
 
-// // used to construct intermediary pairs for trading
-// export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
-//   ...WETH_ONLY,
-//   // [ChainId.MAINNET]: [...WETH_ONLY[ChainId.MAINNET], DAI, USDC, USDT, COMP, MKR]
-//   [ChainId.MAINNET]: [...WETH_ONLY[ChainId.MAINNET], DAI, USDC, USDT, COMP, MKR, SSJ, BUIDL, ARTE, UNIFI, USD]
-// }
+// used to construct intermediary pairs for trading
+export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
+  ...WETH_ONLY,
+  [ChainId.MAINNET]: [...WETH_ONLY[ChainId.MAINNET], DAI, USDC, USDT, COMP, MKR]
+  //[ChainId.MAINNET]: [...WETH_ONLY[ChainId.MAINNET]]
+}
 
 /**
  * Some tokens can only be swapped via certain pairs, so we override the list of bases that are considered for these

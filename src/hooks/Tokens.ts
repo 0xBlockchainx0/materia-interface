@@ -1,5 +1,6 @@
 import { parseBytes32String } from '@ethersproject/strings'
-import { Currency, ETHER, Token, currencyEquals } from '@uniswap/sdk'
+import { Currency, Token, currencyEquals } from '@uniswap/sdk'
+import { USD } from '../constants/index'
 import { useMemo } from 'react'
 import { useSelectedTokenList } from '../state/lists/hooks'
 import { NEVER_RELOAD, useSingleCallResult } from '../state/multicall/hooks'
@@ -102,7 +103,7 @@ export function useToken(tokenAddress?: string): Token | undefined | null {
 }
 
 export function useCurrency(currencyId: string | undefined): Currency | null | undefined {
-  const isETH = currencyId?.toUpperCase() === 'ETH'
-  const token = useToken(isETH ? undefined : currencyId)
-  return isETH ? ETHER : token
+  const isUSD = currencyId?.toUpperCase() === 'USD'
+  const token = useToken(isUSD ? undefined : currencyId)
+  return isUSD ? USD : token
 }

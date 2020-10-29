@@ -103,7 +103,7 @@ const SwapCallbackErrorInner = styled.div`
   border-radius: 1rem;
   display: flex;
   align-items: center;
-  font-size: 0.825rem;
+  font-size: 1rem;
   width: 100%;
   padding: 3rem 1.25rem 1rem 1rem;
   margin-top: -2rem;
