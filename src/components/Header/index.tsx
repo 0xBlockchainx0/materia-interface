@@ -1,4 +1,4 @@
-import { ChainId } from '@uniswap/sdk'
+import { ChainId, TokenAmount } from '@uniswap/sdk'
 import React, { useState } from 'react'
 import { Text } from 'rebass'
 import { NavLink } from 'react-router-dom'
@@ -7,10 +7,14 @@ import { useTranslation } from 'react-i18next'
 
 import styled from 'styled-components'
 
-import Logo from '../../assets/images/materia-logo-dark.png'
+import Logo from '../../assets/svg/logo.svg'
+import LogoDark from '../../assets/svg/logo_white.svg'
 import { useActiveWeb3React } from '../../hooks'
-import { useETHBalances } from '../../state/wallet/hooks'
-import { ExternalLink } from '../../theme'
+import { useDarkModeManager } from '../../state/user/hooks'
+import { useETHBalances, useAggregateUniBalance } from '../../state/wallet/hooks'
+import { CardNoise } from '../earn/styled'
+import { CountUp } from 'use-count-up'
+import { TYPE, ExternalLink } from '../../theme'
 
 import { YellowCard } from '../Card'
 import Settings from '../Settings'
@@ -19,9 +23,13 @@ import Menu from '../Menu'
 import Row, { RowFixed } from '../Row'
 import Web3Status from '../Web3Status'
 import ClaimModal from '../claim/ClaimModal'
-
+import { useToggleSelfClaimModal, useShowClaimPopup } from '../../state/application/hooks'
+import { useUserHasAvailableClaim } from '../../state/claim/hooks'
+import { useUserHasSubmittedClaim } from '../../state/transactions/hooks'
+import { Dots } from '../swap/styleds'
 import Modal from '../Modal'
 import UniBalanceContent from './UniBalanceContent'
+import usePrevious from '../../hooks/usePrevious'
 
 const HeaderFrame = styled.div`
   display: grid;
@@ -76,25 +84,6 @@ const HeaderElement = styled.div`
   display: flex;
   align-items: center;
   gap: 8px;
-  position: relative;
-  width: 100%;
-
-  border: solid 1px #424542;
-  box-shadow: 1px 1px #e7dfe7, -1px -1px #e7dfe7, 1px -1px #e7dfe7, -1px 1px #e7dfe7, 0 -2px #9c9a9c, -2px 0 #7b757b,
-    0 2px #424542;
-
-  background: #04009d;
-  background: -moz-linear-gradient(top, #04009d 0%, #06004d 100%);
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #04009d), color-stop(100%, #06004d));
-  background: -webkit-linear-gradient(top, #04009d 0%, #06004d 100%);
-  background: -o-linear-gradient(top, #04009d 0%, #06004d 100%);
-  background: -ms-linear-gradient(top, #04009d 0%, #06004d 100%);
-  background: linear-gradient(to bottom, #04009d 0%, #06004d 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#04009d', endColorstr='#06004d',GradientType=0 );
-
-  -webkit-border-radius: 7px;
-  -moz-border-radius: 7px;
-  border-radius: 7px;
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
    flex-direction: row-reverse;
@@ -125,15 +114,7 @@ const AccountElement = styled.div<{ active: boolean }>`
   display: flex;
   flex-direction: row;
   align-items: center;
-  background-color: transparent;
-
-  color: #eff1ff;
-  text-shadow: 2px 2px #212421,
-               1px 1px #212021;
-  font-family: Verdana, sans-serif;
-  font-weight: normal;
-  margin: 5px 0;
-
+  background-color: ${({ theme, active }) => (!active ? theme.bg1 : theme.bg3)};
   border-radius: 12px;
   white-space: nowrap;
   width: 100%;
@@ -145,6 +126,29 @@ const AccountElement = styled.div<{ active: boolean }>`
   /* :hover {
     background-color: ${({ theme, active }) => (!active ? theme.bg2 : theme.bg4)};
   } */
+`
+
+const UNIAmount = styled(AccountElement)`
+  color: white;
+  padding: 4px 8px;
+  height: 36px;
+  font-weight: 500;
+  background-color: ${({ theme }) => theme.bg3};
+  background: radial-gradient(174.47% 188.91% at 1.84% 0%, #ff007a 0%, #2172e5 100%), #edeef2;
+`
+
+const UNIWrapper = styled.span`
+  width: fit-content;
+  position: relative;
+  cursor: pointer;
+
+  :hover {
+    opacity: 0.8;
+  }
+
+  :active {
+    opacity: 0.9;
+  }
 `
 
 const HideSmall = styled.span`
@@ -186,7 +190,7 @@ const Title = styled.a`
   }
 `
 
-const MateriaLogo = styled.div`
+const UniIcon = styled.div`
   transition: transform 0.3s ease;
   :hover {
     transform: rotate(-5deg);
@@ -265,8 +269,21 @@ export default function Header() {
   const { t } = useTranslation()
 
   const userEthBalance = useETHBalances(account ? [account] : [])?.[account ?? '']
+  const [isDark] = useDarkModeManager()
+
+  const toggleClaimModal = useToggleSelfClaimModal()
+
+  const availableClaim: boolean = useUserHasAvailableClaim(account)
+
+  const { claimTxn } = useUserHasSubmittedClaim(account ?? undefined)
+
+  const aggregateBalance: TokenAmount | undefined = useAggregateUniBalance()
 
   const [showUniBalanceModal, setShowUniBalanceModal] = useState(false)
+  const showClaimPopup = useShowClaimPopup()
+
+  const countUpValue = aggregateBalance?.toFixed(0) ?? '0'
+  const countUpValuePrevious = usePrevious(countUpValue) ?? '0'
 
   return (
     <HeaderFrame>
@@ -276,9 +293,9 @@ export default function Header() {
       </Modal>
       <HeaderRow>
         <Title href=".">
-          <MateriaLogo>
-            <img width={'100px'} src={Logo} alt="logo" />
-          </MateriaLogo>
+          <UniIcon>
+            <img width={'24px'} src={isDark ? LogoDark : Logo} alt="logo" />
+          </UniIcon>
         </Title>
         <HeaderLinks>
           <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
@@ -298,11 +315,11 @@ export default function Header() {
             {t('pool')}
           </StyledNavLink>
           <StyledNavLink id={`stake-nav-link`} to={'/uni'}>
-            LM
+            UNI
           </StyledNavLink>
-          <StyledExternalLink id={`stake-nav-link`} href={'https://dfohub.com'}>
-            DFOHub <span style={{ fontSize: '11px' }}>↗</span>
-          </StyledExternalLink>
+          <StyledNavLink id={`stake-nav-link`} to={'/vote'}>
+            Vote
+          </StyledNavLink>
           <StyledExternalLink id={`stake-nav-link`} href={'https://uniswap.info'}>
             Charts <span style={{ fontSize: '11px' }}>↗</span>
           </StyledExternalLink>
@@ -315,6 +332,42 @@ export default function Header() {
               <NetworkCard title={NETWORK_LABELS[chainId]}>{NETWORK_LABELS[chainId]}</NetworkCard>
             )}
           </HideSmall>
+          {availableClaim && !showClaimPopup && (
+            <UNIWrapper onClick={toggleClaimModal}>
+              <UNIAmount active={!!account && !availableClaim} style={{ pointerEvents: 'auto' }}>
+                <TYPE.white padding="0 2px">
+                  {claimTxn && !claimTxn?.receipt ? <Dots>Claiming UNI</Dots> : 'Claim UNI'}
+                </TYPE.white>
+              </UNIAmount>
+              <CardNoise />
+            </UNIWrapper>
+          )}
+          {!availableClaim && aggregateBalance && (
+            <UNIWrapper onClick={() => setShowUniBalanceModal(true)}>
+              <UNIAmount active={!!account && !availableClaim} style={{ pointerEvents: 'auto' }}>
+                {account && (
+                  <HideSmall>
+                    <TYPE.white
+                      style={{
+                        paddingRight: '.4rem'
+                      }}
+                    >
+                      <CountUp
+                        key={countUpValue}
+                        isCounting
+                        start={parseFloat(countUpValuePrevious)}
+                        end={parseFloat(countUpValue)}
+                        thousandsSeparator={','}
+                        duration={1}
+                      />
+                    </TYPE.white>
+                  </HideSmall>
+                )}
+                UNI
+              </UNIAmount>
+              <CardNoise />
+            </UNIWrapper>
+          )}
           <AccountElement active={!!account} style={{ pointerEvents: 'auto' }}>
             {account && userEthBalance ? (
               <BalanceText style={{ flexShrink: 0 }} pl="0.75rem" pr="0.5rem" fontWeight={500}>

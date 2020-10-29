@@ -21,26 +21,24 @@ const InputRow = styled.div<{ selected: boolean }>`
 `
 
 const CurrencySelect = styled.button<{ selected: boolean }>`
-  text-shadow: 2px 2px #212421, 1px 1px #212021;
-  font-family: Verdana, sans-serif;
-  margin: 5px 0;
-
   align-items: center;
   height: 2.2rem;
   font-size: 20px;
-  font-weight: 800;
-  background-color: transparent;
-  color: ${({ selected, theme }) => (selected ? theme.text6 : theme.white)};
-  border-radius: 0px;
+  font-weight: 500;
+  background-color: ${({ selected, theme }) => (selected ? theme.bg1 : theme.primary1)};
+  color: ${({ selected, theme }) => (selected ? theme.text1 : theme.white)};
+  border-radius: 12px;
   box-shadow: ${({ selected }) => (selected ? 'none' : '0px 6px 10px rgba(0, 0, 0, 0.075)')};
   outline: none;
   cursor: pointer;
   user-select: none;
   border: none;
-  border-bottom: 1px solid white;
   padding: 0 0.5rem;
 
-  :focus, ;
+  :focus,
+  :hover {
+    background-color: ${({ selected, theme }) => (selected ? theme.bg2 : darken(0.05, theme.primary1))};
+  }
 `
 
 const LabelRow = styled.div`
@@ -75,15 +73,15 @@ const StyledDropDown = styled(DropDown)<{ selected: boolean }>`
 const InputPanel = styled.div<{ hideInput?: boolean }>`
   ${({ theme }) => theme.flexColumnNoWrap}
   position: relative;
-  border-radius: ${({ hideInput }) => (hideInput ? '8px' : '10px')};
-  background-color: transparent;
+  border-radius: ${({ hideInput }) => (hideInput ? '8px' : '20px')};
+  background-color: ${({ theme }) => theme.bg2};
   z-index: 1;
 `
 
 const Container = styled.div<{ hideInput: boolean }>`
-  border-radius: ${({ hideInput }) => (hideInput ? '8px' : '10px')};
-  border: none;
-  background-color: transparent;
+  border-radius: ${({ hideInput }) => (hideInput ? '8px' : '20px')};
+  border: 1px solid ${({ theme }) => theme.bg2};
+  background-color: ${({ theme }) => theme.bg1};
 `
 
 const StyledTokenName = styled.span<{ active?: boolean }>`
@@ -94,7 +92,7 @@ const StyledTokenName = styled.span<{ active?: boolean }>`
 
 const StyledBalanceMax = styled.button`
   height: 28px;
-  background-color: transparent;
+  background-color: ${({ theme }) => theme.primary5};
   border: 1px solid ${({ theme }) => theme.primary5};
   border-radius: 0.5rem;
   font-size: 0.875rem;
@@ -168,13 +166,13 @@ export default function CurrencyInputPanel({
         {!hideInput && (
           <LabelRow>
             <RowBetween>
-              <TYPE.body color={theme.text1} fontWeight={500} fontSize={14}>
+              <TYPE.body color={theme.text2} fontWeight={500} fontSize={14}>
                 {label}
               </TYPE.body>
               {account && (
                 <TYPE.body
                   onClick={onMax}
-                  color={theme.text1}
+                  color={theme.text2}
                   fontWeight={500}
                   fontSize={14}
                   style={{ display: 'inline', cursor: 'pointer' }}

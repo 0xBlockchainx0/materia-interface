@@ -19,26 +19,21 @@ const InfoLink = styled(ExternalLink)`
   border-radius: 8px;
   text-align: center;
   font-size: 14px;
-
-  text-shadow: 2px 2px #212421, 1px 1px #212021;
-  font-family: Verdana, sans-serif;
-  margin: 5px 0;
-
   color: ${({ theme }) => theme.text1};
 `
 
 function TradeSummary({ trade, allowedSlippage }: { trade: Trade; allowedSlippage: number }) {
   const theme = useContext(ThemeContext)
   const { priceImpactWithoutFee, realizedLPFee } = computeTradePriceBreakdown(trade)
-
   const isExactIn = trade.tradeType === TradeType.EXACT_INPUT
   const slippageAdjustedAmounts = computeSlippageAdjustedAmounts(trade, allowedSlippage)
+
   return (
     <>
       <AutoColumn style={{ padding: '0 20px' }}>
         <RowBetween>
           <RowFixed>
-            <TYPE.black fontSize={14} fontWeight={400} color={theme.text6}>
+            <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
               {isExactIn ? 'Minimum received' : 'Maximum sold'}
             </TYPE.black>
             <QuestionHelper text="Your transaction will revert if there is a large, unfavorable price movement before it is confirmed." />
@@ -55,7 +50,7 @@ function TradeSummary({ trade, allowedSlippage }: { trade: Trade; allowedSlippag
         </RowBetween>
         <RowBetween>
           <RowFixed>
-            <TYPE.black fontSize={14} fontWeight={400} color={theme.text6}>
+            <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
               Price Impact
             </TYPE.black>
             <QuestionHelper text="The difference between the market price and estimated price due to trade size." />
@@ -65,7 +60,7 @@ function TradeSummary({ trade, allowedSlippage }: { trade: Trade; allowedSlippag
 
         <RowBetween>
           <RowFixed>
-            <TYPE.black fontSize={14} fontWeight={400} color={theme.text6}>
+            <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
               Liquidity Provider Fee
             </TYPE.black>
             <QuestionHelper text="A portion of each trade (0.30%) goes to liquidity providers as a protocol incentive." />
@@ -100,7 +95,7 @@ export function AdvancedSwapDetails({ trade }: AdvancedSwapDetailsProps) {
               <SectionBreak />
               <AutoColumn style={{ padding: '0 24px' }}>
                 <RowFixed>
-                  <TYPE.black fontSize={14} fontWeight={400} color={theme.text6}>
+                  <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
                     Route
                   </TYPE.black>
                   <QuestionHelper text="Routing through these tokens resulted in the best price for your trade." />

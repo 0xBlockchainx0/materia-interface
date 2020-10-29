@@ -42,19 +42,6 @@ const StyledCloseIcon = styled(X)`
 `
 
 const StyledMenuButton = styled.button`
-  border: solid 1px #424542;
-  box-shadow: 1px 1px #e7dfe7, -1px -1px #e7dfe7, 1px -1px #e7dfe7, -1px 1px #e7dfe7, 0 -2px #9c9a9c, -2px 0 #7b757b,
-    0 2px #424542;
-
-  background: #04009d;
-  background: -moz-linear-gradient(top, #04009d 0%, #06004d 100%);
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #04009d), color-stop(100%, #06004d));
-  background: -webkit-linear-gradient(top, #04009d 0%, #06004d 100%);
-  background: -o-linear-gradient(top, #04009d 0%, #06004d 100%);
-  background: -ms-linear-gradient(top, #04009d 0%, #06004d 100%);
-  background: linear-gradient(to bottom, #04009d 0%, #06004d 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#04009d', endColorstr='#06004d',GradientType=0 );
-
   position: relative;
   width: 100%;
   height: 100%;
@@ -63,6 +50,7 @@ const StyledMenuButton = styled.button`
   margin: 0;
   padding: 0;
   height: 35px;
+  background-color: ${({ theme }) => theme.bg3};
 
   padding: 0.15rem 0.5rem;
   border-radius: 0.5rem;
@@ -97,20 +85,10 @@ const StyledMenu = styled.div`
 
 const MenuFlyout = styled.span`
   min-width: 20.125rem;
-  border: solid 1px #424542;
-  box-shadow: 1px 1px #e7dfe7, -1px -1px #e7dfe7, 1px -1px #e7dfe7, -1px 1px #e7dfe7, 0 -2px #9c9a9c, -2px 0 #7b757b,
-    0 2px #424542;
-
-  background: #04009d;
-  background: -moz-linear-gradient(top, #04009d 0%, #06004d 100%);
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #04009d), color-stop(100%, #06004d));
-  background: -webkit-linear-gradient(top, #04009d 0%, #06004d 100%);
-  background: -o-linear-gradient(top, #04009d 0%, #06004d 100%);
-  background: -ms-linear-gradient(top, #04009d 0%, #06004d 100%);
-  background: linear-gradient(to bottom, #04009d 0%, #06004d 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#04009d', endColorstr='#06004d',GradientType=0 );
-
-  border-radius: 10px;
+  background-color: ${({ theme }) => theme.bg2};
+  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
+    0px 24px 32px rgba(0, 0, 0, 0.01);
+  border-radius: 12px;
   display: flex;
   flex-direction: column;
   font-size: 1rem;

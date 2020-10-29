@@ -12,16 +12,14 @@ const Base = styled(RebassButton)<{
   borderRadius?: string
   altDisabledStyle?: boolean
 }>`
-  padding: ${({ padding }) => (padding ? padding : '15px')};
+  padding: ${({ padding }) => (padding ? padding : '18px')};
   width: ${({ width }) => (width ? width : '100%')};
-  font-weight: 800;
+  font-weight: 500;
   text-align: center;
+  border-radius: 12px;
+  border-radius: ${({ borderRadius }) => borderRadius && borderRadius};
   outline: none;
-
-  text-shadow: 2px 2px #212421, 1px 1px #212021;
-  font-family: Verdana, sans-serif;
-  margin: 5px 0;
-
+  border: 1px solid transparent;
   color: white;
   text-decoration: none;
   display: flex;
@@ -63,30 +61,12 @@ export const ButtonPrimary = styled(Base)`
     outline: none;
     opacity: ${({ altDisabledStyle }) => (altDisabledStyle ? '0.7' : '1')};
   }
-
-  border: solid 1px #424542;
-  box-shadow: 1px 1px #e7dfe7, -1px -1px #e7dfe7, 1px -1px #e7dfe7, -1px 1px #e7dfe7, 0 -2px #9c9a9c, -2px 0 #7b757b,
-    0 2px #424542;
-
-  background: #700e9c;
-  background: -moz-linear-gradient(top, #700e9c 0%, #6c1237 100%);
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #700e9c), color-stop(100%, #6c1237));
-  background: -webkit-linear-gradient(top, #700e9c 0%, #6c1237 100%);
-  background: -o-linear-gradient(top, #700e9c 0%, #6c1237 100%);
-  background: -ms-linear-gradient(top, #700e9c 0%, #6c1237 100%);
-  background: linear-gradient(to bottom, #700e9c 0%, #6c1237 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#700e9c', endColorstr='#6c1237',GradientType=0 );
-
-  -webkit-border-radius: 7px;
-  -moz-border-radius: 7px;
-  border-radius: 10px;
 `
 
 export const ButtonLight = styled(Base)`
   background-color: ${({ theme }) => theme.primary5};
   color: ${({ theme }) => theme.primaryText1};
   font-size: 16px;
-  text-shadow: none;
   font-weight: 500;
   &:focus {
     box-shadow: 0 0 0 1pt ${({ theme, disabled }) => !disabled && darken(0.03, theme.primary5)};
@@ -105,33 +85,16 @@ export const ButtonLight = styled(Base)`
       cursor: auto;
       background-color: ${({ theme }) => theme.primary5};
       box-shadow: none;
+      border: 1px solid transparent;
       outline: none;
     }
   }
-
-  border: solid 1px #424542;
-  box-shadow: 1px 1px #e7dfe7, -1px -1px #e7dfe7, 1px -1px #e7dfe7, -1px 1px #e7dfe7, 0 -2px #9c9a9c, -2px 0 #7b757b,
-    0 2px #424542;
-
-  background: #700e9c;
-  background: -moz-linear-gradient(top, #700e9c 0%, #6c1237 100%);
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #700e9c), color-stop(100%, #6c1237));
-  background: -webkit-linear-gradient(top, #700e9c 0%, #6c1237 100%);
-  background: -o-linear-gradient(top, #700e9c 0%, #6c1237 100%);
-  background: -ms-linear-gradient(top, #700e9c 0%, #6c1237 100%);
-  background: linear-gradient(to bottom, #700e9c 0%, #6c1237 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#700e9c', endColorstr='#6c1237',GradientType=0 );
-
-  -webkit-border-radius: 7px;
-  -moz-border-radius: 7px;
-  border-radius: 10px;
 `
 
 export const ButtonGray = styled(Base)`
   background-color: ${({ theme }) => theme.bg3};
   color: ${({ theme }) => theme.text2};
   font-size: 16px;
-  text-shadow: none;
   font-weight: 500;
   &:focus {
     box-shadow: 0 0 0 1pt ${({ theme, disabled }) => !disabled && darken(0.05, theme.bg2)};
@@ -194,23 +157,6 @@ export const ButtonPink = styled(Base)`
     opacity: 50%;
     cursor: auto;
   }
-
-  border: solid 1px #424542;
-  box-shadow: 1px 1px #e7dfe7, -1px -1px #e7dfe7, 1px -1px #e7dfe7, -1px 1px #e7dfe7, 0 -2px #9c9a9c, -2px 0 #7b757b,
-    0 2px #424542;
-
-  background: #700e9c;
-  background: -moz-linear-gradient(top, #700e9c 0%, #6c1237 100%);
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #700e9c), color-stop(100%, #6c1237));
-  background: -webkit-linear-gradient(top, #700e9c 0%, #6c1237 100%);
-  background: -o-linear-gradient(top, #700e9c 0%, #6c1237 100%);
-  background: -ms-linear-gradient(top, #700e9c 0%, #6c1237 100%);
-  background: linear-gradient(to bottom, #700e9c 0%, #6c1237 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#700e9c', endColorstr='#6c1237',GradientType=0 );
-
-  -webkit-border-radius: 7px;
-  -moz-border-radius: 7px;
-  border-radius: 10px;
 `
 
 export const ButtonOutlined = styled(Base)`
@@ -288,22 +234,27 @@ const ButtonConfirmedStyle = styled(Base)`
 `
 
 const ButtonErrorStyle = styled(Base)`
-  border: solid 1px #424542;
-  box-shadow: 1px 1px #e7dfe7, -1px -1px #e7dfe7, 1px -1px #e7dfe7, -1px 1px #e7dfe7, 0 -2px #9c9a9c, -2px 0 #7b757b,
-    0 2px #424542;
+  background-color: ${({ theme }) => theme.red1};
+  border: 1px solid ${({ theme }) => theme.red1};
 
-  background: #700e9c;
-  background: -moz-linear-gradient(top, #700e9c 0%, #6c1237 100%);
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #700e9c), color-stop(100%, #6c1237));
-  background: -webkit-linear-gradient(top, #700e9c 0%, #6c1237 100%);
-  background: -o-linear-gradient(top, #700e9c 0%, #6c1237 100%);
-  background: -ms-linear-gradient(top, #700e9c 0%, #6c1237 100%);
-  background: linear-gradient(to bottom, #700e9c 0%, #6c1237 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#700e9c', endColorstr='#6c1237',GradientType=0 );
-
-  -webkit-border-radius: 7px;
-  -moz-border-radius: 7px;
-  border-radius: 10px;
+  &:focus {
+    box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.05, theme.red1)};
+    background-color: ${({ theme }) => darken(0.05, theme.red1)};
+  }
+  &:hover {
+    background-color: ${({ theme }) => darken(0.05, theme.red1)};
+  }
+  &:active {
+    box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.1, theme.red1)};
+    background-color: ${({ theme }) => darken(0.1, theme.red1)};
+  }
+  &:disabled {
+    opacity: 50%;
+    cursor: auto;
+    box-shadow: none;
+    background-color: ${({ theme }) => theme.red1};
+    border: 1px solid ${({ theme }) => theme.red1};
+  }
 `
 
 export function ButtonConfirmed({

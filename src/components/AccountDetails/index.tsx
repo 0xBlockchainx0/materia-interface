@@ -67,7 +67,7 @@ const AccountGroupingRow = styled.div`
   justify-content: space-between;
   align-items: center;
   font-weight: 400;
-  color: ${({ theme }) => theme.text5};
+  color: ${({ theme }) => theme.text1};
 
   div {
     ${({ theme }) => theme.flexRowNoWrap}
@@ -76,7 +76,7 @@ const AccountGroupingRow = styled.div`
 `
 
 const AccountSection = styled.div`
-  background-color: transparent;
+  background-color: ${({ theme }) => theme.bg1};
   padding: 0rem 1rem;
   ${({ theme }) => theme.mediaWidth.upToMedium`padding: 0rem 1rem 1.5rem 1rem;`};
 `
@@ -98,8 +98,8 @@ const LowerSection = styled.div`
   padding: 1.5rem;
   flex-grow: 1;
   overflow: auto;
-  background-color: ${({ theme }) => theme.bg1};
-  border-bottom-left-radius: 25px;
+  background-color: ${({ theme }) => theme.bg2};
+  border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;
 
   h5 {
@@ -403,7 +403,7 @@ export default function AccountDetails({
         </LowerSection>
       ) : (
         <LowerSection>
-          <TYPE.body color={theme.text5}>Your transactions will appear here...</TYPE.body>
+          <TYPE.body color={theme.text1}>Your transactions will appear here...</TYPE.body>
         </LowerSection>
       )}
     </>

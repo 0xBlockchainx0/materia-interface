@@ -1,34 +1,122 @@
 import React from 'react'
 import styled from 'styled-components'
+import appBackground from '../assets/images/app-background.png'
+import frameCorner from '../assets/images/trailer_frame_corner.png'
 
 export const BodyWrapper = styled.div`
   position: relative;
-  max-width: 420px;
+  max-width: 1020px;
+  min-height: 520px;
   width: 100%;
-
-  border: solid 1px #424542;
-  box-shadow: 1px 1px #e7dfe7, -1px -1px #e7dfe7, 1px -1px #e7dfe7, -1px 1px #e7dfe7, 0 -2px #9c9a9c, -2px 0 #7b757b,
-    0 2px #424542;
-  width: 500px;
+  background: url(${appBackground}) no-repeat;
+  background-size: cover;
+  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
+    0px 24px 32px rgba(0, 0, 0, 0.01);
+  border-radius: 0px;
   padding: 1rem;
-
-  background: #04009d;
-  background: -moz-linear-gradient(top, #04009d 0%, #06004d 100%);
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #04009d), color-stop(100%, #06004d));
-  background: -webkit-linear-gradient(top, #04009d 0%, #06004d 100%);
-  background: -o-linear-gradient(top, #04009d 0%, #06004d 100%);
-  background: -ms-linear-gradient(top, #04009d 0%, #06004d 100%);
-  background: linear-gradient(to bottom, #04009d 0%, #06004d 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#04009d', endColorstr='#06004d',GradientType=0 );
-
-  -webkit-border-radius: 7px;
-  -moz-border-radius: 7px;
-  border-radius: 10px;
 `
+
+const StyledBox = styled.div`
+  padding: 0;
+  margin: 0 auto;
+  position: relative;
+  max-width: 1020px;
+  min-height: 520px;
+  width: 100%;
+  display: inline-block;
+  z-index: 0;
+  cursor: pointer;
+  border: 2px solid #1e9de3;
+`
+
+const StyledCornerImage = styled.img`
+  position:absolute;
+  display:block;
+  height:39px;
+  width:39px
+  @media (max-width: 960px) {
+    display: none;
+  }
+  @media (max-width: 375px) {
+    display: none;
+  }
+`
+
+
+const StyledSpanTopRight = styled.span`
+filter: blur(0);
+    top: -22.5px;
+    right: -21.5px;
+    -webkit-transform: rotate(90deg);
+    transform: rotate(90deg);
+    position: absolute;
+    display: block!important;
+    height: 39px;
+    width: 39px;
+`
+
+const StyledSpanTopLeft = styled.span`
+filter: blur(0);
+top: -21.5px;
+left: -23.5px;
+-webkit-transform: rotate(0deg);
+transform: rotate(0deg);
+    position: absolute;
+    display: block!important;
+    height: 39px;
+    width: 39px;
+`
+
+const StyledSpanBottomLeft = styled.span`
+bottom: -20.5px;
+left: -23.5px;
+-webkit-transform: rotate(270deg);
+transform: rotate(270deg);
+    position: absolute;
+    display: block!important;
+    height: 39px;
+    width: 39px;
+`
+
+const StyledSpanBottomRight = styled.span`
+bottom: -20.5px;
+    right: -23.5px;
+    -webkit-transform: rotate(180deg);
+    transform: rotate(180deg);
+    position: absolute;
+    display: block!important;
+    height: 39px;
+    width: 39px;
+`
+
+
+const CornerBox = () => {
+  return (
+    <>
+      <StyledSpanTopRight>
+        <StyledCornerImage src={frameCorner} />
+      </StyledSpanTopRight>
+      <StyledSpanTopLeft>
+        <StyledCornerImage src={frameCorner} />
+      </StyledSpanTopLeft>
+      <StyledSpanBottomLeft>
+        <StyledCornerImage src={frameCorner} />
+      </StyledSpanBottomLeft>
+      <StyledSpanBottomRight>
+        <StyledCornerImage src={frameCorner} />
+      </StyledSpanBottomRight>
+    </>
+  )
+}
 
 /**
  * The styled container element that wraps the content of most pages and the tabs.
  */
 export default function AppBody({ children }: { children: React.ReactNode }) {
-  return <BodyWrapper>{children}</BodyWrapper>
+  return (
+    <StyledBox>
+      <CornerBox/>
+      <BodyWrapper>{children}</BodyWrapper>
+    </StyledBox>
+  )
 }

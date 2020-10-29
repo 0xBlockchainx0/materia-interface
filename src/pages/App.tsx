@@ -4,7 +4,6 @@ import styled from 'styled-components'
 import GoogleAnalyticsReporter from '../components/analytics/GoogleAnalyticsReporter'
 import AddressClaimModal from '../components/claim/AddressClaimModal'
 import Header from '../components/Header'
-import Footer from '../components/Footer'
 import Polling from '../components/Header/Polling'
 import URLWarning from '../components/Header/URLWarning'
 import Popups from '../components/Popups'
@@ -118,7 +117,6 @@ export default function App() {
           </Web3ReactManager>
           <Marginer />
         </BodyWrapper>
-        <Footer />
       </AppWrapper>
     </Suspense>
   )
