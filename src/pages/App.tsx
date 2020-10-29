@@ -3,8 +3,9 @@ import { Route, Switch } from 'react-router-dom'
 import styled from 'styled-components'
 import GoogleAnalyticsReporter from '../components/analytics/GoogleAnalyticsReporter'
 import AddressClaimModal from '../components/claim/AddressClaimModal'
+import Footer from '../components/Footer/Footer'
 import Header from '../components/Header'
-import Polling from '../components/Header/Polling'
+// import Polling from '../components/Header/Polling'
 import URLWarning from '../components/Header/URLWarning'
 import Popups from '../components/Popups'
 import Web3ReactManager from '../components/Web3ReactManager'
@@ -86,7 +87,8 @@ export default function App() {
         </HeaderWrapper>
         <BodyWrapper>
           <Popups />
-          <Polling />
+          {/* <Polling /> */}
+          <Footer />
           <TopLevelModals />
           <Web3ReactManager>
             <Switch>
