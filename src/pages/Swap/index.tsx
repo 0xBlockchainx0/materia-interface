@@ -44,10 +44,11 @@ import { computeTradePriceBreakdown, warningSeverity } from '../../utils/prices'
 import AppBody from '../AppBody'
 import { ClickableText } from '../Pool/styleds'
 import Loader from '../../components/Loader'
+import Inventory from '../../components/Inventory'
 
 const SwapGridContainer = styled.div`
   display: grid;
-  grid-template-columns: 5% 35% auto;
+  grid-template-columns: 5% 25% auto;
 `
 
 // const SwapTitleColumn = styled.div`
@@ -318,7 +319,10 @@ export default function Swap() {
                 Swap
               </SwapTitleColumnContent>
             </SwapTitleColumn> */}
-            <div>Inventory</div>
+            <div>
+              Inventory
+              <Inventory/>
+            </div>
             <div>
               <SwapCurrencyContainer>
                 <div>
