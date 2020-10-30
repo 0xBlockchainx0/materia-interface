@@ -299,7 +299,7 @@ export default function Header() {
         </Title>
         <HeaderLinks>
           <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
-            {t('swap')}
+            Swap
           </StyledNavLink>
           <StyledNavLink
             id={`pool-nav-link`}
@@ -312,16 +312,16 @@ export default function Header() {
               pathname.startsWith('/find')
             }
           >
-            {t('pool')}
+            Pool
           </StyledNavLink>
           <StyledNavLink id={`stake-nav-link`} to={'/uni'}>
-            UNI
+            Exping
           </StyledNavLink>
           <StyledNavLink id={`stake-nav-link`} to={'/vote'}>
-            Vote
+            LM
           </StyledNavLink>
-          <StyledExternalLink id={`stake-nav-link`} href={'https://uniswap.info'}>
-            Charts <span style={{ fontSize: '11px' }}>↗</span>
+          <StyledExternalLink id={`stake-nav-link`} href={'https://www.dfohub.com'}>
+            DFO {/* <span style={{ fontSize: '11px' }}>↗</span> */}
           </StyledExternalLink>
         </HeaderLinks>
       </HeaderRow>
