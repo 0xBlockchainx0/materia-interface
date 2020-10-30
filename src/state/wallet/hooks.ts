@@ -10,6 +10,7 @@ import { useSingleContractMultipleData, useMultipleContractSingleData } from '..
 import { useUserUnclaimedAmount } from '../claim/hooks'
 import { useTotalUniEarned } from '../stake/hooks'
 
+
 /**
  * Returns a map of the given addresses to their eventually consistent ETH balances.
  */

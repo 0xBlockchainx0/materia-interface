@@ -16,7 +16,7 @@ import { CardNoise } from '../earn/styled'
 import { CountUp } from 'use-count-up'
 import { TYPE, ExternalLink } from '../../theme'
 
-import { YellowCard } from '../Card'
+import { YellowCard, TransparentCard } from '../Card'
 import Settings from '../Settings'
 import Menu from '../Menu'
 
@@ -56,11 +56,13 @@ const HeaderFrame = styled.div`
   `}
 `
 
-const HeaderControls = styled.div`
+const FooterControls = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-self: flex-end;
+  max-width: 75%;
+  width: 100%;
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
     flex-direction: row;
@@ -68,7 +70,7 @@ const HeaderControls = styled.div`
     justify-self: center;
     width: 100%;
     max-width: 960px;
-    padding: 1rem;
+    padding: 0rem;
     position: fixed;
     bottom: 0px;
     left: 0px;
@@ -80,7 +82,7 @@ const HeaderControls = styled.div`
   `};
 `
 
-const HeaderElement = styled.div`
+const FooterElement = styled.div`
   display: flex;
   align-items: center;
   gap: 8px;
@@ -91,18 +93,19 @@ const HeaderElement = styled.div`
   `};
 `
 
-const HeaderElementWrap = styled.div`
+const FooterElementWrap = styled.div`
   display: flex;
   align-items: center;
+  margin-left: auto;
 `
 
-const HeaderRow = styled(RowFixed)`
+const FooterRow = styled(RowFixed)`
   ${({ theme }) => theme.mediaWidth.upToMedium`
    width: 100%;
   `};
 `
 
-const HeaderLinks = styled(Row)`
+const FooterLinks = styled(Row)`
   justify-content: center;
   ${({ theme }) => theme.mediaWidth.upToMedium`
     padding: 1rem 0 1rem 1rem;
@@ -114,18 +117,8 @@ const AccountElement = styled.div<{ active: boolean }>`
   display: flex;
   flex-direction: row;
   align-items: center;
-  background-color: ${({ theme, active }) => (!active ? theme.bg1 : theme.bg3)};
-  border-radius: 12px;
   white-space: nowrap;
   width: 100%;
-  cursor: pointer;
-
-  :focus {
-    border: 1px solid blue;
-  }
-  /* :hover {
-    background-color: ${({ theme, active }) => (!active ? theme.bg2 : theme.bg4)};
-  } */
 `
 
 const UNIAmount = styled(AccountElement)`
@@ -157,7 +150,7 @@ const HideSmall = styled.span`
   `};
 `
 
-const NetworkCard = styled(YellowCard)`
+const NetworkCard = styled(TransparentCard)`
   border-radius: 12px;
   padding: 8px 12px;
   ${({ theme }) => theme.mediaWidth.upToSmall`
@@ -256,7 +249,6 @@ const StyledExternalLink = styled(ExternalLink).attrs({
       display: none;
 `}
 `
-
 const NETWORK_LABELS: { [chainId in ChainId]?: string } = {
   [ChainId.RINKEBY]: 'Rinkeby',
   [ChainId.ROPSTEN]: 'Ropsten',
@@ -264,11 +256,12 @@ const NETWORK_LABELS: { [chainId in ChainId]?: string } = {
   [ChainId.KOVAN]: 'Kovan'
 }
 
-export default function Header() {
+export default function Footer() {
   const { account, chainId } = useActiveWeb3React()
   const { t } = useTranslation()
 
   const userEthBalance = useETHBalances(account ? [account] : [])?.[account ?? '']
+
   const [isDark] = useDarkModeManager()
 
   const toggleClaimModal = useToggleSelfClaimModal()
@@ -286,53 +279,12 @@ export default function Header() {
   const countUpValuePrevious = usePrevious(countUpValue) ?? '0'
 
   return (
-    <HeaderFrame>
-      <ClaimModal />
-      <Modal isOpen={showUniBalanceModal} onDismiss={() => setShowUniBalanceModal(false)}>
-        <UniBalanceContent setShowUniBalanceModal={setShowUniBalanceModal} />
-      </Modal>
-      <HeaderRow>
-        <Title href=".">
-          <UniIcon>
-            <img width={'24px'} src={isDark ? LogoDark : Logo} alt="logo" />
-          </UniIcon>
-        </Title>
-        <HeaderLinks>
-          <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
-            {t('swap')}
-          </StyledNavLink>
-          <StyledNavLink
-            id={`pool-nav-link`}
-            to={'/pool'}
-            isActive={(match, { pathname }) =>
-              Boolean(match) ||
-              pathname.startsWith('/add') ||
-              pathname.startsWith('/remove') ||
-              pathname.startsWith('/create') ||
-              pathname.startsWith('/find')
-            }
-          >
-            {t('pool')}
-          </StyledNavLink>
-          <StyledNavLink id={`stake-nav-link`} to={'/uni'}>
-            UNI
-          </StyledNavLink>
-          <StyledNavLink id={`stake-nav-link`} to={'/vote'}>
-            Vote
-          </StyledNavLink>
-          <StyledExternalLink id={`stake-nav-link`} href={'https://uniswap.info'}>
-            Charts <span style={{ fontSize: '11px' }}>↗</span>
-          </StyledExternalLink>
-        </HeaderLinks>
-      </HeaderRow>
-      {/*
-      <HeaderControls>
-        <HeaderElement>
-          <HideSmall>
-            {chainId && NETWORK_LABELS[chainId] && (
-              <NetworkCard title={NETWORK_LABELS[chainId]}>{NETWORK_LABELS[chainId]}</NetworkCard>
-            )}
-          </HideSmall>
+      <FooterControls>
+        <FooterElement>
+          <TransparentCard>
+            Time: {new Date().toLocaleTimeString()}
+          </TransparentCard>
+          {/*
           {availableClaim && !showClaimPopup && (
             <UNIWrapper onClick={toggleClaimModal}>
               <UNIAmount active={!!account && !availableClaim} style={{ pointerEvents: 'auto' }}>
@@ -369,6 +321,7 @@ export default function Header() {
               <CardNoise />
             </UNIWrapper>
           )}
+                    */}
           <AccountElement active={!!account} style={{ pointerEvents: 'auto' }}>
             {account && userEthBalance ? (
               <BalanceText style={{ flexShrink: 0 }} pl="0.75rem" pr="0.5rem" fontWeight={500}>
@@ -377,13 +330,16 @@ export default function Header() {
             ) : null}
             <Web3Status />
           </AccountElement>
-        </HeaderElement>
-        <HeaderElementWrap>
-          <Settings />
+          <HideSmall>
+            {chainId && NETWORK_LABELS[chainId] && (
+              <NetworkCard title={NETWORK_LABELS[chainId]}>{NETWORK_LABELS[chainId]}</NetworkCard>
+            )}
+          </HideSmall>
+        </FooterElement>
+        <FooterElementWrap>
           <Menu />
-        </HeaderElementWrap>
-      </HeaderControls>
-            */}
-    </HeaderFrame>
+          <Settings />
+        </FooterElementWrap>
+      </FooterControls>
   )
 }

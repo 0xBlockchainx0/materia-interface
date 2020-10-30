@@ -20,6 +20,7 @@ import { RowBetween, RowFixed } from '../Row'
 import Toggle from '../Toggle'
 import TransactionSettings from '../TransactionSettings'
 
+
 const StyledMenuIcon = styled(Settings)`
   height: 20px;
   width: 20px;
@@ -27,6 +28,13 @@ const StyledMenuIcon = styled(Settings)`
   > * {
     stroke: ${({ theme }) => theme.text1};
   }
+`
+
+const StyledMenuText = styled.b`
+  :hover {
+    cursor: pointer;
+  }
+  margin-top: -0.3rem;
 `
 
 const StyledCloseIcon = styled(X)`
@@ -50,7 +58,6 @@ const StyledMenuButton = styled.button`
   margin: 0;
   padding: 0;
   height: 35px;
-  background-color: ${({ theme }) => theme.bg3};
 
   padding: 0.15rem 0.5rem;
   border-radius: 0.5rem;
@@ -59,7 +66,6 @@ const StyledMenuButton = styled.button`
   :focus {
     cursor: pointer;
     outline: none;
-    background-color: ${({ theme }) => theme.bg4};
   }
 
   svg {
@@ -184,6 +190,7 @@ export default function SettingsTab() {
       </Modal>
       <StyledMenuButton onClick={toggle} id="open-settings-dialog-button">
         <StyledMenuIcon />
+        {/*
         {expertMode ? (
           <EmojiWrapper>
             <span role="img" aria-label="wizard-icon">
@@ -191,7 +198,11 @@ export default function SettingsTab() {
             </span>
           </EmojiWrapper>
         ) : null}
+        */}
       </StyledMenuButton>
+      <StyledMenuText>
+        Settings
+      </StyledMenuText>
       {open && (
         <MenuFlyout>
           <AutoColumn gap="md" style={{ padding: '1rem' }}>
