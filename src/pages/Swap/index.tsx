@@ -48,7 +48,7 @@ import Inventory from '../../components/Inventory'
 
 const SwapGridContainer = styled.div`
   display: grid;
-  grid-template-columns: 5% 25% auto;
+  grid-template-columns: 5% 30% auto;
 `
 
 // const SwapTitleColumn = styled.div`
@@ -309,8 +309,8 @@ export default function Swap() {
             onDismiss={handleConfirmDismiss}
           />
           <SwapGridContainer>
-            <div style={{ writingMode: 'vertical-rl', textOrientation: 'mixed', marginLeft: '60px' }}>
-              <p style={{ fontSize: 'xx-large' }}>
+            <div style={{ writingMode: 'vertical-rl', textOrientation: 'mixed' }}>
+              <p style={{ fontSize: 'xx-large', margin: '0px 40px 0px 0px' }}>
                 Swap
               </p>
             </div>
@@ -320,7 +320,7 @@ export default function Swap() {
               </SwapTitleColumnContent>
             </SwapTitleColumn> */}
             <div>
-              Inventory
+              <TYPE.body color={theme.text1} fontWeight={500} fontSize={20}>Inventory</TYPE.body>
               <Inventory/>
             </div>
             <div>
@@ -338,7 +338,7 @@ export default function Swap() {
                       otherCurrency={currencies[Field.OUTPUT]}
                       id="swap-currency-input"
                     />
-                    <AutoColumn justify="space-between">
+                    {/* <AutoColumn justify="space-between">
                       <AutoRow justify={isExpertMode ? 'space-between' : 'center'} style={{ padding: '0 1rem' }}>
                         <ArrowWrapper clickable>
                           <ArrowDown
@@ -356,7 +356,7 @@ export default function Swap() {
                           </LinkStyledButton>
                         ) : null}
                       </AutoRow>
-                    </AutoColumn>
+                    </AutoColumn> */}
                   </AutoColumn>
                 </div>
                 <div>

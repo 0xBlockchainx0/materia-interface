@@ -7,7 +7,7 @@ export const BodyWrapper = styled.div`
   position: relative;
   // max-width: 75%;
   // max-width: 1020px;
-  min-height: 560px;
+  min-height: 620px;
   width: 100%;
   background: url(${appBackground}) no-repeat;
   background-size: cover;
@@ -23,7 +23,7 @@ const StyledBox = styled.div`
   position: relative;
   max-width: 75%;
   // max-width: 1020px;
-  min-height: 560px;
+  min-height: 620px;
   width: 100%;
   display: inline-block;
   z-index: 0;
