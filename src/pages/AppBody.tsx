@@ -21,6 +21,7 @@ export const BodyWrapper = styled.div`
 export const Center = styled.div`
   display: flex;
   margin: 0 auto;
+  justify-content: center;
   padding-top: 5px;
   padding-bottom: 5px;
 `

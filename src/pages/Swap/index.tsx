@@ -68,7 +68,30 @@ const SwapGridContainer = styled.div`
 
 const SwapCurrencyContainer = styled.div`
   display: grid;
-  grid-template-columns: 50% 50%;
+  grid-template-columns: 40% 20% 40%;
+`
+
+const Divider = styled.div`
+  border: 1px solid ${({ theme }) => theme.cyan1};
+  margin-right: 0.5rem;
+  margin-top: 0.2rem;
+`
+
+const SwapPageContainer = styled.div`
+  padding-top: 2rem;
+`
+
+const SwapMenu = styled.div`
+  display: inline-flex;
+`
+
+const SwapMenuItem = styled.div<{ active?: boolean }>`
+  padding-right: 1rem;
+  opacity: ${({ active }) => (active ? '1' : '0.4')};
+`
+
+const TradePriceContainer = styled.div`
+  margin-top: auto;
 `
 
 export default function Swap() {
@@ -328,8 +351,16 @@ export default function Swap() {
               <TYPE.body color={theme.text1} fontWeight={500} fontSize={20}>Inventory</TYPE.body>
               <Inventory />
             </div>
-            <div>
-              <div>TESTO TESTO TESTO</div>
+            <SwapPageContainer>
+              <SwapMenu>
+                <SwapMenuItem active={true}>
+                  <TYPE.body color={theme.text1} fontWeight={500} fontSize={14}>Classic SWAP</TYPE.body>
+                </SwapMenuItem>
+                <SwapMenuItem>
+                  <TYPE.body color={theme.text1} fontWeight={500} fontSize={14}>Batch SWAP (coming soon)</TYPE.body>
+                </SwapMenuItem>
+              </SwapMenu>
+              <Divider></Divider>
               <div>
                 <SwapCurrencyContainer>
                   <div>
@@ -366,6 +397,36 @@ export default function Swap() {
                     </AutoColumn> */}
                     </AutoColumn>
                   </div>
+                  <TradePriceContainer>
+                    {showWrap ? null : (
+                      <Card padding={'.25rem .75rem 0 .75rem'} borderRadius={'20px'}>
+                        <AutoColumn gap="4px">
+                          {Boolean(trade) && (
+                            <RowBetween align="center">
+                              {/* <Text fontWeight={500} fontSize={14} color={theme.text2}>
+                                Price
+                              </Text> */}
+                              <TradePrice
+                                price={trade?.executionPrice}
+                                showInverted={showInverted}
+                                setShowInverted={setShowInverted}
+                              />
+                            </RowBetween>
+                          )}
+                          {allowedSlippage !== INITIAL_ALLOWED_SLIPPAGE && (
+                            <RowBetween align="center">
+                              <ClickableText fontWeight={500} fontSize={14} color={theme.text2} onClick={toggleSettings}>
+                                Slippage Tolerance
+                              </ClickableText>
+                              <ClickableText fontWeight={500} fontSize={14} color={theme.text2} onClick={toggleSettings}>
+                                {allowedSlippage / 100}%
+                              </ClickableText>
+                            </RowBetween>
+                          )}
+                        </AutoColumn>
+                      </Card>
+                    )}
+                  </TradePriceContainer>
                   <div>
                     <AutoColumn gap={'lg'}>
                       <CurrencyInputPanel
@@ -379,7 +440,7 @@ export default function Swap() {
                         id="swap-currency-output"
                       />
 
-                      {recipient !== null && !showWrap ? (
+                      {/* {recipient !== null && !showWrap ? (
                         <>
                           <AutoRow justify="space-between" style={{ padding: '0 1rem' }}>
                             <ArrowWrapper clickable={false}>
@@ -391,36 +452,7 @@ export default function Swap() {
                           </AutoRow>
                           <AddressInputPanel id="recipient" value={recipient} onChange={onChangeRecipient} />
                         </>
-                      ) : null}
-
-                      {showWrap ? null : (
-                        <Card padding={'.25rem .75rem 0 .75rem'} borderRadius={'20px'}>
-                          <AutoColumn gap="4px">
-                            {Boolean(trade) && (
-                              <RowBetween align="center">
-                                <Text fontWeight={500} fontSize={14} color={theme.text2}>
-                                  Price
-                              </Text>
-                                <TradePrice
-                                  price={trade?.executionPrice}
-                                  showInverted={showInverted}
-                                  setShowInverted={setShowInverted}
-                                />
-                              </RowBetween>
-                            )}
-                            {allowedSlippage !== INITIAL_ALLOWED_SLIPPAGE && (
-                              <RowBetween align="center">
-                                <ClickableText fontWeight={500} fontSize={14} color={theme.text2} onClick={toggleSettings}>
-                                  Slippage Tolerance
-                              </ClickableText>
-                                <ClickableText fontWeight={500} fontSize={14} color={theme.text2} onClick={toggleSettings}>
-                                  {allowedSlippage / 100}%
-                              </ClickableText>
-                              </RowBetween>
-                            )}
-                          </AutoColumn>
-                        </Card>
-                      )}
+                      ) : null} */}
                     </AutoColumn>
                   </div>
                 </SwapCurrencyContainer>
@@ -524,11 +556,11 @@ export default function Swap() {
                 ) : null} */}
                 </BottomGrouping>
               </div>
-            </div>
+            </SwapPageContainer>
           </SwapGridContainer>
         </Wrapper>
       </AppBody>
-      <AdvancedSwapDetailsDropdown trade={trade} />
+      {/* <AdvancedSwapDetailsDropdown trade={trade} /> */}
     </>
   )
 }
