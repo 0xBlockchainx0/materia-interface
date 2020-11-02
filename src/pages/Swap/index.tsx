@@ -326,24 +326,26 @@ export default function Swap() {
             </SwapTitleColumn> */}
             <div>
               <TYPE.body color={theme.text1} fontWeight={500} fontSize={20}>Inventory</TYPE.body>
-              <Inventory/>
+              <Inventory />
             </div>
             <div>
-              <SwapCurrencyContainer>
-                <div>
-                  <AutoColumn gap={'lg'}>
-                    <CurrencyInputPanel
-                      label={independentField === Field.OUTPUT && !showWrap && trade ? 'From (estimated)' : 'From'}
-                      value={formattedAmounts[Field.INPUT]}
-                      showMaxButton={!atMaxAmountInput}
-                      currency={currencies[Field.INPUT]}
-                      onUserInput={handleTypeInput}
-                      onMax={handleMaxInput}
-                      onCurrencySelect={handleInputSelect}
-                      otherCurrency={currencies[Field.OUTPUT]}
-                      id="swap-currency-input"
-                    />
-                    {/* <AutoColumn justify="space-between">
+              <div>TESTO TESTO TESTO</div>
+              <div>
+                <SwapCurrencyContainer>
+                  <div>
+                    <AutoColumn gap={'lg'}>
+                      <CurrencyInputPanel
+                        label={independentField === Field.OUTPUT && !showWrap && trade ? 'From (estimated)' : 'From'}
+                        value={formattedAmounts[Field.INPUT]}
+                        showMaxButton={!atMaxAmountInput}
+                        currency={currencies[Field.INPUT]}
+                        onUserInput={handleTypeInput}
+                        onMax={handleMaxInput}
+                        onCurrencySelect={handleInputSelect}
+                        otherCurrency={currencies[Field.OUTPUT]}
+                        id="swap-currency-input"
+                      />
+                      {/* <AutoColumn justify="space-between">
                       <AutoRow justify={isExpertMode ? 'space-between' : 'center'} style={{ padding: '0 1rem' }}>
                         <ArrowWrapper clickable>
                           <ArrowDown
@@ -362,165 +364,166 @@ export default function Swap() {
                         ) : null}
                       </AutoRow>
                     </AutoColumn> */}
-                  </AutoColumn>
-                </div>
-                <div>
-                  <AutoColumn gap={'lg'}>
-                    <CurrencyInputPanel
-                      value={formattedAmounts[Field.OUTPUT]}
-                      onUserInput={handleTypeOutput}
-                      label={independentField === Field.INPUT && !showWrap && trade ? 'To (estimated)' : 'To'}
-                      showMaxButton={false}
-                      currency={currencies[Field.OUTPUT]}
-                      onCurrencySelect={handleOutputSelect}
-                      otherCurrency={currencies[Field.INPUT]}
-                      id="swap-currency-output"
-                    />
+                    </AutoColumn>
+                  </div>
+                  <div>
+                    <AutoColumn gap={'lg'}>
+                      <CurrencyInputPanel
+                        value={formattedAmounts[Field.OUTPUT]}
+                        onUserInput={handleTypeOutput}
+                        label={independentField === Field.INPUT && !showWrap && trade ? 'To (estimated)' : 'To'}
+                        showMaxButton={false}
+                        currency={currencies[Field.OUTPUT]}
+                        onCurrencySelect={handleOutputSelect}
+                        otherCurrency={currencies[Field.INPUT]}
+                        id="swap-currency-output"
+                      />
 
-                    {recipient !== null && !showWrap ? (
-                      <>
-                        <AutoRow justify="space-between" style={{ padding: '0 1rem' }}>
-                          <ArrowWrapper clickable={false}>
-                            <ArrowDown size="16" color={theme.text2} />
-                          </ArrowWrapper>
-                          <LinkStyledButton id="remove-recipient-button" onClick={() => onChangeRecipient(null)}>
-                            - Remove send
+                      {recipient !== null && !showWrap ? (
+                        <>
+                          <AutoRow justify="space-between" style={{ padding: '0 1rem' }}>
+                            <ArrowWrapper clickable={false}>
+                              <ArrowDown size="16" color={theme.text2} />
+                            </ArrowWrapper>
+                            <LinkStyledButton id="remove-recipient-button" onClick={() => onChangeRecipient(null)}>
+                              - Remove send
                           </LinkStyledButton>
-                        </AutoRow>
-                        <AddressInputPanel id="recipient" value={recipient} onChange={onChangeRecipient} />
-                      </>
-                    ) : null}
+                          </AutoRow>
+                          <AddressInputPanel id="recipient" value={recipient} onChange={onChangeRecipient} />
+                        </>
+                      ) : null}
 
-                    {showWrap ? null : (
-                      <Card padding={'.25rem .75rem 0 .75rem'} borderRadius={'20px'}>
-                        <AutoColumn gap="4px">
-                          {Boolean(trade) && (
-                            <RowBetween align="center">
-                              <Text fontWeight={500} fontSize={14} color={theme.text2}>
-                                Price
+                      {showWrap ? null : (
+                        <Card padding={'.25rem .75rem 0 .75rem'} borderRadius={'20px'}>
+                          <AutoColumn gap="4px">
+                            {Boolean(trade) && (
+                              <RowBetween align="center">
+                                <Text fontWeight={500} fontSize={14} color={theme.text2}>
+                                  Price
                               </Text>
-                              <TradePrice
-                                price={trade?.executionPrice}
-                                showInverted={showInverted}
-                                setShowInverted={setShowInverted}
-                              />
-                            </RowBetween>
-                          )}
-                          {allowedSlippage !== INITIAL_ALLOWED_SLIPPAGE && (
-                            <RowBetween align="center">
-                              <ClickableText fontWeight={500} fontSize={14} color={theme.text2} onClick={toggleSettings}>
-                                Slippage Tolerance
+                                <TradePrice
+                                  price={trade?.executionPrice}
+                                  showInverted={showInverted}
+                                  setShowInverted={setShowInverted}
+                                />
+                              </RowBetween>
+                            )}
+                            {allowedSlippage !== INITIAL_ALLOWED_SLIPPAGE && (
+                              <RowBetween align="center">
+                                <ClickableText fontWeight={500} fontSize={14} color={theme.text2} onClick={toggleSettings}>
+                                  Slippage Tolerance
                               </ClickableText>
-                              <ClickableText fontWeight={500} fontSize={14} color={theme.text2} onClick={toggleSettings}>
-                                {allowedSlippage / 100}%
+                                <ClickableText fontWeight={500} fontSize={14} color={theme.text2} onClick={toggleSettings}>
+                                  {allowedSlippage / 100}%
                               </ClickableText>
-                            </RowBetween>
-                          )}
-                        </AutoColumn>
-                      </Card>
-                    )}
-                  </AutoColumn>
-                </div>
-              </SwapCurrencyContainer>
-              <BottomGrouping>
-                {!account ? (
-                  <ButtonLight onClick={toggleWalletModal}>Connect Wallet</ButtonLight>
-                ) : showWrap ? (
-                  <ButtonPrimary disabled={Boolean(wrapInputError)} onClick={onWrap}>
-                    {wrapInputError ??
-                      (wrapType === WrapType.WRAP ? 'Wrap' : wrapType === WrapType.UNWRAP ? 'Unwrap' : null)}
-                  </ButtonPrimary>
-                ) : noRoute && userHasSpecifiedInputOutput ? (
-                  <GreyCard style={{ textAlign: 'center' }}>
-                    <TYPE.main mb="4px">Insufficient liquidity for this trade.</TYPE.main>
-                  </GreyCard>
-                ) : showApproveFlow ? (
-                  <RowBetween>
-                    <ButtonConfirmed
-                      onClick={approveCallback}
-                      disabled={approval !== ApprovalState.NOT_APPROVED || approvalSubmitted}
-                      width="48%"
-                      altDisabledStyle={approval === ApprovalState.PENDING} // show solid button while waiting
-                      confirmed={approval === ApprovalState.APPROVED}
-                    >
-                      {approval === ApprovalState.PENDING ? (
-                        <AutoRow gap="6px" justify="center">
-                          Approving <Loader stroke="white" />
-                        </AutoRow>
-                      ) : approvalSubmitted && approval === ApprovalState.APPROVED ? (
-                        'Approved'
-                      ) : (
-                            'Approve ' + currencies[Field.INPUT]?.symbol
-                          )}
-                    </ButtonConfirmed>
-                    <ButtonError
-                      onClick={() => {
-                        if (isExpertMode) {
-                          handleSwap()
-                        } else {
-                          setSwapState({
-                            tradeToConfirm: trade,
-                            attemptingTxn: false,
-                            swapErrorMessage: undefined,
-                            showConfirm: true,
-                            txHash: undefined
-                          })
+                              </RowBetween>
+                            )}
+                          </AutoColumn>
+                        </Card>
+                      )}
+                    </AutoColumn>
+                  </div>
+                </SwapCurrencyContainer>
+                <BottomGrouping>
+                  {!account ? (
+                    <ButtonLight onClick={toggleWalletModal}>Connect Wallet</ButtonLight>
+                  ) : showWrap ? (
+                    <ButtonPrimary disabled={Boolean(wrapInputError)} onClick={onWrap}>
+                      {wrapInputError ??
+                        (wrapType === WrapType.WRAP ? 'Wrap' : wrapType === WrapType.UNWRAP ? 'Unwrap' : null)}
+                    </ButtonPrimary>
+                  ) : noRoute && userHasSpecifiedInputOutput ? (
+                    <GreyCard style={{ textAlign: 'center' }}>
+                      <TYPE.main mb="4px">Insufficient liquidity for this trade.</TYPE.main>
+                    </GreyCard>
+                  ) : showApproveFlow ? (
+                    <RowBetween>
+                      <ButtonConfirmed
+                        onClick={approveCallback}
+                        disabled={approval !== ApprovalState.NOT_APPROVED || approvalSubmitted}
+                        width="48%"
+                        altDisabledStyle={approval === ApprovalState.PENDING} // show solid button while waiting
+                        confirmed={approval === ApprovalState.APPROVED}
+                      >
+                        {approval === ApprovalState.PENDING ? (
+                          <AutoRow gap="6px" justify="center">
+                            Approving <Loader stroke="white" />
+                          </AutoRow>
+                        ) : approvalSubmitted && approval === ApprovalState.APPROVED ? (
+                          'Approved'
+                        ) : (
+                              'Approve ' + currencies[Field.INPUT]?.symbol
+                            )}
+                      </ButtonConfirmed>
+                      <ButtonError
+                        onClick={() => {
+                          if (isExpertMode) {
+                            handleSwap()
+                          } else {
+                            setSwapState({
+                              tradeToConfirm: trade,
+                              attemptingTxn: false,
+                              swapErrorMessage: undefined,
+                              showConfirm: true,
+                              txHash: undefined
+                            })
+                          }
+                        }}
+                        width="48%"
+                        id="swap-button"
+                        disabled={
+                          !isValid || approval !== ApprovalState.APPROVED || (priceImpactSeverity > 3 && !isExpertMode)
                         }
-                      }}
-                      width="48%"
-                      id="swap-button"
-                      disabled={
-                        !isValid || approval !== ApprovalState.APPROVED || (priceImpactSeverity > 3 && !isExpertMode)
-                      }
-                      error={isValid && priceImpactSeverity > 2}
-                    >
-                      <Text fontSize={16} fontWeight={500}>
-                        {priceImpactSeverity > 3 && !isExpertMode
-                          ? `Price Impact High`
-                          : `Swap${priceImpactSeverity > 2 ? ' Anyway' : ''}`}
-                      </Text>
-                    </ButtonError>
-                  </RowBetween>
-                ) : (
-                          <ButtonError
-                            onClick={() => {
-                              if (isExpertMode) {
-                                handleSwap()
-                              } else {
-                                setSwapState({
-                                  tradeToConfirm: trade,
-                                  attemptingTxn: false,
-                                  swapErrorMessage: undefined,
-                                  showConfirm: true,
-                                  txHash: undefined
-                                })
-                              }
-                            }}
-                            id="swap-button"
-                            disabled={!isValid || (priceImpactSeverity > 3 && !isExpertMode) || !!swapCallbackError}
-                            error={isValid && priceImpactSeverity > 2 && !swapCallbackError}
-                          >
-                            <Text fontSize={20} fontWeight={500}>
-                              {swapInputError
-                                ? swapInputError
-                                : priceImpactSeverity > 3 && !isExpertMode
-                                  ? `Price Impact Too High`
-                                  : `Swap${priceImpactSeverity > 2 ? ' Anyway' : ''}`}
-                            </Text>
-                          </ButtonError>
-                        )}
-                {showApproveFlow && (
-                  <Column style={{ marginTop: '1rem' }}>
-                    <ProgressSteps steps={[approval === ApprovalState.APPROVED]} />
-                  </Column>
-                )}
-                {isExpertMode && swapErrorMessage ? <SwapCallbackError error={swapErrorMessage} /> : null}
-                {/* {betterTradeLinkVersion ? (
+                        error={isValid && priceImpactSeverity > 2}
+                      >
+                        <Text fontSize={16} fontWeight={500}>
+                          {priceImpactSeverity > 3 && !isExpertMode
+                            ? `Price Impact High`
+                            : `Swap${priceImpactSeverity > 2 ? ' Anyway' : ''}`}
+                        </Text>
+                      </ButtonError>
+                    </RowBetween>
+                  ) : (
+                            <ButtonError
+                              onClick={() => {
+                                if (isExpertMode) {
+                                  handleSwap()
+                                } else {
+                                  setSwapState({
+                                    tradeToConfirm: trade,
+                                    attemptingTxn: false,
+                                    swapErrorMessage: undefined,
+                                    showConfirm: true,
+                                    txHash: undefined
+                                  })
+                                }
+                              }}
+                              id="swap-button"
+                              disabled={!isValid || (priceImpactSeverity > 3 && !isExpertMode) || !!swapCallbackError}
+                              error={isValid && priceImpactSeverity > 2 && !swapCallbackError}
+                            >
+                              <Text fontSize={20} fontWeight={500}>
+                                {swapInputError
+                                  ? swapInputError
+                                  : priceImpactSeverity > 3 && !isExpertMode
+                                    ? `Price Impact Too High`
+                                    : `Swap${priceImpactSeverity > 2 ? ' Anyway' : ''}`}
+                              </Text>
+                            </ButtonError>
+                          )}
+                  {showApproveFlow && (
+                    <Column style={{ marginTop: '1rem' }}>
+                      <ProgressSteps steps={[approval === ApprovalState.APPROVED]} />
+                    </Column>
+                  )}
+                  {isExpertMode && swapErrorMessage ? <SwapCallbackError error={swapErrorMessage} /> : null}
+                  {/* {betterTradeLinkVersion ? (
                   <BetterTradeLink version={betterTradeLinkVersion} />
                 ) : toggledVersion !== DEFAULT_VERSION && defaultTrade ? (
                   <DefaultVersionLink />
                 ) : null} */}
-              </BottomGrouping>
+                </BottomGrouping>
+              </div>
             </div>
           </SwapGridContainer>
         </Wrapper>
