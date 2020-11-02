@@ -11,7 +11,13 @@ export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 type ChainTokenList = {
   readonly [chainId in ChainId]: Token[]
 }
-
+export const USD = new Token(
+  ChainId.MAINNET,
+  '0x44086035439E676c02D411880FcCb9837CE37c57',
+  18,
+  'USD',
+  'unified Stable Dollar'
+)
 export const DAI = new Token(ChainId.MAINNET, '0x6B175474E89094C44Da98b954EedeAC495271d0F', 18, 'DAI', 'Dai Stablecoin')
 export const USDC = new Token(ChainId.MAINNET, '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', 6, 'USDC', 'USD//C')
 export const USDT = new Token(ChainId.MAINNET, '0xdAC17F958D2ee523a2206206994597C13D831ec7', 6, 'USDT', 'Tether USD')
@@ -59,6 +65,7 @@ const WETH_ONLY: ChainTokenList = {
 export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
   ...WETH_ONLY,
   [ChainId.MAINNET]: [...WETH_ONLY[ChainId.MAINNET], DAI, USDC, USDT, COMP, MKR]
+  //[ChainId.MAINNET]: [...WETH_ONLY[ChainId.MAINNET]]
 }
 
 /**

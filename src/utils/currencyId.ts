@@ -1,7 +1,8 @@
-import { Currency, ETHER, Token } from '@uniswap/sdk'
+import { Currency, Token } from '@uniswap/sdk'
+import { USD } from '../constants/index'
 
 export function currencyId(currency: Currency): string {
-  if (currency === ETHER) return 'ETH'
+  if (currency === USD) return 'USD'
   if (currency instanceof Token) return currency.address
   throw new Error('invalid currency')
 }
