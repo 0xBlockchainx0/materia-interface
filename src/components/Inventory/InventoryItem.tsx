@@ -1,6 +1,5 @@
 import React, { useContext } from 'react'
 import styled, { ThemeContext } from 'styled-components'
-import listItemBackground from '../../assets/images/list-item.png'
 import { TYPE } from '../../theme'
 
 const Item = styled.div`
@@ -8,7 +7,7 @@ const Item = styled.div`
   margin-bottom: 0.15rem;
   width: 100%;
   height: 15%;
-  background: url(${listItemBackground}) no-repeat;
+  background-color: rgba(0, 27, 49, 0.5);
   background-size: cover;
   box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
     0px 24px 32px rgba(0, 0, 0, 0.01);
@@ -72,13 +71,13 @@ export default function InventoryItem({
           </BalanceRow>
         </div>
         <ButtonColumn>
-        <TYPE.body color={theme.text1} fontWeight={500} fontSize={14}>
-          {
-            wrapped
-              ? 'UN-WRAP'
-              : 'WRAP'
-          }
-        </TYPE.body>
+          <TYPE.body color={theme.text1} fontWeight={500} fontSize={14}>
+            {
+              wrapped
+                ? 'UN-WRAP'
+                : 'WRAP'
+            }
+          </TYPE.body>
         </ButtonColumn>
       </GridContainer>
     </Item>

@@ -19,7 +19,7 @@ export default function Inventory() {
   return (
     <InventoryContainer>
       {tokens.map((token) => {
-        return (<InventoryItem tokenName={token.tokenName} tokenSymbol={token.tokenSymbol} tokenType={token.tokenType} balance={token.balance} wrapped={token.wrapped} />)
+        return (<InventoryItem key={token.tokenSymbol} tokenName={token.tokenName} tokenSymbol={token.tokenSymbol} tokenType={token.tokenType} balance={token.balance} wrapped={token.wrapped} />)
       })}
     </InventoryContainer>
   )
