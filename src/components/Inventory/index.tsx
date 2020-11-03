@@ -5,6 +5,8 @@ import InventoryItem from './InventoryItem'
 const InventoryContainer = styled.div`
   margin-right: 1rem;
   padding-top: 0.5rem;
+  overflow-y: auto;
+  max-height: 530px;
 `
 
 export default function Inventory() {

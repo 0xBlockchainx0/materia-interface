@@ -5,8 +5,9 @@ import { darken, lighten } from 'polished'
 import { RowBetween } from '../Row'
 import { ChevronDown } from 'react-feather'
 import { Button as RebassButton, ButtonProps } from 'rebass/styled-components'
+import swapButtonBg from '../../assets/images/button-background.png'
 
-const Base = styled(RebassButton)<{
+const Base = styled(RebassButton) <{
   padding?: string
   width?: string
   borderRadius?: string
@@ -89,6 +90,59 @@ export const ButtonLight = styled(Base)`
       border: 1px solid transparent;
       outline: none;
     }
+  }
+`
+
+export const ButtonMateriaLight = styled(ButtonLight)`
+  width: auto;    
+  background-color: transparent;
+  color: ${({ theme }) => theme.text1};
+  &:focus {
+    box-shadow: none;
+    background-color: transparent;
+  }
+  &:hover {
+    background-color: transparent;
+  }
+  &:active {
+    box-shadow: none;
+    background-color: transparent;
+  }
+  :disabled {
+    opacity: 0.4;
+    :hover {
+      cursor: auto;
+      background-color: transparent;
+      box-shadow: none;
+      border: 1px solid transparent;
+      outline: none;
+    }
+  }
+`
+
+export const ButtonMateriaPrimary = styled(ButtonPrimary)`
+  width: auto;    
+  background-color: transparent;
+  color: ${({ theme }) => theme.text1};
+  &:focus {
+    box-shadow: none;
+    background-color: transparent;
+  }
+  &:hover {
+    background-color: transparent;
+  }
+  &:active {
+    box-shadow: none;
+    background-color: transparent;
+  }
+  &:disabled {
+    background-color: transparent;
+    color: ${({ theme }) => theme.text1};
+    cursor: auto;
+    box-shadow: none;
+    border: 1px solid transparent;
+    outline: none;
+    opacity: ${({ altDisabledStyle }) => (altDisabledStyle ? '0.7' : '1')};
   }
 `
 
@@ -259,6 +313,23 @@ const ButtonErrorStyle = styled(Base)`
   }
 `
 
+const ButtonMateriaErrorStyle = styled(ButtonErrorStyle)`
+  width: auto;
+`
+
+export const SwapButton = styled(ButtonMateriaPrimary)`
+  width: 10%;
+  margin: 10px;
+  border: none;
+  border-radius: unset;
+  background-image: url(${swapButtonBg});
+  background-size: 100% 100%;
+
+  & > div {
+    display: none;
+  }
+`;
+
 export function ButtonConfirmed({
   confirmed,
   altDisabledStyle,
@@ -276,6 +347,31 @@ export function ButtonError({ error, ...rest }: { error?: boolean } & ButtonProp
     return <ButtonErrorStyle {...rest} />
   } else {
     return <ButtonPrimary {...rest} />
+  }
+}
+
+export function ButtonMateriaConfirmed({
+  confirmed,
+  altDisabledStyle,
+  ...rest
+}: { confirmed?: boolean; altDisabledStyle?: boolean } & ButtonProps) {
+  if (confirmed) {
+    return <ButtonConfirmedStyle {...rest} />
+  } else {
+    return <ButtonMateriaPrimary {...rest} altDisabledStyle={altDisabledStyle} />
+  }
+}
+
+export function ButtonMateriaError({ showSwap, error, ...rest }: { showSwap?: boolean, error?: boolean } & ButtonProps) {
+  if (error) {
+    return <ButtonMateriaErrorStyle {...rest} />
+  } else {
+    if (showSwap) {
+      return <SwapButton {...rest} />
+    }
+    else {
+      return <ButtonMateriaPrimary {...rest} />
+    }
   }
 }
 

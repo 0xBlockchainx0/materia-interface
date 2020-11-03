@@ -36,7 +36,7 @@ export const Footer = styled.div`
   margin: 0 auto;
 `
 
-const ButtonbgItem = styled.img`
+export const ButtonBgItem = styled.img`
   width: 10%;
   margin: 0px 5px;
 `;
@@ -144,7 +144,7 @@ export default function AppBody({ children }: { children: React.ReactNode }) {
       <CornerBox/>
         <BodyWrapper>{children}</BodyWrapper>
       <Footer>
-        <Center>Select two token. Press <ButtonbgItem src={buttonBg}/> button to swap.</Center>
+        <Center>Select two token. Press <ButtonBgItem src={buttonBg}/> button to swap.</Center>
       </Footer>
     </StyledBox>
   )
