@@ -142,10 +142,11 @@ export default function AppBody({ children }: { children: React.ReactNode }) {
   return (
     <StyledBox>
       <CornerBox/>
-        <BodyWrapper>{children}</BodyWrapper>
-      <Footer>
+        <BodyWrapper>{children}
+        <Footer>
         <Center>Select two token. Press <ButtonBgItem src={buttonBg}/> button to swap.</Center>
       </Footer>
+        </BodyWrapper>
     </StyledBox>
   )
 }
