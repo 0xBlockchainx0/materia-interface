@@ -10,13 +10,17 @@ export const BodyWrapper = styled.div`
   // max-width: 1020px;
   min-height: 620px;
   width: 100%;
-  background: url(${appBackground}) no-repeat;
+  // background: url(${appBackground}) no-repeat;
   background-size: cover;
   box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
     0px 24px 32px rgba(0, 0, 0, 0.01);
   border-radius: 0px;
   padding: 1rem;
   cursor: auto;
+  background: rgb(0,77,161, 0.7);
+  background: -moz-linear-gradient(168deg, rgba(0,77,161,0.7) 0%, rgba(5,30,64,0.7) 100%);
+  background: -webkit-linear-gradient(168deg, rgba(0,77,161,0.7) 0%, rgba(5,30,64,0.7) 100%);
+  background: linear-gradient(168deg, rgba(0,77,161,0.7) 0%, rgba(5,30,64,0.7) 100%);
 `
 
 export const Center = styled.div`
@@ -138,7 +142,7 @@ export default function AppBody({ children }: { children: React.ReactNode }) {
   return (
     <StyledBox>
       <CornerBox/>
-      <BodyWrapper>{children}</BodyWrapper>
+        <BodyWrapper>{children}</BodyWrapper>
       <Footer>
         <Center>Select two token. Press <ButtonbgItem src={buttonBg}/> button to swap.</Center>
       </Footer>
