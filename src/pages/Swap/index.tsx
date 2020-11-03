@@ -68,7 +68,7 @@ const SwapGridContainer = styled.div`
 
 const SwapCurrencyContainer = styled.div`
   display: grid;
-  grid-template-columns: 40% 20% 40%;
+  grid-template-columns: 37.5% 25% 37.5%;
 `
 
 const Divider = styled.div`
