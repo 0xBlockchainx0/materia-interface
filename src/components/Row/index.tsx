@@ -11,6 +11,11 @@ const Row = styled(Box)<{ align?: string; padding?: string; border?: string; bor
   border-radius: ${({ borderRadius }) => borderRadius};
 `
 
+export const RowCenter = styled(Row)`
+  justify-content: center;
+  display: flex;
+`
+
 export const RowBetween = styled(Row)`
   justify-content: space-between;
 `

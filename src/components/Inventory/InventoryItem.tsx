@@ -1,9 +1,11 @@
 import React, { useContext } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 import { TYPE } from '../../theme'
+import { ButtonMateriaPrimary } from '../Button'
 
 const Item = styled.div`
   padding: 1rem;
+  padding-right: 0.25rem;
   margin-bottom: 0.15rem;
   width: 100%;
   height: 15%;
@@ -15,7 +17,7 @@ const Item = styled.div`
 
 const GridContainer = styled.div`
   display: grid;
-  grid-template-columns: 80% auto;
+  grid-template-columns: 70% auto;
 `
 
 const ButtonColumn = styled.div`
@@ -71,13 +73,15 @@ export default function InventoryItem({
           </BalanceRow>
         </div>
         <ButtonColumn>
-          <TYPE.body color={theme.text1} fontWeight={500} fontSize={14}>
+          <ButtonMateriaPrimary>
+            {/* <TYPE.body color={theme.text1} fontWeight={500} fontSize={14}> */}
             {
               wrapped
                 ? 'UN-WRAP'
                 : 'WRAP'
             }
-          </TYPE.body>
+            {/* </TYPE.body> */}
+          </ButtonMateriaPrimary>
         </ButtonColumn>
       </GridContainer>
     </Item>

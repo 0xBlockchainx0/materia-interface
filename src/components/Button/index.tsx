@@ -94,53 +94,67 @@ export const ButtonLight = styled(Base)`
 `
 
 export const ButtonMateriaLight = styled(ButtonLight)`
-  width: auto;    
-  background-color: transparent;
+  width: auto;
   color: ${({ theme }) => theme.text1};
+  background-color: rgb(0, 0, 0, 0.5);
+  border: 2px solid ${({ theme }) => theme.cyan1};
+  padding: 5px 10px;
+  border-radius: 35px;
+  text-transform: uppercase;
   &:focus {
     box-shadow: none;
-    background-color: transparent;
+    background-color: rgb(0, 0, 0, 0.5);
+    border: 2px solid ${({ theme }) => theme.cyan1};
   }
   &:hover {
-    background-color: transparent;
+    background-color: rgb(0, 0, 0, 0.5);
+    border: 2px solid ${({ theme }) => theme.cyan1};
   }
   &:active {
     box-shadow: none;
-    background-color: transparent;
+    background-color: rgb(0, 0, 0, 0.5);
+    border: 2px solid ${({ theme }) => theme.cyan1};
   }
   :disabled {
     opacity: 0.4;
     :hover {
       cursor: auto;
-      background-color: transparent;
+      background-color: rgb(0, 0, 0, 0.5);
+      border: 2px solid ${({ theme }) => theme.cyan1};
       box-shadow: none;
-      border: 1px solid transparent;
       outline: none;
     }
   }
 `
 
 export const ButtonMateriaPrimary = styled(ButtonPrimary)`
-  width: auto;    
-  background-color: transparent;
+  width: auto;
+  background-color: rgb(0, 0, 0, 0.5);
+  border: 2px solid ${({ theme }) => theme.cyan1};
   color: ${({ theme }) => theme.text1};
+  padding: 5px 10px;
+  border-radius: 35px;
+  text-transform: uppercase;
   &:focus {
     box-shadow: none;
-    background-color: transparent;
+    background-color: rgb(0, 0, 0, 0.5);
+    border: 2px solid ${({ theme }) => theme.cyan1};
   }
   &:hover {
-    background-color: transparent;
+    background-color: rgb(0, 0, 0, 0.5);
+    border: 2px solid ${({ theme }) => theme.cyan1};
   }
   &:active {
     box-shadow: none;
-    background-color: transparent;
+    background-color: rgb(0, 0, 0, 0.5);
+    border: 2px solid ${({ theme }) => theme.cyan1};
   }
   &:disabled {
-    background-color: transparent;
+    background-color: rgb(0, 0, 0, 0.5);
+    border: 2px solid ${({ theme }) => theme.cyan1};
     color: ${({ theme }) => theme.text1};
     cursor: auto;
     box-shadow: none;
-    border: 1px solid transparent;
     outline: none;
     opacity: ${({ altDisabledStyle }) => (altDisabledStyle ? '0.7' : '1')};
   }
@@ -315,16 +329,34 @@ const ButtonErrorStyle = styled(Base)`
 
 const ButtonMateriaErrorStyle = styled(ButtonErrorStyle)`
   width: auto;
+  padding: 5px 10px;
+  border-radius: 35px;
 `
 
 export const SwapButton = styled(ButtonMateriaPrimary)`
   width: 10%;
-  margin: 10px;
   border: none;
   border-radius: unset;
+  background-color: transparent;
   background-image: url(${swapButtonBg});
   background-size: 100% 100%;
-
+  padding: 18px;
+  &:focus {
+    background-color: transparent;
+    border: none;
+  }
+  &:hover {
+    background-color: transparent;
+    border: none;
+  }
+  &:active {
+    background-color: transparent;
+    border: none;
+  }
+  &:disabled {
+    background-color: transparent;
+    border: none;
+  }
   & > div {
     display: none;
   }
@@ -351,27 +383,43 @@ export function ButtonError({ error, ...rest }: { error?: boolean } & ButtonProp
 }
 
 export function ButtonMateriaConfirmed({
+  hide,
   confirmed,
   altDisabledStyle,
   ...rest
-}: { confirmed?: boolean; altDisabledStyle?: boolean } & ButtonProps) {
-  if (confirmed) {
-    return <ButtonConfirmedStyle {...rest} />
-  } else {
-    return <ButtonMateriaPrimary {...rest} altDisabledStyle={altDisabledStyle} />
+}: { hide?: boolean; confirmed?: boolean; altDisabledStyle?: boolean } & ButtonProps) {
+  if (!hide) {
+    if (confirmed) {
+      return <ButtonConfirmedStyle {...rest} />
+    } else {
+      return <ButtonMateriaPrimary {...rest} altDisabledStyle={altDisabledStyle} />
+    }
+  }
+  else {
+    return <></>
   }
 }
 
-export function ButtonMateriaError({ showSwap, error, ...rest }: { showSwap?: boolean, error?: boolean } & ButtonProps) {
-  if (error) {
-    return <ButtonMateriaErrorStyle {...rest} />
-  } else {
-    if (showSwap) {
-      return <SwapButton {...rest} />
+export function ButtonMateriaError({
+  hide,
+  showSwap,
+  error,
+  ...rest
+}: { hide?: boolean; showSwap?: boolean, error?: boolean } & ButtonProps) {
+  if (!hide || showSwap) {
+    if (error) {
+      return <ButtonMateriaErrorStyle {...rest} />
+    } else {
+      if (showSwap) {
+        return <SwapButton {...rest} />
+      }
+      else {
+        return <ButtonMateriaPrimary {...rest} />
+      }
     }
-    else {
-      return <ButtonMateriaPrimary {...rest} />
-    }
+  }
+  else {
+    return <></>
   }
 }
 

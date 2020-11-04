@@ -11,7 +11,7 @@ import Column, { AutoColumn } from '../../components/Column'
 import ConfirmSwapModal from '../../components/swap/ConfirmSwapModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import { SwapPoolTabs } from '../../components/NavigationTabs'
-import { AutoRow, RowBetween } from '../../components/Row'
+import { AutoRow, RowBetween, RowCenter } from '../../components/Row'
 import AdvancedSwapDetailsDropdown from '../../components/swap/AdvancedSwapDetailsDropdown'
 // import BetterTradeLink, { DefaultVersionLink } from '../../components/swap/BetterTradeLink'
 import confirmPriceImpactWithoutFee from '../../components/swap/confirmPriceImpactWithoutFee'
@@ -481,10 +481,11 @@ export default function Swap() {
                         <TYPE.body color={theme.text1} fontSize={20} fontWeight={500}>Insufficient liquidity for this trade</TYPE.body>
                       </SwapGreyCard>
                     ) : showApproveFlow ? (
-                      <RowBetween>
+                      <RowCenter>
                         <ButtonMateriaConfirmed
                           onClick={approveCallback}
                           disabled={approval !== ApprovalState.NOT_APPROVED || approvalSubmitted}
+                          hide={approval !== ApprovalState.NOT_APPROVED || approvalSubmitted}
                           width="48%"
                           altDisabledStyle={approval === ApprovalState.PENDING} // show solid button while waiting
                           confirmed={approval === ApprovalState.APPROVED}
@@ -515,9 +516,8 @@ export default function Swap() {
                           }}
                           width="48%"
                           id="swap-button"
-                          disabled={
-                            !isValid || approval !== ApprovalState.APPROVED || (priceImpactSeverity > 3 && !isExpertMode)
-                          }
+                          disabled={!isValid || approval !== ApprovalState.APPROVED || (priceImpactSeverity > 3 && !isExpertMode)}
+                          hide={!isValid || approval !== ApprovalState.APPROVED || (priceImpactSeverity > 3 && !isExpertMode)}
                           error={isValid && priceImpactSeverity > 2}
                           showSwap={!(!isValid || approval !== ApprovalState.APPROVED || (priceImpactSeverity > 3 && !isExpertMode))}
                         >
@@ -527,7 +527,7 @@ export default function Swap() {
                               : `Swap${priceImpactSeverity > 2 ? ' Anyway' : ''}`}
                           </Text>
                         </ButtonMateriaError>
-                      </RowBetween>
+                      </RowCenter>
                     ) : (
                               <ButtonMateriaError
                                 onClick={() => {
@@ -557,11 +557,11 @@ export default function Swap() {
                                 </Text>
                               </ButtonMateriaError>
                             )}
-                    {showApproveFlow && (
+                    {/* {showApproveFlow && (
                       <Column style={{ marginTop: '1rem' }}>
                         <ProgressSteps steps={[approval === ApprovalState.APPROVED]} />
                       </Column>
-                    )}
+                    )} */}
                     {isExpertMode && swapErrorMessage ? <SwapCallbackError error={swapErrorMessage} /> : null}
                     {/* {betterTradeLinkVersion ? (
                       <BetterTradeLink version={betterTradeLinkVersion} />

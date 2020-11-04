@@ -23,7 +23,12 @@ export const GreyCard = styled(Card)`
 `
 
 export const SwapGreyCard = styled(Card)`
-  background-color: transparent;
+  width: auto;
+  background-color: rgb(0, 0, 0, 0.5);
+  border: 2px solid ${({ theme }) => theme.cyan1};
+  padding: 5px 10px;
+  border-radius: 35px;
+  text-transform: uppercase;
 `
 
 export const OutlineCard = styled(Card)`
