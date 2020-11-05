@@ -1,7 +1,9 @@
 import { JSBI } from '@uniswap/sdk';
-import React from 'react'
-import styled from 'styled-components'
+import React, { useContext } from 'react'
+import styled, { ThemeContext } from 'styled-components'
+import { useAllTokenList } from '../../state/lists/hooks';
 import { useUserTokens } from '../../state/wallet/hooks';
+import { TYPE } from '../../theme';
 import InventoryItem from './InventoryItem'
 
 const InventoryContainer = styled.div`
@@ -12,23 +14,20 @@ const InventoryContainer = styled.div`
 `
 
 export default function Inventory() {
+  const theme = useContext(ThemeContext)
   const userTokens = useUserTokens()
-  const tokens = [
-    { tokenName: 'Ethereum', tokenSymbol: 'ETH', tokenType: null, balance: '3.2351', wrapped: false },
-    { tokenName: 'DFOHub', tokenSymbol: 'BUIDL', tokenType: 'ERC1155', balance: '100', wrapped: false },
-    { tokenName: 'Unifi', tokenSymbol: 'UNIFI', tokenType: 'ERC1155', balance: '3,500.4989', wrapped: false },
-    { tokenName: 'mEthereum', tokenSymbol: 'mETH', tokenType: 'ETHITEM', balance: '15', wrapped: true },
-    { tokenName: 'Magician Cat', tokenSymbol: 'MagCat', tokenType: 'ETHITEM', balance: '5', wrapped: true },
-  ]
-
+  
   return (
     <InventoryContainer>
-      {/* {tokens.map((token) => {
-        return (<InventoryItem key={token.tokenSymbol} tokenName={token.tokenName} tokenSymbol={token.tokenSymbol} tokenType={token.tokenType} balance={token.balance} wrapped={token.wrapped} />)
-      })} */}
-      {userTokens.map((userToken: any) => {
-        return (<InventoryItem key={userToken.token.symbol} tokenName={userToken.token.name} tokenSymbol={userToken.token.symbol} tokenType={''} balance={JSBI.BigInt(userToken.raw).toString()} wrapped={false} />)
-      })}
+      {
+        userTokens && userTokens.length > 0 ? (
+          userTokens.map((userToken: any) => {
+            return (<InventoryItem key={userToken.token.symbol} tokenName={userToken.token.name} tokenSymbol={userToken.token.symbol} tokenType={''} balance={userToken.toSignificant(4)} wrapped={false} />)
+          })
+        )
+          :
+          (<TYPE.body color={theme.text1} fontWeight={400} fontSize={16}>No tokens present in your inventory</TYPE.body>)
+      }
     </InventoryContainer>
   )
 }
