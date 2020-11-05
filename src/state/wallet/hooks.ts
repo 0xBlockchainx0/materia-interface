@@ -91,6 +91,23 @@ export function useTokenBalances(
   return useTokenBalancesWithLoadingIndicator(address, tokens)[0]
 }
 
+export function useUserTokens(): any {
+  const { account } = useActiveWeb3React()
+  const allTokens = useAllTokens()
+  const allTokensArray = useMemo(() => Object.values(allTokens ?? {}), [allTokens])
+  const balances = useTokenBalances(account ?? undefined, allTokensArray)
+  let filteredBalances: Array<any> = []
+
+  Object.keys(balances).forEach(currency => {
+    const balance = balances[currency]?.raw
+    if(balance && JSBI.greaterThan(balance, JSBI.BigInt(0))) {
+      filteredBalances.push(balances[currency])
+    }
+  });
+
+  return filteredBalances ?? []
+}
+
 // get the balance for a single token/account combo
 export function useTokenBalance(account?: string, token?: Token): TokenAmount | undefined {
   const tokenBalances = useTokenBalances(account, [token])
