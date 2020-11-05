@@ -2,7 +2,7 @@ import { UNI } from './../../constants/index'
 import { Currency, CurrencyAmount, ETHER, JSBI, Token, TokenAmount } from '@uniswap/sdk'
 import { useMemo } from 'react'
 import ERC20_INTERFACE from '../../constants/abis/erc20'
-import { useAllTokens } from '../../hooks/Tokens'
+import { useAllListTokens, useAllTokens } from '../../hooks/Tokens'
 import { useActiveWeb3React } from '../../hooks'
 import { useMulticallContract } from '../../hooks/useContract'
 import { isAddress } from '../../utils'
@@ -93,7 +93,7 @@ export function useTokenBalances(
 
 export function useUserTokens(): any {
   const { account } = useActiveWeb3React()
-  const allTokens = useAllTokens()
+  const allTokens = useAllListTokens()
   const allTokensArray = useMemo(() => Object.values(allTokens ?? {}), [allTokens])
   const balances = useTokenBalances(account ?? undefined, allTokensArray)
   let filteredBalances: Array<any> = []

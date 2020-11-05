@@ -70,6 +70,34 @@ export function listToTokenMap(list: TokenList): TokenAddressMap {
   return map
 }
 
+export function listToAllTokenMap(list: TokenList): TokenAddressMap {
+  const result = listCache?.get(list)
+  if (result) return result
+
+  const map = list.tokens.reduce<TokenAddressMap>(
+    (tokenMap, tokenInfo) => {
+      const tags: TagInfo[] =
+        tokenInfo.tags
+          ?.map(tagId => {
+            if (!list.tags?.[tagId]) return undefined
+            return { ...list.tags[tagId], id: tagId }
+          })
+          ?.filter((x): x is TagInfo => Boolean(x)) ?? []
+      const token = new WrappedTokenInfo(tokenInfo, tags)
+      return {
+        ...tokenMap,
+        [token.chainId]: {
+          ...tokenMap[token.chainId],
+          [token.address]: token
+        }
+      }
+    },
+    { ...EMPTY_LIST }
+  )
+  listCache?.set(list, map)
+  return map
+}
+
 export function useTokenList(url: string | undefined): TokenAddressMap {
   const lists = useSelector<AppState, AppState['lists']['byUrl']>(state => state.lists.byUrl)
   return useMemo(() => {
@@ -102,6 +130,17 @@ export function useSelectedListInfo(): { current: TokenList | null; pending: Tok
     pending: list?.pendingUpdate ?? null,
     loading: list?.loadingRequestId !== null
   }
+}
+
+export function useAllTokenList(): TokenAddressMap {
+  const tokenLists = useAllLists()
+  const allTokenAddressMap = EMPTY_LIST
+
+  tokenLists.map((list) => {
+    Object.assign(allTokenAddressMap, listToAllTokenMap(list))
+  })
+
+  return allTokenAddressMap;
 }
 
 // returns all downloaded current lists
