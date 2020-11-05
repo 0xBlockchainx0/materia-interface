@@ -115,10 +115,10 @@ const StyledBalanceMax = styled.button`
   margin-right: 0.5rem;
   color: ${({ theme }) => theme.cyan1};
   :hover {
-    border: 1px solid ${({ theme }) => theme.cyan1};
+    border: 1px solid ${({ theme }) => theme.cyan2};
   }
   :focus {
-    border: 1px solid ${({ theme }) => theme.cyan1};
+    border: 1px solid ${({ theme }) => theme.cyan2};
     outline: none;
   }
 
