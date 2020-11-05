@@ -14,9 +14,6 @@ import SwapRoute from './SwapRoute'
 
 const InfoLink = styled(ExternalLink)`
   width: 100%;
-  border: 1px solid ${({ theme }) => theme.bg3};
-  padding: 6px 6px;
-  border-radius: 8px;
   text-align: center;
   font-size: 14px;
   color: ${({ theme }) => theme.text1};
@@ -33,7 +30,7 @@ function TradeSummary({ trade, allowedSlippage }: { trade: Trade; allowedSlippag
       <AutoColumn style={{ padding: '0 20px' }}>
         <RowBetween>
           <RowFixed>
-            <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
+            <TYPE.black fontSize={14} fontWeight={400} color={theme.cyan1}>
               {isExactIn ? 'Minimum received' : 'Maximum sold'}
             </TYPE.black>
             <QuestionHelper text="Your transaction will revert if there is a large, unfavorable price movement before it is confirmed." />
@@ -50,7 +47,7 @@ function TradeSummary({ trade, allowedSlippage }: { trade: Trade; allowedSlippag
         </RowBetween>
         <RowBetween>
           <RowFixed>
-            <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
+            <TYPE.black fontSize={14} fontWeight={400} color={theme.cyan1}>
               Price Impact
             </TYPE.black>
             <QuestionHelper text="The difference between the market price and estimated price due to trade size." />
@@ -60,7 +57,7 @@ function TradeSummary({ trade, allowedSlippage }: { trade: Trade; allowedSlippag
 
         <RowBetween>
           <RowFixed>
-            <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
+            <TYPE.black fontSize={14} fontWeight={400} color={theme.cyan1}>
               Liquidity Provider Fee
             </TYPE.black>
             <QuestionHelper text="A portion of each trade (0.30%) goes to liquidity providers as a protocol incentive." />
@@ -90,7 +87,7 @@ export function AdvancedSwapDetails({ trade }: AdvancedSwapDetailsProps) {
       {trade && (
         <>
           <TradeSummary trade={trade} allowedSlippage={allowedSlippage} />
-          {showRoute && (
+          {/* {showRoute && (
             <>
               <SectionBreak />
               <AutoColumn style={{ padding: '0 24px' }}>
@@ -103,10 +100,10 @@ export function AdvancedSwapDetails({ trade }: AdvancedSwapDetailsProps) {
                 <SwapRoute trade={trade} />
               </AutoColumn>
             </>
-          )}
+          )} */}
           <AutoColumn style={{ padding: '0 24px' }}>
             <InfoLink href={'https://uniswap.info/pair/' + trade.route.pairs[0].liquidityToken.address} target="_blank">
-              View pair analytics ↗
+              View pair analytics
             </InfoLink>
           </AutoColumn>
         </>

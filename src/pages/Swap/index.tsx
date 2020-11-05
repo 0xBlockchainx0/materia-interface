@@ -571,11 +571,15 @@ export default function Swap() {
                   </SwapButton>
                 </BottomGrouping>
               </div>
+              <AdvancedSwapDetailsDropdown trade={trade} />
+
             </SwapPageContainer>
+
           </SwapGridContainer>
+          {/* <AdvancedSwapDetailsDropdown trade={trade} /> */}
+
         </Wrapper>
       </AppBody>
-      {/* <AdvancedSwapDetailsDropdown trade={trade} /> */}
     </>
   )
 }

@@ -4,19 +4,18 @@ import { useLastTruthy } from '../../hooks/useLast'
 import { AdvancedSwapDetails, AdvancedSwapDetailsProps } from './AdvancedSwapDetails'
 
 const AdvancedDetailsFooter = styled.div<{ show: boolean }>` 
-  padding-top: calc(16px + 2rem);
-  padding-bottom: ${({ show }) => show ? '20px' : ''};
-  margin-top: -2rem;
+  padding-bottom: ${({ show }) => show ? '10px' : ''};
+  padding-top: ${({ show }) => show ? '10px' : ''};
   width: 100%;
-  max-width: 400px;
-  border-bottom-left-radius: 20px;
-  border-bottom-right-radius: 20px;
   color: ${({ theme }) => theme.text2};
   background-color: ${({ theme }) => theme.advancedBG};
   z-index: -1;
-
+  border: ${({ show }) => (show ? '1px solid #1e9de3' : '')};
   transform: ${({ show }) => (show ? 'translateY(0%)' : 'translateY(-100%)')};
   transition: transform 300ms ease-in-out;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden; 
+  display: ${({ show }) => (show ? 'block' : 'none')};
 `
 
 export default function AdvancedSwapDetailsDropdown({ trade, ...rest }: AdvancedSwapDetailsProps) {
