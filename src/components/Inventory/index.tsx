@@ -22,7 +22,7 @@ export default function Inventory() {
       {
         userTokens && userTokens.length > 0 ? (
           userTokens.map((userToken: any) => {
-            return (<InventoryItem key={userToken.token.symbol} tokenName={userToken.token.name} tokenSymbol={userToken.token.symbol} tokenType={''} balance={userToken.toSignificant(4)} wrapped={false} />)
+            return (<InventoryItem key={userToken.token.symbol} tokenName={userToken.token.name} tokenSymbol={userToken.token.symbol} tokenType={''} balance={userToken.toExact(4)} wrapped={false} />)
           })
         )
           :
