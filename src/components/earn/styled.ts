@@ -10,8 +10,8 @@ export const TextBox = styled.div`
   align-items: center;
   justify-content: center;
   padding: 4px 12px;
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  border-radius: 20px;
+  border: 1px solid ${({ theme }) => theme.cyan2};
+  // border-radius: 20px;
   width: fit-content;
   justify-self: flex-end;
 `

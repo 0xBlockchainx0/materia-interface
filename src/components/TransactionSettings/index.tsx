@@ -19,22 +19,23 @@ enum DeadlineError {
 }
 
 const FancyButton = styled.button`
+border: 1px solid ${({ theme }) => theme.cyan1};
   color: ${({ theme }) => theme.text1};
   align-items: center;
   height: 2rem;
-  border-radius: 36px;
+  border-radius: 35px;
   font-size: 1rem;
   width: auto;
   min-width: 3.5rem;
-  border: 1px solid ${({ theme }) => theme.bg3};
+  // border: 1px solid ${({ theme }) => theme.bg3};
   outline: none;
-  background: ${({ theme }) => theme.bg1};
+  background-color: transparent;
   :hover {
-    border: 1px solid ${({ theme }) => theme.bg4};
-  }
+    box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.05, theme.cyan1)};
+    background-color: ${({ theme }) => darken(0.05, theme.bg6)};  }
   :focus {
-    border: 1px solid ${({ theme }) => theme.primary1};
-  }
+    box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.05, theme.cyan1)};
+    background-color: ${({ theme }) => darken(0.05, theme.bg6)};  }
 `
 
 const Option = styled(FancyButton)<{ active: boolean }>`
@@ -47,8 +48,8 @@ const Option = styled(FancyButton)<{ active: boolean }>`
 `
 
 const Input = styled.input`
-  background: ${({ theme }) => theme.bg1};
-  font-size: 16px;
+background-color: transparent;
+font-size: 16px;
   width: auto;
   outline: none;
   &::-webkit-outer-spin-button,
