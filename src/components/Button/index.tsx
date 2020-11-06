@@ -70,8 +70,7 @@ export const ButtonPrimary = styled(Base)`
 export const ButtonLight = styled(Base)`
   background-color: ${({ theme }) => theme.primary5};
   color: ${({ theme }) => theme.primaryText1};
-  font-size: 18px;
-  text-shadow: none;
+  font-size: 16px;
   font-weight: 500;
   &:focus {
     box-shadow: 0 0 0 1pt ${({ theme, disabled }) => !disabled && darken(0.03, theme.primary5)};
@@ -166,8 +165,7 @@ export const ButtonMateriaPrimary = styled(ButtonPrimary)`
 export const ButtonGray = styled(Base)`
   background-color: ${({ theme }) => theme.bg3};
   color: ${({ theme }) => theme.text2};
-  font-size: 18px;
-  text-shadow: none;
+  font-size: 16px;
   font-weight: 500;
   &:focus {
     box-shadow: 0 0 0 1pt ${({ theme, disabled }) => !disabled && darken(0.05, theme.bg2)};
@@ -183,9 +181,9 @@ export const ButtonGray = styled(Base)`
 `
 
 export const ButtonSecondary = styled(Base)`
-border: 2px solid ${({ theme }) => theme.cyan1};
-color: white;
-background-color: transparent;
+  border: 2px solid ${({ theme }) => theme.cyan1};
+  color: white;
+  background-color: transparent;
   font-size: 18px;
   border-radius: 35px;
   padding: ${({ padding }) => (padding ? padding : '10px')};

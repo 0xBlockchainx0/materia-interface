@@ -1,5 +1,4 @@
-import { Currency, CurrencyAmount, currencyEquals, Token } from '@uniswap/sdk'
-import { USD } from '../../constants/index'
+import { Currency, CurrencyAmount, currencyEquals, ETHER, Token } from '@uniswap/sdk'
 import React, { CSSProperties, MutableRefObject, useCallback, useMemo } from 'react'
 import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'
@@ -19,7 +18,7 @@ import Loader from '../Loader'
 import { isTokenOnList } from '../../utils'
 
 function currencyKey(currency: Currency): string {
-  return currency instanceof Token ? currency.address : currency === USD ? 'USD' : ''
+  return currency instanceof Token ? currency.address : currency === ETHER ? 'ETHER' : ''
 }
 
 const StyledBalanceText = styled(Text)`
