@@ -30,6 +30,7 @@ import { Dots } from '../swap/styleds'
 import Modal from '../Modal'
 import UniBalanceContent from './UniBalanceContent'
 import usePrevious from '../../hooks/usePrevious'
+import Clock from 'react-live-clock';
 
 const HeaderFrame = styled.div`
   display: grid;
@@ -84,6 +85,18 @@ const FooterControls = styled.div`
 
 const FooterElement = styled.div`
   display: flex;
+  align-items: center;
+  gap: 8px;
+
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+   flex-direction: row-reverse;
+    align-items: center;
+  `};
+`
+
+const FooterElementClock = styled.div`
+  display: flex;
+  width: 10%;
   align-items: center;
   gap: 8px;
 
@@ -221,7 +234,7 @@ const StyledNavLink = styled(NavLink).attrs({
 
 const StyledExternalLink = styled(ExternalLink).attrs({
   activeClassName
-})<{ isActive?: boolean }>`
+}) <{ isActive?: boolean }>`
   ${({ theme }) => theme.flexRowNoWrap}
   align-items: left;
   border-radius: 3rem;
@@ -279,12 +292,14 @@ export default function Footer() {
   const countUpValuePrevious = usePrevious(countUpValue) ?? '0'
 
   return (
-      <FooterControls>
-        <FooterElement>
-          <TransparentCard>
-            Time: {new Date().toLocaleTimeString()}
-          </TransparentCard>
-          {/*
+    <FooterControls>
+      <FooterElementClock>
+        <TransparentCard>
+          Time: <Clock format={'HH:mm:ss'} ticking={true} />
+        </TransparentCard>
+      </FooterElementClock>
+      <FooterElement>
+        {/*
           {availableClaim && !showClaimPopup && (
             <UNIWrapper onClick={toggleClaimModal}>
               <UNIAmount active={!!account && !availableClaim} style={{ pointerEvents: 'auto' }}>
@@ -322,24 +337,24 @@ export default function Footer() {
             </UNIWrapper>
           )}
                     */}
-          <AccountElement active={!!account} style={{ pointerEvents: 'auto' }}>
-            {account && userEthBalance ? (
-              <BalanceText style={{ flexShrink: 0 }} pl="0.75rem" pr="0.5rem" fontWeight={500}>
-                {userEthBalance?.toSignificant(4)} ETH
-              </BalanceText>
-            ) : null}
-            <Web3Status />
-          </AccountElement>
-          <HideSmall>
-            {chainId && NETWORK_LABELS[chainId] && (
-              <NetworkCard title={NETWORK_LABELS[chainId]}>{NETWORK_LABELS[chainId]}</NetworkCard>
-            )}
-          </HideSmall>
-        </FooterElement>
-        <FooterElementWrap>
-          <Menu />
-          <Settings />
-        </FooterElementWrap>
-      </FooterControls>
+        <AccountElement active={!!account} style={{ pointerEvents: 'auto' }}>
+          {account && userEthBalance ? (
+            <BalanceText style={{ flexShrink: 0 }} pl="0.75rem" pr="0.5rem" fontWeight={500}>
+              {userEthBalance?.toSignificant(4)} ETH
+            </BalanceText>
+          ) : null}
+          <Web3Status />
+        </AccountElement>
+        <HideSmall>
+          {chainId && NETWORK_LABELS[chainId] && (
+            <NetworkCard title={NETWORK_LABELS[chainId]}>{NETWORK_LABELS[chainId]}</NetworkCard>
+          )}
+        </HideSmall>
+      </FooterElement>
+      <FooterElementWrap>
+        <Menu />
+        <Settings />
+      </FooterElementWrap>
+    </FooterControls>
   )
 }
