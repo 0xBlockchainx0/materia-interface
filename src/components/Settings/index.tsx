@@ -200,7 +200,7 @@ export default function SettingsTab() {
         ) : null}
         */}
       </StyledMenuButton>
-      <StyledMenuText>
+      <StyledMenuText onClick={toggle}>
         Settings
       </StyledMenuText>
       {open && (
