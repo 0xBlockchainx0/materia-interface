@@ -19,7 +19,7 @@ enum DeadlineError {
 }
 
 const FancyButton = styled.button`
-border: 1px solid ${({ theme }) => theme.cyan1};
+  border: 1px solid ${({ theme }) => theme.cyan1};
   color: ${({ theme }) => theme.text1};
   align-items: center;
   height: 2rem;
@@ -32,24 +32,26 @@ border: 1px solid ${({ theme }) => theme.cyan1};
   background-color: transparent;
   :hover {
     box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.05, theme.cyan1)};
-    background-color: ${({ theme }) => darken(0.05, theme.bg6)};  }
+    background-color: ${({ theme }) => darken(0.05, theme.bg6)};  
+  }
   :focus {
     box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.05, theme.cyan1)};
-    background-color: ${({ theme }) => darken(0.05, theme.bg6)};  }
+    background-color: ${({ theme }) => darken(0.05, theme.bg6)};  
+  }
 `
 
 const Option = styled(FancyButton)<{ active: boolean }>`
   margin-right: 8px;
+  background-color: ${({ active, theme }) => active && theme.bg6};
+  color: ${({ active, theme }) => (active ? theme.white : theme.text1)};
   :hover {
     cursor: pointer;
   }
-  background-color: ${({ active, theme }) => active && theme.bg6};
-  color: ${({ active, theme }) => (active ? theme.white : theme.text1)};
 `
 
 const Input = styled.input`
-background-color: transparent;
-font-size: 16px;
+  background-color: transparent;
+  font-size: 16px;
   width: auto;
   outline: none;
   &::-webkit-outer-spin-button,
