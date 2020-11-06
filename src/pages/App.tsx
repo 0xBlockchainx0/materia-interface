@@ -89,7 +89,6 @@ export default function App() {
         <BodyWrapper>
           <Popups />
           {/* <Polling /> */}
-          <Footer />
           <TopLevelModals />
           <Web3ReactManager>
             <Switch>
@@ -121,6 +120,7 @@ export default function App() {
           <FooterControls />      
           <Marginer />
         </BodyWrapper>
+        <Footer />
       </AppWrapper>
     </Suspense>
   )

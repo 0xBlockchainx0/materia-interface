@@ -68,53 +68,51 @@ const StyledCornerImage = styled.img`
   }
 `
 
-
 const StyledSpanTopRight = styled.span`
-filter: blur(0);
-    top: -22.5px;
-    right: -21.5px;
-    -webkit-transform: rotate(90deg);
-    transform: rotate(90deg);
-    position: absolute;
-    display: block!important;
-    height: 39px;
-    width: 39px;
+  filter: blur(0);
+  top: -22.5px;
+  right: -21.5px;
+  -webkit-transform: rotate(90deg);
+  transform: rotate(90deg);
+  position: absolute;
+  display: block!important;
+  height: 39px;
+  width: 39px;
 `
 
 const StyledSpanTopLeft = styled.span`
-filter: blur(0);
-top: -21.5px;
-left: -23.5px;
--webkit-transform: rotate(0deg);
-transform: rotate(0deg);
-    position: absolute;
-    display: block!important;
-    height: 39px;
-    width: 39px;
+  filter: blur(0);
+  top: -21.5px;
+  left: -23.5px;
+  -webkit-transform: rotate(0deg);
+  transform: rotate(0deg);
+  position: absolute;
+  display: block!important;
+  height: 39px;
+  width: 39px;
 `
 
 const StyledSpanBottomLeft = styled.span`
-bottom: -20.5px;
-left: -23.5px;
--webkit-transform: rotate(270deg);
-transform: rotate(270deg);
-    position: absolute;
-    display: block!important;
-    height: 39px;
-    width: 39px;
+  bottom: -20.5px;
+  left: -23.5px;
+  -webkit-transform: rotate(270deg);
+  transform: rotate(270deg);
+  position: absolute;
+  display: block!important;
+  height: 39px;
+  width: 39px;
 `
 
 const StyledSpanBottomRight = styled.span`
-bottom: -20.5px;
-    right: -23.5px;
-    -webkit-transform: rotate(180deg);
-    transform: rotate(180deg);
-    position: absolute;
-    display: block!important;
-    height: 39px;
-    width: 39px;
+  bottom: -20.5px;
+  right: -23.5px;
+  -webkit-transform: rotate(180deg);
+  transform: rotate(180deg);
+  position: absolute;
+  display: block!important;
+  height: 39px;
+  width: 39px;
 `
-
 
 const CornerBox = () => {
   return (
@@ -141,12 +139,13 @@ const CornerBox = () => {
 export default function AppBody({ children }: { children: React.ReactNode }) {
   return (
     <StyledBox>
-      <CornerBox/>
-        <BodyWrapper>{children}
+      <CornerBox />
+      <BodyWrapper>
+        {children}
         <Footer>
-        <Center>Select two token. Press <ButtonBgItem src={buttonBg}/> button to swap.</Center>
-      </Footer>
-        </BodyWrapper>
+          <Center>Select two token. Press <ButtonBgItem src={buttonBg} /> button to swap.</Center>
+        </Footer>
+      </BodyWrapper>
     </StyledBox>
   )
 }

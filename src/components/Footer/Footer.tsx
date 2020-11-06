@@ -2,10 +2,8 @@ import React from 'react'
 import styled from 'styled-components'
 
 const FooterContainer = styled.div`
-  position: fixed;
-  display: flex;
-  // right: 0;
-  bottom: 0;
+  margin: 0 auto;
+  margin-top: 3.5rem;
   padding: 1rem;
   color: white;
   transition: opacity 0.25s ease;
