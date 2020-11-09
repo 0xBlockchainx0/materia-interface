@@ -41,6 +41,9 @@ const EMPTY_LIST: TokenAddressMap = {
 const listCache: WeakMap<TokenList, TokenAddressMap> | null =
   typeof WeakMap !== 'undefined' ? new WeakMap<TokenList, TokenAddressMap>() : null
 
+const allListCache: WeakMap<TokenList, TokenAddressMap> | null =
+  typeof WeakMap !== 'undefined' ? new WeakMap<TokenList, TokenAddressMap>() : null
+
 export function listToTokenMap(list: TokenList): TokenAddressMap {
   const result = listCache?.get(list)
   if (result) return result
@@ -71,7 +74,7 @@ export function listToTokenMap(list: TokenList): TokenAddressMap {
 }
 
 export function listToAllTokenMap(list: TokenList): TokenAddressMap {
-  const result = listCache?.get(list)
+  const result = allListCache?.get(list)
   if (result) return result
 
   const map = list.tokens.reduce<TokenAddressMap>(
@@ -94,7 +97,7 @@ export function listToAllTokenMap(list: TokenList): TokenAddressMap {
     },
     { ...EMPTY_LIST }
   )
-  listCache?.set(list, map)
+  allListCache?.set(list, map)
   return map
 }
 
