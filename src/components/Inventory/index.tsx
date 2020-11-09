@@ -1,4 +1,4 @@
-import { JSBI } from '@uniswap/sdk';
+import { CurrencyAmount, JSBI, TokenAmount } from '@uniswap/sdk';
 import React, { useContext } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 import { useAllTokenList } from '../../state/lists/hooks';
@@ -16,13 +16,18 @@ const InventoryContainer = styled.div`
 export default function Inventory() {
   const theme = useContext(ThemeContext)
   const userTokens = useUserTokens()
-  
+
   return (
     <InventoryContainer>
       {
         userTokens && userTokens.length > 0 ? (
           userTokens.map((userToken: any) => {
-            return (<InventoryItem key={userToken.token.symbol} tokenName={userToken.token.name} tokenSymbol={userToken.token.symbol} tokenType={''} balance={userToken.toExact(4)} wrapped={false} />)
+            if (userToken && userToken.token) {
+              return (<InventoryItem key={userToken.token.symbol} tokenName={userToken.token.name} tokenSymbol={userToken.token.symbol} tokenType={''} balance={userToken.toExact(4)} wrapped={false} />)
+            }
+            else {
+              return (<InventoryItem key={userToken.currency.symbol} tokenName={userToken.currency.name ?? ''} tokenSymbol={userToken.currency.symbol ?? ''} tokenType={''} balance={userToken.toExact(4)} wrapped={false} />)
+            }
           })
         )
           :
