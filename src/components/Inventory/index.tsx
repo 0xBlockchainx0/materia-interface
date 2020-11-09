@@ -7,10 +7,17 @@ import { TYPE } from '../../theme';
 import InventoryItem from './InventoryItem'
 
 const InventoryContainer = styled.div`
+  @media (max-width: 1350px) {
+      display: none;
+  }
   margin-right: 1rem;
   padding-top: 0.5rem;
   overflow-y: auto;
   max-height: 530px;
+`
+
+const InventoryTitle = styled.div`
+  margin-bottom: 10px;
 `
 
 export default function Inventory() {
@@ -19,6 +26,9 @@ export default function Inventory() {
 
   return (
     <InventoryContainer>
+      <InventoryTitle>
+        <TYPE.body color={theme.text1} fontWeight={500} fontSize={20} >Inventory</TYPE.body>
+      </InventoryTitle>
       {
         userTokens && userTokens.length > 0 ? (
           userTokens.map((userToken: any) => {

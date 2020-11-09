@@ -16,6 +16,10 @@ const AdvancedDetailsFooter = styled.div<{ show: boolean }>`
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden; 
   display: ${({ show }) => (show ? 'block' : 'none')};
+
+  @media (max-width: 600px) {
+    padding-left: -2rem !important;
+  }
 `
 
 export default function AdvancedSwapDetailsDropdown({ trade, ...rest }: AdvancedSwapDetailsProps) {

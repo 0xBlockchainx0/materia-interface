@@ -49,6 +49,9 @@ import Inventory from '../../components/Inventory'
 const SwapGridContainer = styled.div`
   display: grid;
   grid-template-columns: 5% 30% auto;
+  @media (max-width: 1350px) {
+    grid-template-columns: 50px auto !important;
+  }
 `
 
 // const SwapTitleColumn = styled.div`
@@ -62,8 +65,10 @@ const SwapGridContainer = styled.div`
 // `
 
 const SwapCurrencyContainer = styled.div`
-  display: grid;
-  grid-template-columns: 37.5% 25% 37.5%;
+  @media (min-width: 1050px) {
+    display: grid;
+    grid-template-columns: 37.5% 25% 37.5%;
+  }
 `
 
 const Divider = styled.div`
@@ -98,6 +103,15 @@ const SwapButton = styled.div`
   justify-content: center;
   display: flex;
   padding: 1rem 0rem;
+  @media (max-width: 450px) {
+    margin-left: -3rem;
+  }
+`
+
+const InventoryColumn = styled.div`
+  @media (max-width: 1350px) {
+    display: none;
+  }
 `
 
 export default function Swap() {
@@ -344,7 +358,7 @@ export default function Swap() {
           />
           <SwapGridContainer>
             <div style={{ writingMode: 'vertical-rl', textOrientation: 'mixed' }}>
-              <p style={{ fontSize: 'xx-large', margin: '0px 40px 0px 0px' }}>
+              <p style={{ fontSize: 'xx-large', margin: '0px 1.5rem 0px 0px' }}>
                 Swap
               </p>
             </div>
@@ -353,10 +367,9 @@ export default function Swap() {
                 Swap
               </SwapTitleColumnContent>
             </SwapTitleColumn> */}
-            <div>
-              <TYPE.body color={theme.text1} fontWeight={500} fontSize={20}>Inventory</TYPE.body>
+            <InventoryColumn>
               <Inventory />
-            </div>
+            </InventoryColumn>
             <SwapPageContainer>
               <SwapMenu>
                 <SwapMenuItem active={true}>

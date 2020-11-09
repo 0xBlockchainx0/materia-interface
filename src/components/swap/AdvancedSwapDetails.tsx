@@ -16,6 +16,7 @@ const InfoLink = styled(ExternalLink)`
   width: 100%;
   text-align: center;
   font-size: 14px;
+  // padding-left: 1.5rem;
   color: ${({ theme }) => theme.text1};
 `
 

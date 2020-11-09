@@ -66,6 +66,13 @@ const TokenImage = styled.div<{ showBackground: boolean }>`
   background-size: contain;
   padding: 6rem;
   background-position: center;
+  @media (max-width: 1050px) {
+    padding: 2rem !important;
+  }
+  @media (max-width: 450px) {
+    padding: 1rem !important;
+    margin-top: -2.5rem;
+  }
 `
 
 const TokenImageContainer = styled.div`

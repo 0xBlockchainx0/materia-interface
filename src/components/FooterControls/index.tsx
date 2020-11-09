@@ -63,6 +63,9 @@ const FooterControls = styled.div`
   align-items: center;
   justify-self: flex-end;
   max-width: 75%;
+  // @media (max-width: 600px) {
+  //   max-width: 90%;
+  // }
   width: 100%;
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
@@ -104,6 +107,10 @@ const FooterElementClock = styled.div`
    flex-direction: row-reverse;
     align-items: center;
   `};
+
+  @media (max-width: 960px) {
+    display: none !important;
+  }
 `
 
 const FooterElementWrap = styled.div`
@@ -262,6 +269,7 @@ const StyledExternalLink = styled(ExternalLink).attrs({
       display: none;
 `}
 `
+
 const NETWORK_LABELS: { [chainId in ChainId]?: string } = {
   [ChainId.RINKEBY]: 'Rinkeby',
   [ChainId.ROPSTEN]: 'Ropsten',

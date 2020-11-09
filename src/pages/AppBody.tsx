@@ -6,7 +6,6 @@ import buttonBg from '../assets/images/button-background.png'
 
 export const BodyWrapper = styled.div`
   position: relative;
-  // max-width: 75%;
   // max-width: 1020px;
   min-height: 620px;
   width: 100%;
@@ -37,7 +36,7 @@ export const Footer = styled.div`
 `
 
 export const ButtonBgItem = styled.img`
-  width: 10%;
+  width: 5ch;
   margin: 0px 5px;
 `;
 
@@ -46,6 +45,9 @@ const StyledBox = styled.div`
   margin: 0 auto;
   position: relative;
   max-width: 75%;
+  @media (max-width: 600px) {
+    max-width: 95% !important;
+  }
   // max-width: 1020px;
   min-height: 620px;
   width: 100%;
