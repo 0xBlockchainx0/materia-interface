@@ -217,12 +217,12 @@ const StyledNavLink = styled(NavLink).attrs({
   &.${activeClassName} {
     border-radius: 12px;
     font-weight: 600;
-    color: ${({ theme }) => theme.text1};
+    color: ${({ theme }) => theme.cyan1};
   }
 
   :hover,
   :focus {
-    color: ${({ theme }) => darken(0.1, theme.text1)};
+    color: ${({ theme }) => darken(0.1, theme.cyan1)};
   }
 `
 
@@ -244,12 +244,12 @@ const StyledExternalLink = styled(ExternalLink).attrs({
   &.${activeClassName} {
     border-radius: 12px;
     font-weight: 600;
-    color: ${({ theme }) => theme.text1};
+    color: ${({ theme }) => theme.cyan2};
   }
 
   :hover,
   :focus {
-    color: ${({ theme }) => darken(0.1, theme.text1)};
+    color: ${({ theme }) => darken(0.1, theme.cyan2)};
   }
 
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`

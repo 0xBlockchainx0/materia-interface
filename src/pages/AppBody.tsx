@@ -36,7 +36,7 @@ export const Footer = styled.div`
 `
 
 export const ButtonBgItem = styled.img`
-  width: 5ch;
+  height: 3ch;
   margin: 0px 5px;
 `;
 

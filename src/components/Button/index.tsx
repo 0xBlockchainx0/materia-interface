@@ -337,13 +337,15 @@ const ButtonMateriaErrorStyle = styled(ButtonErrorStyle)`
 `
 
 export const SwapButton = styled(ButtonMateriaPrimary)`
-  width: 10%;
+  height: 3ch !important;
+  width: 4rem;
   border: none;
   border-radius: unset;
   background-color: transparent;
   background-image: url(${swapButtonBg});
+  background-repeat: no-repeat;
   background-size: 100% 100%;
-  padding: 18px;
+  // padding: 18px;
   &:focus {
     background-color: transparent;
     border: none;

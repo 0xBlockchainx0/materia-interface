@@ -81,8 +81,9 @@ const FooterControls = styled.div`
     width: 100%;
     z-index: 99;
     height: 72px;
-    border-radius: 12px 12px 0 0;
-    background-color: ${({ theme }) => theme.bg1};
+    // border-radius: 12px 12px 0 0;
+    border: 2px solid ${({ theme }) => theme.cyan2};
+    background-color: #002852;
   `};
 `
 

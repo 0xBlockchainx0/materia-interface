@@ -49,8 +49,11 @@ import Inventory from '../../components/Inventory'
 const SwapGridContainer = styled.div`
   display: grid;
   grid-template-columns: 5% 30% auto;
-  @media (max-width: 1350px) {
+  @media (min-width: 601px) and (max-width: 1350px) {
     grid-template-columns: 50px auto !important;
+  }
+  @media (max-width: 600px) {
+    grid-template-columns: auto !important;
   }
 `
 
@@ -103,9 +106,9 @@ const SwapButton = styled.div`
   justify-content: center;
   display: flex;
   padding: 1rem 0rem;
-  @media (max-width: 450px) {
-    margin-left: -3rem;
-  }
+  // @media (max-width: 450px) {
+  //   margin-left: -3rem;
+  // }
 `
 
 const InventoryColumn = styled.div`
@@ -113,6 +116,16 @@ const InventoryColumn = styled.div`
     display: none;
   }
 `
+
+const ItemColumn = styled.div`
+  @media (min-width: 601px) and (max-width: 1350px) {
+    // display: none;
+  }
+  @media (max-width: 600px) {
+    display: none;
+  }
+`
+
 
 export default function Swap() {
   const loadedUrlParams = useDefaultsFromURLSearch()
@@ -357,11 +370,13 @@ export default function Swap() {
             onDismiss={handleConfirmDismiss}
           />
           <SwapGridContainer>
+            <ItemColumn>
             <div style={{ writingMode: 'vertical-rl', textOrientation: 'mixed' }}>
               <p style={{ fontSize: 'xx-large', margin: '0px 1.5rem 0px 0px' }}>
                 Swap
               </p>
             </div>
+            </ItemColumn>
             {/* <SwapTitleColumn>
               <SwapTitleColumnContent>
                 Swap
