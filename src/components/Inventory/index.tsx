@@ -1,7 +1,6 @@
 import { CurrencyAmount, JSBI, TokenAmount } from '@uniswap/sdk';
 import React, { useContext } from 'react'
 import styled, { ThemeContext } from 'styled-components'
-import { useAllTokenList } from '../../state/lists/hooks';
 import { useUserTokens } from '../../state/wallet/hooks';
 import { TYPE } from '../../theme';
 import InventoryItem from './InventoryItem'

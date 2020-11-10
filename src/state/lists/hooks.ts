@@ -2,6 +2,7 @@ import { ChainId, Token } from '@uniswap/sdk'
 import { Tags, TokenInfo, TokenList } from '@uniswap/token-lists'
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
+import { deepMerge } from '../../utils/deepMerge'
 import { AppState } from '../index'
 
 type TagDetails = Tags[keyof Tags]
@@ -58,7 +59,9 @@ export function listToTokenMap(list: TokenList): TokenAddressMap {
           })
           ?.filter((x): x is TagInfo => Boolean(x)) ?? []
       const token = new WrappedTokenInfo(tokenInfo, tags)
-      if (tokenMap[token.chainId][token.address] !== undefined) throw Error('Duplicate tokens.')
+      if (tokenMap[token.chainId][token.address] !== undefined) {
+        throw Error('Duplicate tokens.')
+      }
       return {
         ...tokenMap,
         [token.chainId]: {
@@ -136,11 +139,16 @@ export function useSelectedListInfo(): { current: TokenList | null; pending: Tok
 }
 
 export function useAllTokenList(): TokenAddressMap {
+  let allTokenAddressMap: any = { ...EMPTY_LIST }
   const tokenLists = useAllLists()
-  const allTokenAddressMap = EMPTY_LIST
 
   tokenLists.map((list) => {
-    Object.assign(allTokenAddressMap, listToAllTokenMap(list))
+    try {
+      allTokenAddressMap = deepMerge(allTokenAddressMap, listToAllTokenMap(list))
+    }
+    catch (error) {
+      console.error('Could not show inventory token list due to error', error)
+    }
   })
 
   return allTokenAddressMap;
