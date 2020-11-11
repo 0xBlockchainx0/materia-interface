@@ -2,7 +2,6 @@ import React from 'react'
 import styled from 'styled-components'
 import appBackground from '../assets/images/app-background.png'
 import frameCorner from '../assets/images/trailer_frame_corner.png'
-import buttonBg from '../assets/images/button-background.png'
 
 export const BodyWrapper = styled.div`
   position: relative;
@@ -20,19 +19,6 @@ export const BodyWrapper = styled.div`
   background: -moz-linear-gradient(168deg, rgba(0,77,161,0.7) 0%, rgba(5,30,64,0.7) 100%);
   background: -webkit-linear-gradient(168deg, rgba(0,77,161,0.7) 0%, rgba(5,30,64,0.7) 100%);
   background: linear-gradient(168deg, rgba(0,77,161,0.7) 0%, rgba(5,30,64,0.7) 100%);
-`
-
-export const Center = styled.div`
-  display: flex;
-  margin: 0 auto;
-  justify-content: center;
-  padding-top: 5px;
-  padding-bottom: 5px;
-`
-
-export const Footer = styled.div`
-  display: flex;
-  margin: 0 auto;
 `
 
 export const ButtonBgItem = styled.img`
@@ -144,9 +130,6 @@ export default function AppBody({ children }: { children: React.ReactNode }) {
       <CornerBox />
       <BodyWrapper>
         {children}
-        <Footer>
-          <Center>Select two token. Press <ButtonBgItem src={buttonBg} /> button to swap.</Center>
-        </Footer>
       </BodyWrapper>
     </StyledBox>
   )

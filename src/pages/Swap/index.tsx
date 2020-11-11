@@ -45,6 +45,7 @@ import AppBody, { ButtonBgItem } from '../AppBody'
 import { ClickableText } from '../Pool/styleds'
 import Loader from '../../components/Loader'
 import Inventory from '../../components/Inventory'
+import buttonBg from '../../assets/images/button-background.png'
 
 const SwapGridContainer = styled.div`
   display: grid;
@@ -126,6 +127,22 @@ const ItemColumn = styled.div`
   }
 `
 
+
+export const Center = styled.div`
+  display: flex;
+  margin: 0 auto;
+  justify-content: center;
+  padding-top: 5px;
+  padding-bottom: 5px;
+`
+
+export const FooterInfo = styled.div`
+  display: flex;
+  margin: 0 auto;
+  margin-top: -3rem;
+  margin-bottom: 0.5rem;
+  z-index: 99;
+`
 
 export default function Swap() {
   const loadedUrlParams = useDefaultsFromURLSearch()
@@ -603,6 +620,9 @@ export default function Swap() {
 
         </Wrapper>
       </AppBody>
+      <FooterInfo>
+          <Center>Select two token. Press <ButtonBgItem src={buttonBg} /> button to swap.</Center>
+        </FooterInfo>
     </>
   )
 }

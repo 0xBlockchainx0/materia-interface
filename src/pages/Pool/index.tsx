@@ -19,6 +19,7 @@ import { usePairs } from '../../data/Reserves'
 import { toV2LiquidityToken, useTrackedTokenPairs } from '../../state/user/hooks'
 import { Dots } from '../../components/swap/styleds'
 import { CardSection, DataCard, CardNoise, CardBGImage } from '../../components/earn/styled'
+import AppBody from '../AppBody'
 
 const PageWrapper = styled(AutoColumn)`
   max-width: 640px;
@@ -26,7 +27,10 @@ const PageWrapper = styled(AutoColumn)`
 `
 
 const VoteCard = styled(DataCard)`
-  background: radial-gradient(76.02% 75.41% at 1.84% 0%, #27ae60 0%, #000000 100%);
+  // background: rgba(0, 27, 49, 0.5) !important;
+  border: 2px solid #1992d3;
+  background: #002852;
+  border-radius: 0px !important;
   overflow: hidden;
 `
 
@@ -63,13 +67,42 @@ const ResponsiveButtonSecondary = styled(ButtonSecondary)`
 `
 
 const EmptyProposals = styled.div`
-  border: 1px solid ${({ theme }) => theme.text4};
+  border: 1px solid ${({ theme }) => theme.cyan1};
   padding: 16px 12px;
-  border-radius: 12px;
+  // border-radius: 12px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+`
+
+const GoBottom = styled.div`
+  margin-top: auto;
+`
+
+const PoolGridContainer = styled.div`
+  display: grid;
+  grid-template-columns: 5% auto;
+
+  @media (min-width: 601px) and (max-width: 1350px) {
+    grid-template-columns: 50px auto !important;
+  }
+  @media (max-width: 600px) {
+    grid-template-columns: auto !important;
+  }
+`
+
+const ItemColumn = styled.div`
+  @media (min-width: 601px) and (max-width: 1350px) {
+    // display: none;
+  }
+  @media (max-width: 600px) {
+    display: none;
+  }
+`
+
+const MainContainer = styled.div`
+
 `
 
 export default function Pool() {
@@ -109,12 +142,20 @@ export default function Pool() {
 
   return (
     <>
-      <PageWrapper>
+      <AppBody>
         <SwapPoolTabs active={'pool'} />
-
-        <VoteCard>
-          <CardBGImage />
-          <CardNoise />
+        <PoolGridContainer>
+          <ItemColumn>
+            <div style={{ writingMode: 'vertical-rl', textOrientation: 'mixed' }}>
+              <p style={{ fontSize: 'xx-large', margin: '0px 1.5rem 0px 0px' }}>
+                Pool
+              </p>
+            </div>
+          </ItemColumn>
+          <MainContainer>
+          <VoteCard>
+          {/* <CardBGImage /> */}
+          {/* <CardNoise /> */}
           <CardSection>
             <AutoColumn gap="md">
               <RowBetween>
@@ -137,7 +178,6 @@ export default function Pool() {
           <CardBGImage />
           <CardNoise />
         </VoteCard>
-
         <AutoColumn gap="lg" justify="center">
           <AutoColumn gap="lg" style={{ width: '100%' }}>
             <TitleRow style={{ marginTop: '1rem' }} padding={'0'}>
@@ -186,24 +226,31 @@ export default function Pool() {
                 ))}
               </>
             ) : (
-              <EmptyProposals>
-                <TYPE.body color={theme.text3} textAlign="center">
-                  No liquidity found.
+                    <EmptyProposals>
+                      <TYPE.body color={theme.text3} textAlign="center">
+                        No liquidity found.
                 </TYPE.body>
-              </EmptyProposals>
-            )}
+                    </EmptyProposals>
+                  )}
 
-            <AutoColumn justify={'center'} gap="md">
-              <Text textAlign="center" fontSize={14} style={{ padding: '.5rem 0 .5rem 0' }}>
-                {hasV1Liquidity ? 'Uniswap V1 liquidity found!' : "Don't see a pool you joined?"}{' '}
-                <StyledInternalLink id="import-pool-link" to={hasV1Liquidity ? '/migrate/v1' : '/find'}>
-                  {hasV1Liquidity ? 'Migrate now.' : 'Import it.'}
-                </StyledInternalLink>
-              </Text>
-            </AutoColumn>
+            <GoBottom>
+              <AutoColumn justify={'center'} gap="md">
+                <Text textAlign="center" fontSize={14} style={{ padding: '.5rem 0 .5rem 0' }}>
+                  {hasV1Liquidity ? 'Uniswap V1 liquidity found!' : "Don't see a pool you joined?"}{' '}
+                  <StyledInternalLink id="import-pool-link" to={hasV1Liquidity ? '/migrate/v1' : '/find'}>
+                    {hasV1Liquidity ? 'Migrate now.' : 'Import it.'}
+                  </StyledInternalLink>
+                </Text>
+              </AutoColumn>
+            </GoBottom>
+
           </AutoColumn>
         </AutoColumn>
-      </PageWrapper>
+ 
+          </MainContainer>
+
+        </PoolGridContainer>
+     </AppBody>
     </>
   )
 }

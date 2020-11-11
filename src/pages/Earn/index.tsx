@@ -9,16 +9,26 @@ import { CardSection, DataCard, CardNoise, CardBGImage } from '../../components/
 import { Countdown } from './Countdown'
 import Loader from '../../components/Loader'
 import { useActiveWeb3React } from '../../hooks'
+import AppBody from '../AppBody'
 
 const PageWrapper = styled(AutoColumn)`
-  max-width: 640px;
+  // max-width: 640px;
   width: 100%;
 `
 
 const TopSection = styled(AutoColumn)`
-  max-width: 720px;
   width: 100%;
 `
+
+
+const EarnCard = styled(DataCard)`
+  // background: rgba(0, 27, 49, 0.5) !important;
+  border: 2px solid #1992d3;
+  background: #002852;
+  border-radius: 0px !important;
+  overflow: hidden;
+`
+
 
 const PoolSection = styled.div`
   display: grid;
@@ -39,39 +49,72 @@ export default function Earn() {
   `};
   `
 
+  const EarnGridContainer = styled.div`
+  display: grid;
+  grid-template-columns: 5% auto;
+
+  @media (min-width: 601px) and (max-width: 1350px) {
+    grid-template-columns: 50px auto !important;
+  }
+  @media (max-width: 600px) {
+    grid-template-columns: auto !important;
+  }
+`
+
+const ItemColumn = styled.div`
+  @media (min-width: 601px) and (max-width: 1350px) {
+    // display: none;
+  }
+  @media (max-width: 600px) {
+    display: none;
+  }
+`
+
+const MainContainer = styled.div`
+
+`
+
   const stakingRewardsExist = Boolean(typeof chainId === 'number' && (STAKING_REWARDS_INFO[chainId]?.length ?? 0) > 0)
 
   return (
-    <PageWrapper gap="lg" justify="center">
-      <TopSection gap="md">
-        <DataCard>
-          <CardBGImage />
-          <CardNoise />
+    <AppBody>
+      <EarnGridContainer>
+      <ItemColumn>
+            <div style={{ writingMode: 'vertical-rl', textOrientation: 'mixed' }}>
+              <p style={{ fontSize: 'xx-large', margin: '0px 1.5rem 0px 0px' }}>
+                Liquidity Mining
+              </p>
+            </div>
+          </ItemColumn>
+          <MainContainer>
+          <TopSection gap="md">
+        <EarnCard>
+          {/* <CardBGImage />
+          <CardNoise /> */}
           <CardSection>
             <AutoColumn gap="md">
               <RowBetween>
-                <TYPE.white fontWeight={600}>Uniswap liquidity mining</TYPE.white>
+                <TYPE.white fontWeight={600}>Materia liquidity mining</TYPE.white>
               </RowBetween>
               <RowBetween>
                 <TYPE.white fontSize={14}>
-                  Deposit your Liquidity Provider tokens to receive UNI, the Uniswap protocol governance token.
+                  Deposit your Liquidity Provider tokens to receive $GIL, the Materia DFO protocol governance token.
                 </TYPE.white>
               </RowBetween>{' '}
               <ExternalLink
                 style={{ color: 'white', textDecoration: 'underline' }}
-                href="https://uniswap.org/blog/uni/"
+                href="https://www.dfohub.com/"
                 target="_blank"
               >
-                <TYPE.white fontSize={14}>Read more about UNI</TYPE.white>
+                <TYPE.white fontSize={14}>Read more about DFO</TYPE.white>
               </ExternalLink>
             </AutoColumn>
           </CardSection>
           <CardBGImage />
           <CardNoise />
-        </DataCard>
+        </EarnCard>
       </TopSection>
-
-      <AutoColumn gap="lg" style={{ width: '100%', maxWidth: '720px' }}>
+      <AutoColumn gap="lg" style={{ width: '100%' }}>
         <DataRow style={{ alignItems: 'baseline' }}>
           <TYPE.mediumHeader style={{ marginTop: '0.5rem' }}>Participating pools</TYPE.mediumHeader>
           <Countdown exactEnd={stakingInfos?.[0]?.periodFinish} />
@@ -90,6 +133,8 @@ export default function Earn() {
           )}
         </PoolSection>
       </AutoColumn>
-    </PageWrapper>
+      </MainContainer>
+      </EarnGridContainer>
+   </AppBody>
   )
 }

@@ -215,7 +215,7 @@ const StyledNavLink = styled(NavLink).attrs({
   font-weight: 500;
 
   &.${activeClassName} {
-    border-radius: 12px;
+    // border-radius: 12px;
     font-weight: 600;
     color: ${({ theme }) => theme.cyan1};
   }
@@ -242,7 +242,7 @@ const StyledExternalLink = styled(ExternalLink).attrs({
   font-weight: 500;
 
   &.${activeClassName} {
-    border-radius: 12px;
+    // border-radius: 12px;
     font-weight: 600;
     color: ${({ theme }) => theme.cyan2};
   }
@@ -315,9 +315,6 @@ export default function Header() {
             Pool
           </StyledNavLink>
           <StyledNavLink id={`stake-nav-link`} to={'/uni'}>
-            Exping
-          </StyledNavLink>
-          <StyledNavLink id={`stake-nav-link`} to={'/vote'}>
             LM
           </StyledNavLink>
           <StyledExternalLink id={`stake-nav-link`} href={'https://www.dfohub.com'}>

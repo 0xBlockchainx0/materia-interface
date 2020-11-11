@@ -29,14 +29,13 @@ const StatContainer = styled.div`
 `
 
 const Wrapper = styled(AutoColumn)<{ showBackground: boolean; bgColor: any }>`
-  border-radius: 12px;
   width: 100%;
   overflow: hidden;
   position: relative;
   opacity: ${({ showBackground }) => (showBackground ? '1' : '1')};
-  background: ${({ theme, bgColor, showBackground }) =>
-    `radial-gradient(91.85% 100% at 1.84% 0%, ${bgColor} 0%, ${showBackground ? theme.black : theme.bg5} 100%) `};
   color: ${({ theme, showBackground }) => (showBackground ? theme.white : theme.text1)} !important;
+  background-color: #002852;
+  border: 2px solid ${({ theme }) => theme.cyan2};
 
   ${({ showBackground }) =>
     showBackground &&
