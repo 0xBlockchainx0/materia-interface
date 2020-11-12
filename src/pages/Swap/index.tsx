@@ -49,7 +49,7 @@ import buttonBg from '../../assets/images/button-background.png'
 
 const SwapGridContainer = styled.div`
   display: grid;
-  grid-template-columns: 5% 30% auto;
+  grid-template-columns: 30px 30% auto;
   @media (min-width: 601px) and (max-width: 1350px) {
     grid-template-columns: 50px auto !important;
   }
@@ -77,12 +77,14 @@ const SwapCurrencyContainer = styled.div`
 
 const Divider = styled.div`
   border: 1px solid ${({ theme }) => theme.cyan1};
-  margin-right: 0.5rem;
   margin-top: 0.2rem;
 `
 
 const SwapPageContainer = styled.div`
   padding-top: 2rem;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  background: linear-gradient(180deg, rgba(0,77,161,0.7) 0%, rgba(5,30,64,0.7) 100%);
 `
 
 const SwapMenu = styled.div`
@@ -113,6 +115,10 @@ const SwapButton = styled.div`
 `
 
 const InventoryColumn = styled.div`
+padding-top: 0.5rem;
+padding-left: 1rem;
+font-size: smaller;
+background: linear-gradient(180deg, rgba(0,77,161,0.7) 0%, rgba(5,30,64,0.7) 100%);
   @media (max-width: 1350px) {
     display: none;
   }
@@ -141,6 +147,7 @@ export const FooterInfo = styled.div`
   margin: 0 auto;
   margin-top: -3rem;
   margin-bottom: 0.5rem;
+  font-size: small;
   z-index: 99;
 `
 
@@ -389,7 +396,7 @@ export default function Swap() {
           <SwapGridContainer>
             <ItemColumn>
             <div style={{ writingMode: 'vertical-rl', textOrientation: 'mixed' }}>
-              <p style={{ fontSize: 'xx-large', margin: '0px 1.5rem 0px 0px' }}>
+              <p style={{ fontSize: 'xx-large', margin: '0px 0px 0px -10px' }}>
                 Swap
               </p>
             </div>

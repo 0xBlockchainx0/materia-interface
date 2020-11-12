@@ -3,9 +3,10 @@ import styled from 'styled-components'
 
 const FooterContainer = styled.div`
   margin: 0 auto;
-  margin-top: 3.5rem;
+  margin-top: 1rem;
   padding: 1rem;
   color: white;
+  font-size: smaller;
   transition: opacity 0.25s ease;
   color: ${({ theme }) => theme.text1};
   :hover {

@@ -58,16 +58,16 @@ export default function InventoryItem({
     <Item>
       <GridContainer>
         <div>
-          <TYPE.body color={theme.text1} fontWeight={500} fontSize={18}>{tokenName} ({tokenSymbol})</TYPE.body>
+          <TYPE.body color={theme.text1} fontWeight={500} fontSize={15}>{tokenName} ({tokenSymbol})</TYPE.body>
           <BalanceRow>
-            <TYPE.body color={theme.blue2} fontWeight={500} fontSize={16}>Balance:</TYPE.body>
+            <TYPE.body color={theme.blue2} fontWeight={500} fontSize={12}>Balance:</TYPE.body>
             <BalanceText>
-              <TYPE.body color={theme.text1} fontWeight={500} fontSize={16}>{balance}</TYPE.body>
+              <TYPE.body color={theme.text1} fontWeight={500} fontSize={12}>{balance}</TYPE.body>
             </BalanceText>
             {tokenType
               && (
                 <TokenType>
-                  <TYPE.body color={theme.cyan1} fontWeight={500} fontSize={16}>{tokenType}</TYPE.body>
+                  <TYPE.body color={theme.cyan1} fontWeight={500} fontSize={15}>{tokenType}</TYPE.body>
                 </TokenType>
               )}
           </BalanceRow>

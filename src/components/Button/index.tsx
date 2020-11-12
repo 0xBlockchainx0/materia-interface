@@ -342,6 +342,7 @@ export const SwapButton = styled(ButtonMateriaPrimary)`
   height: 3ch !important;
   width: 4rem;
   border: none;
+  font-size: small;
   border-radius: unset;
   background-color: transparent;
   background-image: url(${swapButtonBg});

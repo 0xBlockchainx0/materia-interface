@@ -58,6 +58,7 @@ const HeaderFrame = styled.div`
 `
 
 const FooterControls = styled.div`
+  font-size: small;
   display: flex;
   flex-direction: row;
   align-items: center;

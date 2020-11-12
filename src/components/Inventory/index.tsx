@@ -26,7 +26,7 @@ export default function Inventory() {
   return (
     <InventoryContainer>
       <InventoryTitle>
-        <TYPE.body color={theme.text1} fontWeight={500} fontSize={20} >Inventory</TYPE.body>
+        <TYPE.body color={theme.text1} fontWeight={500} fontSize={15} >Inventory</TYPE.body>
       </InventoryTitle>
       {
         userTokens && userTokens.length > 0 ? (
@@ -40,7 +40,7 @@ export default function Inventory() {
           })
         )
           :
-          (<TYPE.body color={theme.text1} fontWeight={400} fontSize={16}>No tokens present in your inventory</TYPE.body>)
+          (<TYPE.body color={theme.text1} fontWeight={400} fontSize={12}>No tokens present in your inventory</TYPE.body>)
       }
     </InventoryContainer>
   )
