@@ -42,7 +42,7 @@ const Base = styled(RebassButton) <{
 export const ButtonPrimary = styled(Base)`
   background-color: rgb(0,0,0,0.5);
   border: 2px solid ${({ theme }) => theme.cyan1};
-  color: white;
+  color: ${({ theme }) => theme.grey};
   padding: 5px 10px;
   border-radius: 35px;
   &:focus {
@@ -102,7 +102,8 @@ export const ButtonMateriaLight = styled(ButtonLight)`
   border: 2px solid ${({ theme }) => theme.cyan1};
   padding: 5px 10px;
   border-radius: 35px;
-  text-transform: uppercase;
+  padding: 5px 15px;
+  border-radius: 15px;
   &:focus {
     box-shadow: none;
     background-color: rgb(0, 0, 0, 0.5);
@@ -134,9 +135,8 @@ export const ButtonMateriaPrimary = styled(ButtonPrimary)`
   background-color: rgb(0, 0, 0, 0.5);
   border: 2px solid ${({ theme }) => theme.cyan1};
   color: ${({ theme }) => theme.text1};
-  padding: 5px 10px;
-  border-radius: 35px;
-  text-transform: uppercase;
+  padding: 5px 15px;
+  border-radius: 15px;
   &:focus {
     box-shadow: none;
     background-color: rgb(0, 0, 0, 0.5);
@@ -342,7 +342,6 @@ export const SwapButton = styled(ButtonMateriaPrimary)`
   height: 3ch !important;
   width: 4rem;
   border: none;
-  font-size: small;
   border-radius: unset;
   background-color: transparent;
   background-image: url(${swapButtonBg});

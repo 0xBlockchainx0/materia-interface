@@ -9,6 +9,7 @@ import styled, {
 import { useIsDarkMode } from '../state/user/hooks'
 import { Text, TextProps } from 'rebass'
 import { Colors } from './styled'
+import { GreyCard } from '../components/Card'
 
 export * from './components'
 
@@ -84,7 +85,8 @@ export function colors(darkMode: boolean): Colors {
     blue1: '#2172E5',
     blue2: '#1671BB',
     cyan1: '#2f9ab8',
-    cyan2: '#1992d3'
+    cyan2: '#1992d3',
+    grey: '#999999'
     
 
     // dont wanna forget these blue yet
