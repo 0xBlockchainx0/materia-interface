@@ -116,8 +116,6 @@ const AccountControl = styled.div`
   width: 100%;
 
   font-weight: 500;
-  font-size: 1.25rem;
-
   a:hover {
     text-decoration: underline;
   }

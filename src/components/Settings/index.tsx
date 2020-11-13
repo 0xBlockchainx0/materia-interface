@@ -245,14 +245,14 @@ export default function SettingsTab() {
                 }
               />
             </RowBetween>
-            {/* <RowBetween>
+            <RowBetween>
               <RowFixed>
                 <TYPE.black fontWeight={400} fontSize={14} color={theme.text2}>
                   Toggle Dark Mode
                 </TYPE.black>
               </RowFixed>
               <Toggle isActive={darkMode} toggle={toggleDarkMode} />
-            </RowBetween> */}
+            </RowBetween> 
           </AutoColumn>
         </MenuFlyout>
       )}

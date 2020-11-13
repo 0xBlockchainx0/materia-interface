@@ -31,6 +31,7 @@ import Modal from '../Modal'
 import UniBalanceContent from './UniBalanceContent'
 import usePrevious from '../../hooks/usePrevious'
 import Clock from 'react-live-clock';
+import { Moon, Sun } from 'react-feather'
 
 const HeaderFrame = styled.div`
   display: grid;
@@ -55,6 +56,20 @@ const HeaderFrame = styled.div`
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
         padding: 0.5rem 1rem;
   `}
+`
+const StyledButton = styled.button`
+  border: none;
+  background-color: rgba(0, 0, 0, 0);
+  color: ${({ theme }) => theme.text1};
+  :focus {
+    outline: none;
+  }
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  :hover {
+    cursor: pointer;
+  }
 `
 
 const FooterControls = styled.div`
@@ -285,7 +300,7 @@ export default function Footer() {
 
   const userEthBalance = useETHBalances(account ? [account] : [])?.[account ?? '']
 
-  const [isDark] = useDarkModeManager()
+  const [darkMode, toggleDarkMode] = useDarkModeManager()
 
   const toggleClaimModal = useToggleSelfClaimModal()
 
@@ -362,6 +377,9 @@ export default function Footer() {
         </HideSmall>
       </FooterElement>
       <FooterElementWrap>
+        <StyledButton type="button" onClick={toggleDarkMode}>
+          {darkMode ? <Sun size={20} /> : <Moon size={20} />}
+        </StyledButton>        
         <Menu />
         <Settings />
       </FooterElementWrap>
