@@ -1,6 +1,6 @@
 import { CurrencyAmount, JSBI, Token, Trade } from '@uniswap/sdk'
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
-import { ArrowDown } from 'react-feather'
+import { ArrowDown, ArrowRightCircle } from 'react-feather'
 import ReactGA from 'react-ga'
 import { Text } from 'rebass'
 import styled, { ThemeContext } from 'styled-components'
@@ -81,9 +81,7 @@ const Divider = styled.div`
 `
 
 const SwapPageContainer = styled.div`
-  padding-top: 2rem;
-  padding-left: 0.5rem;
-  padding-right: 0.5rem;
+  padding: 1rem 0.5rem 1rem 0.5rem;
   background: linear-gradient(180deg, rgba(0,77,161,0.7) 0%, rgba(5,30,64,0.7) 100%);
 `
 
@@ -117,6 +115,7 @@ const SwapButton = styled.div`
 const InventoryColumn = styled.div`
 padding-top: 0.5rem;
 padding-left: 1rem;
+padding-bottom: 1rem;
 font-size: smaller;
 background: linear-gradient(180deg, rgba(0,77,161,0.7) 0%, rgba(5,30,64,0.7) 100%);
   @media (max-width: 1350px) {
@@ -145,8 +144,6 @@ export const Center = styled.div`
 export const FooterInfo = styled.div`
   display: flex;
   margin: 0 auto;
-  margin-top: -3rem;
-  margin-bottom: 0.5rem;
   font-size: small;
   z-index: 99;
 `
@@ -434,10 +431,13 @@ export default function Swap() {
                         otherCurrency={currencies[Field.OUTPUT]}
                         id="swap-currency-input"
                       />
-                      {/* <AutoColumn justify="space-between">
+                    </AutoColumn>
+                  </div>
+                  <TradePriceContainer>
+                  <AutoColumn justify="space-between">
                       <AutoRow justify={isExpertMode ? 'space-between' : 'center'} style={{ padding: '0 1rem' }}>
                         <ArrowWrapper clickable>
-                          <ArrowDown
+                          <ArrowRightCircle
                             size="16"
                             onClick={() => {
                               setApprovalSubmitted(false) // reset 2 step UI for approvals
@@ -452,10 +452,7 @@ export default function Swap() {
                           </LinkStyledButton>
                         ) : null}
                       </AutoRow>
-                    </AutoColumn> */}
-                    </AutoColumn>
-                  </div>
-                  <TradePriceContainer>
+                    </AutoColumn> 
                     {showWrap ? null : (
                       <TradeCard padding={'.25rem .75rem 0 .75rem'} borderRadius={'20px'}>
                         <AutoColumn gap="4px">
@@ -498,7 +495,7 @@ export default function Swap() {
                         id="swap-currency-output"
                       />
 
-                      {/* {recipient !== null && !showWrap ? (
+                     {recipient !== null && !showWrap ? (
                         <>
                           <AutoRow justify="space-between" style={{ padding: '0 1rem' }}>
                             <ArrowWrapper clickable={false}>
@@ -510,7 +507,7 @@ export default function Swap() {
                           </AutoRow>
                           <AddressInputPanel id="recipient" value={recipient} onChange={onChangeRecipient} />
                         </>
-                      ) : null} */}
+                      ) : null} 
                     </AutoColumn>
                   </div>
                 </SwapCurrencyContainer>
@@ -624,12 +621,11 @@ export default function Swap() {
 
           </SwapGridContainer>
           {/* <AdvancedSwapDetailsDropdown trade={trade} /> */}
-
         </Wrapper>
-      </AppBody>
-      <FooterInfo>
+        <FooterInfo>
           <Center>Select two token. Press <ButtonBgItem src={buttonBg} /> button to swap.</Center>
         </FooterInfo>
+      </AppBody>
     </>
   )
 }
