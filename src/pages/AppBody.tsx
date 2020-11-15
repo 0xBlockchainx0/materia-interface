@@ -15,10 +15,7 @@ export const BodyWrapper = styled.div`
   border-radius: 5px;
   padding: 1rem;
   cursor: auto;
-  background: rgb(0,77,161, 0.7);
-  background: -moz-linear-gradient(168deg, rgba(0,77,161,0.7) 0%, rgba(5,30,64,0.7) 100%);
-  background: -webkit-linear-gradient(168deg, rgba(0,77,161,0.7) 0%, rgba(5,30,64,0.7) 100%);
-  background: linear-gradient(168deg, rgba(0,77,161,0.7) 0%, rgba(5,30,64,0.7) 100%);
+  ${({ theme }) => theme.bodyWrapperBackground}
 `
 
 export const ButtonBgItem = styled.img`
@@ -41,7 +38,7 @@ const StyledBox = styled.div`
   z-index: 0;
   cursor: pointer;
   border-radius: 5px;
-  border: 1px solid #1e9de3;
+  ${({ theme }) => theme.styledBoxBorder}
 `
 
 const StyledCornerImage = styled.img`

@@ -5,7 +5,6 @@ import { darken, lighten } from 'polished'
 import { RowBetween } from '../Row'
 import { ChevronDown } from 'react-feather'
 import { Button as RebassButton, ButtonProps } from 'rebass/styled-components'
-import swapButtonBg from '../../assets/images/button-background.png'
 
 const Base = styled(RebassButton) <{
   padding?: string
@@ -40,24 +39,22 @@ const Base = styled(RebassButton) <{
 `
 
 export const ButtonPrimary = styled(Base)`
-  background-color: rgb(0,0,0,0.5);
-  border: 2px solid ${({ theme }) => theme.cyan1};
-  color: ${({ theme }) => theme.grey};
-  padding: 5px 10px;
-  border-radius: 35px;
+  background-color: ${({ theme }) => theme.primary1};  
+  border: 1px solid ${({ theme }) => theme.cyan1};
+  color: white;
   &:focus {
-    box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.05, theme.cyan1)};
-    background-color: ${({ theme }) => darken(0.05, theme.bg6)};
+    box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.05, theme.primary1)};
+    background-color: ${({ theme }) => darken(0.05, theme.primary1)};
   }
   &:hover {
-    background-color: ${({ theme }) => darken(0.05, theme.bg6)};
+    background-color: ${({ theme }) => darken(0.05, theme.primary1)};
   }
   &:active {
     box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.1, theme.bg6)};
     background-color: ${({ theme }) => darken(0.1, theme.bg6)};
   }
   &:disabled {
-    background-color: ${({ theme, altDisabledStyle }) => (altDisabledStyle ? theme.bg6 : theme.bg6)};
+    background-color: ${({ theme, altDisabledStyle }) => (altDisabledStyle ? theme.primary1 : theme.bg3)};
     color: ${({ theme, altDisabledStyle }) => (altDisabledStyle ? 'white' : theme.text3)};
     cursor: auto;
     box-shadow: none;
@@ -98,7 +95,7 @@ export const ButtonLight = styled(Base)`
 export const ButtonMateriaLight = styled(ButtonLight)`
   width: auto;
   color: ${({ theme }) => theme.text1};
-  background-color: rgb(0, 0, 0, 0.5);
+  background-color: ${({ theme }) => theme.bg8};
   border: 2px solid ${({ theme }) => theme.cyan1};
   padding: 5px 10px;
   border-radius: 35px;
@@ -106,23 +103,23 @@ export const ButtonMateriaLight = styled(ButtonLight)`
   border-radius: 15px;
   &:focus {
     box-shadow: none;
-    background-color: rgb(0, 0, 0, 0.5);
+    background-color: ${({ theme }) => theme.bg8};
     border: 2px solid ${({ theme }) => theme.cyan1};
   }
   &:hover {
-    background-color: rgb(0, 0, 0, 0.5);
+    background-color: ${({ theme }) => theme.bg8};
     border: 2px solid ${({ theme }) => theme.cyan1};
   }
   &:active {
     box-shadow: none;
-    background-color: rgb(0, 0, 0, 0.5);
+    background-color: r${({ theme }) => theme.bg8};
     border: 2px solid ${({ theme }) => theme.cyan1};
   }
   :disabled {
     opacity: 0.4;
     :hover {
       cursor: auto;
-      background-color: rgb(0, 0, 0, 0.5);
+      background-color: ${({ theme }) => theme.bg8};
       border: 2px solid ${({ theme }) => theme.cyan1};
       box-shadow: none;
       outline: none;
@@ -132,27 +129,27 @@ export const ButtonMateriaLight = styled(ButtonLight)`
 
 export const ButtonMateriaPrimary = styled(ButtonPrimary)`
   width: auto;
-  background-color: rgb(0, 0, 0, 0.5);
+  background-color: ${({ theme }) => theme.bg8};
   border: 2px solid ${({ theme }) => theme.cyan1};
   color: ${({ theme }) => theme.text1};
   padding: 5px 15px;
   border-radius: 15px;
   &:focus {
     box-shadow: none;
-    background-color: rgb(0, 0, 0, 0.5);
+    background-color: ${({ theme }) => theme.bg8};
     border: 2px solid ${({ theme }) => theme.cyan1};
   }
   &:hover {
-    background-color: rgb(0, 0, 0, 0.5);
+    background-color: ${({ theme }) => theme.bg8};
     border: 2px solid ${({ theme }) => theme.cyan1};
   }
   &:active {
     box-shadow: none;
-    background-color: rgb(0, 0, 0, 0.5);
+    background-color: ${({ theme }) => theme.bg8};
     border: 2px solid ${({ theme }) => theme.cyan1};
   }
   &:disabled {
-    background-color: rgb(0, 0, 0, 0.5);
+    background-color: ${({ theme }) => theme.bg8};
     border: 2px solid ${({ theme }) => theme.cyan1};
     color: ${({ theme }) => theme.text1};
     cursor: auto;
@@ -181,32 +178,30 @@ export const ButtonGray = styled(Base)`
 `
 
 export const ButtonSecondary = styled(Base)`
-  border: 2px solid ${({ theme }) => theme.cyan1};
-  color: white;
-  background-color: transparent;
+border: 1px solid ${({ theme }) => theme.primary4};
+color: ${({ theme }) => theme.primary1};
+background-color: transparent;
   font-size: 18px;
   border-radius: 35px;
   padding: ${({ padding }) => (padding ? padding : '10px')};
 
   &:focus {
-    box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.05, theme.cyan1)};
-    background-color: ${({ theme }) => darken(0.05, theme.bg6)};
+    box-shadow: 0 0 0 1pt ${({ theme }) => theme.primary4};
+    border: 1px solid ${({ theme }) => theme.primary3};
   }
   &:hover {
-    background-color: ${({ theme }) => darken(0.05, theme.bg6)};
+    border: 1px solid ${({ theme }) => theme.primary3};
   }
   &:active {
-    box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.1, theme.bg6)};
-    background-color: ${({ theme }) => darken(0.1, theme.bg6)};
+    box-shadow: 0 0 0 1pt ${({ theme }) => theme.primary4};
+    border: 1px solid ${({ theme }) => theme.primary3};
   }
   &:disabled {
-    background-color: ${({ theme, altDisabledStyle }) => (altDisabledStyle ? theme.bg6 : theme.bg6)};
-    color: ${({ theme, altDisabledStyle }) => (altDisabledStyle ? 'white' : theme.text3)};
     cursor: auto;
     box-shadow: none;
     border: 1px solid transparent;
     outline: none;
-    opacity: ${({ altDisabledStyle }) => (altDisabledStyle ? '0.7' : '1')};
+    opacity: 50%;
   }
 `
 
@@ -344,7 +339,7 @@ export const SwapButton = styled(ButtonMateriaPrimary)`
   border: none;
   border-radius: unset;
   background-color: transparent;
-  background-image: url(${swapButtonBg});
+  ${({ theme }) => theme.swapButtonBg};
   background-repeat: no-repeat;
   background-size: 100% 100%;
   // padding: 18px;

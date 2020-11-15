@@ -1,4 +1,4 @@
-import { FlattenSimpleInterpolation, ThemedCssFunction } from 'styled-components'
+import { FlattenSimpleInterpolation, FlattenSimpleInterpolation, ThemedCssFunction } from 'styled-components'
 
 export type Color = string
 export interface Colors {
@@ -21,6 +21,7 @@ export interface Colors {
   bg5: Color
   bg6: Color
   bg7: Color
+  bg8: Color
 
   modalBG: Color
   advancedBG: Color
@@ -50,6 +51,7 @@ export interface Colors {
   cyan1: Color
   cyan2: Color
   grey: Color
+  transparent: Color
 }
 
 export interface Grids {
@@ -76,5 +78,18 @@ declare module 'styled-components' {
     // css snippets
     flexColumnNoWrap: FlattenSimpleInterpolation
     flexRowNoWrap: FlattenSimpleInterpolation
+
+    bodyBackground: FlattenSimpleInterpolation
+
+    bodyWrapperBackground: FlattenSimpleInterpolation
+    styledBoxBorder: FlattenSimpleInterpolation
+
+    backgroundContainer: FlattenSimpleInterpolation
+    backgroundContainer2: FlattenSimpleInterpolation
+    backgroundContainer3: FlattenSimpleInterpolation
+
+    tokenBackground: string
+    swapButtonBg: FlattenSimpleInterpolation
+    swapButtonSrc: string
   }
 }

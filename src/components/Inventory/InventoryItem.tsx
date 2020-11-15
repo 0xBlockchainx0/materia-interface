@@ -9,10 +9,8 @@ const Item = styled.div`
   margin-bottom: 0.15rem;
   width: 100%;
   height: 15%;
-  background-color: rgba(0, 27, 49, 0.5);
+  ${({ theme }) => theme.backgroundContainer2}
   background-size: cover;
-  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
-    0px 24px 32px rgba(0, 0, 0, 0.01);
 `
 
 const GridContainer = styled.div`

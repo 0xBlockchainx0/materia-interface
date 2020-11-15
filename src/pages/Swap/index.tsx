@@ -45,7 +45,6 @@ import AppBody, { ButtonBgItem } from '../AppBody'
 import { ClickableText } from '../Pool/styleds'
 import Loader from '../../components/Loader'
 import Inventory from '../../components/Inventory'
-import buttonBg from '../../assets/images/button-background.png'
 
 const SwapGridContainer = styled.div`
   display: grid;
@@ -82,7 +81,7 @@ const Divider = styled.div`
 
 const SwapPageContainer = styled.div`
   padding: 1rem 0.5rem 1rem 0.5rem;
-  background: linear-gradient(180deg, rgba(0,77,161,0.7) 0%, rgba(5,30,64,0.7) 100%);
+  ${({ theme }) => theme.backgroundContainer}
 `
 
 const SwapMenu = styled.div`
@@ -117,7 +116,7 @@ padding-top: 0.5rem;
 padding-left: 1rem;
 padding-bottom: 1rem;
 font-size: smaller;
-background: linear-gradient(180deg, rgba(0,77,161,0.7) 0%, rgba(5,30,64,0.7) 100%);
+${({ theme }) => theme.backgroundContainer}
   @media (max-width: 1350px) {
     display: none;
   }
@@ -393,7 +392,7 @@ export default function Swap() {
           <SwapGridContainer>
             <ItemColumn>
             <div style={{ writingMode: 'vertical-rl', textOrientation: 'mixed' }}>
-              <p style={{ fontSize: 'xx-large', margin: '0px 0px 0px -10px' }}>
+              <p style={{ fontSize: 'xx-large', margin: '0px 0px 0px -10px', color: '#fff' }}>
                 Swap
               </p>
             </div>
@@ -623,7 +622,7 @@ export default function Swap() {
           {/* <AdvancedSwapDetailsDropdown trade={trade} /> */}
         </Wrapper>
         <FooterInfo>
-          <Center>Select two token. Press <ButtonBgItem src={buttonBg} /> button to swap.</Center>
+          <Center>Select two token. Press <ButtonBgItem src={theme.swapButtonSrc}/> button to swap.</Center>
         </FooterInfo>
       </AppBody>
     </>

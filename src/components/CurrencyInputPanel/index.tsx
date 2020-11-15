@@ -10,7 +10,6 @@ import { RowBetween } from '../Row'
 import { TYPE } from '../../theme'
 import { Input as NumericalInput } from '../NumericalInput'
 import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
-import tokenbackground from '../../assets/images/token-background.png'
 
 import { useActiveWeb3React } from '../../hooks'
 import { useTranslation } from 'react-i18next'
@@ -60,9 +59,10 @@ const Aligner = styled.span`
   align-items: center;
   justify-content: space-between;
 `
+const tokenBackground = styled.var`${({ theme }) => theme.tokenBackground}`
 
 const TokenImage = styled.div<{ showBackground: boolean }>`
-  background: ${props => props.showBackground ? 'url(' + tokenbackground + ') no-repeat' : 'unset'}    
+  background: ${props => props.showBackground ? ({ theme }) => theme.tokenBackground : 'unset'}    
   background-size: contain;
   padding: 6rem;
   background-position: center;

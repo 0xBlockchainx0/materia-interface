@@ -40,7 +40,7 @@ export default function Inventory() {
           })
         )
           :
-          (<TYPE.body color={theme.text1} fontWeight={400} fontSize={12}>No tokens present in your inventory</TYPE.body>)
+          (<TYPE.body color={theme.text1} fontWeight={400} fontSize={12}>No items present in your inventory</TYPE.body>)
       }
     </InventoryContainer>
   )
