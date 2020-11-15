@@ -307,6 +307,9 @@ export default function Header() {
           <StyledExternalLink id={`stake-nav-link`} href={'https://www.dfohub.com'}>
             DFO <span style={{ fontSize: '11px' }}>↗</span> 
           </StyledExternalLink>
+          <StyledExternalLink id={`stake-nav-link`} href={'https://ethitem.com'}>
+            EthItem <span style={{ fontSize: '11px' }}>↗</span> 
+          </StyledExternalLink>
         </HeaderLinks>
       </HeaderRow>
     </HeaderFrame>

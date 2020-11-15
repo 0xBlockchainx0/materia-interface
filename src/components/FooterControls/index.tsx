@@ -85,7 +85,7 @@ const FooterControls = styled.div`
     justify-self: center;
     width: 100%;
     max-width: 960px;
-    padding: 0rem;
+    padding: 0rem 0.5rem;
     position: fixed;
     bottom: 0px;
     left: 0px;
@@ -93,8 +93,7 @@ const FooterControls = styled.div`
     z-index: 99;
     height: 72px;
     // border-radius: 12px 12px 0 0;
-    border: 2px solid ${({ theme }) => theme.cyan2};
-    background-color: #002852;
+    ${({ theme }) => theme.backgroundContainer2}
   `};
 `
 
