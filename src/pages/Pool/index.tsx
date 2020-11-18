@@ -82,7 +82,7 @@ const GoBottom = styled.div`
 
 const PoolGridContainer = styled.div`
   display: grid;
-  grid-template-columns: 5% auto;
+  grid-template-columns: 3% auto;
 
   @media (min-width: 601px) and (max-width: 1350px) {
     grid-template-columns: 50px auto !important;
@@ -102,7 +102,7 @@ const ItemColumn = styled.div`
 `
 
 const MainContainer = styled.div`
-
+${({ theme }) => theme.backgroundContainer}
 `
 
 export default function Pool() {
@@ -145,13 +145,13 @@ export default function Pool() {
       <AppBody>
         <SwapPoolTabs active={'pool'} />
         <PoolGridContainer>
-          <ItemColumn>
+        <ItemColumn>
             <div style={{ writingMode: 'vertical-rl', textOrientation: 'mixed' }}>
-              <p style={{ fontSize: 'xx-large', margin: '0px 1.5rem 0px 0px' }}>
+              <p style={{ fontSize: 'xx-large', margin: '0px 0px 0px -10px', color: '#fff' }}>
                 Pool
               </p>
             </div>
-          </ItemColumn>
+            </ItemColumn>
           <MainContainer>
           <VoteCard>
           {/* <CardBGImage /> */}
@@ -159,7 +159,7 @@ export default function Pool() {
           <CardSection>
             <AutoColumn gap="md">
               <RowBetween>
-                <TYPE.white fontWeight={600}>Liquidity provider rewards</TYPE.white>
+                <TYPE.white color={theme.text1} fontWeight={600}>Liquidity provider rewards</TYPE.white>
               </RowBetween>
               <RowBetween>
                 <TYPE.white fontSize={14}>

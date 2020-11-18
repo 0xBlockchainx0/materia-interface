@@ -69,6 +69,7 @@ export const CardSection = styled(AutoColumn)<{ disabled?: boolean }>`
   padding: 1rem;
   z-index: 1;
   opacity: ${({ disabled }) => disabled && '0.4'};
+  ${({ theme }) => theme.backgroundContainer2}
 `
 
 export const Break = styled.div`
