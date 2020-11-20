@@ -53,10 +53,10 @@ function withVesting(before: JSBI, time: BigNumber, amount: number, start: numbe
   return before
 }
 
-export function computeUniCirculation(
-  uni: Token,
+export function computeGilCirculation(
+  gil: Token,
   blockTimestamp: BigNumber,
-  unclaimedUni: TokenAmount | undefined
+  unclaimedGil: TokenAmount | undefined
 ): TokenAmount {
   let wholeAmount = JSBI.BigInt(USERS_AMOUNT)
 
@@ -107,6 +107,6 @@ export function computeUniCirculation(
   wholeAmount = withVesting(wholeAmount, blockTimestamp, TEAM_YEAR_3_AMOUNT, TREASURY_BEGIN_YEAR_3, TREASURY_END_YEAR_3)
   wholeAmount = withVesting(wholeAmount, blockTimestamp, TEAM_YEAR_4_AMOUNT, TREASURY_BEGIN_YEAR_4, TREASURY_END_YEAR_4)
 
-  const total = new TokenAmount(uni, JSBI.multiply(wholeAmount, JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(18))))
-  return unclaimedUni ? total.subtract(unclaimedUni) : total
+  const total = new TokenAmount(gil, JSBI.multiply(wholeAmount, JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(18))))
+  return unclaimedGil ? total.subtract(unclaimedGil) : total
 }

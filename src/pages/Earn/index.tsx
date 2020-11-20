@@ -98,7 +98,7 @@ const MainContainer = styled.div`
               </RowBetween>
               <RowBetween>
                 <TYPE.white fontSize={14}>
-                  Deposit your Liquidity Provider tokens to receive $GIL, the Materia DFO protocol governance token.
+                  Deposit your Liquidity Provider tokens to receive GIL, the Materia DFO protocol governance token.
                 </TYPE.white>
               </RowBetween>{' '}
               <ExternalLink

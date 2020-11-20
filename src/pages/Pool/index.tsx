@@ -16,7 +16,7 @@ import { AutoColumn } from '../../components/Column'
 
 import { useActiveWeb3React } from '../../hooks'
 import { usePairs } from '../../data/Reserves'
-import { toV2LiquidityToken, useTrackedTokenPairs } from '../../state/user/hooks'
+import { toLiquidityToken, useTrackedTokenPairs } from '../../state/user/hooks'
 import { Dots } from '../../components/swap/styleds'
 import { CardSection, DataCard, CardNoise, CardBGImage } from '../../components/earn/styled'
 import AppBody from '../AppBody'
@@ -109,36 +109,34 @@ export default function Pool() {
   const theme = useContext(ThemeContext)
   const { account } = useActiveWeb3React()
 
-  // fetch the user's balances of all tracked V2 LP tokens
+  // fetch the user's balances of all tracked LP tokens
   const trackedTokenPairs = useTrackedTokenPairs()
   const tokenPairsWithLiquidityTokens = useMemo(
-    () => trackedTokenPairs.map(tokens => ({ liquidityToken: toV2LiquidityToken(tokens), tokens })),
+    () => trackedTokenPairs.map(tokens => ({ liquidityToken: toLiquidityToken(tokens), tokens })),
     [trackedTokenPairs]
   )
   const liquidityTokens = useMemo(() => tokenPairsWithLiquidityTokens.map(tpwlt => tpwlt.liquidityToken), [
     tokenPairsWithLiquidityTokens
   ])
-  const [v2PairsBalances, fetchingV2PairBalances] = useTokenBalancesWithLoadingIndicator(
+  const [pairsBalances, fetchingPairBalances] = useTokenBalancesWithLoadingIndicator(
     account ?? undefined,
     liquidityTokens
   )
 
-  // fetch the reserves for all V2 pools in which the user has a balance
+  // fetch the reserves for all pools in which the user has a balance
   const liquidityTokensWithBalances = useMemo(
     () =>
       tokenPairsWithLiquidityTokens.filter(({ liquidityToken }) =>
-        v2PairsBalances[liquidityToken.address]?.greaterThan('0')
+        pairsBalances[liquidityToken.address]?.greaterThan('0')
       ),
-    [tokenPairsWithLiquidityTokens, v2PairsBalances]
+    [tokenPairsWithLiquidityTokens, pairsBalances]
   )
 
-  const v2Pairs = usePairs(liquidityTokensWithBalances.map(({ tokens }) => tokens))
-  const v2IsLoading =
-    fetchingV2PairBalances || v2Pairs?.length < liquidityTokensWithBalances.length || v2Pairs?.some(V2Pair => !V2Pair)
+  const pairs = usePairs(liquidityTokensWithBalances.map(({ tokens }) => tokens))
+  const isLoading =
+    fetchingPairBalances || pairs?.length < liquidityTokensWithBalances.length || pairs?.some(Pair => !Pair)
 
-  const allV2PairsWithLiquidity = v2Pairs.map(([, pair]) => pair).filter((v2Pair): v2Pair is Pair => Boolean(v2Pair))
-
-  const hasV1Liquidity = useUserHasLiquidityInAllTokens()
+  const allPairsWithLiquidity = pairs.map(([, pair]) => pair).filter((pair): pair is Pair => Boolean(pair))
 
   return (
     <>
@@ -204,25 +202,25 @@ export default function Pool() {
                   Connect to a wallet to view your liquidity.
                 </TYPE.body>
               </Card>
-            ) : v2IsLoading ? (
+            ) : isLoading ? (
               <EmptyProposals>
                 <TYPE.body color={theme.text3} textAlign="center">
                   <Dots>Loading</Dots>
                 </TYPE.body>
               </EmptyProposals>
-            ) : allV2PairsWithLiquidity?.length > 0 ? (
+            ) : allPairsWithLiquidity?.length > 0 ? (
               <>
                 <ButtonSecondary>
                   <RowBetween>
-                    <ExternalLink href={'https://uniswap.info/account/' + account}>
+                    <ExternalLink href={'https://info.materia.exchange/account/' + account}>
                       Account analytics and accrued fees
                     </ExternalLink>
                     <span> ↗</span>
                   </RowBetween>
                 </ButtonSecondary>
 
-                {allV2PairsWithLiquidity.map(v2Pair => (
-                  <FullPositionCard key={v2Pair.liquidityToken.address} pair={v2Pair} />
+                {allPairsWithLiquidity.map(pair => (
+                  <FullPositionCard key={pair.liquidityToken.address} pair={pair} />
                 ))}
               </>
             ) : (
@@ -232,18 +230,6 @@ export default function Pool() {
                 </TYPE.body>
                     </EmptyProposals>
                   )}
-
-            <GoBottom>
-              <AutoColumn justify={'center'} gap="md">
-                <Text textAlign="center" fontSize={14} style={{ padding: '.5rem 0 .5rem 0' }}>
-                  {hasV1Liquidity ? 'Uniswap V1 liquidity found!' : "Don't see a pool you joined?"}{' '}
-                  <StyledInternalLink id="import-pool-link" to={hasV1Liquidity ? '/migrate/v1' : '/find'}>
-                    {hasV1Liquidity ? 'Migrate now.' : 'Import it.'}
-                  </StyledInternalLink>
-                </Text>
-              </AutoColumn>
-            </GoBottom>
-
           </AutoColumn>
         </AutoColumn>
  

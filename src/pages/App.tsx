@@ -2,7 +2,6 @@ import React, { Suspense } from 'react'
 import { Route, Switch } from 'react-router-dom'
 import styled from 'styled-components'
 import GoogleAnalyticsReporter from '../components/analytics/GoogleAnalyticsReporter'
-import AddressClaimModal from '../components/claim/AddressClaimModal'
 import Footer from '../components/Footer/Footer'
 import Header from '../components/Header'
 import FooterControls from '../components/FooterControls'
@@ -71,12 +70,6 @@ const Marginer = styled.div`
   margin-top: 5rem;
 `
 
-function TopLevelModals() {
-  const open = useModalOpen(ApplicationModal.ADDRESS_CLAIM)
-  const toggle = useToggleModal(ApplicationModal.ADDRESS_CLAIM)
-  return <AddressClaimModal isOpen={open} onDismiss={toggle} />
-}
-
 export default function App() {
   return (
     <Suspense fallback={null}>
@@ -90,7 +83,6 @@ export default function App() {
         <BodyWrapper>
           <Popups />
           {/* <Polling /> */}
-          <TopLevelModals />
           <Web3ReactManager>
             <Switch>
               <Route exact strict path="/swap" component={Swap} />
@@ -99,7 +91,7 @@ export default function App() {
               <Route exact strict path="/send" component={RedirectPathToSwapOnly} />
               <Route exact strict path="/find" component={PoolFinder} />
               <Route exact strict path="/pool" component={Pool} />
-              <Route exact strict path="/uni" component={Earn} />
+              <Route exact strict path="/lm" component={Earn} />
               <Route exact strict path="/create" component={RedirectToAddLiquidity} />
               <Route exact path="/add" component={AddLiquidity} />
               <Route exact path="/add/:currencyIdA" component={RedirectOldAddLiquidityPathStructure} />
@@ -112,7 +104,7 @@ export default function App() {
               <Route exact strict path="/remove/:currencyIdA/:currencyIdB" component={RemoveLiquidity} />
               <Route exact strict path="/migrate/v1" component={MigrateV1} />
               <Route exact strict path="/migrate/v1/:address" component={MigrateV1Exchange} />
-              <Route exact strict path="/uni/:currencyIdA/:currencyIdB" component={Manage} />
+              <Route exact strict path="/lm/:currencyIdA/:currencyIdB" component={Manage} />
               <Route component={RedirectPathToSwapOnly} />
             </Switch>
           </Web3ReactManager>

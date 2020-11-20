@@ -24,7 +24,6 @@ import Row, { RowFixed } from '../Row'
 import Web3Status from '../Web3Status'
 import { Dots } from '../swap/styleds'
 import Modal from '../Modal'
-import UniBalanceContent from './UniBalanceContent'
 import usePrevious from '../../hooks/usePrevious'
 
 const HeaderFrame = styled.div`
@@ -275,9 +274,6 @@ export default function Header() {
 
   return (
     <HeaderFrame>
-      <Modal isOpen={showUniBalanceModal} onDismiss={() => setShowUniBalanceModal(false)}>
-        <UniBalanceContent setShowUniBalanceModal={setShowUniBalanceModal} />
-      </Modal>
       <HeaderRow>
         <Title href=".">
           <UniIcon>
@@ -301,7 +297,7 @@ export default function Header() {
           >
             Pool
           </StyledNavLink>
-          <StyledNavLink id={`stake-nav-link`} to={'/uni'}>
+          <StyledNavLink id={`stake-nav-link`} to={'/lm'}>
             LM
           </StyledNavLink>
           <StyledExternalLink id={`stake-nav-link`} href={'https://www.dfohub.com'}>
