@@ -1,4 +1,4 @@
-import { JSBI, Pair, Percent } from '@uniswap/sdk'
+import { JSBI, Pair, Percent } from '@materia-dex/sdk'
 import { darken } from 'polished'
 import React, { useState } from 'react'
 import { ChevronDown, ChevronUp } from 'react-feather'
@@ -280,7 +280,7 @@ export default function FullPositionCard({ pair, border }: PositionCardProps) {
             <ButtonSecondary padding="8px" borderRadius="8px">
               <ExternalLink
                 style={{ width: '100%', textAlign: 'center' }}
-                href={`https://uniswap.info/account/${account}`}
+                href={`https://info.materia.exchange/account/${account}`}
               >
                 View accrued fees and analytics<span style={{ fontSize: '11px' }}>↗</span>
               </ExternalLink>
