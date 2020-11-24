@@ -57,16 +57,6 @@ const SwapGridContainer = styled.div`
   }
 `
 
-// const SwapTitleColumn = styled.div`
-//   writingMode: vertical-rl;
-//   text-orientation: mixed;
-//   margin-left: 54px
-// `
-
-// const SwapTitleColumnContent = styled.p`
-//   font-size: xx-large;
-// `
-
 const SwapCurrencyContainer = styled.div`
   @media (min-width: 1050px) {
     display: grid;
@@ -195,6 +185,7 @@ export default function Swap() {
   const { address: recipientAddress } = useENSAddress(recipient)
 
   const trade = showWrap ? undefined : v2Trade
+  const defaultTrade = showWrap ? undefined : v2Trade
 
   const parsedAmounts = showWrap
     ? {
@@ -294,7 +285,8 @@ export default function Swap() {
                 : 'Swap w/ Send',
           label: [
             trade?.inputAmount?.currency?.symbol,
-            trade?.outputAmount?.currency?.symbol
+            trade?.outputAmount?.currency?.symbol,
+            v2Trade
           ].join('/')
         })
       })
@@ -383,11 +375,6 @@ export default function Swap() {
               </p>
             </div>
             </ItemColumn>
-            {/* <SwapTitleColumn>
-              <SwapTitleColumnContent>
-                Swap
-              </SwapTitleColumnContent>
-            </SwapTitleColumn> */}
             <InventoryColumn>
               <Inventory />
             </InventoryColumn>
@@ -586,11 +573,11 @@ export default function Swap() {
                                 </Text>
                               </ButtonMateriaError>
                             )}
-                    {/* {showApproveFlow && (
+                    {showApproveFlow && (
                       <Column style={{ marginTop: '1rem' }}>
                         <ProgressSteps steps={[approval === ApprovalState.APPROVED]} />
                       </Column>
-                    )} */}
+                    )} 
                     {isExpertMode && swapErrorMessage ? <SwapCallbackError error={swapErrorMessage} /> : null}
                     {/* {betterTradeLinkVersion ? (
                       <BetterTradeLink version={betterTradeLinkVersion} />
@@ -601,11 +588,8 @@ export default function Swap() {
                 </BottomGrouping>
               </div>
               <AdvancedSwapDetailsDropdown trade={trade} />
-
             </SwapPageContainer>
-
           </SwapGridContainer>
-          {/* <AdvancedSwapDetailsDropdown trade={trade} /> */}
         </Wrapper>
         <FooterInfo>
           <Center>Select two token. Press <ButtonBgItem src={theme.swapButtonSrc}/> button to swap.</Center>
