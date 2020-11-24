@@ -1,4 +1,4 @@
-import { Currency, ETHER, Token } from '@materia-dex/sdk'
+import { Currency, ETHER, Token } from '@uniswap/sdk'
 
 export function currencyId(currency: Currency): string {
   if (currency === ETHER) return 'ETH'

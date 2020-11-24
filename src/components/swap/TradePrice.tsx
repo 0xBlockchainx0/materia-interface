@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react'
-import { Price } from '@materia-dex/sdk'
+import { Price } from '@uniswap/sdk'
 import { useContext } from 'react'
 import { Repeat } from 'react-feather'
 import { Text } from 'rebass'

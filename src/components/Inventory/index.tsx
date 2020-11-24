@@ -1,4 +1,4 @@
-import { CurrencyAmount, JSBI, TokenAmount } from '@materia-dex/sdk';
+import { CurrencyAmount, JSBI, TokenAmount } from '@uniswap/sdk';
 import React, { useContext } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 import { useUserTokens } from '../../state/wallet/hooks';

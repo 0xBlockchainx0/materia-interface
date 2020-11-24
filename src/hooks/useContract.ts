@@ -1,7 +1,7 @@
 import { Contract } from '@ethersproject/contracts'
 import { abi as STAKING_REWARDS_ABI } from '@uniswap/liquidity-staker/build/StakingRewards.json'
 import { abi as MERKLE_DISTRIBUTOR_ABI } from '@uniswap/merkle-distributor/build/MerkleDistributor.json'
-import { ChainId, WETH } from '@materia-dex/sdk'
+import { ChainId, WETH } from '@uniswap/sdk'
 import { abi as IMateriaPairABI } from '@materia-dex/materia-contracts-core/build/IMateriaPair.json'
 import { useMemo } from 'react'
 import { MERKLE_DISTRIBUTOR_ADDRESS, GIL } from '../constants'

@@ -1,4 +1,4 @@
-import { ChainId, JSBI, Token, TokenAmount } from '@materia-dex/sdk'
+import { ChainId, JSBI, Token, TokenAmount } from '@uniswap/sdk'
 import { BigNumber } from 'ethers'
 import { ZERO_ADDRESS } from '../constants'
 import { computeGilCirculation } from './computeGilCirculation'

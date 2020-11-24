@@ -1,4 +1,4 @@
-import { ChainId } from '@materia-dex/sdk'
+import { ChainId } from '@uniswap/sdk'
 import { createStore, Store } from 'redux'
 import { addPopup, ApplicationModal, removePopup, setOpenModal, updateBlockNumber } from './actions'
 import reducer, { ApplicationState } from './reducer'
