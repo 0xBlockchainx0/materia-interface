@@ -80,7 +80,7 @@ const GoBottom = styled.div`
 
 const PoolGridContainer = styled.div`
   display: grid;
-  grid-template-columns: 3% auto;
+  grid-template-columns: 30px 30% auto;
 
   @media (min-width: 601px) and (max-width: 1350px) {
     grid-template-columns: 50px auto !important;
@@ -88,6 +88,11 @@ const PoolGridContainer = styled.div`
   @media (max-width: 600px) {
     grid-template-columns: auto !important;
   }
+`
+
+const AddLiquidityContainer = styled.div`
+  padding: 1rem 0.5rem 1rem 0.5rem;
+  ${({ theme }) => theme.backgroundContainer}
 `
 
 const ItemColumn = styled.div`
@@ -99,8 +104,10 @@ const ItemColumn = styled.div`
   }
 `
 
-const MainContainer = styled.div`
-${({ theme }) => theme.backgroundContainer}
+const PoolContainer = styled.div`
+  padding: 1rem;
+  font-size: smaller;
+  ${({ theme }) => theme.backgroundContainer}
 `
 
 export default function Pool() {
@@ -141,93 +148,95 @@ export default function Pool() {
       <AppBody>
         <SwapPoolTabs active={'pool'} />
         <PoolGridContainer>
-        <ItemColumn>
+          <ItemColumn>
             <div style={{ writingMode: 'vertical-rl', textOrientation: 'mixed' }}>
               <p style={{ fontSize: 'xx-large', margin: '0px 0px 0px -10px', color: '#fff' }}>
                 Pool
               </p>
             </div>
-            </ItemColumn>
-          <MainContainer>
-          <VoteCard>
-          {/* <CardBGImage /> */}
-          {/* <CardNoise /> */}
-          <CardSection>
-            <AutoColumn gap="md">
-              <RowBetween>
-                <TYPE.white color={theme.text1} fontWeight={600}>Liquidity provider rewards</TYPE.white>
-              </RowBetween>
-              <RowBetween>
-                <TYPE.white fontSize={14}>
-                  {`Liquidity providers earn a 0.3% fee on all trades proportional to their share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity.`}
-                </TYPE.white>
-              </RowBetween>
-            </AutoColumn>
-          </CardSection>
-          <CardBGImage />
-          <CardNoise />
-        </VoteCard>
-        <AutoColumn gap="lg" justify="center">
-          <AutoColumn gap="lg" style={{ width: '100%' }}>
-            <TitleRow style={{ marginTop: '1rem' }} padding={'0'}>
-              <HideSmall>
-                <TYPE.mediumHeader style={{ marginTop: '0.5rem', justifySelf: 'flex-start' }}>
-                  Your liquidity
-                </TYPE.mediumHeader>
-              </HideSmall>
-              <ButtonRow>
-                <ResponsiveButtonSecondary as={Link} padding="6px 8px" to="/create/ETH">
-                  Create a pair
-                </ResponsiveButtonSecondary>
-                <ResponsiveButtonPrimary id="join-pool-button" as={Link} padding="6px 8px" to="/add/ETH">
-                  <Text fontWeight={500} fontSize={16}>
-                    Add Liquidity
-                  </Text>
-                </ResponsiveButtonPrimary>
-              </ButtonRow>
-            </TitleRow>
-
-            {!account ? (
-              <Card padding="40px">
-                <TYPE.body color={theme.text3} textAlign="center">
-                  Connect to a wallet to view your liquidity.
-                </TYPE.body>
-              </Card>
-            ) : isLoading ? (
-              <EmptyProposals>
-                <TYPE.body color={theme.text3} textAlign="center">
-                  <Dots>Loading</Dots>
-                </TYPE.body>
-              </EmptyProposals>
-            ) : allPairsWithLiquidity?.length > 0 ? (
-              <>
-                <ButtonSecondary>
+          </ItemColumn>
+          <PoolContainer>
+            <VoteCard>
+              {/* <CardBGImage /> */}
+              {/* <CardNoise /> */}
+              <CardSection>
+                <AutoColumn gap="md">
                   <RowBetween>
-                    <ExternalLink href={'https://info.materia.exchange/account/' + account}>
-                      Account analytics and accrued fees
-                    </ExternalLink>
-                    <span> ↗</span>
+                    <TYPE.white color={theme.text1} fontWeight={600}>Liquidity provider rewards</TYPE.white>
                   </RowBetween>
-                </ButtonSecondary>
+                  <RowBetween>
+                    <TYPE.white fontSize={14}>
+                      {`Liquidity providers earn a 0.3% fee on all trades proportional to their share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity.`}
+                    </TYPE.white>
+                  </RowBetween>
+                </AutoColumn>
+              </CardSection>
+              <CardBGImage />
+              <CardNoise />
+            </VoteCard>
+            <AutoColumn gap="lg" justify="center">
+              <AutoColumn gap="lg" style={{ width: '100%' }}>
+                <TitleRow style={{ marginTop: '1rem' }} padding={'0'}>
+                  <HideSmall>
+                    <TYPE.mediumHeader style={{ marginTop: '0.5rem', justifySelf: 'flex-start' }}>
+                      Your liquidity
+                </TYPE.mediumHeader>
+                  </HideSmall>
+                </TitleRow>
 
-                {allPairsWithLiquidity.map(pair => (
-                  <FullPositionCard key={pair.liquidityToken.address} pair={pair} />
-                ))}
-              </>
-            ) : (
-                    <EmptyProposals>
-                      <TYPE.body color={theme.text3} textAlign="center">
-                        No liquidity found.
+                {!account ? (
+                  <Card padding="40px">
+                    <TYPE.body color={theme.text3} textAlign="center">
+                      Connect to a wallet to view your liquidity.
                 </TYPE.body>
-                    </EmptyProposals>
-                  )}
-          </AutoColumn>
-        </AutoColumn>
- 
-          </MainContainer>
+                  </Card>
+                ) : isLoading ? (
+                  <EmptyProposals>
+                    <TYPE.body color={theme.text3} textAlign="center">
+                      <Dots>Loading</Dots>
+                    </TYPE.body>
+                  </EmptyProposals>
+                ) : allPairsWithLiquidity?.length > 0 ? (
+                  <>
+                    <ButtonSecondary>
+                      <RowBetween>
+                        <ExternalLink href={'https://info.materia.exchange/account/' + account}>
+                          Account analytics and accrued fees
+                    </ExternalLink>
+                        <span> ↗</span>
+                      </RowBetween>
+                    </ButtonSecondary>
 
+                    {allPairsWithLiquidity.map(pair => (
+                      <FullPositionCard key={pair.liquidityToken.address} pair={pair} />
+                    ))}
+                  </>
+                ) : (
+                        <EmptyProposals>
+                          <TYPE.body color={theme.text3} textAlign="center">
+                            No liquidity found.
+                </TYPE.body>
+                        </EmptyProposals>
+                      )}
+              </AutoColumn>
+            </AutoColumn>
+
+          </PoolContainer>
+          <AddLiquidityContainer>
+            <ButtonRow>
+              <ResponsiveButtonSecondary as={Link} padding="6px 8px" to="/create/ETH">
+                Create a pair
+                </ResponsiveButtonSecondary>
+              <ResponsiveButtonPrimary id="join-pool-button" as={Link} padding="6px 8px" to="/add/ETH">
+                <Text fontWeight={500} fontSize={16}>
+                  Add Liquidity
+                  </Text>
+              </ResponsiveButtonPrimary>
+            </ButtonRow>
+            
+          </AddLiquidityContainer>
         </PoolGridContainer>
-     </AppBody>
+      </AppBody>
     </>
   )
 }
