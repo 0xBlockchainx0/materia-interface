@@ -14,13 +14,13 @@ const Card = styled(Box)<{ padding?: string; border?: string; borderRadius?: str
 export default Card
 
 export const LightCard = styled(Card)`
-  border: 2px solid ${({ theme }) => theme.cyan2};
-  background-color: #002852;
+  border: 1px solid ${({ theme }) => theme.cyan2};
+  background-color: ${({ theme }) => theme.primary5};
 `
 
 export const GreyCard = styled(Card)`
-  border: 2px solid ${({ theme }) => theme.cyan2};
-  background-color: #002852;
+  border: 1px solid ${({ theme }) => theme.cyan2};
+  background-color: ${({ theme }) => theme.primary5};
 `
 
 export const SwapGreyCard = styled(Card)`

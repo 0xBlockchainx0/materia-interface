@@ -181,7 +181,7 @@ export const ButtonSecondary = styled(Base)`
 border: 1px solid ${({ theme }) => theme.primary4};
 color: ${({ theme }) => theme.primary1};
 background-color: transparent;
-  font-size: 18px;
+  font-size: small;
   border-radius: 35px;
   padding: ${({ padding }) => (padding ? padding : '10px')};
 

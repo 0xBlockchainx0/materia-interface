@@ -22,9 +22,7 @@ const TopSection = styled(AutoColumn)`
 
 
 const EarnCard = styled(DataCard)`
-  // background: rgba(0, 27, 49, 0.5) !important;
-  border: 2px solid #1992d3;
-  background: #002852;
+  background: rgba(0, 27, 49, 0.5) !important;
   border-radius: 0px !important;
   overflow: hidden;
 `

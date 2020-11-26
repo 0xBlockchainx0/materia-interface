@@ -19,6 +19,7 @@ import { Dots } from '../../components/swap/styleds'
 import { CardSection, DataCard, CardNoise, CardBGImage } from '../../components/earn/styled'
 import AppBody from '../AppBody'
 
+
 const PageWrapper = styled(AutoColumn)`
   max-width: 640px;
   width: 100%;
@@ -220,7 +221,6 @@ export default function Pool() {
                       )}
               </AutoColumn>
             </AutoColumn>
-
           </PoolContainer>
           <AddLiquidityContainer>
             <ButtonRow>
@@ -233,7 +233,6 @@ export default function Pool() {
                   </Text>
               </ResponsiveButtonPrimary>
             </ButtonRow>
-            
           </AddLiquidityContainer>
         </PoolGridContainer>
       </AppBody>

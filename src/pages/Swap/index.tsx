@@ -369,11 +369,11 @@ export default function Swap() {
           />
           <SwapGridContainer>
             <ItemColumn>
-            <div style={{ writingMode: 'vertical-rl', textOrientation: 'mixed' }}>
-              <p style={{ fontSize: 'xx-large', margin: '0px 0px 0px -10px', color: '#fff' }}>
-                Swap
+              <div style={{ writingMode: 'vertical-rl', textOrientation: 'mixed' }}>
+                <p style={{ fontSize: 'xx-large', margin: '0px 0px 0px -10px', color: '#fff' }}>
+                  Swap
               </p>
-            </div>
+              </div>
             </ItemColumn>
             <InventoryColumn>
               <Inventory />
@@ -406,7 +406,7 @@ export default function Swap() {
                     </AutoColumn>
                   </div>
                   <TradePriceContainer>
-                  <AutoColumn justify="space-between">
+                    <AutoColumn justify="space-between">
                       <AutoRow justify={isExpertMode ? 'space-between' : 'center'} style={{ padding: '0 1rem' }}>
                         <ArrowWrapper clickable>
                           <ArrowRightCircle
@@ -424,7 +424,7 @@ export default function Swap() {
                           </LinkStyledButton>
                         ) : null}
                       </AutoRow>
-                    </AutoColumn> 
+                    </AutoColumn>
                     {showWrap ? null : (
                       <TradeCard padding={'.25rem .75rem 0 .75rem'} borderRadius={'20px'}>
                         <AutoColumn gap="4px">
@@ -467,7 +467,7 @@ export default function Swap() {
                         id="swap-currency-output"
                       />
 
-                     {recipient !== null && !showWrap ? (
+                      {recipient !== null && !showWrap ? (
                         <>
                           <AutoRow justify="space-between" style={{ padding: '0 1rem' }}>
                             <ArrowWrapper clickable={false}>
@@ -479,7 +479,7 @@ export default function Swap() {
                           </AutoRow>
                           <AddressInputPanel id="recipient" value={recipient} onChange={onChangeRecipient} />
                         </>
-                      ) : null} 
+                      ) : null}
                     </AutoColumn>
                   </div>
                 </SwapCurrencyContainer>
@@ -577,7 +577,7 @@ export default function Swap() {
                       <Column style={{ marginTop: '1rem' }}>
                         <ProgressSteps steps={[approval === ApprovalState.APPROVED]} />
                       </Column>
-                    )} 
+                    )}
                     {isExpertMode && swapErrorMessage ? <SwapCallbackError error={swapErrorMessage} /> : null}
                     {/* {betterTradeLinkVersion ? (
                       <BetterTradeLink version={betterTradeLinkVersion} />
@@ -592,7 +592,7 @@ export default function Swap() {
           </SwapGridContainer>
         </Wrapper>
         <FooterInfo>
-          <Center>Select two token. Press <ButtonBgItem src={theme.swapButtonSrc}/> button to swap.</Center>
+          <Center>Select two token. Press <ButtonBgItem src={theme.swapButtonSrc} /> button to swap.</Center>
         </FooterInfo>
       </AppBody>
     </>
