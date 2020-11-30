@@ -10,7 +10,6 @@ import Card, { GreyCard, SwapGreyCard } from '../../components/Card'
 import Column, { AutoColumn } from '../../components/Column'
 import ConfirmSwapModal from '../../components/swap/ConfirmSwapModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
-import { SwapPoolTabs } from '../../components/NavigationTabs'
 import { AutoRow, RowBetween, RowCenter } from '../../components/Row'
 import AdvancedSwapDetailsDropdown from '../../components/swap/AdvancedSwapDetailsDropdown'
 
@@ -352,7 +351,6 @@ export default function Swap() {
         onConfirm={handleConfirmTokenWarning}
       />
       <AppBody>
-        <SwapPoolTabs active={'swap'} />
         <Wrapper id="swap-page">
           <ConfirmSwapModal
             isOpen={showConfirm}
@@ -579,11 +577,6 @@ export default function Swap() {
                       </Column>
                     )}
                     {isExpertMode && swapErrorMessage ? <SwapCallbackError error={swapErrorMessage} /> : null}
-                    {/* {betterTradeLinkVersion ? (
-                      <BetterTradeLink version={betterTradeLinkVersion} />
-                    ) : toggledVersion !== DEFAULT_VERSION && defaultTrade ? (
-                      <DefaultVersionLink />
-                    ) : null} */}
                   </SwapButton>
                 </BottomGrouping>
               </div>

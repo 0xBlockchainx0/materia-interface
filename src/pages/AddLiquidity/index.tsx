@@ -11,7 +11,6 @@ import { AutoColumn, ColumnCenter } from '../../components/Column'
 import TransactionConfirmationModal, { ConfirmationModalContent } from '../../components/TransactionConfirmationModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import DoubleCurrencyLogo from '../../components/DoubleLogo'
-import { AddRemoveTabs } from '../../components/NavigationTabs'
 import { MinimalPositionCard } from '../../components/PositionCard'
 import Row, {AutoRow, RowBetween, RowFlat, RowFixed } from '../../components/Row'
 
@@ -37,7 +36,6 @@ import { PoolPriceBar } from './PoolPriceBar'
 import styled, { ThemeContext } from 'styled-components'
 import { Pair } from '@uniswap/sdk'
 import { Link } from 'react-router-dom'
-import { SwapPoolTabs } from '../../components/NavigationTabs'
 import FullPositionCard from '../../components/PositionCard'
 import { useTokenBalancesWithLoadingIndicator } from '../../state/wallet/hooks'
 import { StyledInternalLink, ExternalLink, TYPE, HideSmall } from '../../theme'
@@ -483,7 +481,6 @@ export default function AddLiquidity({
   return (
     <>
       <AppBody>
-        <SwapPoolTabs active={'pool'} />
         <PoolGridContainer>
           <ItemColumn>
             <div style={{ writingMode: 'vertical-rl', textOrientation: 'mixed' }}>
@@ -573,7 +570,6 @@ export default function AddLiquidity({
               </PoolMenuItem>
             </PoolMenu>
             <Divider></Divider>
-            {/* <AddRemoveTabs creating={isCreate} adding={true} /> */}
             <TransactionConfirmationModal
               isOpen={showConfirm}
               onDismiss={handleDismissConfirmation}
@@ -600,6 +596,7 @@ export default function AddLiquidity({
                   onCurrencySelect={handleCurrencyASelect}
                   showMaxButton={!atMaxAmounts[Field.CURRENCY_A]}
                   currency={currencies[Field.CURRENCY_A]}
+                  disableCurrencySelect={true}
                   id="add-liquidity-input-tokena"
                   showCommonBases
                 />

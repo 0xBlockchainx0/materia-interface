@@ -32,15 +32,15 @@ export default function Inventory() {
         userTokens && userTokens.length > 0 ? (
           userTokens.map((userToken: any) => {
             if (userToken && userToken.token) {
-              return (<InventoryItem key={userToken.token.symbol} tokenName={userToken.token.name} tokenSymbol={userToken.token.symbol} tokenType={''} balance={userToken.toExact(4)} wrapped={false} />)
+              return (<InventoryItem token={userToken.token} key={userToken.token.symbol} tokenName={userToken.token.name} tokenSymbol={userToken.token.symbol} tokenType={''} balance={userToken.toExact(4)} wrapped={false} tokenAddress={userToken.token.address} />)
             }
             else {
-              return (<InventoryItem key={userToken.currency.symbol} tokenName={userToken.currency.name ?? ''} tokenSymbol={userToken.currency.symbol ?? ''} tokenType={''} balance={userToken.toExact(4)} wrapped={false} />)
+              return (<InventoryItem token={userToken.currency} key={userToken.currency.symbol} tokenName={userToken.currency.name ?? ''} tokenSymbol={userToken.currency.symbol ?? ''} tokenType={''} balance={userToken.toExact(4)} wrapped={false} tokenAddress={userToken.currency.address ?? ''}/>)
             }
           })
         )
           :
-          (<TYPE.body color={theme.text1} fontWeight={400} fontSize={12}>No items present in your inventory</TYPE.body>)
+          (<TYPE.body color={theme.text1} fontWeight={400} fontSize={12}>No items in your inventory</TYPE.body>)
       }
     </InventoryContainer>
   )
