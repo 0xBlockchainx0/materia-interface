@@ -12,9 +12,9 @@ import TransactionConfirmationModal, { ConfirmationModalContent } from '../../co
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import DoubleCurrencyLogo from '../../components/DoubleLogo'
 import { MinimalPositionCard } from '../../components/PositionCard'
-import Row, {AutoRow, RowBetween, RowFlat, RowFixed } from '../../components/Row'
+import Row, { AutoRow, RowBetween, RowFlat, RowFixed } from '../../components/Row'
 
-import { ROUTER_ADDRESS } from '../../constants'
+import { ROUTER_ADDRESS, USD } from '../../constants'
 import { PairState } from '../../data/Reserves'
 import { useCurrency } from '../../hooks/Tokens'
 import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
@@ -47,6 +47,8 @@ import { usePairs } from '../../data/Reserves'
 import { toLiquidityToken, useTrackedTokenPairs } from '../../state/user/hooks'
 import { CardSection, DataCard, CardNoise, CardBGImage } from '../../components/earn/styled'
 import AppBody from '../AppBody'
+import useUSD from '../../hooks/useUSD'
+import usePoolCurrencies from '../../hooks/usePoolCurrencies'
 
 
 const PageWrapper = styled(AutoColumn)`
@@ -159,7 +161,7 @@ const PoolMenuItem = styled.div<{ active?: boolean }>`
   opacity: ${({ active }) => (active ? '1' : '0.4')};
   `
 
-  const TradePriceContainer = styled.div`
+const TradePriceContainer = styled.div`
   margin-top: auto;
 `
 
@@ -191,6 +193,10 @@ export default function AddLiquidity({
 }: RouteComponentProps<{ currencyIdA?: string; currencyIdB?: string }>) {
   const { account, chainId, library } = useActiveWeb3React()
   const theme = useContext(ThemeContext)
+  const { poolCurrencyIdA, poolCurrencyIdB } = usePoolCurrencies(currencyIdA, currencyIdB)
+  
+  currencyIdA = poolCurrencyIdA
+  currencyIdB = poolCurrencyIdB
 
   // Pool
   // fetch the user's balances of all tracked LP tokens
@@ -553,8 +559,15 @@ export default function AddLiquidity({
                         </EmptyProposals>
                       )}
               </AutoColumn>
+              <AutoColumn justify={'center'} gap="md">
+                <Text textAlign="center" fontSize={14} style={{ padding: '0' }}>
+                  {"Don't see a pool you joined?"}{' '}
+                  <StyledInternalLink id="import-pool-link" to={'/find'}>
+                    {'Import it.'}
+                  </StyledInternalLink>
+                </Text>
+              </AutoColumn>
             </AutoColumn>
-
           </PoolContainer>
           <AddLiquidityContainer>
             <PoolMenu>

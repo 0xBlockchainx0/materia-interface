@@ -23,12 +23,21 @@ export const WBTC = new Token(ChainId.MAINNET, '0x2260FAC5E5542a773Aa44fBCfeDf7C
 export const TIMELOCK_ADDRESS = '0x1a9C8182C09F50C8318d769245beA52c32BE35BC'
 
 const GIL_ADDRESS = '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984' //TODO change this address
+
 export const GIL: { [chainId in ChainId]: Token } = {
   [ChainId.MAINNET]: new Token(ChainId.MAINNET, GIL_ADDRESS, 18, 'GIL', 'GIL'),
   [ChainId.RINKEBY]: new Token(ChainId.RINKEBY, GIL_ADDRESS, 18, 'GIL', 'GIL'),
   [ChainId.ROPSTEN]: new Token(ChainId.ROPSTEN, GIL_ADDRESS, 18, 'GIL', 'GIL'),
   [ChainId.GÖRLI]: new Token(ChainId.GÖRLI, GIL_ADDRESS, 18, 'GIL', 'GIL'),
   [ChainId.KOVAN]: new Token(ChainId.KOVAN, GIL_ADDRESS, 18, 'GIL', 'GIL')
+}
+
+export const USD: { [chainId in ChainId]: Token } = {
+  [ChainId.MAINNET]: new Token(ChainId.MAINNET, '0x44086035439E676c02D411880FcCb9837CE37c57', 18, 'uSD', 'unified Stable Dollar'),
+  [ChainId.RINKEBY]: new Token(ChainId.RINKEBY, '0xD50c463d643b9b9f29c3DcCD14b219EFD6cFFcF6', 18, 'uSD', 'unified Stable Dollar'),
+  [ChainId.ROPSTEN]: new Token(ChainId.ROPSTEN, '0xD50c463d643b9b9f29c3DcCD14b219EFD6cFFcF6', 18, 'uSD', 'unified Stable Dollar'),
+  [ChainId.GÖRLI]: new Token(ChainId.GÖRLI, '0xD50c463d643b9b9f29c3DcCD14b219EFD6cFFcF6', 18, 'uSD', 'unified Stable Dollar'),
+  [ChainId.KOVAN]: new Token(ChainId.KOVAN, '0xD50c463d643b9b9f29c3DcCD14b219EFD6cFFcF6', 18, 'uSD', 'unified Stable Dollar'),
 }
 
 export const COMMON_CONTRACT_NAMES: { [address: string]: string } = {
