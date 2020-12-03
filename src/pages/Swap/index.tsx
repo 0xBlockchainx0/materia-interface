@@ -345,8 +345,13 @@ export default function Swap() {
 
   return (
     <>
-      <TokenWarningModal
+      {/* <TokenWarningModal
         isOpen={urlLoadedTokens.length > 0 && !dismissTokenWarning}
+        tokens={urlLoadedTokens}
+        onConfirm={handleConfirmTokenWarning}
+      /> */}
+      <TokenWarningModal
+        isOpen={false}
         tokens={urlLoadedTokens}
         onConfirm={handleConfirmTokenWarning}
       />
