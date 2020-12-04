@@ -5,7 +5,7 @@ import frameCorner from '../assets/images/trailer_frame_corner.png'
 
 export const BodyWrapper = styled.div`
   position: relative;
-  // max-width: 1020px;
+  max-width: 1200px;
   min-height: 620px;
   width: 100%;
   // background: url(${appBackground}) no-repeat;
@@ -27,11 +27,13 @@ const StyledBox = styled.div`
   padding: 0;
   margin: 0 auto;
   position: relative;
-  max-width: 75%;
+  max-width: 1200px;
   @media (max-width: 600px) {
-    max-width: 95% !important;
+    max-width: 90% !important;
   }
-  // max-width: 1020px;
+  @media (max-width: 1200px) {
+    max-width: 90%;
+ }
   min-height: 620px;
   width: 100%;
   display: inline-block;

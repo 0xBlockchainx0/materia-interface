@@ -73,10 +73,13 @@ const FooterControls = styled.div`
   flex-direction: row;
   align-items: center;
   justify-self: flex-end;
-  max-width: 75%;
-  // @media (max-width: 600px) {
-  //   max-width: 90%;
-  // }
+  max-width: 1200px;
+  @media (max-width: 600px) {
+     max-width: 90%;
+  }
+  @media (max-width: 1200px) {
+    max-width: 90%;
+ }
   width: 100%;
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
@@ -326,7 +329,7 @@ export default function Footer() {
       <FooterElementWrap>
         <StyledButton type="button" onClick={toggleDarkMode}>
           {darkMode ? <Sun size={20} /> : <Moon size={20} />}
-        </StyledButton>        
+        </StyledButton>
         <Menu />
         <Settings />
       </FooterElementWrap>

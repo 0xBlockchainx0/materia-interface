@@ -5,6 +5,9 @@
   "private": true,
   "devDependencies": {
     "@ethersproject/experimental": "^5.0.1",
+    "@materia-dex/materia-contracts-core": "1.0.1",
+    "@materia-dex/materia-contracts-proxy": "1.0.0",
+    "@materia-dex/sdk": "1.0.1",
     "@popperjs/core": "^2.4.4",
     "@reach/dialog": "^0.10.3",
     "@reach/portal": "^0.10.3",
@@ -29,11 +32,8 @@
     "@typescript-eslint/parser": "^2.31.0",
     "@uniswap/liquidity-staker": "^1.0.2",
     "@uniswap/merkle-distributor": "1.0.1",
-    "@materia-dex/sdk": "1.0.1",
     "@uniswap/sdk": "3.0.3",
     "@uniswap/token-lists": "^1.0.0-beta.17",
-    "@materia-dex/materia-contracts-core": "1.0.1",
-    "@materia-dex/materia-contracts-proxy": "1.0.0",
     "@uniswap/v2-periphery": "^1.1.0-beta.0",
     "@web3-react/core": "^6.0.9",
     "@web3-react/fortmatic-connector": "^6.0.9",
@@ -67,7 +67,7 @@
     "polished": "^3.3.2",
     "prettier": "^1.17.0",
     "qs": "^6.9.4",
-    "react": "^16.13.1",
+    "react": "^16.14.0",
     "react-confetti": "^6.0.0",
     "react-device-detect": "^1.6.2",
     "react-dom": "^16.13.1",
@@ -89,7 +89,7 @@
     "redux-localstorage-simple": "^2.3.1",
     "serve": "^11.3.0",
     "start-server-and-test": "^1.11.0",
-    "styled-components": "^4.2.0",
+    "styled-components": "^4.4.1",
     "typescript": "^3.8.3",
     "use-count-up": "^2.2.5",
     "wcag-contrast": "^3.0.0"
@@ -124,5 +124,8 @@
     ]
   },
   "license": "GPL-3.0-or-later",
-  "dependencies": {}
+  "dependencies": {
+    "react-dropdown": "^1.9.0",
+    "styled-dropdown-component": "^4.0.0"
+  }
 }

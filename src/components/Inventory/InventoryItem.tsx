@@ -13,13 +13,15 @@ import { useSwapActionHandlers } from '../../state/swap/hooks'
 import { Field } from '../../state/wrap/actions'
 import { useDerivedWrapInfo, useWrapActionHandlers, useWrapState } from '../../state/wrap/hooks'
 import CurrencyInputPanel from '../CurrencyInputPanel'
+import Dropdown from 'react-dropdown';
+import 'react-dropdown/style.css';
 
 
 const Item = styled.div`
   padding: 1rem;
   margin-bottom: 0.15rem;
   width: 100%;
-  height: 15%;
+  height: auto;
   ${({ theme }) => theme.backgroundContainer2}
   background-size: cover;
 `
@@ -78,7 +80,7 @@ interface InventoryItemProps {
   token: Token
   tokenName: string
   tokenSymbol: string
-  tokenAddress: string
+  tokenAddress: string | null,
   tokenType?: string | null,
   balance?: string | null,
   wrapped?: boolean,
@@ -95,10 +97,14 @@ export default function InventoryItem({
 }: InventoryItemProps) {
   const theme = useContext(ThemeContext)
   const [showMore, setShowMore] = useState(false)
+  const [isERC20, setIsERC20] = useState(true)
+  const [isERC721, setIsERC721] = useState(false)
+  const [isERC1155, setIsERC1155] = useState(false)
+
   const { account } = useActiveWeb3React()
   const { onUserInput } = useWrapActionHandlers()
   const handleMaxButton = useCallback(() => {
-    onUserInput(Field.INPUT, balance??'0.0')
+    onUserInput(Field.INPUT, balance ?? '0.0')
   },
     [onUserInput]
   )
@@ -123,6 +129,35 @@ export default function InventoryItem({
     [independentField]: typedValue
   }
 
+  const options = [
+    'ERC20', 'ERC721', 'ERC1155'
+  ];
+  const defaultOption = options[1];
+
+  const onSelect = useCallback(
+    (value) => {
+      console.log(value)
+      switch (value.value) {
+        case 'ERC20':
+          setIsERC20(true)
+          setIsERC721(false)
+          setIsERC1155(false)
+          break
+        case 'ERC721':
+          setIsERC20(false)
+          setIsERC721(true)
+          setIsERC1155(false)
+          break
+        case 'ERC1155':
+          setIsERC20(false)
+          setIsERC721(false)
+          setIsERC1155(true)
+          break
+      }
+    },
+    [setIsERC20, setIsERC721, setIsERC1155]
+  )
+
   return (
     <Item>
       <GridContainer>
@@ -146,7 +181,7 @@ export default function InventoryItem({
             padding="6px 8px"
             borderRadius="12px"
             width="fit-content"
-            onClick={() => {setShowMore(!showMore)}}
+            onClick={() => { setShowMore(!showMore) }}
           >
             {showMore ? (
               <>
@@ -182,22 +217,29 @@ export default function InventoryItem({
               )}
             </>
           </FixedHeightRow>
+          {tokenAddress!=='' &&(
+            <>
+          Wrap as <Dropdown options={options} onChange={onSelect} value={defaultOption} />
+          </>
+          )}
           <RowBetween marginTop="10px">
-              <ButtonPrimary
-                padding="8px"
-                borderRadius="8px"
-                width="48%"
-              >
-                Approve
+            {isERC20 && (
+            <ButtonPrimary
+              padding="8px"
+              borderRadius="8px"
+              width="48%"
+            >
+              Approve
               </ButtonPrimary>
-              <ButtonPrimary
-                padding="8px"
-                borderRadius="8px"
-                width="48%"
-              >
-                Wrap
+              )}
+            <ButtonPrimary
+              padding="8px"
+              borderRadius="8px"
+              width="48%"
+            >
+              Wrap
               </ButtonPrimary>
-            </RowBetween>
+          </RowBetween>
         </AutoColumn>
       )}
     </Item>
