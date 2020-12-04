@@ -1,4 +1,4 @@
-import { Token } from '@uniswap/sdk'
+import { Token } from '@materia-dex/sdk'
 import { useMemo } from 'react'
 import { USD } from '../constants'
 import { useActiveWeb3React } from './index'

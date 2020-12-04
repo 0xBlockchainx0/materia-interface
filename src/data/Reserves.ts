@@ -1,4 +1,4 @@
-import { TokenAmount, Pair, Currency } from '@uniswap/sdk'
+import { TokenAmount, Pair, Currency } from '@materia-dex/sdk'
 import { useMemo } from 'react'
 import { abi as IMateriaPairABI } from '@materia-dex/materia-contracts-core/build/IMateriaPair.json'
 import { Interface } from '@ethersproject/abi'

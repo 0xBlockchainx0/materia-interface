@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useActiveWeb3React } from '../../hooks'
 import { AppDispatch, AppState } from '../index'
 import { Field, typeInput } from './actions'
-import { Currency, CurrencyAmount, ETHER, JSBI, Token, TokenAmount, Trade } from '@uniswap/sdk'
+import { Currency, CurrencyAmount, ETHER, JSBI, Token, TokenAmount, Trade } from '@materia-dex/sdk'
 import { parseUnits } from '@ethersproject/units'
 import { useCurrency } from '../../hooks/Tokens'
 

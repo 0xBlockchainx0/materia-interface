@@ -1,6 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { TransactionResponse } from '@ethersproject/providers'
-import { Currency, currencyEquals, ETHER, TokenAmount, WETH } from '@uniswap/sdk'
+import { Currency, currencyEquals, ETHER, TokenAmount, WETH } from '@materia-dex/sdk'
 import React, { useCallback, useContext, useState, useMemo } from 'react'
 import { Plus } from 'react-feather'
 import ReactGA from 'react-ga'
@@ -14,7 +14,7 @@ import DoubleCurrencyLogo from '../../components/DoubleLogo'
 import { MinimalPositionCard } from '../../components/PositionCard'
 import Row, { AutoRow, RowBetween, RowFlat, RowFixed } from '../../components/Row'
 
-import { ROUTER_ADDRESS, USD } from '../../constants'
+import { PROXY_ADDRESS, USD } from '../../constants'
 import { PairState } from '../../data/Reserves'
 import { useCurrency } from '../../hooks/Tokens'
 import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
@@ -34,7 +34,7 @@ import { currencyId } from '../../utils/currencyId'
 import { PoolPriceBar } from './PoolPriceBar'
 
 import styled, { ThemeContext } from 'styled-components'
-import { Pair } from '@uniswap/sdk'
+import { Pair } from '@materia-dex/sdk'
 import { Link } from 'react-router-dom'
 import FullPositionCard from '../../components/PositionCard'
 import { useTokenBalancesWithLoadingIndicator } from '../../state/wallet/hooks'
@@ -298,8 +298,8 @@ export default function AddLiquidity({
   )
 
   // check whether the user has approved the router on the tokens
-  const [approvalA, approveACallback] = useApproveCallback(parsedAmounts[Field.CURRENCY_A], ROUTER_ADDRESS)
-  const [approvalB, approveBCallback] = useApproveCallback(parsedAmounts[Field.CURRENCY_B], ROUTER_ADDRESS)
+  const [approvalA, approveACallback] = useApproveCallback(parsedAmounts[Field.CURRENCY_A], PROXY_ADDRESS)
+  const [approvalB, approveBCallback] = useApproveCallback(parsedAmounts[Field.CURRENCY_B], PROXY_ADDRESS)
 
   const addTransaction = useTransactionAdder()
 
