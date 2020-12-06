@@ -1,6 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { Contract } from '@ethersproject/contracts'
-import { JSBI, Percent, Router, SwapParameters, Trade, TradeType } from '@materia-dex/sdk'
+import { ETHER, JSBI, Percent, Router, SwapParameters, Trade, TradeType } from '@materia-dex/sdk'
 import { useMemo } from 'react'
 import { BIPS_BASE, INITIAL_ALLOWED_SLIPPAGE } from '../constants'
 import { useTransactionAdder } from '../state/transactions/hooks'
@@ -9,6 +9,7 @@ import isZero from '../utils/isZero'
 import { useActiveWeb3React } from './index'
 import useTransactionDeadline from './useTransactionDeadline'
 import useENS from './useENS'
+import { useSingleCallResult } from '../state/multicall/hooks'
 
 export enum SwapCallbackState {
   INVALID,
@@ -49,37 +50,43 @@ function useSwapCallArguments(
   const { address: recipientAddress } = useENS(recipientAddressOrName)
   const recipient = recipientAddressOrName === null ? account : recipientAddress
   const deadline = useTransactionDeadline()
+  const contract: Contract | null = (!library || !account || !chainId) ? null : getRouterContract(chainId, library, account)
+  const isEthItem = false
+  const inputTokenAddress = trade?.route.path[0]?.address
+  const result: any = useSingleCallResult(contract, 'isEthItem', [inputTokenAddress])
+  const i = 0
 
   return useMemo(() => {
-    if (!trade || !recipient || !library || !account || !chainId || !deadline) return []
-
-    const contract: Contract | null = getRouterContract(chainId, library, account) 
-    if (!contract) {
-      return []
-    }
-
     const swapMethods = []
 
+    if (!trade || !recipient || !library || !account || !chainId || !deadline) return []
+    if (!contract) { return [] }
+    
+    if (trade?.inputAmount.currency !== ETHER && trade?.outputAmount.currency !== ETHER && isEthItem) {
+
+    }
+    else {
+      swapMethods.push(
+        Router.swapCallParameters(trade, {
+          feeOnTransfer: false,
+          allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
+          recipient,
+          deadline: deadline.toNumber()
+        })
+      )
+
+      if (trade.tradeType === TradeType.EXACT_INPUT) {
         swapMethods.push(
           Router.swapCallParameters(trade, {
-            feeOnTransfer: false,
+            feeOnTransfer: true,
             allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
             recipient,
             deadline: deadline.toNumber()
           })
         )
+      }
+    }
 
-        if (trade.tradeType === TradeType.EXACT_INPUT) {
-          swapMethods.push(
-            Router.swapCallParameters(trade, {
-              feeOnTransfer: true,
-              allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
-              recipient,
-              deadline: deadline.toNumber()
-            })
-          )
-        }
-     
     return swapMethods.map(parameters => ({ parameters, contract }))
   }, [account, allowedSlippage, chainId, deadline, library, recipient, trade])
 }
@@ -190,13 +197,12 @@ export function useSwapCallback(
             const withRecipient =
               recipient === account
                 ? base
-                : `${base} to ${
-                    recipientAddressOrName && isAddress(recipientAddressOrName)
-                      ? shortenAddress(recipientAddressOrName)
-                      : recipientAddressOrName
-                  }`
+                : `${base} to ${recipientAddressOrName && isAddress(recipientAddressOrName)
+                  ? shortenAddress(recipientAddressOrName)
+                  : recipientAddressOrName
+                }`
 
-            const withVersion = withRecipient 
+            const withVersion = withRecipient
 
             addTransaction(response, {
               summary: withVersion

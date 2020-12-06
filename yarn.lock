@@ -2005,17 +2005,17 @@
     "@babel/runtime" "^7.7.2"
     core-js "^3.4.1"
 
-"@materia-dex/materia-contracts-core@^1.0.2":
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/@materia-dex/materia-contracts-core/-/materia-contracts-core-1.0.2.tgz#cc4429f7633b79300a94dce54f14b36d310d51b3"
-  integrity sha512-TjAOXFj40C9anVgO/N7Nk6aFJuORjQDbTGIGrT7swmcA455QAjJNhqZY8Uh6d+ZWFkdXIY2+FyxCciZ7t0zUPg==
+"@materia-dex/materia-contracts-core@^1.0.3":
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/@materia-dex/materia-contracts-core/-/materia-contracts-core-1.0.3.tgz#204556ae590c2df81b23b70081a74562cdf9ccdd"
+  integrity sha512-OIZ9/fqSDTSxX9ghIGMPw1xfl8qwONBStDQZeyT2o5dQQhT1rIiokpHl1ucpQRnNetHHwoNSfdFgsMKgS+nbZQ==
 
-"@materia-dex/materia-contracts-proxy@^1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@materia-dex/materia-contracts-proxy/-/materia-contracts-proxy-1.0.1.tgz#6a4041bc7cf1e29d17ace25a0469b2059c93f57c"
-  integrity sha512-+g87M4alokgujhp3p/Jw/kZ5WY3OMhxrjk1HhABg4CBhyIMs9kI7rIoq1XrOje9GApUN7/QalK/aT8e7HiN2og==
+"@materia-dex/materia-contracts-proxy@^1.0.4":
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/@materia-dex/materia-contracts-proxy/-/materia-contracts-proxy-1.0.4.tgz#8f156096f78db787d22ce063863ad13be354df86"
+  integrity sha512-bewNqlnZu3eJG4T/4iwZ7JTn0dQK4LvbAtz207XK47xOgk3xWqEKjj1XgHQ+8++MFaVOyoDSJzBL5+yyy59fOQ==
   dependencies:
-    "@materia-dex/materia-contracts-core" "^1.0.2"
+    "@materia-dex/materia-contracts-core" "^1.0.3"
     abstract-leveldown "^5.0.0"
     accepts "^1.3.7"
     aes-js "^3.0.0"
@@ -2652,13 +2652,13 @@
     yargs-unparser "^1.6.0"
     yn "^3.1.1"
 
-"@materia-dex/sdk@^1.0.2":
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/@materia-dex/sdk/-/sdk-1.0.2.tgz#deab00dc49a6c06dd3aae284dfe9ef8d355d8ead"
-  integrity sha512-Qw4q2RRkfVZsT8gq0s7d1izEUdAJJldO5Q35wlU/uWp02KyzQj43dTKjLsqpoi0r/10BhVegbZu0QE/p66/hDA==
+"@materia-dex/sdk@^1.0.3":
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/@materia-dex/sdk/-/sdk-1.0.3.tgz#8ab278f3c3dc213266d9733cc2f023d0024db416"
+  integrity sha512-C+C8k1+dPvCvKsCXXfBywcd1/PQ6NryGstSNS1kFQzL2RrQGOMy0MTUN4G/avj8kFDAtxZgKlV7AWI3DY0PGjQ==
   dependencies:
-    "@materia-dex/materia-contracts-core" "^1.0.2"
-    "@materia-dex/materia-contracts-proxy" "^1.0.1"
+    "@materia-dex/materia-contracts-core" "^1.0.3"
+    "@materia-dex/materia-contracts-proxy" "^1.0.4"
     big.js "^5.2.2"
     decimal.js-light "^2.5.0"
     jsbi "^3.1.1"
@@ -6337,9 +6337,9 @@ core-js-pure@^3.0.0:
   integrity sha512-lacdXOimsiD0QyNf9BC/mxivNJ/ybBGJXQFKzRekp1WTHoVUWsUHEn+2T8GJAzzIhyOuXA+gOxCVN3l+5PLPUA==
 
 core-js-pure@^3.0.1, core-js-pure@^3.6.5:
-  version "3.8.0"
-  resolved "https://registry.yarnpkg.com/core-js-pure/-/core-js-pure-3.8.0.tgz#4cdd2eca37d49cda206b66e26204818dba77884a"
-  integrity sha512-fRjhg3NeouotRoIV0L1FdchA6CK7ZD+lyINyMoz19SyV+ROpC4noS1xItWHFtwZdlqfMfVPJEyEGdfri2bD1pA==
+  version "3.8.1"
+  resolved "https://registry.yarnpkg.com/core-js-pure/-/core-js-pure-3.8.1.tgz#23f84048f366fdfcf52d3fd1c68fec349177d119"
+  integrity sha512-Se+LaxqXlVXGvmexKGPvnUIYC1jwXu1H6Pkyb3uBM5d8/NELMYCHs/4/roD7721NxrTLyv7e5nXd5/QLBO+10g==
 
 core-js@^2.4.0, core-js@^2.5.0:
   version "2.6.11"
@@ -6850,9 +6850,9 @@ decamelize@^1.2.0:
   integrity sha1-9lNNFRSCabIDUue+4m9QH5oZEpA=
 
 decimal.js-light@^2.5.0:
-  version "2.5.0"
-  resolved "https://registry.yarnpkg.com/decimal.js-light/-/decimal.js-light-2.5.0.tgz#ca7faf504c799326df94b0ab920424fdfc125348"
-  integrity sha512-b3VJCbd2hwUpeRGG3Toob+CRo8W22xplipNhP3tN7TSVB/cyMX71P1vM2Xjc9H74uV6dS2hDDmo/rHq8L87Upg==
+  version "2.5.1"
+  resolved "https://registry.yarnpkg.com/decimal.js-light/-/decimal.js-light-2.5.1.tgz#134fd32508f19e208f4fb2f8dac0d2626a867934"
+  integrity sha512-qIMFpTMZmny+MMIitAB6D7iVPEorVw6YQRWkvarTkT4tBeSLLiHzcwj6q0MmYSFCiVpiqPJTJEYIrpcPzVEIvg==
 
 decode-uri-component@^0.2.0:
   version "0.2.0"
@@ -7296,9 +7296,9 @@ electron-to-chromium@^1.3.378, electron-to-chromium@^1.3.47, electron-to-chromiu
   integrity sha512-cN4lkjNRuTG8rtAqTOVgwpecEC2kbKA04PG6YijcKGHK/kD0xLjiqExcAOmLUwtXZRF8cBeam2I0VZcih919Ug==
 
 electron-to-chromium@^1.3.580:
-  version "1.3.615"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.615.tgz#50f523be4a04449410e9f3a694490814e602cd54"
-  integrity sha512-fNYTQXoUhNc6RmHDlGN4dgcLURSBIqQCN7ls6MuQ741+NJyLNRz8DxAC+pZpOKfRs6cfY0lv2kWdy8Oxf9j4+A==
+  version "1.3.616"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.616.tgz#de63d1c79bb8eb61168774df0c11c9e1af69f9e8"
+  integrity sha512-CI8L38UN2BEnqXw3/oRIQTmde0LiSeqWSRlPA42ZTYgJQ8fYenzAM2Z3ni+jtILTcrs5aiXZCGJ96Pm+3/yGyQ==
 
 elegant-spinner@^1.0.1:
   version "1.0.1"
@@ -10341,9 +10341,9 @@ is-installed-globally@0.3.2:
     is-path-inside "^3.0.1"
 
 is-negative-zero@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/is-negative-zero/-/is-negative-zero-2.0.0.tgz#9553b121b0fac28869da9ed459e20c7543788461"
-  integrity sha1-lVOxIbD6wohp2p7UWeIMdUN4hGE=
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/is-negative-zero/-/is-negative-zero-2.0.1.tgz#3de746c18dda2319241a53675908d8f766f11c24"
+  integrity sha512-2z6JzQvZRa9A2Y7xC6dQQm4FSTSTNWjKIYYTt4246eMTJmIo0Q+ZyOsU66X8lxK1AbB92dFeglPLrhwpeRKO6w==
 
 is-number@^3.0.0:
   version "3.0.0"
@@ -11072,9 +11072,9 @@ js-yaml@^3.13.1:
     esprima "^4.0.0"
 
 jsbi@^3.1.1:
-  version "3.1.3"
-  resolved "https://registry.yarnpkg.com/jsbi/-/jsbi-3.1.3.tgz#f024b340032f7c7caaa6ca4b32b55e8d33f6e897"
-  integrity sha512-nBJqA0C6Qns+ZxurbEoIR56wyjiUszpNy70FHvxO5ervMoCbZVE3z3kxr5nKGhlxr/9MhKTSUBs7cAwwuf3g9w==
+  version "3.1.4"
+  resolved "https://registry.yarnpkg.com/jsbi/-/jsbi-3.1.4.tgz#9654dd02207a66a4911b4e4bb74265bc2cbc9dd0"
+  integrity sha512-52QRRFSsi9impURE8ZUbzAMCLjPm4THO7H2fcuIvaaeFTbSysvkodbQQXIVsNgq/ypDbq6dJiuGKL0vZ/i9hUg==
 
 jsbn@^0.1.1, jsbn@~0.1.0:
   version "0.1.1"
