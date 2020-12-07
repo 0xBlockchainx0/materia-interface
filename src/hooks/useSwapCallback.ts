@@ -4,7 +4,7 @@ import { ETHER, JSBI, Percent, Router, SwapParameters, Trade, TradeType } from '
 import { useMemo } from 'react'
 import { BIPS_BASE, INITIAL_ALLOWED_SLIPPAGE } from '../constants'
 import { useTransactionAdder } from '../state/transactions/hooks'
-import { calculateGasMargin, getRouterContract, isAddress, shortenAddress } from '../utils'
+import { calculateGasMargin, getProxyContract, isAddress, shortenAddress } from '../utils'
 import isZero from '../utils/isZero'
 import { useActiveWeb3React } from './index'
 import useTransactionDeadline from './useTransactionDeadline'
@@ -50,8 +50,9 @@ function useSwapCallArguments(
   const { address: recipientAddress } = useENS(recipientAddressOrName)
   const recipient = recipientAddressOrName === null ? account : recipientAddress
   const deadline = useTransactionDeadline()
-  const contract: Contract | null = (!library || !account || !chainId) ? null : getRouterContract(chainId, library, account)
+  const contract: Contract | null = (!library || !account || !chainId) ? null : getProxyContract(chainId, library, account)
   const isEthItem = false
+  const needUnwrap = false
   const inputTokenAddress = trade?.route.path[0]?.address
   const result: any = useSingleCallResult(contract, 'isEthItem', [inputTokenAddress])
   const i = 0
@@ -72,7 +73,7 @@ function useSwapCallArguments(
           allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
           recipient,
           deadline: deadline.toNumber()
-        })
+        }, isEthItem, needUnwrap)
       )
 
       if (trade.tradeType === TradeType.EXACT_INPUT) {
@@ -82,7 +83,7 @@ function useSwapCallArguments(
             allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
             recipient,
             deadline: deadline.toNumber()
-          })
+          }, isEthItem, needUnwrap)
         )
       }
     }

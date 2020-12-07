@@ -99,7 +99,7 @@ export function getContract(address: string, ABI: any, library: Web3Provider, ac
 }
 
 // account is optional
-export function getRouterContract(_: number, library: Web3Provider, account?: string): Contract {
+export function getProxyContract(_: number, library: Web3Provider, account?: string): Contract {
   return getContract(PROXY_ADDRESS, IMateriaProxyABI, library, account)
 }
 
