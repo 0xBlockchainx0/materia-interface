@@ -127,7 +127,7 @@ export function theme(darkMode: boolean): DefaultTheme {
     `,
 
     bodyBackground: darkMode ? css`
-      background: linear-gradient(rgba(0,0,0,.1), rgba(0,0,0,.1)), url(${sky}) no-repeat fixed top;
+      background: linear-gradient(rgba(0,0,0,.1), rgba(0,0,0,.1))) fixed top;
     `:
       css`
       background: linear-gradient(rgba(255,255,255), rgba(255,255,255)), fixed top;

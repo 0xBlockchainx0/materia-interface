@@ -8,8 +8,7 @@ import { RouteComponentProps } from 'react-router-dom'
 import DoubleCurrencyLogo from '../../components/DoubleLogo'
 import { useCurrency } from '../../hooks/Tokens'
 import { useWalletModalToggle } from '../../state/application/hooks'
-import { TYPE } from '../../theme'
-
+import { TYPE, ExternalLink } from '../../theme'
 import { RowBetween } from '../../components/Row'
 import { CardSection, DataCard, CardNoise, CardBGImage } from '../../components/earn/styled'
 import { ButtonPrimary, ButtonEmpty } from '../../components/Button'
@@ -29,15 +28,14 @@ import { usePair } from '../../data/Reserves'
 import usePrevious from '../../hooks/usePrevious'
 import useUSDCPrice from '../../utils/useUSDCPrice'
 import { BIG_INT_ZERO } from '../../constants'
+import AppBody from '../AppBody'
 
 const PageWrapper = styled(AutoColumn)`
-  max-width: 640px;
   width: 100%;
 `
 
-const PositionInfo = styled(AutoColumn)<{ dim: any }>`
+const PositionInfo = styled(AutoColumn) <{ dim: any }>`
   position: relative;
-  max-width: 640px;
   width: 100%;
   opacity: ${({ dim }) => (dim ? 0.6 : 1)};
 `
@@ -48,14 +46,14 @@ const BottomSection = styled(AutoColumn)`
   position: relative;
 `
 
-const StyledDataCard = styled(DataCard)<{ bgColor?: any; showBackground?: any }>`
+const StyledDataCard = styled(DataCard) <{ bgColor?: any; showBackground?: any }>`
   z-index: 2;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
   background-color: #002852;
   border: 2px solid ${({ theme }) => theme.cyan2};
 `
 
-const StyledBottomCard = styled(DataCard)<{ dim: any }>`
+const StyledBottomCard = styled(DataCard) <{ dim: any }>`
   background: ${({ theme }) => theme.bg3};
   opacity: ${({ dim }) => (dim ? 0.4 : 1)};
   margin-top: -40px;
@@ -84,6 +82,55 @@ const DataRow = styled(RowBetween)`
     flex-direction: column;
     gap: 12px;
   `};
+`
+
+const LMGridContainer = styled.div`
+  display: grid;
+  grid-template-columns: 30px 30% auto;
+
+  @media (min-width: 601px) and (max-width: 1350px) {
+    grid-template-columns: 50px auto !important;
+  }
+  @media (max-width: 600px) {
+    grid-template-columns: auto !important;
+  }
+`
+
+const InfoContainer = styled.div`
+  padding: 1rem;
+  font-size: smaller;
+  ${({ theme }) => theme.backgroundContainer}
+`
+
+const PoolsContainer = styled.div`
+  padding: 1rem 0.5rem 1rem 0.5rem;
+  ${({ theme }) => theme.backgroundContainer}
+`
+
+const EarnCard = styled(DataCard)`
+  background: rgba(0, 27, 49, 0.5) !important;
+  border-radius: 0px !important;
+  overflow: hidden;
+`
+
+
+const PoolSection = styled.div`
+  display: grid;
+  grid-template-columns: 1fr;
+  column-gap: 10px;
+  row-gap: 15px;
+  width: 100%;
+  justify-self: center;
+`
+
+
+const ItemColumn = styled.div`
+  @media (min-width: 601px) and (max-width: 1350px) {
+    // display: none;
+  }
+  @media (max-width: 600px) {
+    display: none;
+  }
 `
 
 export default function Manage({
@@ -153,185 +200,227 @@ export default function Manage({
   }, [account, toggleWalletModal])
 
   return (
-    <PageWrapper gap="lg" justify="center">
-      <RowBetween style={{ gap: '24px' }}>
-        <TYPE.mediumHeader style={{ margin: 0 }}>
-          {currencyA?.symbol}-{currencyB?.symbol} Liquidity Mining
-        </TYPE.mediumHeader>
-        <DoubleCurrencyLogo currency0={currencyA ?? undefined} currency1={currencyB ?? undefined} size={24} />
-      </RowBetween>
-
-      <DataRow style={{ gap: '24px' }}>
-        <PoolData>
-          <AutoColumn gap="sm">
-            <TYPE.body style={{ margin: 0 }}>Total deposits</TYPE.body>
-            <TYPE.body fontSize={24} fontWeight={500}>
-              {valueOfTotalStakedAmountInUSDC
-                ? `$${valueOfTotalStakedAmountInUSDC.toFixed(0, { groupSeparator: ',' })}`
-                : `${valueOfTotalStakedAmountInWETH?.toSignificant(4, { groupSeparator: ',' }) ?? '-'} ETH`}
-            </TYPE.body>
-          </AutoColumn>
-        </PoolData>
-        <PoolData>
-          <AutoColumn gap="sm">
-            <TYPE.body style={{ margin: 0 }}>Pool Rate</TYPE.body>
-            <TYPE.body fontSize={24} fontWeight={500}>
-              {stakingInfo?.totalRewardRate
-                ?.multiply((60 * 60 * 24 * 7).toString())
-                ?.toFixed(0, { groupSeparator: ',' }) ?? '-'}
-              {' GIL / week'}
-            </TYPE.body>
-          </AutoColumn>
-        </PoolData>
-      </DataRow>
-
-      {showAddLiquidityButton && (
-        <VoteCard>
-          <CardBGImage />
-          <CardNoise />
-          <CardSection>
-            <AutoColumn gap="md">
-              <RowBetween>
-                <TYPE.white fontWeight={600}>Step 1. Get Liquidity tokens</TYPE.white>
-              </RowBetween>
-              <RowBetween style={{ marginBottom: '1rem' }}>
-                <TYPE.white fontSize={14}>
-                  {`LP tokens are required. Once you've added liquidity to the ${currencyA?.symbol}-${currencyB?.symbol} pool you can stake your liquidity tokens on this page.`}
-                </TYPE.white>
-              </RowBetween>
-              <ButtonPrimary
-                padding="8px"
-                borderRadius="8px"
-                width={'fit-content'}
-                as={Link}
-                to={`/add/${currencyA && currencyId(currencyA)}/${currencyB && currencyId(currencyB)}`}
-              >
-                {`Add ${currencyA?.symbol}-${currencyB?.symbol} liquidity`}
-              </ButtonPrimary>
-            </AutoColumn>
-          </CardSection>
-          <CardBGImage />
-          <CardNoise />
-        </VoteCard>
-      )}
-
-      {stakingInfo && (
-        <>
-          <StakingModal
-            isOpen={showStakingModal}
-            onDismiss={() => setShowStakingModal(false)}
-            stakingInfo={stakingInfo}
-            userLiquidityUnstaked={userLiquidityUnstaked}
-          />
-          <UnstakingModal
-            isOpen={showUnstakingModal}
-            onDismiss={() => setShowUnstakingModal(false)}
-            stakingInfo={stakingInfo}
-          />
-          <ClaimRewardModal
-            isOpen={showClaimRewardModal}
-            onDismiss={() => setShowClaimRewardModal(false)}
-            stakingInfo={stakingInfo}
-          />
-        </>
-      )}
-
-      <PositionInfo gap="lg" justify="center" dim={showAddLiquidityButton}>
-        <BottomSection gap="lg" justify="center">
-          <StyledDataCard disabled={disableTop} bgColor={backgroundColor} showBackground={!showAddLiquidityButton}>
-            <CardSection>
-              <CardBGImage desaturate />
-              <CardNoise />
-              <AutoColumn gap="md">
-                <RowBetween>
-                  <TYPE.white fontWeight={600}>Your liquidity deposits</TYPE.white>
-                </RowBetween>
-                <RowBetween style={{ alignItems: 'baseline' }}>
-                  <TYPE.white fontSize={36} fontWeight={600}>
-                    {stakingInfo?.stakedAmount?.toSignificant(6) ?? '-'}
-                  </TYPE.white>
-                  <TYPE.white>
-                    LP {currencyA?.symbol}-{currencyB?.symbol}
-                  </TYPE.white>
-                </RowBetween>
-              </AutoColumn>
-            </CardSection>
-          </StyledDataCard>
-          <StyledBottomCard dim={stakingInfo?.stakedAmount?.equalTo(JSBI.BigInt(0))}>
-            <CardBGImage desaturate />
-            <CardNoise />
-            <AutoColumn gap="sm">
-              <RowBetween>
-                <div>
-                  <TYPE.black>Your unclaimed GIL</TYPE.black>
-                </div>
-                {stakingInfo?.earnedAmount && JSBI.notEqual(BIG_INT_ZERO, stakingInfo?.earnedAmount?.raw) && (
-                  <ButtonEmpty
-                    padding="8px"
-                    borderRadius="8px"
-                    width="fit-content"
-                    onClick={() => setShowClaimRewardModal(true)}
+    <>
+      <AppBody>
+        <LMGridContainer>
+          <ItemColumn>
+            <div style={{ writingMode: 'vertical-rl', textOrientation: 'mixed' }}>
+              <p style={{ fontSize: 'xx-large', margin: '0px 0px 0px -10px', color: '#fff' }}>
+                Liquidity Mining
+          </p>
+            </div>
+          </ItemColumn>
+          <InfoContainer>
+            <EarnCard>
+              <CardSection>
+                <AutoColumn gap="md">
+                  <RowBetween>
+                    <TYPE.white fontWeight={600}>Materia liquidity mining</TYPE.white>
+                  </RowBetween>
+                  <RowBetween>
+                    <TYPE.white fontSize={14}>
+                      Deposit your Liquidity Provider tokens to receive GIL, the Materia DFO protocol governance token.
+              </TYPE.white>
+                  </RowBetween>{' '}
+                  <ExternalLink
+                    style={{ color: 'white', textDecoration: 'underline' }}
+                    href="https://www.dfohub.com/"
+                    target="_blank"
                   >
-                    Claim
-                  </ButtonEmpty>
+                    <TYPE.white fontSize={14}>Read more about DFO</TYPE.white>
+                  </ExternalLink>
+                </AutoColumn>
+              </CardSection>
+              <CardBGImage />
+              <CardNoise />
+            </EarnCard>
+          </InfoContainer>
+          <PoolsContainer>
+            <PoolSection>
+              <PageWrapper gap="lg" justify="center">
+                <RowBetween style={{ gap: '24px' }}>
+                  <TYPE.mediumHeader style={{ margin: 0 }}>
+                    {currencyA?.symbol}-{currencyB?.symbol} Liquidity Mining
+        </TYPE.mediumHeader>
+                  <DoubleCurrencyLogo currency0={currencyA ?? undefined} currency1={currencyB ?? undefined} size={24} />
+                </RowBetween>
+
+                <DataRow style={{ gap: '24px' }}>
+                  <PoolData>
+                    <AutoColumn gap="sm">
+                      <TYPE.body style={{ margin: 0 }}>Total deposits</TYPE.body>
+                      <TYPE.body fontSize={24} fontWeight={500}>
+                        {valueOfTotalStakedAmountInUSDC
+                          ? `$${valueOfTotalStakedAmountInUSDC.toFixed(0, { groupSeparator: ',' })}`
+                          : `${valueOfTotalStakedAmountInWETH?.toSignificant(4, { groupSeparator: ',' }) ?? '-'} ETH`}
+                      </TYPE.body>
+                    </AutoColumn>
+                  </PoolData>
+                  <PoolData>
+                    <AutoColumn gap="sm">
+                      <TYPE.body style={{ margin: 0 }}>Pool Rate</TYPE.body>
+                      <TYPE.body fontSize={24} fontWeight={500}>
+                        {stakingInfo?.totalRewardRate
+                          ?.multiply((60 * 60 * 24 * 7).toString())
+                          ?.toFixed(0, { groupSeparator: ',' }) ?? '-'}
+                        {' GIL / week'}
+                      </TYPE.body>
+                    </AutoColumn>
+                  </PoolData>
+                </DataRow>
+
+                {showAddLiquidityButton && (
+                  <VoteCard>
+                    <CardBGImage />
+                    <CardNoise />
+                    <CardSection>
+                      <AutoColumn gap="md">
+                        <RowBetween>
+                          <TYPE.white fontWeight={600}>Step 1. Get Liquidity tokens</TYPE.white>
+                        </RowBetween>
+                        <RowBetween style={{ marginBottom: '1rem' }}>
+                          <TYPE.white fontSize={14}>
+                            {`LP tokens are required. Once you've added liquidity to the ${currencyA?.symbol}-${currencyB?.symbol} pool you can stake your liquidity tokens on this page.`}
+                          </TYPE.white>
+                        </RowBetween>
+                        <ButtonPrimary
+                          padding="8px"
+                          borderRadius="8px"
+                          width={'fit-content'}
+                          as={Link}
+                          to={`/add/${currencyA && currencyId(currencyA)}/${currencyB && currencyId(currencyB)}`}
+                        >
+                          {`Add ${currencyA?.symbol}-${currencyB?.symbol} liquidity`}
+                        </ButtonPrimary>
+                      </AutoColumn>
+                    </CardSection>
+                    <CardBGImage />
+                    <CardNoise />
+                  </VoteCard>
                 )}
-              </RowBetween>
-              <RowBetween style={{ alignItems: 'baseline' }}>
-                <TYPE.largeHeader fontSize={36} fontWeight={600}>
-                  <CountUp
-                    key={countUpAmount}
-                    isCounting
-                    decimalPlaces={4}
-                    start={parseFloat(countUpAmountPrevious)}
-                    end={parseFloat(countUpAmount)}
-                    thousandsSeparator={','}
-                    duration={1}
-                  />
-                </TYPE.largeHeader>
-                <TYPE.black fontSize={16} fontWeight={500}>
-                  <span role="img" aria-label="wizard-icon" style={{ marginRight: '8px ' }}>
-                    ⚡
+
+                {stakingInfo && (
+                  <>
+                    <StakingModal
+                      isOpen={showStakingModal}
+                      onDismiss={() => setShowStakingModal(false)}
+                      stakingInfo={stakingInfo}
+                      userLiquidityUnstaked={userLiquidityUnstaked}
+                    />
+                    <UnstakingModal
+                      isOpen={showUnstakingModal}
+                      onDismiss={() => setShowUnstakingModal(false)}
+                      stakingInfo={stakingInfo}
+                    />
+                    <ClaimRewardModal
+                      isOpen={showClaimRewardModal}
+                      onDismiss={() => setShowClaimRewardModal(false)}
+                      stakingInfo={stakingInfo}
+                    />
+                  </>
+                )}
+
+                <PositionInfo gap="lg" justify="center" dim={showAddLiquidityButton}>
+                  <BottomSection gap="lg" justify="center">
+                    <StyledDataCard disabled={disableTop} bgColor={backgroundColor} showBackground={!showAddLiquidityButton}>
+                      <CardSection>
+                        <CardBGImage desaturate />
+                        <CardNoise />
+                        <AutoColumn gap="md">
+                          <RowBetween>
+                            <TYPE.white fontWeight={600}>Your liquidity deposits</TYPE.white>
+                          </RowBetween>
+                          <RowBetween style={{ alignItems: 'baseline' }}>
+                            <TYPE.white fontSize={36} fontWeight={600}>
+                              {stakingInfo?.stakedAmount?.toSignificant(6) ?? '-'}
+                            </TYPE.white>
+                            <TYPE.white>
+                              LP {currencyA?.symbol}-{currencyB?.symbol}
+                            </TYPE.white>
+                          </RowBetween>
+                        </AutoColumn>
+                      </CardSection>
+                    </StyledDataCard>
+                    <StyledBottomCard dim={stakingInfo?.stakedAmount?.equalTo(JSBI.BigInt(0))}>
+                      <CardBGImage desaturate />
+                      <CardNoise />
+                      <AutoColumn gap="sm">
+                        <RowBetween>
+                          <div>
+                            <TYPE.black>Your unclaimed GIL</TYPE.black>
+                          </div>
+                          {stakingInfo?.earnedAmount && JSBI.notEqual(BIG_INT_ZERO, stakingInfo?.earnedAmount?.raw) && (
+                            <ButtonEmpty
+                              padding="8px"
+                              borderRadius="8px"
+                              width="fit-content"
+                              onClick={() => setShowClaimRewardModal(true)}
+                            >
+                              Claim
+                            </ButtonEmpty>
+                          )}
+                        </RowBetween>
+                        <RowBetween style={{ alignItems: 'baseline' }}>
+                          <TYPE.largeHeader fontSize={36} fontWeight={600}>
+                            <CountUp
+                              key={countUpAmount}
+                              isCounting
+                              decimalPlaces={4}
+                              start={parseFloat(countUpAmountPrevious)}
+                              end={parseFloat(countUpAmount)}
+                              thousandsSeparator={','}
+                              duration={1}
+                            />
+                          </TYPE.largeHeader>
+                          <TYPE.black fontSize={16} fontWeight={500}>
+                            <span role="img" aria-label="wizard-icon" style={{ marginRight: '8px ' }}>
+                              ⚡
                   </span>
-                  {stakingInfo?.rewardRate
-                    ?.multiply((60 * 60 * 24 * 7).toString())
-                    ?.toSignificant(4, { groupSeparator: ',' }) ?? '-'}
-                  {' GIL / week'}
-                </TYPE.black>
-              </RowBetween>
-            </AutoColumn>
-          </StyledBottomCard>
-        </BottomSection>
-        <TYPE.main style={{ textAlign: 'center' }} fontSize={14}>
-          <span role="img" aria-label="wizard-icon" style={{ marginRight: '8px' }}>
-            ⭐️
+                            {stakingInfo?.rewardRate
+                              ?.multiply((60 * 60 * 24 * 7).toString())
+                              ?.toSignificant(4, { groupSeparator: ',' }) ?? '-'}
+                            {' GIL / week'}
+                          </TYPE.black>
+                        </RowBetween>
+                      </AutoColumn>
+                    </StyledBottomCard>
+                  </BottomSection>
+                  <TYPE.main style={{ textAlign: 'center' }} fontSize={14}>
+                    <span role="img" aria-label="wizard-icon" style={{ marginRight: '8px' }}>
           </span>
           When you withdraw, the contract will automagically claim GIL on your behalf!
         </TYPE.main>
 
-        {!showAddLiquidityButton && (
-          <DataRow style={{ marginBottom: '1rem' }}>
-            <ButtonPrimary padding="8px" borderRadius="8px" width="160px" onClick={handleDepositClick}>
-              {stakingInfo?.stakedAmount?.greaterThan(JSBI.BigInt(0)) ? 'Deposit' : 'Deposit LP Tokens'}
-            </ButtonPrimary>
+                  {!showAddLiquidityButton && (
+                    <DataRow style={{ marginBottom: '1rem' }}>
+                      <ButtonPrimary padding="8px" borderRadius="8px" width="160px" onClick={handleDepositClick}>
+                        {stakingInfo?.stakedAmount?.greaterThan(JSBI.BigInt(0)) ? 'Deposit' : 'Deposit LP Tokens'}
+                      </ButtonPrimary>
 
-            {stakingInfo?.stakedAmount?.greaterThan(JSBI.BigInt(0)) && (
-              <>
-                <ButtonPrimary
-                  padding="8px"
-                  borderRadius="8px"
-                  width="160px"
-                  onClick={() => setShowUnstakingModal(true)}
-                >
-                  Withdraw
+                      {stakingInfo?.stakedAmount?.greaterThan(JSBI.BigInt(0)) && (
+                        <>
+                          <ButtonPrimary
+                            padding="8px"
+                            borderRadius="8px"
+                            width="160px"
+                            onClick={() => setShowUnstakingModal(true)}
+                          >
+                            Withdraw
                 </ButtonPrimary>
-              </>
-            )}
-          </DataRow>
-        )}
-        {!userLiquidityUnstaked ? null : userLiquidityUnstaked.equalTo('0') ? null : (
-          <TYPE.main>{userLiquidityUnstaked.toSignificant(6)} LP tokens available</TYPE.main>
-        )}
-      </PositionInfo>
-    </PageWrapper>
+                        </>
+                      )}
+                    </DataRow>
+                  )}
+                  {!userLiquidityUnstaked ? null : userLiquidityUnstaked.equalTo('0') ? null : (
+                    <TYPE.main>{userLiquidityUnstaked.toSignificant(6)} LP tokens available</TYPE.main>
+                  )}
+                </PositionInfo>
+              </PageWrapper>
+            </PoolSection>
+          </PoolsContainer>
+        </LMGridContainer>
+      </AppBody>
+    </>
+
   )
 }
