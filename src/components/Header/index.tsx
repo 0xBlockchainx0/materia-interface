@@ -25,6 +25,7 @@ import Web3Status from '../Web3Status'
 import { Dots } from '../swap/styleds'
 import Modal from '../Modal'
 import usePrevious from '../../hooks/usePrevious'
+import { MATERIA_DFO_ADDRESS } from '../../constants'
 
 const HeaderFrame = styled.div`
   display: grid;
@@ -300,6 +301,9 @@ export default function Header() {
           <StyledNavLink id={`stake-nav-link`} to={'/lm'}>
             LM
           </StyledNavLink>
+          <StyledExternalLink id={`stake-nav-link`} href={'https://dapp.dfohub.com/?addr='+ MATERIA_DFO_ADDRESS}>
+            Governance <span style={{ fontSize: '11px' }}>↗</span> 
+          </StyledExternalLink>
           <StyledExternalLink id={`stake-nav-link`} href={'https://www.dfohub.com'}>
             DFO <span style={{ fontSize: '11px' }}>↗</span> 
           </StyledExternalLink>
