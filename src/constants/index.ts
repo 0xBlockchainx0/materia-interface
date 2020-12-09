@@ -35,10 +35,10 @@ export const GIL: { [chainId in ChainId]: Token } = {
 
 export const USD: { [chainId in ChainId]: Token } = {
   [ChainId.MAINNET]: new Token(ChainId.MAINNET, '0x44086035439E676c02D411880FcCb9837CE37c57', 18, 'uSD', 'unified Stable Dollar'),
-  [ChainId.RINKEBY]: new Token(ChainId.RINKEBY, '0xD50c463d643b9b9f29c3DcCD14b219EFD6cFFcF6', 18, 'uSD', 'unified Stable Dollar'),
-  [ChainId.ROPSTEN]: new Token(ChainId.ROPSTEN, '0xD50c463d643b9b9f29c3DcCD14b219EFD6cFFcF6', 18, 'uSD', 'unified Stable Dollar'),
-  [ChainId.GÖRLI]: new Token(ChainId.GÖRLI, '0xD50c463d643b9b9f29c3DcCD14b219EFD6cFFcF6', 18, 'uSD', 'unified Stable Dollar'),
-  [ChainId.KOVAN]: new Token(ChainId.KOVAN, '0xD50c463d643b9b9f29c3DcCD14b219EFD6cFFcF6', 18, 'uSD', 'unified Stable Dollar'),
+  [ChainId.RINKEBY]: new Token(ChainId.RINKEBY, ZERO_ADDRESS, 18, 'uSD', 'unified Stable Dollar'),
+  [ChainId.ROPSTEN]: new Token(ChainId.ROPSTEN, '0x3CF9679b78075054093E04bB27758A0b25c2BdBc', 18, 'uSD', 'unified Stable Dollar'),
+  [ChainId.GÖRLI]: new Token(ChainId.GÖRLI, ZERO_ADDRESS, 18, 'uSD', 'unified Stable Dollar'),
+  [ChainId.KOVAN]: new Token(ChainId.KOVAN, ZERO_ADDRESS, 18, 'uSD', 'unified Stable Dollar'),
 }
 
 export const COMMON_CONTRACT_NAMES: { [address: string]: string } = {
