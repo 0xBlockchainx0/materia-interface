@@ -3,7 +3,7 @@ export const DEFAULT_TOKEN_LIST_URL = 'https://raw.githubusercontent.com/materia
 
 export const DEFAULT_LIST_OF_LISTS: string[] = [
   DEFAULT_TOKEN_LIST_URL,
-  'https://raw.githubusercontent.com/b-u-i-d-l/WIMD-uniswap/ITEMswap/src/constants/ethItemLists/dist/tokensList.json',
+  'https://raw.githubusercontent.com/b-u-i-d-l/ITEMswap/master/src/constants/ethItemLists/dist/tokensList.json',
   'tokens.uniswap.eth',
   't2crtokens.eth',
   'tokens.1inch.eth',

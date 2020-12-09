@@ -2,9 +2,9 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { Contract } from '@ethersproject/contracts'
 import { ETHER, JSBI, Percent, Router, SwapParameters, Trade, TradeType } from '@materia-dex/sdk'
 import { useMemo } from 'react'
-import { BIPS_BASE, INITIAL_ALLOWED_SLIPPAGE } from '../constants'
+import { BIPS_BASE, INITIAL_ALLOWED_SLIPPAGE, ZERO_ADDRESS } from '../constants'
 import { useTransactionAdder } from '../state/transactions/hooks'
-import { calculateGasMargin, getProxyContract, isAddress, shortenAddress } from '../utils'
+import { calculateGasMargin, getEthItemCollectionContract, getProxyContract, isAddress, shortenAddress } from '../utils'
 import isZero from '../utils/isZero'
 import { useActiveWeb3React } from './index'
 import useTransactionDeadline from './useTransactionDeadline'
@@ -51,44 +51,57 @@ function useSwapCallArguments(
   const recipient = recipientAddressOrName === null ? account : recipientAddress
   const deadline = useTransactionDeadline()
   const contract: Contract | null = (!library || !account || !chainId) ? null : getProxyContract(chainId, library, account)
-  const isEthItem = false
+
   const needUnwrap = false
   const inputTokenAddress = trade?.route.path[0]?.address
-  const result: any = useSingleCallResult(contract, 'isEthItem', [inputTokenAddress])
-  const i = 0
+  const { result: checkIsEthItem } = useSingleCallResult(contract, 'isEthItem', [inputTokenAddress])
+  const isEthItem: boolean = checkIsEthItem?.ethItem
+  const ethItemCollection: string = checkIsEthItem?.collection
+  const ethItemObjectId: JSBI = JSBI.BigInt(checkIsEthItem?.itemId ?? 0)
+  const collectionContract: Contract | null =
+    (!library || !account || !chainId || !isEthItem)
+      ? null
+      : getEthItemCollectionContract(chainId, ethItemCollection, library, account)
 
   return useMemo(() => {
     const swapMethods = []
 
     if (!trade || !recipient || !library || !account || !chainId || !deadline) return []
     if (!contract) { return [] }
-    
-    if (trade?.inputAmount.currency !== ETHER && trade?.outputAmount.currency !== ETHER && isEthItem) {
 
-    }
-    else {
+    swapMethods.push(
+      Router.swapCallParameters(trade, {
+        feeOnTransfer: false,
+        allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
+        recipient,
+        deadline: deadline.toNumber()
+      }, isEthItem, needUnwrap, JSBI.toNumber(ethItemObjectId))
+    )
+
+    if (trade.tradeType === TradeType.EXACT_INPUT) {
       swapMethods.push(
         Router.swapCallParameters(trade, {
-          feeOnTransfer: false,
+          feeOnTransfer: true,
           allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
           recipient,
           deadline: deadline.toNumber()
-        }, isEthItem, needUnwrap)
+        }, isEthItem, needUnwrap, JSBI.toNumber(ethItemObjectId))
       )
-
-      if (trade.tradeType === TradeType.EXACT_INPUT) {
-        swapMethods.push(
-          Router.swapCallParameters(trade, {
-            feeOnTransfer: true,
-            allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
-            recipient,
-            deadline: deadline.toNumber()
-          }, isEthItem, needUnwrap)
-        )
-      }
     }
 
-    return swapMethods.map(parameters => ({ parameters, contract }))
+    if (isEthItem) {
+      if (!collectionContract) { return [] }
+
+      return swapMethods.map(parameters => ({
+        parameters: parameters,
+        contract: collectionContract
+      }))
+    }
+
+    return swapMethods.map(parameters => ({
+      parameters: parameters,
+      contract: contract
+    }))
   }, [account, allowedSlippage, chainId, deadline, library, recipient, trade])
 }
 
@@ -102,7 +115,6 @@ export function useSwapCallback(
   const { account, chainId, library } = useActiveWeb3React()
 
   const swapCalls = useSwapCallArguments(trade, allowedSlippage, recipientAddressOrName)
-
   const addTransaction = useTransactionAdder()
 
   const { address: recipientAddress } = useENS(recipientAddressOrName)

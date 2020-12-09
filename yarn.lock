@@ -1422,10 +1422,24 @@
     ethers "^5.0.13"
     scrypt-js "3.0.1"
 
-"@ethersproject/hash@5.0.8", "@ethersproject/hash@>=5.0.0-beta.128", "@ethersproject/hash@^5.0.4":
+"@ethersproject/hash@5.0.8", "@ethersproject/hash@^5.0.4":
   version "5.0.8"
   resolved "https://registry.yarnpkg.com/@ethersproject/hash/-/hash-5.0.8.tgz#368a60addc3c5cd18e28f78c80dc94e1bacb82d8"
   integrity sha512-Qay01tcFyFreYjSMt82rOQGMfQDmLm1sj3iNNO1BhrVf840xgBZuJ7gBATERzAjTuTCHUHw9BuGwxErJUS95yg==
+  dependencies:
+    "@ethersproject/abstract-signer" "^5.0.6"
+    "@ethersproject/address" "^5.0.5"
+    "@ethersproject/bignumber" "^5.0.8"
+    "@ethersproject/bytes" "^5.0.4"
+    "@ethersproject/keccak256" "^5.0.3"
+    "@ethersproject/logger" "^5.0.5"
+    "@ethersproject/properties" "^5.0.4"
+    "@ethersproject/strings" "^5.0.4"
+
+"@ethersproject/hash@>=5.0.0-beta.128":
+  version "5.0.9"
+  resolved "https://registry.yarnpkg.com/@ethersproject/hash/-/hash-5.0.9.tgz#81252a848185b584aa600db4a1a68cad9229a4d4"
+  integrity sha512-e8/i2ZDeGSgCxXT0vocL54+pMbw5oX5fNjb2E3bAIvdkh5kH29M7zz1jHu1QDZnptIuvCZepIbhUH8lxKE2/SQ==
   dependencies:
     "@ethersproject/abstract-signer" "^5.0.6"
     "@ethersproject/address" "^5.0.5"
@@ -2005,17 +2019,16 @@
     "@babel/runtime" "^7.7.2"
     core-js "^3.4.1"
 
-"@materia-dex/materia-contracts-core@^1.0.3":
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/@materia-dex/materia-contracts-core/-/materia-contracts-core-1.0.3.tgz#204556ae590c2df81b23b70081a74562cdf9ccdd"
-  integrity sha512-OIZ9/fqSDTSxX9ghIGMPw1xfl8qwONBStDQZeyT2o5dQQhT1rIiokpHl1ucpQRnNetHHwoNSfdFgsMKgS+nbZQ==
+"@materia-dex/materia-contracts-core@^1.0.5":
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/@materia-dex/materia-contracts-core/-/materia-contracts-core-1.0.5.tgz#c8e583020cfc0c8f174775fcc6d219258b2e66bc"
+  integrity sha512-DsL/xiXG9qwd5cBOF5R1juf1VM+YbFc7JxZOcdlObdeLGshM1zQ9EMmIpBAK6Jg/vLJsfmNESP8o8hU/3RfSAA==
 
-"@materia-dex/materia-contracts-proxy@^1.0.4":
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/@materia-dex/materia-contracts-proxy/-/materia-contracts-proxy-1.0.4.tgz#8f156096f78db787d22ce063863ad13be354df86"
-  integrity sha512-bewNqlnZu3eJG4T/4iwZ7JTn0dQK4LvbAtz207XK47xOgk3xWqEKjj1XgHQ+8++MFaVOyoDSJzBL5+yyy59fOQ==
+"@materia-dex/materia-contracts-proxy@^1.0.6":
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/@materia-dex/materia-contracts-proxy/-/materia-contracts-proxy-1.0.6.tgz#b933ae71b42e78a5c2283750147ccdc15ee3b9a2"
+  integrity sha512-8rzx7J0CtTqtbR+9HKCyMtllvEqugalSi7mKqead30Xcb2XCWPu/Zno1r+jXz8kx6uykHYdyJjvZgE0L4uC9ZQ==
   dependencies:
-    "@materia-dex/materia-contracts-core" "^1.0.3"
     abstract-leveldown "^5.0.0"
     accepts "^1.3.7"
     aes-js "^3.0.0"
@@ -2652,19 +2665,20 @@
     yargs-unparser "^1.6.0"
     yn "^3.1.1"
 
-"@materia-dex/sdk@^1.0.6":
-  version "1.0.6"
-  resolved "https://registry.yarnpkg.com/@materia-dex/sdk/-/sdk-1.0.6.tgz#dc9014c013b141758eab70bd996f8a06f9151180"
-  integrity sha512-cK5qBNX3Zm5iGGRyqpccJPr68t5MozMc17UMo84x5TckN0wwFg2Vc6FTPPFC4yz8cyOCo1j2byrh6y5wzgNk1Q==
+"@materia-dex/sdk@^1.0.8":
+  version "1.0.8"
+  resolved "https://registry.yarnpkg.com/@materia-dex/sdk/-/sdk-1.0.8.tgz#8f5fbd1887b2e8e02908d91b175fa513aaf38456"
+  integrity sha512-UHyAM58JhEsSRFCI506CpZPP+AASvusgMyHOjboc4WAa+o76RhGIXKtjmOD5iIY/Tb8HuPUcj324FcsMFiKysQ==
   dependencies:
-    "@materia-dex/materia-contracts-core" "^1.0.3"
-    "@materia-dex/materia-contracts-proxy" "^1.0.4"
+    "@materia-dex/materia-contracts-core" "^1.0.5"
+    "@materia-dex/materia-contracts-proxy" "^1.0.6"
     big.js "^5.2.2"
     decimal.js-light "^2.5.0"
     jsbi "^3.1.1"
     tiny-invariant "^1.1.0"
     tiny-warning "^1.0.3"
     toformat "^2.0.0"
+    web3 "^1.3.0"
 
 "@mrmlnc/readdir-enhanced@^2.2.1":
   version "2.2.1"
@@ -7296,9 +7310,9 @@ electron-to-chromium@^1.3.378, electron-to-chromium@^1.3.47, electron-to-chromiu
   integrity sha512-cN4lkjNRuTG8rtAqTOVgwpecEC2kbKA04PG6YijcKGHK/kD0xLjiqExcAOmLUwtXZRF8cBeam2I0VZcih919Ug==
 
 electron-to-chromium@^1.3.580:
-  version "1.3.616"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.616.tgz#de63d1c79bb8eb61168774df0c11c9e1af69f9e8"
-  integrity sha512-CI8L38UN2BEnqXw3/oRIQTmde0LiSeqWSRlPA42ZTYgJQ8fYenzAM2Z3ni+jtILTcrs5aiXZCGJ96Pm+3/yGyQ==
+  version "1.3.620"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.620.tgz#c6f36a7e398acc9d7d12743a6f58d536fbc58700"
+  integrity sha512-YbgWXUR2Mu+Fp6rm3GZ5YJdNo8SgZKLUTNSl2PNvdOcM8OIz07jRJnRkIaV9vdszFv9UUuGChh19w9qSuoLJgw==
 
 elegant-spinner@^1.0.1:
   version "1.0.1"
@@ -18247,7 +18261,7 @@ web3@1.2.11:
     web3-shh "1.2.11"
     web3-utils "1.2.11"
 
-web3@^1.2.11:
+web3@^1.2.11, web3@^1.3.0:
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/web3/-/web3-1.3.0.tgz#8fe4cd6e2a21c91904f343ba75717ee4c76bb349"
   integrity sha512-4q9dna0RecnrlgD/bD1C5S+81Untbd6Z/TBD7rb+D5Bvvc0Wxjr4OP70x+LlnwuRDjDtzBwJbNUblh2grlVArw==
@@ -18384,10 +18398,22 @@ websocket-extensions@>=0.1.1:
   resolved "https://registry.yarnpkg.com/websocket-extensions/-/websocket-extensions-0.1.4.tgz#7f8473bc839dfd87608adb95d7eb075211578a42"
   integrity sha512-OqedPIGOfsDlo31UNwYbCFMSaO9m9G/0faIHj5/dZFDMFqPTcx6UwqyOy3COEaEOg/9VsGIpdqn62W5KhoKSpg==
 
-websocket@1.0.32, websocket@^1.0.31, websocket@^1.0.32:
+websocket@1.0.32:
   version "1.0.32"
   resolved "https://registry.yarnpkg.com/websocket/-/websocket-1.0.32.tgz#1f16ddab3a21a2d929dec1687ab21cfdc6d3dbb1"
   integrity sha512-i4yhcllSP4wrpoPMU2N0TQ/q0O94LRG/eUQjEAamRltjQ1oT1PFFKOG4i877OlJgCG8rw6LrrowJp+TYCEWF7Q==
+  dependencies:
+    bufferutil "^4.0.1"
+    debug "^2.2.0"
+    es5-ext "^0.10.50"
+    typedarray-to-buffer "^3.1.5"
+    utf-8-validate "^5.0.2"
+    yaeti "^0.0.6"
+
+websocket@^1.0.31, websocket@^1.0.32:
+  version "1.0.33"
+  resolved "https://registry.yarnpkg.com/websocket/-/websocket-1.0.33.tgz#407f763fc58e74a3fa41ca3ae5d78d3f5e3b82a5"
+  integrity sha512-XwNqM2rN5eh3G2CUQE3OHZj+0xfdH42+OFK6LdC2yqiC0YU8e5UK0nYre220T0IyyN031V/XOvtHvXozvJYFWA==
   dependencies:
     bufferutil "^4.0.1"
     debug "^2.2.0"
