@@ -497,8 +497,6 @@ export default function AddLiquidity({
           </ItemColumn>
           <PoolContainer>
             <VoteCard>
-              {/* <CardBGImage /> */}
-              {/* <CardNoise /> */}
               <CardSection>
                 <AutoColumn gap="md">
                   <RowBetween>
@@ -735,7 +733,6 @@ export default function AddLiquidity({
           </AddLiquidityContainer>
         </PoolGridContainer>
       </AppBody>
-
     </>
   )
 }

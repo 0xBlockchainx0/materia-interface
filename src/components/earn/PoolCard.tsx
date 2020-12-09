@@ -34,8 +34,7 @@ const Wrapper = styled(AutoColumn)<{ showBackground: boolean; bgColor: any }>`
   position: relative;
   opacity: ${({ showBackground }) => (showBackground ? '1' : '1')};
   color: ${({ theme, showBackground }) => (showBackground ? theme.white : theme.text1)} !important;
-  background-color: #002852;
-  border: 2px solid ${({ theme }) => theme.cyan2};
+  background-color: ${({ theme }) => theme.primary4};
 
   ${({ showBackground }) =>
     showBackground &&
@@ -54,11 +53,6 @@ const TopSection = styled.div`
     grid-template-columns: 48px 1fr 96px;
   `};
 `
-
-// const APR = styled.div`
-//   display: flex;
-//   justify-content: flex-end;
-// `
 
 const BottomSection = styled.div<{ showBackground: boolean }>`
   padding: 12px 16px;

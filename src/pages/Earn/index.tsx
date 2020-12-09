@@ -11,15 +11,29 @@ import Loader from '../../components/Loader'
 import { useActiveWeb3React } from '../../hooks'
 import AppBody from '../AppBody'
 
-const PageWrapper = styled(AutoColumn)`
-  // max-width: 640px;
-  width: 100%;
+
+const LMGridContainer = styled.div`
+  display: grid;
+  grid-template-columns: 30px 30% auto;
+
+  @media (min-width: 601px) and (max-width: 1350px) {
+    grid-template-columns: 50px auto !important;
+  }
+  @media (max-width: 600px) {
+    grid-template-columns: auto !important;
+  }
 `
 
-const TopSection = styled(AutoColumn)`
-  width: 100%;
+const InfoContainer = styled.div`
+  padding: 1rem;
+  font-size: smaller;
+  ${({ theme }) => theme.backgroundContainer}
 `
 
+const PoolsContainer = styled.div`
+  padding: 1rem 0.5rem 1rem 0.5rem;
+  ${({ theme }) => theme.backgroundContainer}
+`
 
 const EarnCard = styled(DataCard)`
   background: rgba(0, 27, 49, 0.5) !important;
@@ -59,7 +73,7 @@ export default function Earn() {
   }
 `
 
-const ItemColumn = styled.div`
+  const ItemColumn = styled.div`
   @media (min-width: 601px) and (max-width: 1350px) {
     // display: none;
   }
@@ -68,71 +82,60 @@ const ItemColumn = styled.div`
   }
 `
 
-const MainContainer = styled.div`
-
-`
-
   const stakingRewardsExist = Boolean(typeof chainId === 'number' && (STAKING_REWARDS_INFO[chainId]?.length ?? 0) > 0)
 
   return (
-    <AppBody>
-      <EarnGridContainer>
-      <ItemColumn>
+    <>
+      <AppBody>
+        <LMGridContainer>
+          <ItemColumn>
             <div style={{ writingMode: 'vertical-rl', textOrientation: 'mixed' }}>
-              <p style={{ fontSize: 'xx-large', margin: '0px 1.5rem 0px 0px' }}>
+              <p style={{ fontSize: 'xx-large', margin: '0px 0px 0px -10px', color: '#fff' }}>
                 Liquidity Mining
-              </p>
+            </p>
             </div>
           </ItemColumn>
-          <MainContainer>
-          <TopSection gap="md">
-        <EarnCard>
-          {/* <CardBGImage />
-          <CardNoise /> */}
-          <CardSection>
-            <AutoColumn gap="md">
-              <RowBetween>
-                <TYPE.white fontWeight={600}>Materia liquidity mining</TYPE.white>
-              </RowBetween>
-              <RowBetween>
-                <TYPE.white fontSize={14}>
-                  Deposit your Liquidity Provider tokens to receive GIL, the Materia DFO protocol governance token.
+          <InfoContainer>
+            <EarnCard>
+              <CardSection>
+                <AutoColumn gap="md">
+                  <RowBetween>
+                    <TYPE.white fontWeight={600}>Materia liquidity mining</TYPE.white>
+                  </RowBetween>
+                  <RowBetween>
+                    <TYPE.white fontSize={14}>
+                      Deposit your Liquidity Provider tokens to receive GIL, the Materia DFO protocol governance token.
                 </TYPE.white>
-              </RowBetween>{' '}
-              <ExternalLink
-                style={{ color: 'white', textDecoration: 'underline' }}
-                href="https://www.dfohub.com/"
-                target="_blank"
-              >
-                <TYPE.white fontSize={14}>Read more about DFO</TYPE.white>
-              </ExternalLink>
-            </AutoColumn>
-          </CardSection>
-          <CardBGImage />
-          <CardNoise />
-        </EarnCard>
-      </TopSection>
-      <AutoColumn gap="lg" style={{ width: '100%' }}>
-        <DataRow style={{ alignItems: 'baseline' }}>
-          <TYPE.mediumHeader style={{ marginTop: '0.5rem' }}>Participating pools</TYPE.mediumHeader>
-          <Countdown exactEnd={stakingInfos?.[0]?.periodFinish} />
-        </DataRow>
-
-        <PoolSection>
-          {stakingRewardsExist && stakingInfos?.length === 0 ? (
-            <Loader style={{ margin: 'auto' }} />
-          ) : !stakingRewardsExist ? (
-            'No active rewards'
-          ) : (
-            stakingInfos?.map(stakingInfo => {
-              // need to sort by added liquidity here
-              return <PoolCard key={stakingInfo.stakingRewardAddress} stakingInfo={stakingInfo} />
-            })
-          )}
-        </PoolSection>
-      </AutoColumn>
-      </MainContainer>
-      </EarnGridContainer>
-   </AppBody>
+                  </RowBetween>{' '}
+                  <ExternalLink
+                    style={{ color: 'white', textDecoration: 'underline' }}
+                    href="https://www.dfohub.com/"
+                    target="_blank"
+                  >
+                    <TYPE.white fontSize={14}>Read more about DFO</TYPE.white>
+                  </ExternalLink>
+                </AutoColumn>
+              </CardSection>
+              <CardBGImage />
+              <CardNoise />
+            </EarnCard>
+          </InfoContainer>
+          <PoolsContainer>
+            <PoolSection>
+              {stakingRewardsExist && stakingInfos?.length === 0 ? (
+                <Loader style={{ margin: 'auto' }} />
+              ) : !stakingRewardsExist ? (
+                'No active rewards'
+              ) : (
+                    stakingInfos?.map(stakingInfo => {
+                      // need to sort by added liquidity here
+                      return <PoolCard key={stakingInfo.stakingRewardAddress} stakingInfo={stakingInfo} />
+                    })
+                  )}
+            </PoolSection>
+          </PoolsContainer>
+        </LMGridContainer>
+      </AppBody>
+    </>
   )
 }
