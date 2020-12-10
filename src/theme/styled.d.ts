@@ -91,5 +91,6 @@ declare module 'styled-components' {
     tokenBackground: string
     swapButtonBg: FlattenSimpleInterpolation
     swapButtonSrc: string
+    advancedDetailsFooter:FlattenSimpleInterpolation
   }
 }

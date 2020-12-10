@@ -70,6 +70,7 @@ const Divider = styled.div`
 
 const SwapPageContainer = styled.div`
   padding: 1rem 0.5rem 1rem 0.5rem;
+  min-height: 580px;
   ${({ theme }) => theme.backgroundContainer}
 `
 
@@ -105,6 +106,7 @@ padding-top: 0.5rem;
 padding-left: 1rem;
 padding-bottom: 1rem;
 font-size: smaller;
+min-height: 580px;
 ${({ theme }) => theme.backgroundContainer}
   @media (max-width: 1350px) {
     display: none;

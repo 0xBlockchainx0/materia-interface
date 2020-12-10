@@ -10,10 +10,12 @@ import {
   SerializedToken,
   updateMatchesDarkMode,
   updateUserDarkMode,
+  updateUserClassicMode,
   updateUserExpertMode,
   updateUserSlippageTolerance,
   updateUserDeadline,
-  toggleURLWarning
+  toggleURLWarning,
+  updateMatchesClassicMode
 } from './actions'
 
 const currentTimestamp = () => new Date().getTime()
@@ -23,7 +25,9 @@ export interface UserState {
   lastUpdateVersionTimestamp?: number
 
   userDarkMode: boolean | null // the user's choice for dark mode or light mode
+  userClassicMode: boolean | null // the user's choice for classic mode or not
   matchesDarkMode: boolean // whether the dark mode media query matches
+  matchesClassicMode: boolean // whether the classic mode media query matches
 
   userExpertMode: boolean
 
@@ -56,7 +60,9 @@ function pairKey(token0Address: string, token1Address: string) {
 
 export const initialState: UserState = {
   userDarkMode: null,
+  userClassicMode: null,
   matchesDarkMode: false,
+  matchesClassicMode: false,
   userExpertMode: false,
   userSlippageTolerance: INITIAL_ALLOWED_SLIPPAGE,
   userDeadline: DEFAULT_DEADLINE_FROM_NOW,
@@ -89,6 +95,14 @@ export default createReducer(initialState, builder =>
     })
     .addCase(updateMatchesDarkMode, (state, action) => {
       state.matchesDarkMode = action.payload.matchesDarkMode
+      state.timestamp = currentTimestamp()
+    })
+    .addCase(updateUserClassicMode, (state, action) => {
+      state.userClassicMode = action.payload.userClassicMode
+      state.timestamp = currentTimestamp()
+    })
+    .addCase(updateMatchesClassicMode, (state, action) => {
+      state.matchesClassicMode = action.payload.matchesClassicMode
       state.timestamp = currentTimestamp()
     })
     .addCase(updateUserExpertMode, (state, action) => {

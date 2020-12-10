@@ -64,7 +64,7 @@ const tokenBackground = styled.var`${({ theme }) => theme.tokenBackground}`
 const TokenImage = styled.div<{ showBackground: boolean }>`
   background: ${props => props.showBackground ? ({ theme }) => theme.tokenBackground : 'unset'}    
   background-size: contain;
-  padding: 6rem;
+  padding: 3rem;
   background-position: center;
   @media (max-width: 1050px) {
     padding: 2rem !important;
