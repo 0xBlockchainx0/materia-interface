@@ -17,7 +17,8 @@ import {
   updateUserDeadline,
   updateUserExpertMode,
   updateUserSlippageTolerance,
-  toggleURLWarning
+  toggleURLWarning,
+  updateUserClassicMode
 } from './actions'
 
 function serializeToken(token: Token): SerializedToken {
@@ -64,6 +65,32 @@ export function useDarkModeManager(): [boolean, () => void] {
   }, [darkMode, dispatch])
 
   return [darkMode, toggleSetDarkMode]
+}
+
+export function useIsClassicMode(): boolean {
+  const { userClassicMode, matchesClassicMode } = useSelector<
+    AppState,
+    { userClassicMode: boolean | null; matchesClassicMode: boolean }
+  >(
+    ({ user: { matchesClassicMode, userClassicMode } }) => ({
+      userClassicMode,
+      matchesClassicMode
+    }),
+    shallowEqual
+  )
+
+  return userClassicMode === null ? matchesClassicMode : userClassicMode
+}
+
+export function useClassicModeManager(): [boolean, () => void] {
+  const dispatch = useDispatch<AppDispatch>()
+  const classicMode = useIsClassicMode()
+
+  const toggleSetClassicMode = useCallback(() => {
+    dispatch(updateUserClassicMode({ userClassicMode: !classicMode }))
+  }, [classicMode, dispatch])
+
+  return [classicMode, toggleSetClassicMode]
 }
 
 export function useIsExpertMode(): boolean {

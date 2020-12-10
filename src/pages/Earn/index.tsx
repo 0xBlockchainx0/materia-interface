@@ -105,7 +105,7 @@ export default function Earn() {
                   <RowBetween>
                     <TYPE.white fontSize={14}>
                       Deposit your Liquidity Provider tokens to receive GIL, the Materia DFO protocol governance token.
-                </TYPE.white>
+                    </TYPE.white>
                   </RowBetween>{' '}
                   <ExternalLink
                     style={{ color: 'white', textDecoration: 'underline' }}
