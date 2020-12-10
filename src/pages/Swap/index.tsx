@@ -257,8 +257,12 @@ export default function Swap() {
   const maxAmountInput: CurrencyAmount | undefined = maxAmountSpend(currencyBalances[Field.INPUT])
   const atMaxAmountInput = Boolean(maxAmountInput && parsedAmounts[Field.INPUT]?.equalTo(maxAmountInput))
 
+  // unwrap
+  const [needUnwrap, setNeedUnwrap] = useState<boolean>(false)
+  const toggleWrap = useCallback(() => setNeedUnwrap(uc => !uc), [])
+
   // the callback to execute the swap
-  const { callback: swapCallback, error: swapCallbackError } = useSwapCallback(trade, allowedSlippage, recipient)
+  const { callback: swapCallback, error: swapCallbackError } = useSwapCallback(trade, allowedSlippage, recipient, needUnwrap)
 
   const { priceImpactWithoutFee } = computeTradePriceBreakdown(trade)
 
@@ -440,6 +444,8 @@ export default function Swap() {
                                 price={trade?.executionPrice}
                                 showInverted={showInverted}
                                 setShowInverted={setShowInverted}
+                                needUnwrap={needUnwrap}
+                                toggleWrap={toggleWrap}
                               />
                             </RowBetween>
                           )}

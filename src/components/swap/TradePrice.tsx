@@ -12,6 +12,8 @@ interface TradePriceProps {
   price?: Price
   showInverted: boolean
   setShowInverted: (showInverted: boolean) => void
+  needUnwrap: boolean
+  toggleWrap: (needUnwrap: boolean) => void
 }
 
 const PriceLabel = styled.div`
@@ -28,7 +30,7 @@ const AutoUnWrap = styled.div`
 `
 
 
-export default function TradePrice({ price, showInverted, setShowInverted }: TradePriceProps) {
+export default function TradePrice({ price, showInverted, setShowInverted, needUnwrap, toggleWrap }: TradePriceProps) {
   const theme = useContext(ThemeContext)
 
   const formattedPrice = showInverted ? price?.toSignificant(6) : price?.invert()?.toSignificant(6)
@@ -40,8 +42,7 @@ export default function TradePrice({ price, showInverted, setShowInverted }: Tra
 
   const tradePrice = (formattedPrice ?? '-') + ' ' + label
 
-  const [wrapValue, setWrap] = useState(false)
-  const toggleWrap = useCallback(() => setWrap(uc => !uc), [])
+  const setToggleWrap = useCallback(() => toggleWrap(needUnwrap), [])
 
   return (
     <Text
@@ -49,7 +50,7 @@ export default function TradePrice({ price, showInverted, setShowInverted }: Tra
       fontSize={14}
       color={theme.text2}
       style={{ justifyContent: 'center', alignItems: 'center' }}
-    // style={{ justifyContent: 'center', alignItems: 'center', display: 'flex' }}
+      // style={{ justifyContent: 'center', alignItems: 'center', display: 'flex' }}
     >
       {show ? (
         <>
@@ -57,8 +58,8 @@ export default function TradePrice({ price, showInverted, setShowInverted }: Tra
           <input
                   type="checkbox"
                   className="wrap-checkbox"
-                  checked={wrapValue}
-                  onChange={toggleWrap}
+                  checked={needUnwrap}
+                  onChange={setToggleWrap}
                 />{' '}
                  Auto Un-Wrap <QuestionHelper text="Your transaction will automatically unwrap the ethItem into your desired currency." />
           </AutoUnWrap>

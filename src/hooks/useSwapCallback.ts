@@ -43,7 +43,8 @@ type EstimatedSwapCall = SuccessfulCall | FailedCall
 function useSwapCallArguments(
   trade: Trade | undefined, // trade to execute, required
   allowedSlippage: number = INITIAL_ALLOWED_SLIPPAGE, // in bips
-  recipientAddressOrName: string | null // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
+  recipientAddressOrName: string | null, // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
+  needUnwrap: boolean // unwrap parameter used for check if the result token need to be unwrapped
 ): SwapCall[] {
   const { account, chainId, library } = useActiveWeb3React()
 
@@ -51,8 +52,6 @@ function useSwapCallArguments(
   const recipient = recipientAddressOrName === null ? account : recipientAddress
   const deadline = useTransactionDeadline()
   const contract: Contract | null = (!library || !account || !chainId) ? null : getProxyContract(chainId, library, account)
-
-  const needUnwrap = false
   const inputTokenAddress = trade?.route.path[0]?.address
   const { result: checkIsEthItem } = useSingleCallResult(contract, 'isEthItem', [inputTokenAddress])
   const isEthItem: boolean = checkIsEthItem?.ethItem
@@ -62,7 +61,7 @@ function useSwapCallArguments(
     (!library || !account || !chainId || !isEthItem)
       ? null
       : getEthItemCollectionContract(chainId, ethItemCollection, library, account)
-
+      
   return useMemo(() => {
     const swapMethods = []
 
@@ -75,7 +74,7 @@ function useSwapCallArguments(
         allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
         recipient,
         deadline: deadline.toNumber()
-      }, isEthItem, needUnwrap, JSBI.toNumber(ethItemObjectId))
+      }, isEthItem, needUnwrap, ethItemObjectId?.toString() ?? "0")
     )
 
     if (trade.tradeType === TradeType.EXACT_INPUT) {
@@ -85,7 +84,7 @@ function useSwapCallArguments(
           allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
           recipient,
           deadline: deadline.toNumber()
-        }, isEthItem, needUnwrap, JSBI.toNumber(ethItemObjectId))
+        }, isEthItem, needUnwrap, ethItemObjectId?.toString() ?? "0")
       )
     }
 
@@ -110,11 +109,12 @@ function useSwapCallArguments(
 export function useSwapCallback(
   trade: Trade | undefined, // trade to execute, required
   allowedSlippage: number = INITIAL_ALLOWED_SLIPPAGE, // in bips
-  recipientAddressOrName: string | null // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
+  recipientAddressOrName: string | null, // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
+  needUnwrap: boolean // unwrap parameter used for check if the result token need to be unwrapped
 ): { state: SwapCallbackState; callback: null | (() => Promise<string>); error: string | null } {
   const { account, chainId, library } = useActiveWeb3React()
 
-  const swapCalls = useSwapCallArguments(trade, allowedSlippage, recipientAddressOrName)
+  const swapCalls = useSwapCallArguments(trade, allowedSlippage, recipientAddressOrName, needUnwrap)
   const addTransaction = useTransactionAdder()
 
   const { address: recipientAddress } = useENS(recipientAddressOrName)
@@ -151,19 +151,19 @@ export function useSwapCallback(
                 }
               })
               .catch(gasError => {
-                console.debug('Gas estimate failed, trying eth_call to extract error', call)
+                console.log('Gas estimate failed, trying eth_call to extract error', call)
 
                 return contract.callStatic[methodName](...args, options)
                   .then(result => {
-                    console.debug('Unexpected successful call after failed estimate gas', call, gasError, result)
+                    console.log('Unexpected successful call after failed estimate gas', call, gasError, result)
                     return { call, error: new Error('Unexpected issue with estimating the gas. Please try again.') }
                   })
                   .catch(callError => {
-                    console.debug('Call threw error', call, callError)
+                    console.log('Call threw error', call, callError)
                     let errorMessage: string
                     switch (callError.reason) {
-                      case 'MateriaRouter: INSUFFICIENT_OUTPUT_AMOUNT':
-                      case 'MateriaRouter: EXCESSIVE_INPUT_AMOUNT':
+                      case 'UniswapV2Router: INSUFFICIENT_OUTPUT_AMOUNT':
+                      case 'UniswapV2Router: EXCESSIVE_INPUT_AMOUNT':
                         errorMessage =
                           'This transaction will not succeed either due to price movement or fee on transfer. Try increasing your slippage tolerance.'
                         break
