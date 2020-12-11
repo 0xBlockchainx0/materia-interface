@@ -5,7 +5,7 @@ import { fortmatic, injected, portis, walletconnect, walletlink } from '../conne
 
 export const FACTORY_ADDRESS = '0x902e7cdDB4821c30B4A8FD7F8FDF62c439AA0657'
 
-export const PROXY_ADDRESS = '0xb19f100c3c02ac469874c8c3a1038c7007950d81'
+export const PROXY_ADDRESS = '0x177F1fD497A4C63e8b6b7Ca7210E0f4E8b5e0210'
 
 export const MATERIA_DFO_ADDRESS = '0x2272f81205db240f6fCbC87ace0A5F1Cf7E49E5A'
 
@@ -65,7 +65,8 @@ const WETH_ONLY: ChainTokenList = {
 // used to construct intermediary pairs for trading
 export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
   ...WETH_ONLY,
-  [ChainId.MAINNET]: [...WETH_ONLY[ChainId.MAINNET], DAI, USDC, USDT, COMP, MKR]
+  [ChainId.MAINNET]: [...WETH_ONLY[ChainId.MAINNET], USD[ChainId.MAINNET]],
+  [ChainId.ROPSTEN]: [...WETH_ONLY[ChainId.ROPSTEN], USD[ChainId.ROPSTEN]]
 }
 
 /**
@@ -81,13 +82,15 @@ export const CUSTOM_BASES: { [chainId in ChainId]?: { [tokenAddress: string]: To
 // used for display in the default list when adding liquidity
 export const SUGGESTED_BASES: ChainTokenList = {
   ...WETH_ONLY,
-  [ChainId.MAINNET]: [...WETH_ONLY[ChainId.MAINNET], DAI, USDC, USDT]
+  [ChainId.MAINNET]: [...WETH_ONLY[ChainId.MAINNET], USD[ChainId.MAINNET], DAI, USDC, USDT],
+  [ChainId.ROPSTEN]: [...WETH_ONLY[ChainId.ROPSTEN], USD[ChainId.ROPSTEN]]
 }
 
 // used to construct the list of all pairs we consider by default in the frontend
 export const BASES_TO_TRACK_LIQUIDITY_FOR: ChainTokenList = {
   ...WETH_ONLY,
-  [ChainId.MAINNET]: [...WETH_ONLY[ChainId.MAINNET], DAI, USDC, USDT]
+  [ChainId.MAINNET]: [...WETH_ONLY[ChainId.MAINNET], USD[ChainId.MAINNET], DAI, USDC, USDT],
+  [ChainId.ROPSTEN]: [...WETH_ONLY[ChainId.ROPSTEN], USD[ChainId.ROPSTEN]]
 }
 
 export const PINNED_PAIRS: { readonly [chainId in ChainId]?: [Token, Token][] } = {
