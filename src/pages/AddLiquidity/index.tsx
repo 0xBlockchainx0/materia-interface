@@ -1,6 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { TransactionResponse } from '@ethersproject/providers'
-import { Currency, currencyEquals, ETHER, TokenAmount, WETH } from '@materia-dex/sdk'
+import { ADD_LIQUIDITY_ACTION_SAFE_TRANSFER_TOKEN, Currency, currencyEquals, ETHER, JSBI, TokenAmount, WETH } from '@materia-dex/sdk'
 import React, { useCallback, useContext, useState, useMemo } from 'react'
 import { Plus } from 'react-feather'
 import ReactGA from 'react-ga'
@@ -25,7 +25,7 @@ import { useDerivedMintInfo, useMintActionHandlers, useMintState } from '../../s
 
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import { useIsExpertMode, useUserSlippageTolerance } from '../../state/user/hooks'
-import { calculateGasMargin, calculateSlippageAmount, getProxyContract } from '../../utils'
+import { calculateGasMargin, calculateSlippageAmount, getEthItemCollectionContract, getProxyContract } from '../../utils'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { wrappedCurrency } from '../../utils/wrappedCurrency'
 import { Dots, Wrapper } from '../Pool/styleds'
@@ -49,7 +49,10 @@ import { CardSection, DataCard, CardNoise, CardBGImage } from '../../components/
 import AppBody from '../AppBody'
 import useUSD from '../../hooks/useUSD'
 import usePoolCurrencies from '../../hooks/usePoolCurrencies'
-
+import { useSingleCallResult } from '../../state/multicall/hooks'
+import { Contract } from 'ethers'
+import Web3 from 'web3'
+import useCheckIsEthItem from '../../hooks/useCheckIsEthItem'
 
 const PageWrapper = styled(AutoColumn)`
   max-width: 640px;
@@ -194,7 +197,7 @@ export default function AddLiquidity({
   const { account, chainId, library } = useActiveWeb3React()
   const theme = useContext(ThemeContext)
   const { poolCurrencyIdA, poolCurrencyIdB } = usePoolCurrencies(currencyIdA, currencyIdB)
-  
+
   currencyIdA = poolCurrencyIdA
   currencyIdB = poolCurrencyIdB
 
@@ -257,6 +260,7 @@ export default function AddLiquidity({
     poolTokenPercentage,
     error
   } = useDerivedMintInfo(currencyA ?? undefined, currencyB ?? undefined)
+  const checkIsEthItem = useCheckIsEthItem(currencyB ?? undefined)
   const { onFieldAInput, onFieldBInput } = useMintActionHandlers(noLiquidity)
 
   const isValid = !error
@@ -306,8 +310,18 @@ export default function AddLiquidity({
   async function onAdd() {
     if (!chainId || !library || !account) return
     const router = getProxyContract(chainId, library, account)
+    // const tokenAddressB = currencyB ? (wrappedCurrency(currencyB, chainId)?.address ?? "") : ""
+    // const { result: checkIsEthItem } = useSingleCallResult(router, 'isEthItem', [tokenAddressB])
+    const isEthItem: boolean = checkIsEthItem?.ethItem
+    const ethItemCollection: string = checkIsEthItem?.collection
+    const ethItemObjectId: JSBI = JSBI.BigInt(checkIsEthItem?.itemId ?? 0)
+    const collectionContract: Contract | null =
+      (!library || !account || !chainId || !isEthItem)
+        ? null
+        : getEthItemCollectionContract(chainId, ethItemCollection, library, account)
 
     const { [Field.CURRENCY_A]: parsedAmountA, [Field.CURRENCY_B]: parsedAmountB } = parsedAmounts
+
     if (!parsedAmountA || !parsedAmountB || !currencyA || !currencyB || !deadline) {
       return
     }
@@ -317,37 +331,73 @@ export default function AddLiquidity({
       [Field.CURRENCY_B]: calculateSlippageAmount(parsedAmountB, noLiquidity ? 0 : allowedSlippage)[0]
     }
 
-    let estimate,
-      method: (...args: any) => Promise<TransactionResponse>,
-      args: Array<string | string[] | number>,
-      value: BigNumber | null
-    if (currencyA === ETHER || currencyB === ETHER) {
-      const tokenBIsETH = currencyB === ETHER
-      estimate = router.estimateGas.addLiquidityETH
-      method = router.addLiquidityETH
-      args = [
-        wrappedCurrency(tokenBIsETH ? currencyA : currencyB, chainId)?.address ?? '', // token
-        (tokenBIsETH ? parsedAmountA : parsedAmountB).raw.toString(), // token desired
-        amountsMin[tokenBIsETH ? Field.CURRENCY_A : Field.CURRENCY_B].toString(), // token min
-        amountsMin[tokenBIsETH ? Field.CURRENCY_B : Field.CURRENCY_A].toString(), // eth min
-        account,
-        deadline.toHexString()
-      ]
-      value = BigNumber.from((tokenBIsETH ? parsedAmountB : parsedAmountA).raw.toString())
-    } else {
-      estimate = router.estimateGas.addLiquidity
-      method = router.addLiquidity
-      args = [
-        wrappedCurrency(currencyA, chainId)?.address ?? '',
-        wrappedCurrency(currencyB, chainId)?.address ?? '',
-        parsedAmountA.raw.toString(),
-        parsedAmountB.raw.toString(),
-        amountsMin[Field.CURRENCY_A].toString(),
-        amountsMin[Field.CURRENCY_B].toString(),
-        account,
-        deadline.toHexString()
-      ]
+    let estimate
+    let method: (...args: any) => Promise<TransactionResponse>
+    let args: Array<string | string[] | number | boolean>
+    let value: BigNumber | null
+
+    if (isEthItem) {
+      if (!collectionContract) return
+
+      const web3 = new Web3();
+      let operation: number = ADD_LIQUIDITY_ACTION_SAFE_TRANSFER_TOKEN
+      let ethItemArgs: (any | any[])
+
+      // (address from, address to, uint256 id, uint256 amount, bytes calldata data)
+      estimate = collectionContract.estimateGas.safeTransferFrom
+      method = collectionContract.safeTransferFrom
+      //(address tokenA, address tokenB, uint amountADesired, uint amountBDesired, uint amountAMin, uint amountBMin, address to, uint deadline, bool callback)
+      ethItemArgs = web3.eth.abi.encodeParameters(
+        ["uint256", "bytes"],
+        [operation, web3.eth.abi.encodeParameters(
+          ["address", "address", "uint", "uint", "uint", "uint", "address", "uint", "bool"],
+          [
+            wrappedCurrency(currencyA, chainId)?.address ?? '',
+            wrappedCurrency(currencyB, chainId)?.address ?? '',
+            parsedAmountA.raw.toString(),
+            parsedAmountB.raw.toString(),
+            amountsMin[Field.CURRENCY_A].toString(),
+            amountsMin[Field.CURRENCY_B].toString(),
+            account,
+            deadline.toHexString(),
+            true
+          ]
+        )]
+      )
+      args = [account, PROXY_ADDRESS, ethItemObjectId?.toString() ?? "0", parsedAmountB.raw.toString(), ethItemArgs]
       value = null
+    }
+    else {
+      if (currencyA === ETHER || currencyB === ETHER) {
+        const tokenBIsETH = currencyB === ETHER
+        estimate = router.estimateGas.addLiquidityETH
+        method = router.addLiquidityETH
+        args = [
+          wrappedCurrency(tokenBIsETH ? currencyA : currencyB, chainId)?.address ?? '', // token
+          (tokenBIsETH ? parsedAmountA : parsedAmountB).raw.toString(), // token desired
+          amountsMin[tokenBIsETH ? Field.CURRENCY_A : Field.CURRENCY_B].toString(), // token min
+          amountsMin[tokenBIsETH ? Field.CURRENCY_B : Field.CURRENCY_A].toString(), // eth min
+          account,
+          deadline.toHexString(),
+          false
+        ]
+        value = BigNumber.from((tokenBIsETH ? parsedAmountB : parsedAmountA).raw.toString())
+      } else {
+        estimate = router.estimateGas.addLiquidity
+        method = router.addLiquidity
+        args = [
+          wrappedCurrency(currencyA, chainId)?.address ?? '',
+          wrappedCurrency(currencyB, chainId)?.address ?? '',
+          parsedAmountA.raw.toString(),
+          parsedAmountB.raw.toString(),
+          amountsMin[Field.CURRENCY_A].toString(),
+          amountsMin[Field.CURRENCY_B].toString(),
+          account,
+          deadline.toHexString(),
+          false
+        ]
+        value = null
+      }
     }
 
     setAttemptingTxn(true)

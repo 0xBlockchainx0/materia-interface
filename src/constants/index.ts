@@ -5,7 +5,7 @@ import { fortmatic, injected, portis, walletconnect, walletlink } from '../conne
 
 export const FACTORY_ADDRESS = '0x902e7cdDB4821c30B4A8FD7F8FDF62c439AA0657'
 
-export const PROXY_ADDRESS = '0x177F1fD497A4C63e8b6b7Ca7210E0f4E8b5e0210'
+export const PROXY_ADDRESS = '0x0d7AD391E89A4B4b21f4F74563Caa546C104D97D'
 
 export const MATERIA_DFO_ADDRESS = '0x2272f81205db240f6fCbC87ace0A5F1Cf7E49E5A'
 
