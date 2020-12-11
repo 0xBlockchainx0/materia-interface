@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next'
 
 import styled from 'styled-components'
 
-import Logo from '../../assets/images/materia-logo.png'
+import Logo from '../../assets/images/materia-logo-light.png'
 import LogoDark from '../../assets/images/materia-logo.png'
 import { useActiveWeb3React } from '../../hooks'
 import { useDarkModeManager } from '../../state/user/hooks'

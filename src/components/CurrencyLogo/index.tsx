@@ -12,14 +12,20 @@ const getTokenLogoURL = (address: string) =>
 
 const StyledEthereumLogo = styled.img<{ size: string }>`
   width: ${({ size }) => size};
-  height: ${({ size }) => size};
-  border-radius: 0px;
+  height: auto;
+
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
 `
 
 const StyledLogo = styled(Logo)<{ size: string }>`
   width: ${({ size }) => size};
-  height: ${({ size }) => size};
-  border-radius: ${({ size }) => size};
+  height: auto;
+
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 `
 
 export default function CurrencyLogo({

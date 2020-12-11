@@ -64,7 +64,11 @@ const tokenBackground = styled.var`${({ theme }) => theme.tokenBackground}`
 const TokenImage = styled.div<{ showBackground: boolean }>`
   background: ${props => props.showBackground ? ({ theme }) => theme.tokenBackground : 'unset'}    
   background-size: contain;
-  padding: 6rem;
+  height: 300px;
+    width: 300px;
+    background-position: center;
+    display: table-cell;
+    vertical-align: middle;
   background-position: center;
   @media (max-width: 1050px) {
     padding: 2rem !important;
@@ -261,7 +265,7 @@ export default function CurrencyInputPanel({
         )}
       </InputPanel>
       <TokenImageContainer>
-        <TokenImage showBackground={(pair != null || currency != null)}>
+        <TokenImage showBackground={true}>
           {pair ? (
             <DoubleCurrencyLogo currency0={pair.token0} currency1={pair.token1} size={24} margin={true} />
           ) : currency ? (

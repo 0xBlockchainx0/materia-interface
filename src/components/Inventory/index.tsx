@@ -12,7 +12,7 @@ const InventoryContainer = styled.div`
   margin-right: 1rem;
   padding-top: 0.5rem;
   overflow-y: auto;
-  max-height: 530px;
+  max-height: 550px;
 `
 
 const InventoryTitle = styled.div`
