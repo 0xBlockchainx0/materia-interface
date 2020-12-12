@@ -12,7 +12,7 @@ import { useTokenBalance } from '../../state/wallet/hooks'
 import { ExternalLink, TYPE } from '../../theme'
 import { currencyId } from '../../utils/currencyId'
 import { unwrappedToken } from '../../utils/wrappedCurrency'
-import { ButtonPrimary, ButtonSecondary, ButtonEmpty } from '../Button'
+import { ButtonPrimary, ButtonSecondary, ButtonEmpty, ButtonMateriaPrimary } from '../Button'
 import { transparentize } from 'polished'
 import { CardNoise } from '../earn/styled'
 
@@ -284,7 +284,7 @@ export default function FullPositionCard({ pair, border }: PositionCardProps) {
               </ExternalLink>
             </ButtonSecondary>
             <RowBetween marginTop="10px">
-              <ButtonPrimary
+              <ButtonMateriaPrimary
                 padding="8px"
                 borderRadius="8px"
                 as={Link}
@@ -292,8 +292,8 @@ export default function FullPositionCard({ pair, border }: PositionCardProps) {
                 width="48%"
               >
                 Add
-              </ButtonPrimary>
-              <ButtonPrimary
+              </ButtonMateriaPrimary>
+              <ButtonMateriaPrimary
                 padding="8px"
                 borderRadius="8px"
                 as={Link}
@@ -301,7 +301,7 @@ export default function FullPositionCard({ pair, border }: PositionCardProps) {
                 to={`/remove/${currencyId(currency0)}/${currencyId(currency1)}`}
               >
                 Remove
-              </ButtonPrimary>
+              </ButtonMateriaPrimary>
             </RowBetween>
           </AutoColumn>
         )}

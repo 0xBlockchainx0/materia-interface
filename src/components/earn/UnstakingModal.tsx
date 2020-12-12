@@ -4,7 +4,7 @@ import { AutoColumn } from '../Column'
 import styled from 'styled-components'
 import { RowBetween } from '../Row'
 import { TYPE, CloseIcon } from '../../theme'
-import { ButtonError } from '../Button'
+import { ButtonMateriaError } from '../Button'
 import { StakingInfo } from '../../state/stake/hooks'
 import { useStakingContract } from '../../hooks/useContract'
 import { SubmittedView, LoadingView } from '../ModalViews'
@@ -93,9 +93,9 @@ export default function UnstakingModal({ isOpen, onDismiss, stakingInfo }: Staki
           <TYPE.subHeader style={{ textAlign: 'center' }}>
             When you withdraw, your GIL is claimed and your liquidity is removed from the mining pool.
           </TYPE.subHeader>
-          <ButtonError disabled={!!error} error={!!error && !!stakingInfo?.stakedAmount} onClick={onWithdraw}>
+          <ButtonMateriaError disabled={!!error} error={!!error && !!stakingInfo?.stakedAmount} onClick={onWithdraw}>
             {error ?? 'Withdraw & Claim'}
-          </ButtonError>
+          </ButtonMateriaError>
         </ContentWrapper>
       )}
       {attempting && !hash && (

@@ -5,7 +5,7 @@ import styled from 'styled-components'
 import { TYPE, StyledInternalLink } from '../../theme'
 import DoubleCurrencyLogo from '../DoubleLogo'
 import { ETHER, JSBI, TokenAmount } from '@materia-dex/sdk'
-import { ButtonPrimary } from '../Button'
+import { ButtonMateriaPrimary, ButtonPrimary } from '../Button'
 import { StakingInfo } from '../../state/stake/hooks'
 import { useColor } from '../../hooks/useColor'
 import { currencyId } from '../../utils/currencyId'
@@ -115,9 +115,9 @@ export default function PoolCard({ stakingInfo }: { stakingInfo: StakingInfo }) 
         </TYPE.white>
 
         <StyledInternalLink to={`/lm/${currencyId(currency0)}/${currencyId(currency1)}`} style={{ width: '100%' }}>
-          <ButtonPrimary padding="8px" borderRadius="8px">
+          <ButtonMateriaPrimary padding="8px" borderRadius="8px">
             {isStaking ? 'Manage' : 'Deposit'}
-          </ButtonPrimary>
+          </ButtonMateriaPrimary>
         </StyledInternalLink>
       </TopSection>
 

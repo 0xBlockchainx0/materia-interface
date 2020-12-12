@@ -11,7 +11,7 @@ import { useWalletModalToggle } from '../../state/application/hooks'
 import { TYPE, ExternalLink } from '../../theme'
 import { RowBetween } from '../../components/Row'
 import { CardSection, DataCard, CardNoise, CardBGImage } from '../../components/earn/styled'
-import { ButtonPrimary, ButtonEmpty } from '../../components/Button'
+import { ButtonPrimary, ButtonEmpty, ButtonMateriaPrimary } from '../../components/Button'
 import StakingModal from '../../components/earn/StakingModal'
 import { useStakingInfo } from '../../state/stake/hooks'
 import UnstakingModal from '../../components/earn/UnstakingModal'
@@ -283,7 +283,7 @@ export default function Manage({
                             {`LP tokens are required. Once you've added liquidity to the ${currencyA?.symbol}-${currencyB?.symbol} pool you can stake your liquidity tokens on this page.`}
                           </TYPE.white>
                         </RowBetween>
-                        <ButtonPrimary
+                        <ButtonMateriaPrimary
                           padding="8px"
                           borderRadius="8px"
                           width={'fit-content'}
@@ -291,7 +291,7 @@ export default function Manage({
                           to={`/add/${currencyA && currencyId(currencyA)}/${currencyB && currencyId(currencyB)}`}
                         >
                           {`Add ${currencyA?.symbol}-${currencyB?.symbol} liquidity`}
-                        </ButtonPrimary>
+                        </ButtonMateriaPrimary>
                       </AutoColumn>
                     </CardSection>
                     <CardBGImage />
@@ -387,26 +387,26 @@ export default function Manage({
                   </BottomSection>
                   <TYPE.main style={{ textAlign: 'center' }} fontSize={14}>
                     <span role="img" aria-label="wizard-icon" style={{ marginRight: '8px' }}>
-          </span>
+                    </span>
           When you withdraw, the contract will automagically claim GIL on your behalf!
         </TYPE.main>
 
                   {!showAddLiquidityButton && (
                     <DataRow style={{ marginBottom: '1rem' }}>
-                      <ButtonPrimary padding="8px" borderRadius="8px" width="160px" onClick={handleDepositClick}>
+                      <ButtonMateriaPrimary padding="8px" borderRadius="8px" width="160px" onClick={handleDepositClick}>
                         {stakingInfo?.stakedAmount?.greaterThan(JSBI.BigInt(0)) ? 'Deposit' : 'Deposit LP Tokens'}
-                      </ButtonPrimary>
+                      </ButtonMateriaPrimary>
 
                       {stakingInfo?.stakedAmount?.greaterThan(JSBI.BigInt(0)) && (
                         <>
-                          <ButtonPrimary
+                          <ButtonMateriaPrimary
                             padding="8px"
                             borderRadius="8px"
                             width="160px"
                             onClick={() => setShowUnstakingModal(true)}
                           >
                             Withdraw
-                </ButtonPrimary>
+                </ButtonMateriaPrimary>
                         </>
                       )}
                     </DataRow>

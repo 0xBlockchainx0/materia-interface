@@ -224,21 +224,21 @@ export default function InventoryItem({
           )}
           <RowBetween marginTop="10px">
             {isERC20 && (
-            <ButtonPrimary
+            <ButtonMateriaPrimary
               padding="8px"
               borderRadius="8px"
               width="48%"
             >
               Approve
-              </ButtonPrimary>
+              </ButtonMateriaPrimary>
               )}
-            <ButtonPrimary
+            <ButtonMateriaPrimary
               padding="8px"
               borderRadius="8px"
               width="48%"
             >
               Wrap
-              </ButtonPrimary>
+              </ButtonMateriaPrimary>
           </RowBetween>
         </AutoColumn>
       )}

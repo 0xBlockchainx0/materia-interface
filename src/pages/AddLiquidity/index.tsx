@@ -320,7 +320,7 @@ export default function AddLiquidity({
       (!library || !account || !chainId || !isEthItem)
         ? null
         : getEthItemCollectionContract(chainId, ethItemCollection, library, account)
-
+    
     const { [Field.CURRENCY_A]: parsedAmountA, [Field.CURRENCY_B]: parsedAmountB } = parsedAmounts
 
     if (!parsedAmountA || !parsedAmountB || !currencyA || !currencyB || !deadline) {
@@ -400,6 +400,14 @@ export default function AddLiquidity({
         value = null
       }
     }
+    
+    console.log("******************************")
+    console.log("method: ", method)
+    console.log("args: ", args)
+    console.log("isEthItem: ", isEthItem)
+    console.log("ethItemCollection: ", ethItemCollection)
+    console.log("ethItemObjectId: ", ethItemObjectId)
+    console.log("******************************")
 
     setAttemptingTxn(true)
     await estimate(...args, value ? { value } : {})

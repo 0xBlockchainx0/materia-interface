@@ -11,7 +11,7 @@ import Modal from '../Modal'
 import { AutoRow, RowBetween } from '../Row'
 import { AutoColumn } from '../Column'
 import { AlertTriangle } from 'react-feather'
-import { ButtonError } from '../Button'
+import { ButtonMateriaError } from '../Button'
 
 const Wrapper = styled.div<{ error: boolean }>`
   background: ${({ theme }) => transparentize(0.6, theme.bg3)};
@@ -129,7 +129,7 @@ export default function TokenWarningModal({
                 I understand
               </label>
             </div>
-            <ButtonError
+            <ButtonMateriaError
               disabled={!understandChecked}
               error={true}
               width={'140px'}
@@ -143,7 +143,7 @@ export default function TokenWarningModal({
               }}
             >
               <TYPE.body color="white">Continue</TYPE.body>
-            </ButtonError>
+            </ButtonMateriaError>
           </RowBetween>
         </AutoColumn>
       </WarningContainer>

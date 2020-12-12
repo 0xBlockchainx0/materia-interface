@@ -16,8 +16,5 @@ export default function useCheckIsEthItem(currency: Currency | null | undefined)
   const tokenAddress = currency ? (wrappedCurrency(currency, chainId)?.address ?? ZERO_ADDRESS) : ZERO_ADDRESS
   const { result: checkIsEthItem } = useSingleCallResult(contract, 'isEthItem', [tokenAddress])
 
-  console.log("tokenAddress: ", tokenAddress)
-  console.log("******************************")
-
   return checkIsEthItem
 }
