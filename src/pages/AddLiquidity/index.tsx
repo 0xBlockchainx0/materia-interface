@@ -4,8 +4,8 @@ import { ADD_LIQUIDITY_ACTION_SAFE_TRANSFER_TOKEN, Currency, currencyEquals, ETH
 import React, { useCallback, useContext, useState, useMemo } from 'react'
 import { Plus } from 'react-feather'
 import ReactGA from 'react-ga'
-import { RouteComponentProps } from 'react-router-dom'
-import { ButtonError, ButtonLight, ButtonPrimary, ButtonSecondary } from '../../components/Button'
+import { NavLink, RouteComponentProps } from 'react-router-dom'
+import { ButtonMateriaError, ButtonMateriaLight, ButtonMateriaPrimary, ButtonSecondary } from '../../components/Button'
 import { BlueCard, LightCard } from '../../components/Card'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
 import TransactionConfirmationModal, { ConfirmationModalContent } from '../../components/TransactionConfirmationModal'
@@ -13,6 +13,7 @@ import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import DoubleCurrencyLogo from '../../components/DoubleLogo'
 import { MinimalPositionCard } from '../../components/PositionCard'
 import Row, { AutoRow, RowBetween, RowFlat, RowFixed } from '../../components/Row'
+import { darken } from 'polished'
 
 import { PROXY_ADDRESS, USD } from '../../constants'
 import { PairState } from '../../data/Reserves'
@@ -83,7 +84,7 @@ const ButtonRow = styled(RowFixed)`
   `};
 `
 
-const ResponsiveButtonPrimary = styled(ButtonPrimary)`
+const ResponsiveButtonPrimary = styled(ButtonMateriaPrimary)`
   width: fit-content;
   ${({ theme }) => theme.mediaWidth.upToSmall`
     width: 48%;
@@ -116,7 +117,7 @@ const PoolGridContainer = styled.div`
   grid-template-columns: 30px 30% auto;
 
   @media (min-width: 601px) and (max-width: 1350px) {
-    grid-template-columns: 50px auto !important;
+    grid-template-columns: 30px 30% auto !important;
   }
   @media (max-width: 600px) {
     grid-template-columns: auto !important;
@@ -534,6 +535,35 @@ export default function AddLiquidity({
 
   const isCreate = history.location.pathname.includes('/create')
 
+  const activeClassName = 'ACTIVE'
+  const StyledNavLink = styled(NavLink).attrs({
+    activeClassName
+  })`
+    ${({ theme }) => theme.flexRowNoWrap}
+    align-items: left;
+    border-radius: 3rem;
+    outline: none;
+    cursor: pointer;
+    text-decoration: none;
+    color: ${({ theme }) => theme.text2};
+    font-size: 1rem;
+    width: fit-content;
+    margin: 0 12px;
+    font-weight: 500;
+
+    &.${activeClassName} {
+      // border-radius: 12px;
+      font-weight: 600;
+      color: ${({ theme }) => theme.cyan1};
+    }
+
+    :hover,
+    :focus {
+      color: ${({ theme }) => darken(0.1, theme.cyan1)};
+    }
+  `
+
+
   return (
     <>
       <AppBody>
@@ -619,16 +649,38 @@ export default function AddLiquidity({
           </PoolContainer>
           <AddLiquidityContainer>
             <PoolMenu>
-              <PoolMenuItem active={true}>
+              {/* <PoolMenuItem active={true}> */}
+              {/* <PoolMenuItem active={true}>
                 <Link to="/create/ETH">
                   <TYPE.body color={theme.text1} fontWeight={500} fontSize={14}>Create a pair</TYPE.body>
                 </Link>
-              </PoolMenuItem>
-              <PoolMenuItem>
+              </PoolMenuItem> */}
+              <StyledNavLink
+                id={`Create-a-pair`}
+                to={'/create/uSD'}
+                isActive={(match, { pathname }) =>
+                  Boolean(match) ||
+                  pathname.startsWith('/create')
+                }
+              >
+                Create a pair
+              </StyledNavLink>
+
+              <StyledNavLink
+                id={`Add-Liquidity`}
+                to={'/add/uSD'}
+                isActive={(match, { pathname }) =>
+                  Boolean(match) ||
+                  pathname.startsWith('/add')
+                }
+              >
+                Add Liquidity
+              </StyledNavLink>
+              {/* <PoolMenuItem>
                 <Link to="/add/ETH">
                   <TYPE.body color={theme.text1} fontWeight={500} fontSize={14}>Add Liquidity</TYPE.body>
                 </Link>
-              </PoolMenuItem>
+              </PoolMenuItem> */}
             </PoolMenu>
             <Divider></Divider>
             <TransactionConfirmationModal
@@ -729,7 +781,7 @@ export default function AddLiquidity({
             }
 
             {!account ? (
-              <ButtonLight onClick={toggleWalletModal}>Connect Wallet</ButtonLight>
+              <ButtonMateriaLight onClick={toggleWalletModal}>Connect Wallet</ButtonMateriaLight>
             ) : (
                 <AutoColumn gap={'md'}>
                   {(approvalA === ApprovalState.NOT_APPROVED ||
@@ -739,7 +791,7 @@ export default function AddLiquidity({
                     isValid && (
                       <RowBetween>
                         {approvalA !== ApprovalState.APPROVED && (
-                          <ButtonPrimary
+                          <ButtonMateriaPrimary
                             onClick={approveACallback}
                             disabled={approvalA === ApprovalState.PENDING}
                             width={approvalB !== ApprovalState.APPROVED ? '48%' : '100%'}
@@ -749,10 +801,10 @@ export default function AddLiquidity({
                             ) : (
                                 'Approve ' + currencies[Field.CURRENCY_A]?.symbol
                               )}
-                          </ButtonPrimary>
+                          </ButtonMateriaPrimary>
                         )}
                         {approvalB !== ApprovalState.APPROVED && (
-                          <ButtonPrimary
+                          <ButtonMateriaPrimary
                             onClick={approveBCallback}
                             disabled={approvalB === ApprovalState.PENDING}
                             width={approvalA !== ApprovalState.APPROVED ? '48%' : '100%'}
@@ -762,11 +814,11 @@ export default function AddLiquidity({
                             ) : (
                                 'Approve ' + currencies[Field.CURRENCY_B]?.symbol
                               )}
-                          </ButtonPrimary>
+                          </ButtonMateriaPrimary>
                         )}
                       </RowBetween>
                     )}
-                  <ButtonError
+                  <ButtonMateriaError
                     onClick={() => {
                       expertMode ? onAdd() : setShowConfirm(true)
                     }}
@@ -776,7 +828,7 @@ export default function AddLiquidity({
                     <Text fontSize={20} fontWeight={500}>
                       {error ?? 'Supply'}
                     </Text>
-                  </ButtonError>
+                  </ButtonMateriaError>
                 </AutoColumn>
               )}
 

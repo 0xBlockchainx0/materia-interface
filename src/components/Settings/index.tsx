@@ -99,7 +99,7 @@ const MenuFlyout = styled.span`
   flex-direction: column;
   font-size: 1rem;
   position: absolute;
-  top: -18rem;
+  top: -21rem;
   right: 1rem;
   z-index: 100;
 
