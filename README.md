@@ -9,7 +9,7 @@ An open source interface for Materia -- a protocol for decentralized exchange of
 - Twitter: [@MateriaDex](https://twitter.com/MateriaDex)
 - Reddit: [/r/Materia](https://www.reddit.com/r/Materia/)
 - Email: [contact@materiadex.com](mailto:contact@materiadex.com)
-- Discord: [Materia](https://discord.gg/Y7TF6QA)
+- Discord: [Materia](https://discord.gg/jdYMZrv)
 
 ## Accessing the Materia Interface
 
