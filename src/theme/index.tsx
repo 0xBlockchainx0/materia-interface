@@ -157,15 +157,15 @@ export function theme(darkMode: boolean, classicMode: boolean): DefaultTheme {
   `:
         darkMode ? css`
     background: rgb(0,77,161, 0.7);
-    background: -moz-linear-gradient(168deg, rgba(0,77,161,0.7) 0%, rgba(5,30,64,0.8) 100%);
-    background: -webkit-linear-gradient(168deg, rgba(0,77,161,0.7) 0%, rgba(5,30,64,0.8) 100%);
-    background: linear-gradient(168deg, rgba(0,77,161,0.7) 0%, rgba(5,30,64,0.8) 100%);`
+    background: -moz-linear-gradient(168deg, rgba(0,77,161,1) 0%, rgba(5,30,64,1) 100%);
+    background: -webkit-linear-gradient(168deg, rgba(0,77,161,1) 0%, rgba(5,30,64,1) 100%);
+    background: linear-gradient(168deg, rgba(0,77,161,1) 0%, rgba(5,30,64,1) 100%);`
           :
           css`
     background: rgb(156,208,245, 0.7);
-    background: -moz-linear-gradient(168deg, rgba(156,208,245,0.7) 0%, rgba(156,208,245,0.7) 100%);
-    background: -webkit-linear-gradient(168deg, rgba(156,208,245,0.7) 0%, rgba(156,208,245,0.7) 100%);
-    background: linear-gradient(168deg, rgba(156,208,245,0.7) 0%, rgba(156,208,245,0.7) 100%);
+    background: -moz-linear-gradient(168deg, rgba(156,208,245,1) 0%, rgba(156,208,245,1) 100%);
+    background: -webkit-linear-gradient(168deg, rgba(156,208,245,1) 0%, rgba(156,208,245,1) 100%);
+    background: linear-gradient(168deg, rgba(156,208,245,1) 0%, rgba(156,208,245,1) 100%);
     `,
 
     styledBoxBorder: darkMode ? css`
@@ -192,7 +192,7 @@ export function theme(darkMode: boolean, classicMode: boolean): DefaultTheme {
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#04009d', endColorstr='#06004d',GradientType=0 );
     `:
     darkMode ? css`
-    background: linear-gradient(180deg, rgba(0,77,161,0.7) 0%, rgba(5,30,64,0.8) 100%);
+    background: linear-gradient(180deg, rgba(0,77,161,1) 0%, rgba(5,30,64,1) 100%);
     `:
       css`
         background: linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 100%);
@@ -205,7 +205,7 @@ export function theme(darkMode: boolean, classicMode: boolean): DefaultTheme {
         background: linear-gradient(180deg, rgba(211,221,250) 0%, rgba(211,221,250) 100%);
     `,
     backgroundContainer3: darkMode ? css`
-    background: linear-gradient(180deg, rgba(0,77,161,0.7) 0%, rgba(5,30,64,0.8) 100%);
+    background: linear-gradient(180deg, rgba(0,77,161,1) 0%, rgba(5,30,64,1) 100%);
     `:
       css`
         background: linear-gradient(180deg, rgba(239,241,244) 0%, rgba(239,241,244) 100%);
