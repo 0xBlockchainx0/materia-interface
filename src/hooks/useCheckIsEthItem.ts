@@ -14,11 +14,10 @@ export default function useCheckIsEthItem(currency: Currency | null | undefined)
   const { account, chainId, library } = useActiveWeb3React()
   const contract: Contract | null = (!library || !account || !chainId) ? null : getProxyContract(chainId, library, account)
   const tokenAddress = currency ? (wrappedCurrency(currency, chainId)?.address ?? ZERO_ADDRESS) : ZERO_ADDRESS
-  // const { result: checkIsEthItem } = tokenAddress && tokenAddress != ZERO_ADDRESS ? useSingleCallResult(contract, 'isEthItem', [tokenAddress]) : { result: null}
+  const { result: checkIsEthItem } = useSingleCallResult(contract, 'isEthItem', [tokenAddress])
 
-  // console.log("tokenAddress: ", tokenAddress)
-  // console.log("******************************")
+  console.log("tokenAddress: ", tokenAddress)
+  console.log("******************************")
 
-  // return checkIsEthItem
-  return undefined
+  return checkIsEthItem
 }
