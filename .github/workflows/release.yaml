@@ -43,13 +43,13 @@ jobs:
         run: yarn install --frozen-lockfile
 
       - name: Build the IPFS bundle
-        run: react-scripts build
+        run: npm run build
 
       - name: Pin to IPFS
         id: upload
         uses: anantaramdas/ipfs-pinata-deploy-action@39bbda1ce1fe24c69c6f57861b8038278d53688d
         with:
-          pin-name: Uniswap ${{ needs.bump_version.outputs.new_tag }}
+          pin-name: Materia ${{ needs.bump_version.outputs.new_tag }}
           path: './build'
           pinata-api-key: ${{ secrets.PINATA_API_KEY }}
           pinata-secret-api-key: ${{ secrets.PINATA_API_SECRET_KEY }}
