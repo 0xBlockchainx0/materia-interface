@@ -2019,15 +2019,15 @@
     "@babel/runtime" "^7.7.2"
     core-js "^3.4.1"
 
-"@materia-dex/materia-contracts-core@^1.0.8":
-  version "1.0.8"
-  resolved "https://registry.yarnpkg.com/@materia-dex/materia-contracts-core/-/materia-contracts-core-1.0.8.tgz#ea7a676fa55180da1bc4e5487a151775239923cb"
-  integrity sha512-CTomP8+UGDZgFzV8cJUgOOGJZmngLFJRDYr63wfk5p1kxmOUr2eYKlL3cuNWRx7FQyxUgYxlO8YseKP1Bc1Nqg==
-
-"@materia-dex/materia-contracts-proxy@^1.0.9":
+"@materia-dex/materia-contracts-core@^1.0.9":
   version "1.0.9"
-  resolved "https://registry.yarnpkg.com/@materia-dex/materia-contracts-proxy/-/materia-contracts-proxy-1.0.9.tgz#ebf521c9df88a71545a6b48e061e7ad2a4154c14"
-  integrity sha512-5KKDFqDky44HqxHioxA/tG/BQFqlLB3uomjAw5kEilO+W4BuqGFbrvk+H6Cl6z9D61xbLRWTrkgRs66Gh0nGEA==
+  resolved "https://registry.yarnpkg.com/@materia-dex/materia-contracts-core/-/materia-contracts-core-1.0.9.tgz#8b71526c93e1a60c448e6581bfeb4b97eb31ad1a"
+  integrity sha512-ABZ00Uk+rkyhoc2Nw4lurctG8zkvjN0xrlrxqTtP+agHMZFqu+gtEAOkTdG6DNViuLejZxE8++Jm7JgTU5Exkg==
+
+"@materia-dex/materia-contracts-proxy@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@materia-dex/materia-contracts-proxy/-/materia-contracts-proxy-1.1.0.tgz#d2f4fafa97868f7e2561949e4b2f9ac676dd467f"
+  integrity sha512-+X+3eu0L9rTV+xNfHloILxGgubF4CHAbWLQLz9VR8TyLwmLs1MvtxBFNEC8r5BDx4AfO0TwRBw+GggG7JY2Axw==
   dependencies:
     abstract-leveldown "^5.0.0"
     accepts "^1.3.7"
@@ -2665,13 +2665,13 @@
     yargs-unparser "^1.6.0"
     yn "^3.1.1"
 
-"@materia-dex/sdk@^1.1.3":
-  version "1.1.3"
-  resolved "https://registry.yarnpkg.com/@materia-dex/sdk/-/sdk-1.1.3.tgz#b7da86a331afbce976277e35b69b134f3bf8742d"
-  integrity sha512-cQ0Nj7ZYVHrLG+OFlX3RcpYyDFAOWj/NPbIdJrMdgwesBNPMv7kacDralFOqYxqUh1/5sJlQcFI0Pq4dO0nSXQ==
+"@materia-dex/sdk@^1.1.4":
+  version "1.1.4"
+  resolved "https://registry.yarnpkg.com/@materia-dex/sdk/-/sdk-1.1.4.tgz#439cd6f2160f9916650c9de583b1929120d83793"
+  integrity sha512-W8v5fGsi7QhKQ+4pjqKm7nLj2WwT4BFZuNBTflu0rXUXZdR3VLMpvJCBWSw+S3oc15lVhWVkGQMVkQKaMgWOmg==
   dependencies:
-    "@materia-dex/materia-contracts-core" "^1.0.8"
-    "@materia-dex/materia-contracts-proxy" "^1.0.9"
+    "@materia-dex/materia-contracts-core" "^1.0.9"
+    "@materia-dex/materia-contracts-proxy" "^1.1.0"
     big.js "^5.2.2"
     decimal.js-light "^2.5.0"
     jsbi "^3.1.1"

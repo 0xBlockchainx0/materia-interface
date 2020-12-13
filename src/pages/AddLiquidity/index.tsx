@@ -312,8 +312,6 @@ export default function AddLiquidity({
   async function onAdd(checkIsEthItem: Result | undefined) {
     if (!chainId || !library || !account) return
     const router = getProxyContract(chainId, library, account)
-    // const tokenAddressB = currencyB ? (wrappedCurrency(currencyB, chainId)?.address ?? "") : ""
-    // const { result: checkIsEthItem } = useSingleCallResult(router, 'isEthItem', [tokenAddressB])
     const isEthItem: boolean = checkIsEthItem?.ethItem
     const ethItemCollection: string = checkIsEthItem?.collection
     const ethItemObjectId: JSBI = JSBI.BigInt(checkIsEthItem?.itemId ?? 0)

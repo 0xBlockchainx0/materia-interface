@@ -3,9 +3,9 @@ import { AbstractConnector } from '@web3-react/abstract-connector'
 
 import { fortmatic, injected, portis, walletconnect, walletlink } from '../connectors'
 
-export const FACTORY_ADDRESS = '0x902e7cdDB4821c30B4A8FD7F8FDF62c439AA0657'
+export const FACTORY_ADDRESS = '0x9Be8177C4395Cc27de34aeB8F231FA39513C155D'
 
-export const PROXY_ADDRESS = '0x2407CBc8d08519cb7F2C082365eBC3BdCAEA8BeE'
+export const PROXY_ADDRESS = '0x93c2504a7fc50808Ff9AF73ac68a6479f04D6806'
 
 export const MATERIA_DFO_ADDRESS = '0x2272f81205db240f6fCbC87ace0A5F1Cf7E49E5A'
 
