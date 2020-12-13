@@ -11,6 +11,14 @@ export const MATERIA_DFO_ADDRESS = '0x2272f81205db240f6fCbC87ace0A5F1Cf7E49E5A'
 
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 
+export const ERC20WRAPPER: { [chainId in ChainId]: string } = {
+  [ChainId.MAINNET]: '0xc4681b7f5206603715998daBAC4fa87c586Ad63D',
+  [ChainId.RINKEBY]: '',
+  [ChainId.ROPSTEN]: '0x651a6837457f1f7179a590dec647ec5d647b8231',
+  [ChainId.GÖRLI]: '',
+  [ChainId.KOVAN]: ''
+}
+
 // a list of tokens by chain
 type ChainTokenList = {
   readonly [chainId in ChainId]: Token[]

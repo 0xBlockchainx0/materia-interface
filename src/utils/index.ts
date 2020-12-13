@@ -5,7 +5,8 @@ import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
 import { BigNumber } from '@ethersproject/bignumber'
 import { abi as IMateriaProxyABI } from '@materia-dex/materia-contracts-proxy/build/IMateriaProxy.json'
 import { abi as IERC1155ABI } from '@materia-dex/materia-contracts-proxy/build/IERC1155.json'
-import { PROXY_ADDRESS } from '../constants'
+import { abi as IERC20WrapperV1 } from '@materia-dex/materia-contracts-proxy/build/IERC20WrapperV1.json'
+import { ERC20WRAPPER, PROXY_ADDRESS } from '../constants'
 import { ChainId, JSBI, Percent, Token, CurrencyAmount, Currency, ETHER } from '@materia-dex/sdk'
 import { TokenAddressMap } from '../state/lists/hooks'
 
@@ -105,6 +106,10 @@ export function getProxyContract(_: number, library: Web3Provider, account?: str
 
 export function getEthItemCollectionContract(_: number, ethItemCollectionAddress: string, library: Web3Provider, account?: string): Contract {
   return getContract(ethItemCollectionAddress, IERC1155ABI, library, account)
+}
+
+export function getERC20WrapperCollectionContract(_: number, erc20WrapperAddress: string, library: Web3Provider, account?: string): Contract {
+  return getContract(erc20WrapperAddress, IERC20WrapperV1, library, account)
 }
 
 export function escapeRegExp(string: string): string {
