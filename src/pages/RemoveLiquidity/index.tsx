@@ -74,6 +74,7 @@ const PoolContainer = styled.div`
 `
 
 const RemoveLiquidityContainer = styled.div`
+  min-height: 580px;
   padding: 1rem 0.5rem 1rem 0.5rem;
   ${({ theme }) => theme.backgroundContainer}
 `

@@ -20,4 +20,14 @@ export const AutoColumn = styled.div<{
   justify-items: ${({ justify }) => justify && justify};
 `
 
+export const FittedAutoColumn = styled.div<{
+  gap?: 'sm' | 'md' | 'lg' | string
+  justify?: 'stretch' | 'center' | 'start' | 'end' | 'flex-start' | 'flex-end' | 'space-between'
+}>`
+  grid-auto-rows: auto;
+  grid-row-gap: ${({ gap }) => (gap === 'sm' && '8px') || (gap === 'md' && '12px') || (gap === 'lg' && '24px') || gap};
+  justify-items: ${({ justify }) => justify && justify};
+  min-height: 580px;
+`
+
 export default Column

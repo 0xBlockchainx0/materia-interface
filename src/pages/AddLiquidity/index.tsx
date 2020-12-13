@@ -136,6 +136,7 @@ const ItemColumn = styled.div`
   @media (max-width: 600px) {
     display: none;
   }
+  min-height: 580px;
 `
 
 const PoolContainer = styled.div`

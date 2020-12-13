@@ -1,5 +1,5 @@
 import React from 'react'
-import { AutoColumn } from '../../components/Column'
+import { FittedAutoColumn } from '../../components/Column'
 import styled from 'styled-components'
 import { STAKING_REWARDS_INFO, useStakingInfo } from '../../state/stake/hooks'
 import { TYPE, ExternalLink } from '../../theme'
@@ -17,7 +17,7 @@ const LMGridContainer = styled.div`
   grid-template-columns: 30px 30% auto;
 
   @media (min-width: 601px) and (max-width: 1350px) {
-    grid-template-columns: 50px auto !important;
+    grid-template-columns: 30px 30% auto !important;
   }
   @media (max-width: 600px) {
     grid-template-columns: auto !important;
@@ -80,6 +80,7 @@ export default function Earn() {
   @media (max-width: 600px) {
     display: none;
   }
+  min-height: 580px;
 `
 
   const stakingRewardsExist = Boolean(typeof chainId === 'number' && (STAKING_REWARDS_INFO[chainId]?.length ?? 0) > 0)
@@ -98,7 +99,7 @@ export default function Earn() {
           <InfoContainer>
             <EarnCard>
               <CardSection>
-                <AutoColumn gap="md">
+                <FittedAutoColumn gap="md">
                   <RowBetween>
                     <TYPE.white fontWeight={600}>Materia liquidity mining</TYPE.white>
                   </RowBetween>
@@ -112,9 +113,10 @@ export default function Earn() {
                     href="https://www.dfohub.com/"
                     target="_blank"
                   >
+                    <br />
                     <TYPE.white fontSize={14}>Read more about DFO</TYPE.white>
                   </ExternalLink>
-                </AutoColumn>
+                </FittedAutoColumn>
               </CardSection>
               <CardBGImage />
               <CardNoise />
