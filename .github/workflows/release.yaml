@@ -43,7 +43,7 @@ jobs:
         run: yarn install --frozen-lockfile
 
       - name: Build the IPFS bundle
-        run: yarn build
+        run: react-scripts build
 
       - name: Pin to IPFS
         id: upload
