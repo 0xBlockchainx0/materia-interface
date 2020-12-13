@@ -625,7 +625,7 @@ export default function AddLiquidity({
                   <>
                     <ButtonSecondary>
                       <RowBetween>
-                        <ExternalLink href={'https://info.materia.exchange/account/' + account}>
+                        <ExternalLink href={'https://info.materiadex.com/account/' + account}>
                           Account analytics and accrued fees
                         </ExternalLink>
                         <span> ↗</span>

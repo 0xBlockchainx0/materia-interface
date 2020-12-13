@@ -112,11 +112,11 @@ export default function Menu() {
 
       {open && (
         <MenuFlyout>
-          <MenuItem id="link" href="https://materiadex.org/">
+          <MenuItem id="link" href="https://materiadex.com/">
             <Info size={14} />
             About
           </MenuItem>
-          <MenuItem id="link" href="https://materia.exchange/docs/">
+          <MenuItem id="link" href="https://materiadex.com/docs/">
             <BookOpen size={14} />
             Docs
           </MenuItem>
@@ -128,7 +128,7 @@ export default function Menu() {
             <MessageCircle size={14} />
             Discord
           </MenuItem>
-          <MenuItem id="link" href="https://info.materia.exchange/">
+          <MenuItem id="link" href="https://info.materiadex.com/">
             <PieChart size={14} />
             Analytics
           </MenuItem>

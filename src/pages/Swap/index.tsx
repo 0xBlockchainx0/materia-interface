@@ -3,6 +3,7 @@ import React, { useCallback, useContext, useEffect, useMemo, useState } from 're
 import { ArrowDown, ArrowRightCircle } from 'react-feather'
 import ReactGA from 'react-ga'
 import { Text } from 'rebass'
+import { NavLink, RouteComponentProps } from 'react-router-dom'
 import styled, { ThemeContext } from 'styled-components'
 import AddressInputPanel from '../../components/AddressInputPanel'
 import { ButtonError, ButtonLight, ButtonPrimary, ButtonConfirmed, ButtonMateriaLight, ButtonMateriaPrimary, ButtonMateriaConfirmed, ButtonMateriaError } from '../../components/Button'
@@ -44,6 +45,7 @@ import AppBody, { ButtonBgItem } from '../AppBody'
 import { ClickableText } from '../Pool/styleds'
 import Loader from '../../components/Loader'
 import Inventory from '../../components/Inventory'
+import { darken } from 'polished'
 
 const SwapGridContainer = styled.div`
   display: grid;
@@ -81,6 +83,35 @@ const SwapMenu = styled.div`
 const SwapMenuItem = styled.div<{ active?: boolean }>`
   padding-right: 1rem;
   opacity: ${({ active }) => (active ? '1' : '0.4')};
+`
+
+
+const activeClassName = 'ACTIVE'
+const StyledNavLink = styled(NavLink).attrs({
+  activeClassName
+})`
+  ${({ theme }) => theme.flexRowNoWrap}
+  align-items: left;
+  border-radius: 3rem;
+  outline: none;
+  cursor: pointer;
+  text-decoration: none;
+  color: ${({ theme }) => theme.text2};
+  font-size: 1rem;
+  width: fit-content;
+  margin: 0 12px;
+  font-weight: 500;
+
+  &.${activeClassName} {
+    // border-radius: 12px;
+    font-weight: 600;
+    color: ${({ theme }) => theme.cyan1};
+  }
+
+  :hover,
+  :focus {
+    color: ${({ theme }) => darken(0.1, theme.cyan1)};
+  }
 `
 
 const TradePriceContainer = styled.div`
@@ -389,12 +420,35 @@ export default function Swap() {
             </InventoryColumn>
             <SwapPageContainer>
               <SwapMenu>
-                <SwapMenuItem active={true}>
+                
+                {/* <SwapMenuItem active={true}>
                   <TYPE.body color={theme.text1} fontWeight={500} fontSize={14}>Classic SWAP</TYPE.body>
                 </SwapMenuItem>
                 <SwapMenuItem>
                   <TYPE.body color={theme.text1} fontWeight={500} fontSize={14}>Batch SWAP (coming soon)</TYPE.body>
-                </SwapMenuItem>
+                </SwapMenuItem> */}
+
+                <StyledNavLink
+                id={`classic-swap`}
+                to={'/swap'}
+                isActive={(match, { pathname }) =>
+                  Boolean(match) ||
+                  pathname.startsWith('/swap')
+                }
+              >
+                Classic SWAP
+              </StyledNavLink>
+
+              <StyledNavLink
+                id={`batch-swap`}
+                to={'/batch-swap'}
+                // isActive={(match, { pathname }) =>
+                //   Boolean(match) ||
+                //   pathname.startsWith('/batchswap')
+                // }
+              >
+                Batch SWAP (coming soon)
+              </StyledNavLink>
               </SwapMenu>
               <Divider></Divider>
               <div>
