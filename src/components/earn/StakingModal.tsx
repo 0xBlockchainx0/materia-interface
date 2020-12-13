@@ -6,7 +6,7 @@ import { AutoColumn } from '../Column'
 import styled from 'styled-components'
 import { RowBetween } from '../Row'
 import { TYPE, CloseIcon } from '../../theme'
-import { ButtonConfirmed, ButtonError } from '../Button'
+import { ButtonConfirmed, ButtonError, ButtonMateriaError } from '../Button'
 import ProgressCircles from '../ProgressSteps'
 import CurrencyInputPanel from '../CurrencyInputPanel'
 import { TokenAmount, Pair } from '@materia-dex/sdk'
@@ -233,13 +233,13 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
             >
               Approve
             </ButtonConfirmed>
-            <ButtonError
+            <ButtonMateriaError
               disabled={!!error || (signatureData === null && approval !== ApprovalState.APPROVED)}
               error={!!error && !!parsedAmount}
               onClick={onStake}
             >
               {error ?? 'Deposit'}
-            </ButtonError>
+            </ButtonMateriaError>
           </RowBetween>
           <ProgressCircles steps={[approval === ApprovalState.APPROVED || signatureData !== null]} disabled={true} />
         </ContentWrapper>

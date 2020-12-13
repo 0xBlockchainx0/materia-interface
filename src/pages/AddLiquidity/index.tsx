@@ -50,7 +50,7 @@ import { CardSection, DataCard, CardNoise, CardBGImage } from '../../components/
 import AppBody from '../AppBody'
 import useUSD from '../../hooks/useUSD'
 import usePoolCurrencies from '../../hooks/usePoolCurrencies'
-import { useSingleCallResult } from '../../state/multicall/hooks'
+import { Result, useSingleCallResult } from '../../state/multicall/hooks'
 import { Contract } from 'ethers'
 import Web3 from 'web3'
 import useCheckIsEthItem from '../../hooks/useCheckIsEthItem'
@@ -309,7 +309,7 @@ export default function AddLiquidity({
 
   const addTransaction = useTransactionAdder()
 
-  async function onAdd() {
+  async function onAdd(checkIsEthItem: Result | undefined) {
     if (!chainId || !library || !account) return
     const router = getProxyContract(chainId, library, account)
     // const tokenAddressB = currencyB ? (wrappedCurrency(currencyB, chainId)?.address ?? "") : ""
@@ -321,7 +321,7 @@ export default function AddLiquidity({
       (!library || !account || !chainId || !isEthItem)
         ? null
         : getEthItemCollectionContract(chainId, ethItemCollection, library, account)
-
+    
     const { [Field.CURRENCY_A]: parsedAmountA, [Field.CURRENCY_B]: parsedAmountB } = parsedAmounts
 
     if (!parsedAmountA || !parsedAmountB || !currencyA || !currencyB || !deadline) {
@@ -401,6 +401,14 @@ export default function AddLiquidity({
         value = null
       }
     }
+    
+    console.log("******************************")
+    console.log("method: ", method)
+    console.log("args: ", args)
+    console.log("isEthItem: ", isEthItem)
+    console.log("ethItemCollection: ", ethItemCollection)
+    console.log("ethItemObjectId: ", ethItemObjectId)
+    console.log("******************************")
 
     setAttemptingTxn(true)
     await estimate(...args, value ? { value } : {})
@@ -489,7 +497,7 @@ export default function AddLiquidity({
         currencies={currencies}
         parsedAmounts={parsedAmounts}
         noLiquidity={noLiquidity}
-        onAdd={onAdd}
+        onAdd={ () => { onAdd(checkIsEthItem) } }
         poolTokenPercentage={poolTokenPercentage}
       />
     )
@@ -821,7 +829,7 @@ export default function AddLiquidity({
                     )}
                   <ButtonMateriaError
                     onClick={() => {
-                      expertMode ? onAdd() : setShowConfirm(true)
+                      expertMode ? onAdd(checkIsEthItem) : setShowConfirm(true)
                     }}
                     disabled={!isValid || approvalA !== ApprovalState.APPROVED || approvalB !== ApprovalState.APPROVED}
                     error={!isValid && !!parsedAmounts[Field.CURRENCY_A] && !!parsedAmounts[Field.CURRENCY_B]}

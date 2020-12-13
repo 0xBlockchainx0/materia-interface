@@ -24,7 +24,7 @@ export const GreyCard = styled(Card)`
 `
 
 export const SwapGreyCard = styled(Card)`
-  width: auto;
+  // width: auto;
   background-color: rgb(0, 0, 0, 0.5);
   border: 1px solid ${({ theme }) => theme.grey};
   padding: 5px 15px;

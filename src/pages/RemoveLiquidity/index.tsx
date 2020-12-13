@@ -8,7 +8,7 @@ import ReactGA from 'react-ga'
 import { RouteComponentProps } from 'react-router'
 import { Text } from 'rebass'
 import styled, { ThemeContext } from 'styled-components'
-import { ButtonPrimary, ButtonLight, ButtonError, ButtonConfirmed } from '../../components/Button'
+import { ButtonPrimary, ButtonLight, ButtonMateriaError, ButtonConfirmed, ButtonMateriaPrimary } from '../../components/Button'
 import { LightCard } from '../../components/Card'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
 import TransactionConfirmationModal, { ConfirmationModalContent } from '../../components/TransactionConfirmationModal'
@@ -449,11 +449,11 @@ export default function RemoveLiquidity({
             </RowBetween>
           </>
         )}
-        <ButtonPrimary disabled={!(approval === ApprovalState.APPROVED || signatureData !== null)} onClick={onRemove}>
+        <ButtonMateriaPrimary disabled={!(approval === ApprovalState.APPROVED || signatureData !== null)} onClick={onRemove}>
           <Text fontWeight={500} fontSize={20}>
             Confirm
           </Text>
-        </ButtonPrimary>
+        </ButtonMateriaPrimary>
       </>
     )
   }
@@ -740,7 +740,7 @@ export default function RemoveLiquidity({
                                 'Approve'
                               )}
                         </ButtonConfirmed>
-                        <ButtonError
+                        <ButtonMateriaError
                           onClick={() => {
                             setShowConfirm(true)
                           }}
@@ -750,7 +750,7 @@ export default function RemoveLiquidity({
                           <Text fontSize={16} fontWeight={500}>
                             {error || 'Remove'}
                           </Text>
-                        </ButtonError>
+                        </ButtonMateriaError>
                       </RowBetween>
                     )}
                 </div>

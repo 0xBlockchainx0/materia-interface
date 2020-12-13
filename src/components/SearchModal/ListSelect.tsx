@@ -17,7 +17,7 @@ import { CloseIcon, ExternalLink, LinkStyledButton, TYPE } from '../../theme'
 import listVersionLabel from '../../utils/listVersionLabel'
 import { parseENSAddress } from '../../utils/parseENSAddress'
 import uriToHttp from '../../utils/uriToHttp'
-import { ButtonOutlined, ButtonPrimary, ButtonSecondary } from '../Button'
+import { ButtonMateriaPrimary, ButtonOutlined, ButtonPrimary, ButtonSecondary } from '../Button'
 
 import Column from '../Column'
 import ListLogo from '../ListLogo'
@@ -207,16 +207,16 @@ const ListRow = memo(function ListRow({ listUrl, onBack }: { listUrl: string; on
         )}
       </StyledMenu>
       {isSelected ? (
-        <ButtonPrimary
+        <ButtonMateriaPrimary
           disabled={true}
           className="select-button"
           style={{ width: '5rem', minWidth: '5rem', padding: '0.5rem .35rem', borderRadius: '12px', fontSize: '14px' }}
         >
           Selected
-        </ButtonPrimary>
+        </ButtonMateriaPrimary>
       ) : (
         <>
-          <ButtonPrimary
+          <ButtonMateriaPrimary
             className="select-button"
             style={{
               width: '5rem',
@@ -228,7 +228,7 @@ const ListRow = memo(function ListRow({ listUrl, onBack }: { listUrl: string; on
             onClick={selectThisList}
           >
             Select
-          </ButtonPrimary>
+          </ButtonMateriaPrimary>
         </>
       )}
     </Row>

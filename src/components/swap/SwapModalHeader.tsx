@@ -5,7 +5,7 @@ import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
 import { Field } from '../../state/swap/actions'
 import { TYPE } from '../../theme'
-import { ButtonPrimary } from '../Button'
+import { ButtonMateriaPrimary, ButtonPrimary } from '../Button'
 import { isAddress, shortenAddress } from '../../utils'
 import { computeSlippageAdjustedAmounts, computeTradePriceBreakdown, warningSeverity } from '../../utils/prices'
 import { AutoColumn } from '../Column'
@@ -87,12 +87,12 @@ export default function SwapModalHeader({
               <AlertTriangle size={20} style={{ marginRight: '8px', minWidth: 24 }} />
               <TYPE.main color={theme.primary1}> Price Updated</TYPE.main>
             </RowFixed>
-            <ButtonPrimary
+            <ButtonMateriaPrimary
               style={{ padding: '.5rem', width: 'fit-content', fontSize: '0.825rem', borderRadius: '12px' }}
               onClick={onAcceptChanges}
             >
               Accept
-            </ButtonPrimary>
+            </ButtonMateriaPrimary>
           </RowBetween>
         </SwapShowAcceptChanges>
       ) : null}

@@ -4,7 +4,7 @@ import { AutoColumn } from '../Column'
 import styled from 'styled-components'
 import { RowBetween } from '../Row'
 import { TYPE, CloseIcon } from '../../theme'
-import { ButtonError } from '../Button'
+import { ButtonError, ButtonMateriaError } from '../Button'
 import { StakingInfo } from '../../state/stake/hooks'
 import { useStakingContract } from '../../hooks/useContract'
 import { SubmittedView, LoadingView } from '../ModalViews'
@@ -84,9 +84,9 @@ export default function ClaimRewardModal({ isOpen, onDismiss, stakingInfo }: Sta
           <TYPE.subHeader style={{ textAlign: 'center' }}>
             When you claim without withdrawing your liquidity remains in the mining pool.
           </TYPE.subHeader>
-          <ButtonError disabled={!!error} error={!!error && !!stakingInfo?.stakedAmount} onClick={onClaimReward}>
+          <ButtonMateriaError disabled={!!error} error={!!error && !!stakingInfo?.stakedAmount} onClick={onClaimReward}>
             {error ?? 'Claim'}
-          </ButtonError>
+          </ButtonMateriaError>
         </ContentWrapper>
       )}
       {attempting && !hash && (

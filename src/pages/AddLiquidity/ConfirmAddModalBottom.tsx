@@ -1,7 +1,7 @@
 import { Currency, CurrencyAmount, Fraction, Percent } from '@materia-dex/sdk'
 import React from 'react'
 import { Text } from 'rebass'
-import { ButtonPrimary } from '../../components/Button'
+import { ButtonMateriaPrimary, ButtonPrimary } from '../../components/Button'
 import { RowBetween, RowFixed } from '../../components/Row'
 import CurrencyLogo from '../../components/CurrencyLogo'
 import { Field } from '../../state/mint/actions'
@@ -57,11 +57,11 @@ export function ConfirmAddModalBottom({
         <TYPE.body>Share of Pool:</TYPE.body>
         <TYPE.body>{noLiquidity ? '100' : poolTokenPercentage?.toSignificant(4)}%</TYPE.body>
       </RowBetween>
-      <ButtonPrimary style={{ margin: '20px 0 0 0' }} onClick={onAdd}>
+      <ButtonMateriaPrimary style={{ margin: '20px 0 0 0' }} onClick={onAdd}>
         <Text fontWeight={500} fontSize={20}>
           {noLiquidity ? 'Create Pool & Supply' : 'Confirm Supply'}
         </Text>
-      </ButtonPrimary>
+      </ButtonMateriaPrimary>
     </>
   )
 }
