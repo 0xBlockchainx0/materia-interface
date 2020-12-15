@@ -203,7 +203,7 @@ export function useURLWarningToggle(): () => void {
  * @param tokenB the other token
  */
 export function toLiquidityToken([tokenA, tokenB]: [Token, Token]): Token {
-  return new Token(tokenA.chainId, Pair.getAddress(tokenA, tokenB), 18, 'LP', 'Materia')
+  return new Token(tokenA.chainId, Pair.getAddress(tokenA, tokenB), 18, 'MP', 'Materia')
 }
 
 /**
