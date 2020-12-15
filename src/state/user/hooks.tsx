@@ -1,11 +1,13 @@
-import { ChainId, Pair, Token } from '@materia-dex/sdk'
+import { ChainId, Pair, Token, TokenAmount } from '@materia-dex/sdk'
 import flatMap from 'lodash.flatmap'
 import { useCallback, useMemo } from 'react'
 import { shallowEqual, useDispatch, useSelector } from 'react-redux'
 import { BASES_TO_TRACK_LIQUIDITY_FOR, PINNED_PAIRS } from '../../constants'
 
 import { useActiveWeb3React } from '../../hooks'
-import { useAllTokens } from '../../hooks/Tokens'
+import { useAllListTokens, useAllTokens } from '../../hooks/Tokens'
+import useGetWrappedLiquidityToken from '../../hooks/useGetWrappedLiquidityToken'
+import useGetWrappedLiquidityTokenAddress from '../../hooks/useGetWrappedLiquidityTokenAddress'
 import { AppDispatch, AppState } from '../index'
 import {
   addSerializedPair,
@@ -207,11 +209,22 @@ export function toLiquidityToken([tokenA, tokenB]: [Token, Token]): Token {
 }
 
 /**
+ * Given two tokens return the wrapped liquidity token that represents its liquidity shares
+ * @param tokenA one of the two tokens
+ * @param tokenB the other token
+ */
+export function toWrappedLiquidityToken([tokenA, tokenB]: [Token, Token]): Token {
+  const pair = new Pair(new TokenAmount(tokenA, '0'), new TokenAmount(tokenB, '0'))
+  return pair.liquidityToken
+}
+
+/**
  * Returns all the pairs of tokens that are tracked by the user for the current chain ID.
  */
 export function useTrackedTokenPairs(): [Token, Token][] {
   const { chainId } = useActiveWeb3React()
   const tokens = useAllTokens()
+  // const tokens = useAllListTokens()
 
   // pinned pairs
   const pinnedPairs = useMemo(() => (chainId ? PINNED_PAIRS[chainId] ?? [] : []), [chainId])

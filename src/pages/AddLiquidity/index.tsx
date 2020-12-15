@@ -25,7 +25,7 @@ import { Field } from '../../state/mint/actions'
 import { useDerivedMintInfo, useMintActionHandlers, useMintState } from '../../state/mint/hooks'
 
 import { useTransactionAdder } from '../../state/transactions/hooks'
-import { useIsExpertMode, useUserSlippageTolerance } from '../../state/user/hooks'
+import { toWrappedLiquidityToken, useIsExpertMode, useUserSlippageTolerance } from '../../state/user/hooks'
 import { calculateGasMargin, calculateSlippageAmount, getEthItemCollectionContract, getProxyContract } from '../../utils'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { wrappedCurrency } from '../../utils/wrappedCurrency'
@@ -207,7 +207,10 @@ export default function AddLiquidity({
   // fetch the user's balances of all tracked LP tokens
   const trackedTokenPairs = useTrackedTokenPairs()
   const tokenPairsWithLiquidityTokens = useMemo(
-    () => trackedTokenPairs.map(tokens => ({ liquidityToken: toLiquidityToken(tokens), tokens })),
+    () => trackedTokenPairs.map(tokens => ({ 
+      // liquidityToken: toLiquidityToken(tokens), tokens 
+      liquidityToken: toWrappedLiquidityToken(tokens), tokens 
+    })),
     [trackedTokenPairs]
   )
   const liquidityTokens = useMemo(() => tokenPairsWithLiquidityTokens.map(tpwlt => tpwlt.liquidityToken), [
@@ -232,6 +235,10 @@ export default function AddLiquidity({
     fetchingPairBalances || pairs?.length < liquidityTokensWithBalances.length || pairs?.some(Pair => !Pair)
 
   const allPairsWithLiquidity = pairs.map(([, pair]) => pair).filter((pair): pair is Pair => Boolean(pair))
+
+  console.log('******************************')
+  console.log('allPairsWithLiquidity: ', allPairsWithLiquidity)
+  console.log('******************************')
 
   // AddLiquidity
   const currencyA = useCurrency(currencyIdA)

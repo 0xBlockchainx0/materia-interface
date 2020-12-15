@@ -12,7 +12,6 @@ import Row from '../../components/Row'
 import CurrencySearchModal from '../../components/SearchModal/CurrencySearchModal'
 import { PairState, usePair } from '../../data/Reserves'
 import { useActiveWeb3React } from '../../hooks'
-import useGetWrappedLiquidityToken from '../../hooks/useGetWrappedLiquidityToken'
 import { usePairAdder } from '../../state/user/hooks'
 import { useTokenBalance } from '../../state/wallet/hooks'
 import { StyledInternalLink } from '../../theme'
@@ -35,6 +34,7 @@ export default function PoolFinder() {
   const [currency1, setCurrency1] = useState<Currency | null>(null)
 
   const [pairState, pair] = usePair(currency0 ?? undefined, currency1 ?? undefined)
+  
   const addPair = usePairAdder()
   useEffect(() => {
     if (pair) {
@@ -50,10 +50,8 @@ export default function PoolFinder() {
         JSBI.equal(pair.reserve0.raw, JSBI.BigInt(0)) &&
         JSBI.equal(pair.reserve1.raw, JSBI.BigInt(0))
     )
-    
-  const liquidityTokenAddress = pair?.liquidityToken?.address
-  const interoperableLiquidityToken = useGetWrappedLiquidityToken(liquidityTokenAddress)
-  const position: TokenAmount | undefined = useTokenBalance(account ?? undefined, interoperableLiquidityToken)
+  
+  const position: TokenAmount | undefined = useTokenBalance(account ?? undefined, pair?.liquidityToken)
   const hasPosition = Boolean(position && JSBI.greaterThan(position.raw, JSBI.BigInt(0)))
 
   const handleCurrencySelect = useCallback(
