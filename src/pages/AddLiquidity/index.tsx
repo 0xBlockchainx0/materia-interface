@@ -1,6 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { TransactionResponse } from '@ethersproject/providers'
-import { ADD_LIQUIDITY_ACTION_SAFE_TRANSFER_TOKEN, Currency, currencyEquals, ETHER, JSBI, TokenAmount, WETH } from '@materia-dex/sdk'
+import { ADD_LIQUIDITY_ACTION_SAFE_TRANSFER_TOKEN, Currency, currencyEquals, ETHER, JSBI, TokenAmount, IETH } from '@materia-dex/sdk'
 import React, { useCallback, useContext, useState, useMemo } from 'react'
 import ReactGA from 'react-ga'
 import { NavLink, RouteComponentProps } from 'react-router-dom'
@@ -199,10 +199,10 @@ export default function AddLiquidity({
   const currencyA = useCurrency(currencyIdA)
   const currencyB = useCurrency(currencyIdB)
 
-  const oneCurrencyIsWETH = Boolean(
+  const oneCurrencyIsIETH = Boolean(
     chainId &&
-    ((currencyA && currencyEquals(currencyA, WETH[chainId])) ||
-      (currencyB && currencyEquals(currencyB, WETH[chainId])))
+    ((currencyA && currencyEquals(currencyA, IETH[chainId])) ||
+      (currencyB && currencyEquals(currencyB, IETH[chainId])))
   )
 
   const toggleWalletModal = useWalletModalToggle() // toggle wallet when disconnected
@@ -724,7 +724,7 @@ export default function AddLiquidity({
             {
               pair && !noLiquidity && pairState !== PairState.INVALID ? (
                 <PositionContainer>
-                  <MinimalPositionCard showUnwrapped={oneCurrencyIsWETH} pair={pair} />
+                  <MinimalPositionCard showUnwrapped={oneCurrencyIsIETH} pair={pair} />
                 </PositionContainer>
               ) : null
             }

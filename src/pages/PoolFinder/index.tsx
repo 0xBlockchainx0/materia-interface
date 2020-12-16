@@ -12,10 +12,12 @@ import Row from '../../components/Row'
 import CurrencySearchModal from '../../components/SearchModal/CurrencySearchModal'
 import { PairState, usePair } from '../../data/Reserves'
 import { useActiveWeb3React } from '../../hooks'
+import useUSD from '../../hooks/useUSD'
 import { usePairAdder } from '../../state/user/hooks'
 import { useTokenBalance } from '../../state/wallet/hooks'
 import { StyledInternalLink } from '../../theme'
 import { currencyId } from '../../utils/currencyId'
+import { unwrappedToken } from '../../utils/wrappedCurrency'
 import AppBody from '../AppBody'
 import { Dots } from '../Pool/styleds'
 
@@ -27,10 +29,11 @@ enum Fields {
 export default function PoolFinder() {
   const { account } = useActiveWeb3React()
 
+  const USD = useUSD()
   const [showSearch, setShowSearch] = useState<boolean>(false)
   const [activeField, setActiveField] = useState<number>(Fields.TOKEN1)
 
-  const [currency0, setCurrency0] = useState<Currency | null>(ETHER)
+  const [currency0, setCurrency0] = useState<Currency | null>(USD ? unwrappedToken(USD) : ETHER)
   const [currency1, setCurrency1] = useState<Currency | null>(null)
 
   const [pairState, pair] = usePair(currency0 ?? undefined, currency1 ?? undefined)

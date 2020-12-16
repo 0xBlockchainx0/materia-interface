@@ -1,9 +1,9 @@
 describe('Remove Liquidity', () => {
   it('redirects', () => {
-    cy.visit('/remove/0xc778417E063141139Fce010982780140Aa0cD5Ab-0xF9bA5210F91D0474bd1e1DcDAeC4C58E359AaD85')
+    cy.visit('/remove/0x0C0488a2e3f5FdEb482Bf5A76AB1ef27A3658101-0xF9bA5210F91D0474bd1e1DcDAeC4C58E359AaD85')
     cy.url().should(
       'contain',
-      '/remove/0xc778417E063141139Fce010982780140Aa0cD5Ab/0xF9bA5210F91D0474bd1e1DcDAeC4C58E359AaD85'
+      '/remove/0x0C0488a2e3f5FdEb482Bf5A76AB1ef27A3658101/0xF9bA5210F91D0474bd1e1DcDAeC4C58E359AaD85'
     )
   })
 
@@ -20,15 +20,15 @@ describe('Remove Liquidity', () => {
   })
 
   it('loads the two correct tokens', () => {
-    cy.visit('/remove/0xc778417E063141139Fce010982780140Aa0cD5Ab-0xF9bA5210F91D0474bd1e1DcDAeC4C58E359AaD85')
-    cy.get('#remove-liquidity-tokena-symbol').should('contain.text', 'WETH')
+    cy.visit('/remove/0x0C0488a2e3f5FdEb482Bf5A76AB1ef27A3658101-0xF9bA5210F91D0474bd1e1DcDAeC4C58E359AaD85')
+    cy.get('#remove-liquidity-tokena-symbol').should('contain.text', 'IETH')
     cy.get('#remove-liquidity-tokenb-symbol').should('contain.text', 'MKR')
   })
 
   it('does not crash if ETH is duplicated', () => {
-    cy.visit('/remove/0xc778417E063141139Fce010982780140Aa0cD5Ab-0xc778417E063141139Fce010982780140Aa0cD5Ab')
-    cy.get('#remove-liquidity-tokena-symbol').should('contain.text', 'WETH')
-    cy.get('#remove-liquidity-tokenb-symbol').should('contain.text', 'WETH')
+    cy.visit('/remove/0x0C0488a2e3f5FdEb482Bf5A76AB1ef27A3658101-0x0C0488a2e3f5FdEb482Bf5A76AB1ef27A3658101')
+    cy.get('#remove-liquidity-tokena-symbol').should('contain.text', 'IETH')
+    cy.get('#remove-liquidity-tokenb-symbol').should('contain.text', 'IETH')
   })
 
   it('token not in storage is loaded', () => {
