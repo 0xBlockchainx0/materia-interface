@@ -1,6 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { Contract } from '@ethersproject/contracts'
-import { ETHER, JSBI, Percent, Router, SwapParameters, Trade, TradeType } from '@materia-dex/sdk'
+import { JSBI, Percent, Router, SwapParameters, Trade, TradeType } from '@materia-dex/sdk'
 import { useMemo } from 'react'
 import { BIPS_BASE, INITIAL_ALLOWED_SLIPPAGE, ZERO_ADDRESS } from '../constants'
 import { useTransactionAdder } from '../state/transactions/hooks'
@@ -9,7 +9,7 @@ import isZero from '../utils/isZero'
 import { useActiveWeb3React } from './index'
 import useTransactionDeadline from './useTransactionDeadline'
 import useENS from './useENS'
-import { useSingleCallResult } from '../state/multicall/hooks'
+import useCheckIsEthItem from './useCheckIsEthItem'
 
 export enum SwapCallbackState {
   INVALID,
@@ -44,24 +44,25 @@ function useSwapCallArguments(
   trade: Trade | undefined, // trade to execute, required
   allowedSlippage: number = INITIAL_ALLOWED_SLIPPAGE, // in bips
   recipientAddressOrName: string | null, // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
-  needUnwrap: boolean // unwrap parameter used for check if the result token need to be unwrapped
 ): SwapCall[] {
   const { account, chainId, library } = useActiveWeb3React()
-
   const { address: recipientAddress } = useENS(recipientAddressOrName)
   const recipient = recipientAddressOrName === null ? account : recipientAddress
   const deadline = useTransactionDeadline()
   const contract: Contract | null = (!library || !account || !chainId) ? null : getProxyContract(chainId, library, account)
-  const inputTokenAddress = trade?.route.path[0]?.address
-  const { result: checkIsEthItem } = useSingleCallResult(contract, 'isEthItem', [inputTokenAddress])
-  const isEthItem: boolean = checkIsEthItem?.ethItem
-  const ethItemCollection: string = checkIsEthItem?.collection
-  const ethItemObjectId: JSBI = JSBI.BigInt(checkIsEthItem?.itemId ?? 0)
+  const tokenAddressA = trade?.route.path[0]?.address ?? ZERO_ADDRESS
+  const tokenAddressB = trade?.route.path && trade?.route.path.length > 0 ? trade?.route.path[trade?.route.path.length - 1]?.address ?? ZERO_ADDRESS : ZERO_ADDRESS
+  const tokenAIsEthItem = useCheckIsEthItem(tokenAddressA)
+  const tokenBIsEthItem = useCheckIsEthItem(tokenAddressB)
+  const isEthItem: boolean = tokenAIsEthItem?.ethItem
+  const ethItemCollection: string = tokenAIsEthItem?.collection
+  const ethItemObjectId: JSBI = JSBI.BigInt(tokenAIsEthItem?.itemId ?? 0)
+  const needUnwrap: boolean = tokenBIsEthItem?.ethItem ? false : true
   const collectionContract: Contract | null =
     (!library || !account || !chainId || !isEthItem)
       ? null
       : getEthItemCollectionContract(chainId, ethItemCollection, library, account)
-      
+
   return useMemo(() => {
     const swapMethods = []
 
@@ -109,12 +110,11 @@ function useSwapCallArguments(
 export function useSwapCallback(
   trade: Trade | undefined, // trade to execute, required
   allowedSlippage: number = INITIAL_ALLOWED_SLIPPAGE, // in bips
-  recipientAddressOrName: string | null, // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
-  needUnwrap: boolean // unwrap parameter used for check if the result token need to be unwrapped
+  recipientAddressOrName: string | null // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
 ): { state: SwapCallbackState; callback: null | (() => Promise<string>); error: string | null } {
   const { account, chainId, library } = useActiveWeb3React()
 
-  const swapCalls = useSwapCallArguments(trade, allowedSlippage, recipientAddressOrName, needUnwrap)
+  const swapCalls = useSwapCallArguments(trade, allowedSlippage, recipientAddressOrName)
   const addTransaction = useTransactionAdder()
 
   const { address: recipientAddress } = useENS(recipientAddressOrName)

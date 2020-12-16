@@ -6,8 +6,8 @@ import { Text } from 'rebass'
 import { NavLink, RouteComponentProps } from 'react-router-dom'
 import styled, { ThemeContext } from 'styled-components'
 import AddressInputPanel from '../../components/AddressInputPanel'
-import { ButtonError, ButtonLight, ButtonPrimary, ButtonConfirmed, ButtonMateriaLight, ButtonMateriaPrimary, ButtonMateriaConfirmed, ButtonMateriaError } from '../../components/Button'
-import Card, { GreyCard, SwapGreyCard } from '../../components/Card'
+import { ButtonMateriaLight, ButtonMateriaPrimary, ButtonMateriaConfirmed, ButtonMateriaError } from '../../components/Button'
+import Card, { SwapGreyCard } from '../../components/Card'
 import Column, { AutoColumn } from '../../components/Column'
 import ConfirmSwapModal from '../../components/swap/ConfirmSwapModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
@@ -20,7 +20,7 @@ import TradePrice from '../../components/swap/TradePrice'
 import TokenWarningModal from '../../components/TokenWarningModal'
 import ProgressSteps from '../../components/ProgressSteps'
 
-import { BETTER_TRADE_LINK_THRESHOLD, INITIAL_ALLOWED_SLIPPAGE } from '../../constants'
+import { INITIAL_ALLOWED_SLIPPAGE } from '../../constants'
 
 import { useActiveWeb3React } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
@@ -290,12 +290,8 @@ export default function Swap() {
   const maxAmountInput: CurrencyAmount | undefined = maxAmountSpend(currencyBalances[Field.INPUT])
   const atMaxAmountInput = Boolean(maxAmountInput && parsedAmounts[Field.INPUT]?.equalTo(maxAmountInput))
 
-  // unwrap
-  const [needUnwrap, setNeedUnwrap] = useState<boolean>(false)
-  const toggleWrap = useCallback(() => setNeedUnwrap(uc => !uc), [])
-
   // the callback to execute the swap
-  const { callback: swapCallback, error: swapCallbackError } = useSwapCallback(trade, allowedSlippage, recipient, needUnwrap)
+  const { callback: swapCallback, error: swapCallbackError } = useSwapCallback(trade, allowedSlippage, recipient)
 
   const { priceImpactWithoutFee } = computeTradePriceBreakdown(trade)
 
@@ -493,15 +489,10 @@ export default function Swap() {
                         <AutoColumn gap="4px">
                           {Boolean(trade) && (
                             <RowBetween align="center">
-                              {/* <Text fontWeight={500} fontSize={14} color={theme.text2}>
-                                Price
-                              </Text> */}
                               <TradePrice
                                 price={trade?.executionPrice}
                                 showInverted={showInverted}
                                 setShowInverted={setShowInverted}
-                                needUnwrap={needUnwrap}
-                                toggleWrap={toggleWrap}
                               />
                             </RowBetween>
                           )}

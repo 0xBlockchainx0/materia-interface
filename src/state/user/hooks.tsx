@@ -6,8 +6,6 @@ import { BASES_TO_TRACK_LIQUIDITY_FOR, PINNED_PAIRS } from '../../constants'
 
 import { useActiveWeb3React } from '../../hooks'
 import { useAllListTokens, useAllTokens } from '../../hooks/Tokens'
-import useGetWrappedLiquidityToken from '../../hooks/useGetWrappedLiquidityToken'
-import useGetWrappedLiquidityTokenAddress from '../../hooks/useGetWrappedLiquidityTokenAddress'
 import { AppDispatch, AppState } from '../index'
 import {
   addSerializedPair,
@@ -206,16 +204,6 @@ export function useURLWarningToggle(): () => void {
  */
 export function toLiquidityToken([tokenA, tokenB]: [Token, Token]): Token {
   return new Token(tokenA.chainId, Pair.getAddress(tokenA, tokenB), 18, 'MP', 'Materia')
-}
-
-/**
- * Given two tokens return the wrapped liquidity token that represents its liquidity shares
- * @param tokenA one of the two tokens
- * @param tokenB the other token
- */
-export function toWrappedLiquidityToken([tokenA, tokenB]: [Token, Token]): Token {
-  const pair = new Pair(new TokenAmount(tokenA, '0'), new TokenAmount(tokenB, '0'))
-  return pair.liquidityToken
 }
 
 /**

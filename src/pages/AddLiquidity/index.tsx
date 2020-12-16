@@ -2,7 +2,6 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { TransactionResponse } from '@ethersproject/providers'
 import { ADD_LIQUIDITY_ACTION_SAFE_TRANSFER_TOKEN, Currency, currencyEquals, ETHER, JSBI, TokenAmount, WETH } from '@materia-dex/sdk'
 import React, { useCallback, useContext, useState, useMemo } from 'react'
-import { Plus } from 'react-feather'
 import ReactGA from 'react-ga'
 import { NavLink, RouteComponentProps } from 'react-router-dom'
 import { ButtonMateriaError, ButtonMateriaLight, ButtonMateriaPrimary, ButtonSecondary } from '../../components/Button'
@@ -15,7 +14,7 @@ import { MinimalPositionCard } from '../../components/PositionCard'
 import Row, { AutoRow, RowBetween, RowFlat, RowFixed } from '../../components/Row'
 import { darken } from 'polished'
 
-import { PROXY_ADDRESS, USD } from '../../constants'
+import { PROXY_ADDRESS, ZERO_ADDRESS } from '../../constants'
 import { PairState } from '../../data/Reserves'
 import { useCurrency } from '../../hooks/Tokens'
 import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
@@ -25,18 +24,17 @@ import { Field } from '../../state/mint/actions'
 import { useDerivedMintInfo, useMintActionHandlers, useMintState } from '../../state/mint/hooks'
 
 import { useTransactionAdder } from '../../state/transactions/hooks'
-import { toWrappedLiquidityToken, useIsExpertMode, useUserSlippageTolerance } from '../../state/user/hooks'
+import { useIsExpertMode, useUserSlippageTolerance } from '../../state/user/hooks'
 import { calculateGasMargin, calculateSlippageAmount, getEthItemCollectionContract, getProxyContract } from '../../utils'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { wrappedCurrency } from '../../utils/wrappedCurrency'
-import { Dots, Wrapper } from '../Pool/styleds'
+import { Dots } from '../Pool/styleds'
 import { ConfirmAddModalBottom } from './ConfirmAddModalBottom'
 import { currencyId } from '../../utils/currencyId'
 import { PoolPriceBar } from './PoolPriceBar'
 
 import styled, { ThemeContext } from 'styled-components'
 import { Pair } from '@materia-dex/sdk'
-import { Link } from 'react-router-dom'
 import FullPositionCard from '../../components/PositionCard'
 import { useTokenBalancesWithLoadingIndicator } from '../../state/wallet/hooks'
 import { StyledInternalLink, ExternalLink, TYPE, HideSmall } from '../../theme'
@@ -48,17 +46,11 @@ import { usePairs } from '../../data/Reserves'
 import { toLiquidityToken, useTrackedTokenPairs } from '../../state/user/hooks'
 import { CardSection, DataCard, CardNoise, CardBGImage } from '../../components/earn/styled'
 import AppBody from '../AppBody'
-import useUSD from '../../hooks/useUSD'
 import usePoolCurrencies from '../../hooks/usePoolCurrencies'
-import { Result, useSingleCallResult } from '../../state/multicall/hooks'
+import { Result } from '../../state/multicall/hooks'
 import { Contract } from 'ethers'
 import Web3 from 'web3'
 import useCheckIsEthItem from '../../hooks/useCheckIsEthItem'
-
-const PageWrapper = styled(AutoColumn)`
-  max-width: 640px;
-  width: 100%;
-`
 
 const VoteCard = styled(DataCard)`
   background: rgba(0, 27, 49, 0.5) !important;
@@ -75,29 +67,6 @@ const TitleRow = styled(RowBetween)`
   `};
 `
 
-const ButtonRow = styled(RowFixed)`
-  gap: 8px;
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    width: 100%;
-    flex-direction: row-reverse;
-    justify-content: space-between;
-  `};
-`
-
-const ResponsiveButtonPrimary = styled(ButtonMateriaPrimary)`
-  width: fit-content;
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    width: 48%;
-  `};
-`
-
-const ResponsiveButtonSecondary = styled(ButtonSecondary)`
-  width: fit-content;
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    width: 48%;
-  `};
-`
-
 const EmptyProposals = styled.div`
   border: 1px solid ${({ theme }) => theme.cyan1};
   padding: 16px 12px;
@@ -106,10 +75,6 @@ const EmptyProposals = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-`
-
-const GoBottom = styled.div`
-  margin-top: auto;
 `
 
 const PoolGridContainer = styled.div`
@@ -161,11 +126,6 @@ const PoolMenu = styled.div`
   display: inline-flex;
 `
 
-const PoolMenuItem = styled.div<{ active?: boolean }>`
-  padding-right: 1rem;
-  opacity: ${({ active }) => (active ? '1' : '0.4')};
-  `
-
 const TradePriceContainer = styled.div`
   margin-top: auto;
 `
@@ -207,9 +167,8 @@ export default function AddLiquidity({
   // fetch the user's balances of all tracked LP tokens
   const trackedTokenPairs = useTrackedTokenPairs()
   const tokenPairsWithLiquidityTokens = useMemo(
-    () => trackedTokenPairs.map(tokens => ({ 
-      // liquidityToken: toLiquidityToken(tokens), tokens 
-      liquidityToken: toWrappedLiquidityToken(tokens), tokens 
+    () => trackedTokenPairs.map(tokens => ({
+      liquidityToken: toLiquidityToken(tokens), tokens
     })),
     [trackedTokenPairs]
   )
@@ -235,10 +194,6 @@ export default function AddLiquidity({
     fetchingPairBalances || pairs?.length < liquidityTokensWithBalances.length || pairs?.some(Pair => !Pair)
 
   const allPairsWithLiquidity = pairs.map(([, pair]) => pair).filter((pair): pair is Pair => Boolean(pair))
-
-  console.log('******************************')
-  console.log('allPairsWithLiquidity: ', allPairsWithLiquidity)
-  console.log('******************************')
 
   // AddLiquidity
   const currencyA = useCurrency(currencyIdA)
@@ -269,7 +224,8 @@ export default function AddLiquidity({
     poolTokenPercentage,
     error
   } = useDerivedMintInfo(currencyA ?? undefined, currencyB ?? undefined)
-  const checkIsEthItem = useCheckIsEthItem(currencyB ?? undefined)
+  const currencyBAddress = currencyB ? (wrappedCurrency(currencyB, chainId)?.address ?? ZERO_ADDRESS) : ZERO_ADDRESS
+  const checkIsEthItem = useCheckIsEthItem(currencyBAddress)
   const { onFieldAInput, onFieldBInput } = useMintActionHandlers(noLiquidity)
 
   const isValid = !error
@@ -326,7 +282,7 @@ export default function AddLiquidity({
       (!library || !account || !chainId || !isEthItem)
         ? null
         : getEthItemCollectionContract(chainId, ethItemCollection, library, account)
-    
+
     const { [Field.CURRENCY_A]: parsedAmountA, [Field.CURRENCY_B]: parsedAmountB } = parsedAmounts
 
     if (!parsedAmountA || !parsedAmountB || !currencyA || !currencyB || !deadline) {
@@ -406,14 +362,6 @@ export default function AddLiquidity({
         value = null
       }
     }
-    
-    console.log("******************************")
-    console.log("method: ", method)
-    console.log("args: ", args)
-    console.log("isEthItem: ", isEthItem)
-    console.log("ethItemCollection: ", ethItemCollection)
-    console.log("ethItemObjectId: ", ethItemObjectId)
-    console.log("******************************")
 
     setAttemptingTxn(true)
     await estimate(...args, value ? { value } : {})
@@ -502,7 +450,7 @@ export default function AddLiquidity({
         currencies={currencies}
         parsedAmounts={parsedAmounts}
         noLiquidity={noLiquidity}
-        onAdd={ () => { onAdd(checkIsEthItem) } }
+        onAdd={() => { onAdd(checkIsEthItem) }}
         poolTokenPercentage={poolTokenPercentage}
       />
     )
@@ -663,12 +611,6 @@ export default function AddLiquidity({
           </PoolContainer>
           <AddLiquidityContainer>
             <PoolMenu>
-              {/* <PoolMenuItem active={true}> */}
-              {/* <PoolMenuItem active={true}>
-                <Link to="/create/ETH">
-                  <TYPE.body color={theme.text1} fontWeight={500} fontSize={14}>Create a pair</TYPE.body>
-                </Link>
-              </PoolMenuItem> */}
               <StyledNavLink
                 id={`Create-a-pair`}
                 to={'/create/uSD'}
@@ -679,7 +621,6 @@ export default function AddLiquidity({
               >
                 Create a pair
               </StyledNavLink>
-
               <StyledNavLink
                 id={`Add-Liquidity`}
                 to={'/add/uSD'}
@@ -690,11 +631,6 @@ export default function AddLiquidity({
               >
                 Add Liquidity
               </StyledNavLink>
-              {/* <PoolMenuItem>
-                <Link to="/add/ETH">
-                  <TYPE.body color={theme.text1} fontWeight={500} fontSize={14}>Add Liquidity</TYPE.body>
-                </Link>
-              </PoolMenuItem> */}
             </PoolMenu>
             <Divider></Divider>
             <TransactionConfirmationModal
@@ -750,7 +686,6 @@ export default function AddLiquidity({
                             </BlueCard>
                           </ColumnCenter>
                         ))}
-                      {/* <Plus size="16" color={theme.text2} /> */}
                       {currencies[Field.CURRENCY_A] && currencies[Field.CURRENCY_B] && pairState !== PairState.INVALID && (
                         <>
                           <RowBetween padding="1rem">
