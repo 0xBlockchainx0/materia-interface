@@ -62,6 +62,13 @@ function useSwapCallArguments(
     (!library || !account || !chainId || !isEthItem)
       ? null
       : getEthItemCollectionContract(chainId, ethItemCollection, library, account)
+  
+  console.log('*********************************')
+  console.log('isEthItem: ', isEthItem)
+  console.log('ethItemCollection: ', ethItemCollection)
+  console.log('ethItemObjectId: ', ethItemObjectId?.toString() ?? "0")
+  console.log('needUnwrap: ', needUnwrap)
+  console.log('*********************************')
 
   return useMemo(() => {
     const swapMethods = []
@@ -119,6 +126,10 @@ export function useSwapCallback(
 
   const { address: recipientAddress } = useENS(recipientAddressOrName)
   const recipient = recipientAddressOrName === null ? account : recipientAddress
+
+  console.log('*********************************')
+  console.log('swapCalls: ', swapCalls)
+  console.log('*********************************')
 
   return useMemo(() => {
     if (!trade || !library || !account || !chainId) {
