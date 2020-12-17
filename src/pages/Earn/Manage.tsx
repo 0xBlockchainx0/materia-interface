@@ -247,8 +247,8 @@ export default function Manage({
                 <RowBetween style={{ gap: '24px' }}>
                   <TYPE.mediumHeader style={{ margin: 0 }}>
                     {currencyA?.symbol}-{currencyB?.symbol} Liquidity Mining
-        </TYPE.mediumHeader>
-                  <DoubleCurrencyLogo currency0={currencyA ?? undefined} currency1={currencyB ?? undefined} size={24} />
+                  </TYPE.mediumHeader>
+                  <DoubleCurrencyLogo currency0={currencyA ?? undefined} currency1={currencyB ?? undefined} size={24} radius={true} />
                 </RowBetween>
 
                 <DataRow style={{ gap: '24px' }}>

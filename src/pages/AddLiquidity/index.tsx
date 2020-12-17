@@ -414,6 +414,7 @@ export default function AddLiquidity({
               currency0={currencies[Field.CURRENCY_A]}
               currency1={currencies[Field.CURRENCY_B]}
               size={30}
+              radius={true}
             />
           </RowFlat>
         </LightCard>
@@ -428,6 +429,7 @@ export default function AddLiquidity({
               currency0={currencies[Field.CURRENCY_A]}
               currency1={currencies[Field.CURRENCY_B]}
               size={30}
+              radius={true}
             />
           </RowFlat>
           <Row>

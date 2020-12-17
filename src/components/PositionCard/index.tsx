@@ -90,7 +90,7 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
             </FixedHeightRow>
             <FixedHeightRow onClick={() => setShowMore(!showMore)}>
               <RowFixed>
-                <DoubleCurrencyLogo currency0={currency0} currency1={currency1} margin={true} size={14} />
+                <DoubleCurrencyLogo currency0={currency0} currency1={currency1} margin={true} size={14} radius={true} />
                 <Text fontWeight={500} fontSize={14}>
                   {currency0.symbol}/{currency1.symbol}
                 </Text>
@@ -191,7 +191,7 @@ export default function FullPositionCard({ pair, border }: PositionCardProps) {
       <AutoColumn gap="12px">
         <FixedHeightRow>
           <RowFixed>
-            <DoubleCurrencyLogo currency0={currency0} currency1={currency1} margin={true} size={14} />
+            <DoubleCurrencyLogo currency0={currency0} currency1={currency1} margin={true} size={14} radius={true} />
             <Text fontWeight={500} fontSize={14}>
               {!currency0 || !currency1 ? <Dots>Loading</Dots> : `${currency0.symbol}/${currency1.symbol}`}
             </Text>
