@@ -22,18 +22,11 @@ type ChainTokenList = {
   readonly [chainId in ChainId]: Token[]
 }
 
-export const DAI = new Token(ChainId.MAINNET, '0x6B175474E89094C44Da98b954EedeAC495271d0F', 18, 'DAI', 'Dai Stablecoin')
-export const USDC = new Token(ChainId.MAINNET, '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', 6, 'USDC', 'USD//C')
-export const USDT = new Token(ChainId.MAINNET, '0xdAC17F958D2ee523a2206206994597C13D831ec7', 6, 'USDT', 'Tether USD')
-export const COMP = new Token(ChainId.MAINNET, '0xc00e94Cb662C3520282E6f5717214004A7f26888', 18, 'COMP', 'Compound')
-export const MKR = new Token(ChainId.MAINNET, '0x9f8F72aA9304c8B593d555F12eF6589cC3A579A2', 18, 'MKR', 'Maker')
-export const AMPL = new Token(ChainId.MAINNET, '0xD46bA6D942050d489DBd938a2C909A5d5039A161', 9, 'AMPL', 'Ampleforth')
-export const WBTC = new Token(ChainId.MAINNET, '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599', 18, 'WBTC', 'Wrapped BTC')
-
 export const GIL: { [chainId in ChainId]: Token } = {
   [ChainId.MAINNET]: new Token(ChainId.MAINNET, ZERO_ADDRESS, 18, 'GIL', 'GIL'),
   [ChainId.RINKEBY]: new Token(ChainId.RINKEBY, ZERO_ADDRESS, 18, 'GIL', 'GIL'),
-  [ChainId.ROPSTEN]: new Token(ChainId.ROPSTEN, '0x1D4f770032A551D70c240D937a8e8cf19Ee37E7d', 18, 'GIL', 'GIL'),
+  // [ChainId.ROPSTEN]: new Token(ChainId.ROPSTEN, '0x1D4f770032A551D70c240D937a8e8cf19Ee37E7d', 18, 'GIL', 'GIL'),
+  [ChainId.ROPSTEN]: new Token(ChainId.ROPSTEN, '0xa5a5f4ECD079e8C92d4D8Ec3AC7bFcD37B5e4ab2', 18, 'LIG', 'LIG'),
   [ChainId.GÖRLI]: new Token(ChainId.GÖRLI, ZERO_ADDRESS, 18, 'GIL', 'GIL'),
   [ChainId.KOVAN]: new Token(ChainId.KOVAN, ZERO_ADDRESS, 18, 'GIL', 'GIL')
 }
@@ -45,6 +38,21 @@ export const USD: { [chainId in ChainId]: Token } = {
   [ChainId.GÖRLI]: new Token(ChainId.GÖRLI, ZERO_ADDRESS, 18, 'uSD', 'unified Stable Dollar'),
   [ChainId.KOVAN]: new Token(ChainId.KOVAN, ZERO_ADDRESS, 18, 'uSD', 'unified Stable Dollar'),
 }
+
+export const WBTC: { [chainId in ChainId]: Token } = {
+  [ChainId.MAINNET]: new Token(ChainId.MAINNET, '0x2260fac5e5542a773aa44fbcfedf7c193bc2c599', 18, 'WBTC', 'Wrapped BTC'),
+  [ChainId.RINKEBY]: new Token(ChainId.RINKEBY, ZERO_ADDRESS, 18, 'WBTC', 'Wrapped BTC'),
+  [ChainId.ROPSTEN]: new Token(ChainId.ROPSTEN, '0x65058d7081fcdc3cd8727dbb7f8f9d52cefdd291', 18, 'WBTC', 'Wrapped BTC'),
+  [ChainId.GÖRLI]: new Token(ChainId.GÖRLI,     ZERO_ADDRESS, 18, 'WBTC', 'Wrapped BTC'),
+  [ChainId.KOVAN]: new Token(ChainId.KOVAN,     ZERO_ADDRESS, 18, 'WBTC', 'Wrapped BTC'),
+}
+
+export const DAI = new Token(ChainId.MAINNET, '0x6B175474E89094C44Da98b954EedeAC495271d0F', 18, 'DAI', 'Dai Stablecoin')
+export const USDC = new Token(ChainId.MAINNET, '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', 6, 'USDC', 'USD//C')
+export const USDT = new Token(ChainId.MAINNET, '0xdAC17F958D2ee523a2206206994597C13D831ec7', 6, 'USDT', 'Tether USD')
+export const COMP = new Token(ChainId.MAINNET, '0xc00e94Cb662C3520282E6f5717214004A7f26888', 18, 'COMP', 'Compound')
+export const MKR = new Token(ChainId.MAINNET, '0x9f8F72aA9304c8B593d555F12eF6589cC3A579A2', 18, 'MKR', 'Maker')
+export const AMPL = new Token(ChainId.MAINNET, '0xD46bA6D942050d489DBd938a2C909A5d5039A161', 9, 'AMPL', 'Ampleforth')
 
 export const COMMON_CONTRACT_NAMES: { [address: string]: string } = {
   [TIMELOCK_ADDRESS]: 'Timelock',

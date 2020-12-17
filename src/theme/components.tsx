@@ -84,6 +84,23 @@ export const StyledInternalLink = styled(Link)`
   }
 `
 
+export const StyledInternalButtonLink = styled(Link)`
+  text-decoration: none;
+  cursor: pointer;
+  color: ${({ theme }) => theme.blue2};
+  font-weight: 500;
+  :hover {
+    text-decoration: none;
+  }
+  :focus {
+    text-decoration: none;
+  }
+  :active {
+    text-decoration: none;
+  }
+`
+
+
 const StyledLink = styled.a`
   text-decoration: none;
   cursor: pointer;

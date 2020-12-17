@@ -2,7 +2,7 @@ import React from 'react'
 import { AutoColumn } from '../Column'
 import { RowBetween } from '../Row'
 import styled from 'styled-components'
-import { TYPE, StyledInternalLink } from '../../theme'
+import { TYPE, StyledInternalButtonLink } from '../../theme'
 import DoubleCurrencyLogo from '../DoubleLogo'
 import { ETHER, JSBI, TokenAmount } from '@materia-dex/sdk'
 import { ButtonMateriaPrimary, ButtonPrimary } from '../Button'
@@ -114,11 +114,11 @@ export default function PoolCard({ stakingInfo }: { stakingInfo: StakingInfo }) 
           {currency0.symbol}-{currency1.symbol}
         </TYPE.white>
 
-        <StyledInternalLink to={`/lm/${currencyId(currency0)}/${currencyId(currency1)}`} style={{ width: '100%' }}>
+        <StyledInternalButtonLink to={`/lm/${currencyId(currency0)}/${currencyId(currency1)}`} style={{ width: '100%' }}>
           <ButtonMateriaPrimary padding="8px" borderRadius="8px">
             {isStaking ? 'Manage' : 'Deposit'}
           </ButtonMateriaPrimary>
-        </StyledInternalLink>
+        </StyledInternalButtonLink>
       </TopSection>
 
       <StatContainer>

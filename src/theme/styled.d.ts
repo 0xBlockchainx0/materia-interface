@@ -25,6 +25,9 @@ export interface Colors {
 
   modalBG: Color
   advancedBG: Color
+  
+  // border
+  border1: Color
 
   //blues
   primary1: Color

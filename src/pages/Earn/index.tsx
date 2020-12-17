@@ -1,6 +1,6 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { FittedAutoColumn } from '../../components/Column'
-import styled from 'styled-components'
+import styled, { ThemeContext } from 'styled-components'
 import { STAKING_REWARDS_INFO, useStakingInfo } from '../../state/stake/hooks'
 import { TYPE, ExternalLink } from '../../theme'
 import PoolCard from '../../components/earn/PoolCard'
@@ -73,7 +73,7 @@ export default function Earn() {
   }
 `
 
-  const ItemColumn = styled.div`
+const ItemColumn = styled.div`
   @media (min-width: 601px) and (max-width: 1350px) {
     // display: none;
   }
@@ -84,7 +84,7 @@ export default function Earn() {
 `
 
   const stakingRewardsExist = Boolean(typeof chainId === 'number' && (STAKING_REWARDS_INFO[chainId]?.length ?? 0) > 0)
-
+  
   return (
     <>
       <AppBody>

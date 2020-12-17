@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react'
-import { AutoColumn } from '../../components/Column'
+import { AutoColumn, FittedAutoColumn } from '../../components/Column'
 import styled from 'styled-components'
 import { Link } from 'react-router-dom'
 
@@ -50,11 +50,13 @@ const StyledDataCard = styled(DataCard) <{ bgColor?: any; showBackground?: any }
   z-index: 2;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
   background-color: #002852;
-  border: 2px solid ${({ theme }) => theme.cyan2};
+  border-radius: 5px;
+  border: 1px solid ${({ theme }) => theme.border1};
 `
 
 const StyledBottomCard = styled(DataCard) <{ dim: any }>`
-  background: ${({ theme }) => theme.bg3};
+  background-color: ${({ theme }) => theme.primary4};
+  border-radius: 5px;
   opacity: ${({ dim }) => (dim ? 0.4 : 1)};
   margin-top: -40px;
   padding: 0 1.25rem 1rem 1.25rem;
@@ -64,7 +66,8 @@ const StyledBottomCard = styled(DataCard) <{ dim: any }>`
 
 const PoolData = styled(DataCard)`
   background: none;
-  border: 1px solid ${({ theme }) => theme.bg4};
+  border-radius: 5px;
+  border: 1px solid ${({ theme }) => theme.border1};
   padding: 1rem;
   z-index: 1;
 `
@@ -89,7 +92,7 @@ const LMGridContainer = styled.div`
   grid-template-columns: 30px 30% auto;
 
   @media (min-width: 601px) and (max-width: 1350px) {
-    grid-template-columns: 50px auto !important;
+    grid-template-columns: 30px 30% auto !important;
   }
   @media (max-width: 600px) {
     grid-template-columns: auto !important;
@@ -131,7 +134,10 @@ const ItemColumn = styled.div`
   @media (max-width: 600px) {
     display: none;
   }
+  min-height: 580px;
 `
+
+
 
 export default function Manage({
   match: {
@@ -213,7 +219,7 @@ export default function Manage({
           <InfoContainer>
             <EarnCard>
               <CardSection>
-                <AutoColumn gap="md">
+                <FittedAutoColumn gap="md" minHeight={'580px'}>
                   <RowBetween>
                     <TYPE.white fontWeight={600}>Materia liquidity mining</TYPE.white>
                   </RowBetween>
@@ -229,7 +235,7 @@ export default function Manage({
                   >
                     <TYPE.white fontSize={14}>Read more about DFO</TYPE.white>
                   </ExternalLink>
-                </AutoColumn>
+                </FittedAutoColumn>
               </CardSection>
               <CardBGImage />
               <CardNoise />
@@ -360,7 +366,7 @@ export default function Manage({
                             </ButtonEmpty>
                           )}
                         </RowBetween>
-                        <RowBetween style={{ alignItems: 'baseline' }}>
+                        <RowBetween>
                           <TYPE.largeHeader fontSize={36} fontWeight={600}>
                             <CountUp
                               key={countUpAmount}
@@ -372,10 +378,7 @@ export default function Manage({
                               duration={1}
                             />
                           </TYPE.largeHeader>
-                          <TYPE.black fontSize={16} fontWeight={500}>
-                            <span role="img" aria-label="wizard-icon" style={{ marginRight: '8px ' }}>
-                              ⚡
-                  </span>
+                          <TYPE.black fontSize={16} fontWeight={500} style={{paddingLeft: '100px'}}>
                             {stakingInfo?.rewardRate
                               ?.multiply((60 * 60 * 24 * 7).toString())
                               ?.toSignificant(4, { groupSeparator: ',' }) ?? '-'}
@@ -386,14 +389,11 @@ export default function Manage({
                     </StyledBottomCard>
                   </BottomSection>
                   <TYPE.main style={{ textAlign: 'center' }} fontSize={14}>
-                    <span role="img" aria-label="wizard-icon" style={{ marginRight: '8px' }}>
-                    </span>
-          When you withdraw, the contract will automagically claim GIL on your behalf!
-        </TYPE.main>
-
+                    When you withdraw, the contract will automagically claim GIL on your behalf!
+                   </TYPE.main>
                   {!showAddLiquidityButton && (
                     <DataRow style={{ marginBottom: '1rem' }}>
-                      <ButtonMateriaPrimary padding="8px" borderRadius="8px" width="160px" onClick={handleDepositClick}>
+                      <ButtonMateriaPrimary padding="8px" borderRadius="8px" onClick={handleDepositClick}>
                         {stakingInfo?.stakedAmount?.greaterThan(JSBI.BigInt(0)) ? 'Deposit' : 'Deposit LP Tokens'}
                       </ButtonMateriaPrimary>
 
@@ -402,7 +402,6 @@ export default function Manage({
                           <ButtonMateriaPrimary
                             padding="8px"
                             borderRadius="8px"
-                            width="160px"
                             onClick={() => setShowUnstakingModal(true)}
                           >
                             Withdraw
