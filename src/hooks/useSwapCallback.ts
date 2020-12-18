@@ -57,7 +57,8 @@ function useSwapCallArguments(
   const isEthItem: boolean = tokenAIsEthItem?.ethItem
   const ethItemCollection: string = tokenAIsEthItem?.collection
   const ethItemObjectId: JSBI = JSBI.BigInt(tokenAIsEthItem?.itemId ?? 0)
-  const needUnwrap: boolean = tokenBIsEthItem?.ethItem ? false : true
+  // const needUnwrap: boolean = tokenBIsEthItem?.ethItem ? false : true
+  const needUnwrap: boolean = false
   const collectionContract: Contract | null =
     (!library || !account || !chainId || !isEthItem)
       ? null
@@ -85,16 +86,16 @@ function useSwapCallArguments(
       }, isEthItem, needUnwrap, ethItemObjectId?.toString() ?? "0")
     )
 
-    if (trade.tradeType === TradeType.EXACT_INPUT) {
-      swapMethods.push(
-        Router.swapCallParameters(trade, {
-          feeOnTransfer: true,
-          allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
-          recipient,
-          deadline: deadline.toNumber()
-        }, isEthItem, needUnwrap, ethItemObjectId?.toString() ?? "0")
-      )
-    }
+    // if (!isEthItem && trade.tradeType === TradeType.EXACT_INPUT) {
+    //   swapMethods.push(
+    //     Router.swapCallParameters(trade, {
+    //       feeOnTransfer: true,
+    //       allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
+    //       recipient,
+    //       deadline: deadline.toNumber()
+    //     }, isEthItem, needUnwrap, ethItemObjectId?.toString() ?? "0")
+    //   )
+    // }
 
     if (isEthItem) {
       if (!collectionContract) { return [] }

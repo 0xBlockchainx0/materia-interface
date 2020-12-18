@@ -5,9 +5,9 @@
   "private": true,
   "devDependencies": {
     "@ethersproject/experimental": "^5.0.1",
-    "@materia-dex/materia-contracts-core": "^1.0.9",
-    "@materia-dex/materia-contracts-proxy": "^1.1.0",
-    "@materia-dex/sdk": "^1.2.6",
+    "@materia-dex/materia-contracts-core": "^1.1.0",
+    "@materia-dex/materia-contracts-proxy": "^1.1.1",
+    "@materia-dex/sdk": "^1.2.9",
     "@popperjs/core": "^2.4.4",
     "@reach/dialog": "^0.10.3",
     "@reach/portal": "^0.10.3",
