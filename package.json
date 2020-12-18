@@ -125,6 +125,7 @@
   "license": "GPL-3.0-or-later",
   "dependencies": {
     "react-dropdown": "^1.9.0",
-    "styled-dropdown-component": "^4.0.0"
+    "styled-dropdown-component": "^4.0.0",
+    "use-sound": "^2.0.1"
   }
 }

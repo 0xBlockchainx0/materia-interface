@@ -1,5 +1,6 @@
 import { CurrencyAmount, JSBI, Token, Trade } from '@materia-dex/sdk'
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import { useIsClassicMode } from '../../state/user/hooks'
 import { ArrowDown, ArrowRightCircle } from 'react-feather'
 import ReactGA from 'react-ga'
 import { Text } from 'rebass'
@@ -46,6 +47,8 @@ import { ClickableText } from '../Pool/styleds'
 import Loader from '../../components/Loader'
 import Inventory from '../../components/Inventory'
 import { darken } from 'polished'
+import FFCursor from '../../assets/images/FF7Cursor.png'
+import useSound from 'use-sound'
 
 const SwapGridContainer = styled.div`
   display: grid;
@@ -127,9 +130,7 @@ const SwapButton = styled.div`
   justify-content: center;
   display: flex;
   padding: 1rem 0rem;
-  // @media (max-width: 450px) {
-  //   margin-left: -3rem;
-  // }
+  width:auto;
 `
 
 const InventoryColumn = styled.div`
@@ -168,6 +169,12 @@ export const FooterInfo = styled.div`
   font-size: small;
   z-index: 99;
 `
+
+export const FFCursorImg = styled.img`
+  position: absolute;
+  margin: 12px 0px 0px -250px;
+  z-index: 999;
+  `
 
 export default function Swap() {
   const loadedUrlParams = useDefaultsFromURLSearch()
@@ -376,6 +383,12 @@ export default function Swap() {
     onCurrencySelection
   ])
 
+  const [isShown, setIsShown] = useState(false)
+
+  const alarm = require("../../assets/audio/FF7CursorMove.mp3")
+  const [play, { stop }] = useSound(alarm)
+  const classicMode = useIsClassicMode()
+
   return (
     <>
       {/* <TokenWarningModal
@@ -416,7 +429,7 @@ export default function Swap() {
             </InventoryColumn>
             <SwapPageContainer>
               <SwapMenu>
-                
+
                 {/* <SwapMenuItem active={true}>
                   <TYPE.body color={theme.text1} fontWeight={500} fontSize={14}>Classic SWAP</TYPE.body>
                 </SwapMenuItem>
@@ -425,25 +438,25 @@ export default function Swap() {
                 </SwapMenuItem> */}
 
                 <StyledNavLink
-                id={`classic-swap`}
-                to={'/swap'}
-                isActive={(match, { pathname }) =>
-                  Boolean(match) ||
-                  pathname.startsWith('/swap')
-                }
-              >
-                Classic SWAP
+                  id={`classic-swap`}
+                  to={'/swap'}
+                  isActive={(match, { pathname }) =>
+                    Boolean(match) ||
+                    pathname.startsWith('/swap')
+                  }
+                >
+                  Classic SWAP
               </StyledNavLink>
 
-              <StyledNavLink
-                id={`batch-swap`}
-                to={'/batch-swap'}
+                <StyledNavLink
+                  id={`batch-swap`}
+                  to={'/batch-swap'}
                 // isActive={(match, { pathname }) =>
                 //   Boolean(match) ||
                 //   pathname.startsWith('/batchswap')
                 // }
-              >
-                Batch SWAP (coming soon)
+                >
+                  Batch SWAP (coming soon)
               </StyledNavLink>
               </SwapMenu>
               <Divider></Divider>
@@ -592,7 +605,12 @@ export default function Swap() {
                           hide={!isValid || approval !== ApprovalState.APPROVED || (priceImpactSeverity > 3 && !isExpertMode)}
                           error={isValid && priceImpactSeverity > 2}
                           showSwap={!(!isValid || approval !== ApprovalState.APPROVED || (priceImpactSeverity > 3 && !isExpertMode))}
+                          onMouseEnter={() => { setIsShown(true); if(classicMode){play()} }}
+                          onMouseLeave={() => { setIsShown(false); if(classicMode){stop() }}}
                         >
+                          {isShown && classicMode && (
+                                  <FFCursorImg src={FFCursor} />
+                                )}
                           <Text fontSize={16} fontWeight={500}>
                             {priceImpactSeverity > 3 && !isExpertMode
                               ? `Price Impact High`
@@ -619,7 +637,12 @@ export default function Swap() {
                                 disabled={!isValid || (priceImpactSeverity > 3 && !isExpertMode) || !!swapCallbackError}
                                 error={isValid && priceImpactSeverity > 2 && !swapCallbackError}
                                 showSwap={!(!isValid || (priceImpactSeverity > 3 && !isExpertMode) || !!swapCallbackError)}
+                                onMouseEnter={() => { setIsShown(true); if(classicMode){play()} }}
+                                onMouseLeave={() => { setIsShown(false); if(classicMode){stop() }}}
                               >
+                                {isShown && classicMode && (
+                                  <FFCursorImg src={FFCursor} />
+                                )}
                                 <Text fontSize={20} fontWeight={500}>
                                   {swapInputError
                                     ? swapInputError

@@ -93,7 +93,7 @@ export const ButtonLight = styled(Base)`
 `
 
 export const ButtonMateriaLight = styled(ButtonLight)`
-  // width: auto;
+  width: auto;
   color: ${({ theme }) => theme.text1};
   background-color: ${({ theme }) => theme.bg8};
   border: 2px solid ${({ theme }) => theme.cyan1};
@@ -128,7 +128,7 @@ export const ButtonMateriaLight = styled(ButtonLight)`
 `
 
 export const ButtonMateriaPrimary = styled(ButtonPrimary)`
-  // width: auto;
+  width: auto;
   background-color: ${({ theme }) => theme.bg8};
   border: 2px solid ${({ theme }) => theme.cyan1};
   color: ${({ theme }) => theme.text1};
@@ -328,9 +328,10 @@ const ButtonErrorStyle = styled(Base)`
 `
 
 const ButtonMateriaErrorStyle = styled(ButtonErrorStyle)`
-  // width: auto;
+  width: auto;
   padding: 5px 15px;
   border-radius: 15px;
+  z-index:2;
 `
 
 export const SwapButton = styled(ButtonMateriaPrimary)`
