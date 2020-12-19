@@ -6685,10 +6685,11 @@ html {
 
 /******** TokenSphereBox ******/
 
+.wrapASBlock { margin: 5px 0px 5px 0px }
 .wrapASBlock div.clearfix { clear: both; }
 .wrapASBlock > div { float: left; }
-.wrapASBlock > div:last-child { float: right; }
-
+.wrapASBlock > div + div { float: right; }
+.wrapASBlock > div:first-child { padding-top: 10px }
 
 `
 

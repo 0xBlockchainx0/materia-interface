@@ -230,7 +230,6 @@ export default function InventoryItem({
             <ButtonMateriaPrimary
               padding="8px"
               borderRadius="8px"
-              width="48%"
             >
               Approve
               </ButtonMateriaPrimary>
@@ -238,7 +237,6 @@ export default function InventoryItem({
             <ButtonMateriaPrimary
               padding="8px"
               borderRadius="8px"
-              width="48%"
             >
               Wrap
               </ButtonMateriaPrimary>
