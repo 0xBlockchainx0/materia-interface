@@ -25,10 +25,13 @@ export const GreyCard = styled(Card)`
 
 export const SwapGreyCard = styled(Card)`
   width: auto;
-  background-color: rgb(0, 0, 0, 0.5);
-  border: 1px solid ${({ theme }) => theme.grey};
-  padding: 5px 15px;
-  border-radius: 15px;
+  background-color: linear-gradient(90deg, ${({ theme }) => theme.buttonMateriaPrimaryBackgroundFirstColor}, ${({ theme }) => theme.buttonMateriaPrimaryBackgroundSecondColor});
+  border: 1px solid ${({ theme }) => theme.buttonMateriaPrimaryBorderColor};
+  color: ${({ theme }) => theme.buttonMateriaPrimaryTextColor};
+  padding: 0.2rem 1.5rem;
+  border-radius: 3px;
+  transition: all 0.3s ease;
+  opacity: 0.7;
 `
 
 export const OutlineCard = styled(Card)`

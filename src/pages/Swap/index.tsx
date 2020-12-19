@@ -134,15 +134,12 @@ const SwapButton = styled.div`
 `
 
 const InventoryColumn = styled.div`
-padding-top: 0.5rem;
-padding-left: 1rem;
-padding-bottom: 1rem;
+padding: 0.5rem 0rem 1rem 1rem;
+border-radius: 2px 2px 0px 0px;
 font-size: smaller;
 min-height: 580px;
 ${({ theme }) => theme.backgroundContainer}
-  @media (max-width: 1350px) {
-    display: none;
-  }
+@media (max-width: 1350px) { display: none; }
 `
 
 const ItemColumn = styled.div`
@@ -419,9 +416,7 @@ export default function Swap() {
           <SwapGridContainer>
             <ItemColumn>
               <div style={{ writingMode: 'vertical-rl', textOrientation: 'mixed' }}>
-                <p style={{ fontSize: 'xx-large', margin: '0px 0px 0px -10px', color: '#fff' }}>
-                  Swap
-              </p>
+                <p style={{ fontSize: 'xx-large', margin: '0px 0px 0px -10px', color: '#fff' }}>Swap</p>
               </div>
             </ItemColumn>
             <InventoryColumn>

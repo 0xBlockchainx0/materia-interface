@@ -49,10 +49,6 @@ export const ButtonPrimary = styled(Base)`
   &:hover {
     background-color: ${({ theme }) => darken(0.05, theme.primary1)};
   }
-  &:active {
-    box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.1, theme.bg6)};
-    background-color: ${({ theme }) => darken(0.1, theme.bg6)};
-  }
   &:disabled {
     background-color: ${({ theme, altDisabledStyle }) => (altDisabledStyle ? theme.primary1 : theme.bg3)};
     color: ${({ theme, altDisabledStyle }) => (altDisabledStyle ? 'white' : theme.text3)};
@@ -129,32 +125,20 @@ export const ButtonMateriaLight = styled(ButtonLight)`
 
 export const ButtonMateriaPrimary = styled(ButtonPrimary)`
   width: auto;
-  background-color: ${({ theme }) => theme.bg8};
-  border: 2px solid ${({ theme }) => theme.cyan1};
-  color: ${({ theme }) => theme.text1};
-  padding: 5px 15px;
-  border-radius: 15px;
-  &:focus {
-    box-shadow: none;
-    background-color: ${({ theme }) => theme.bg8};
-    border: 2px solid ${({ theme }) => theme.cyan1};
-  }
-  &:hover {
-    background-color: ${({ theme }) => theme.bg8};
-    border: 2px solid ${({ theme }) => theme.cyan1};
-  }
-  &:active {
-    box-shadow: none;
-    background-color: ${({ theme }) => theme.bg8};
-    border: 2px solid ${({ theme }) => theme.cyan1};
+  background-color: linear-gradient(90deg, ${({ theme }) => theme.buttonMateriaPrimaryBackgroundFirstColor}, ${({ theme }) => theme.buttonMateriaPrimaryBackgroundSecondColor});
+  border: 1px solid ${({ theme }) => theme.buttonMateriaPrimaryBorderColor};
+  color: ${({ theme }) => theme.buttonMateriaPrimaryTextColor};
+  padding: 0.2rem 1.5rem;
+  border-radius: 3px;
+  transition: all 0.3s ease;
+  &:hover:enabled{
+    text-shadow: 0px 0px 2px 0px #111111; 
+    background-color: linear-gradient(90deg, ${({ theme }) => theme.buttonMateriaPrimaryBackgroundHoverFirstColor}, ${({ theme }) => theme.buttonMateriaPrimaryBackgroundHoverSecondColor});
+    border-color: ${({ theme }) => theme.buttonMateriaPrimaryHoverBorderColor};
+    box-shadow: 0px 0px 6px 0px #b0deff;
   }
   &:disabled {
-    background-color: ${({ theme }) => theme.bg8};
-    border: 2px solid ${({ theme }) => theme.cyan1};
-    color: ${({ theme }) => theme.text1};
-    cursor: auto;
-    box-shadow: none;
-    outline: none;
+    background-color: linear-gradient(90deg, ${({ theme }) => theme.buttonMateriaPrimaryBackgroundFirstColor}, ${({ theme }) => theme.buttonMateriaPrimaryBackgroundSecondColor});
     opacity: ${({ altDisabledStyle }) => (altDisabledStyle ? '0.7' : '1')};
   }
 `
@@ -304,9 +288,26 @@ const ButtonConfirmedStyle = styled(Base)`
 `
 
 const ButtonErrorStyle = styled(Base)`
+  width: auto;
+  background-color: linear-gradient(90deg, ${({ theme }) => theme.buttonMateriaErrorBackgroundFirstColor}, ${({ theme }) => theme.buttonMateriaErrorBackgroundSecondColor});
+  border: 1px solid ${({ theme }) => theme.buttonMateriaErrorBorderColor};
+  color: ${({ theme }) => theme.buttonMateriaPrimaryTextColor};
+  padding: 0.2rem 1.5rem;
+  border-radius: 3px;
+  transition: all 0.3s ease;
+  &:hover:enabled{
+    text-shadow: 0px 0px 2px 0px #111111; 
+    background-color: linear-gradient(90deg, ${({ theme }) => theme.buttonMateriaErrorBackgroundHoverFirstColor}, ${({ theme }) => theme.buttonMateriaErrorBackgroundHoverSecondColor});
+    border-color: ${({ theme }) => theme.buttonMateriaErrorHoverBorderColor};
+    box-shadow: 0px 0px 6px 0px #b0deff;
+  }
+  &:disabled {
+    background-color: linear-gradient(90deg, ${({ theme }) => theme.buttonMateriaErrorBackgroundFirstColor}, ${({ theme }) => theme.buttonMateriaErrorBackgroundSecondColor});
+    opacity: ${({ altDisabledStyle }) => (altDisabledStyle ? '0.7' : '1')};
+    border-radius: 3px;
+  }
   background-color: ${({ theme }) => theme.red1};
   border: 1px solid ${({ theme }) => theme.red1};
-
   &:focus {
     box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.05, theme.red1)};
     background-color: ${({ theme }) => darken(0.05, theme.red1)};
@@ -328,42 +329,12 @@ const ButtonErrorStyle = styled(Base)`
 `
 
 const ButtonMateriaErrorStyle = styled(ButtonErrorStyle)`
-  width: auto;
-  padding: 5px 15px;
-  border-radius: 15px;
   z-index:2;
 `
 
 export const SwapButton = styled(ButtonMateriaPrimary)`
-  height: 3ch !important;
-  width: 4rem;
-  border: none;
-  border-radius: unset;
-  background-color: transparent;
-  ${({ theme }) => theme.swapButtonBg};
-  background-repeat: no-repeat;
-  background-size: 100% 100%;
-  // padding: 18px;
-  &:focus {
-    background-color: transparent;
-    border: none;
-  }
-  &:hover {
-    background-color: transparent;
-    border: none;
-  }
-  &:active {
-    background-color: transparent;
-    border: none;
-  }
-  &:disabled {
-    background-color: transparent;
-    border: none;
-  }
-  & > div {
-    display: none;
-  }
-`;
+ 
+`
 
 export function ButtonConfirmed({
   confirmed,

@@ -36,12 +36,14 @@ const ButtonColumn = styled.div`
 `
 
 const TokenType = styled.span`
-  margin-left: 10px;
+  margin: 5px 0px 5px 10px;
+  display: inline-block;
   // color: ${({ theme }) => theme.cyan1}
 `
 
 const BalanceRow = styled.div`
   display: inline-flex;
+  margin: 5px 0px;
 `
 
 const BalanceText = styled.div`
@@ -56,15 +58,16 @@ const StyledBalanceMax = styled.button`
   height: 28px;
   background-color: ${({ theme }) => theme.primary5};
   border: 1px solid ${({ theme }) => theme.primary5};
-  border-radius: 0.5rem;
+  border-radius: 3px;
   font-size: 0.875rem;
-
   font-weight: 500;
   cursor: pointer;
   margin-right: 0.5rem;
   color: ${({ theme }) => theme.cyan1};
   :hover {
+    text-shadow: 0px 0px 2px 0px #111111; 
     border: 1px solid ${({ theme }) => theme.cyan2};
+    box-shadow: 0px 0px 6px 0px #b0deff;
   }
   :focus {
     border: 1px solid ${({ theme }) => theme.cyan2};
@@ -199,9 +202,7 @@ export default function InventoryItem({
 
       {showMore && (
         <AutoColumn>
-          <Text fontSize={10} fontWeight={500}>
-            {tokenAddress}
-          </Text>
+          <Text fontSize={10} fontWeight={500} style={{ marginBottom: '10px'}}>{tokenAddress}</Text>
           <FixedHeightRow>
             <>
               <NumericalInput
@@ -218,9 +219,11 @@ export default function InventoryItem({
             </>
           </FixedHeightRow>
           {tokenAddress!=='' &&(
-            <>
-          Wrap as <Dropdown options={options} onChange={onSelect} value={defaultOption} />
-          </>
+            <div className="wrapASBlock">
+              <div>Wrap as</div>
+              <div><Dropdown options={options} onChange={onSelect} value={defaultOption} /></div> 
+              <div className="clearfix"></div>           
+            </div>
           )}
           <RowBetween marginTop="10px">
             {isERC20 && (

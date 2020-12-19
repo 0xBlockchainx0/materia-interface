@@ -8,11 +8,10 @@ export const BodyWrapper = styled.div`
   max-width: 1200px;
   min-height: 620px;
   width: 100%;
-  // background: url(${appBackground}) no-repeat;
   background-size: cover;
   box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
     0px 24px 32px rgba(0, 0, 0, 0.01);
-  border-radius: 5px;
+  border-radius: 3px;
   padding: 1rem;
   cursor: auto;
   ${({ theme }) => theme.bodyWrapperBackground}
@@ -28,38 +27,31 @@ const StyledBox = styled.div`
   margin: 0 auto;
   position: relative;
   max-width: 1200px;
-  @media (max-width: 600px) {
-    max-width: 90% !important;
-  }
-  @media (max-width: 1200px) {
-    max-width: 90%;
- }
+  @media (max-width: 600px) { max-width: 90% !important; }
+  @media (max-width: 1200px) { max-width: 90%; }
   min-height: 620px;
   width: 100%;
   display: inline-block;
   z-index: 0;
   cursor: pointer;
-  border-radius: 5px;
+  border-radius: 0px;
+  padding: 3px;
   ${({ theme }) => theme.styledBoxBorder}
 `
 
 const StyledCornerImage = styled.img`
-  position:absolute;
-  display:none;
+  position:absolute;  
   height:39px;
   width:39px
-  @media (max-width: 960px) {
-    display: none;
-  }
-  @media (max-width: 375px) {
-    display: none;
-  }
+  opacity: 0.7;
+  @media (max-width: 960px) { display: none; }
+  @media (max-width: 375px) { display: none; }
 `
 
 const StyledSpanTopRight = styled.span`
   filter: blur(0);
-  top: -22.5px;
-  right: -21.5px;
+  top: -23px;
+  right: -21px;
   -webkit-transform: rotate(90deg);
   transform: rotate(90deg);
   position: absolute;
@@ -70,8 +62,8 @@ const StyledSpanTopRight = styled.span`
 
 const StyledSpanTopLeft = styled.span`
   filter: blur(0);
-  top: -21.5px;
-  left: -23.5px;
+  top: -21px;
+  left: -23px;
   -webkit-transform: rotate(0deg);
   transform: rotate(0deg);
   position: absolute;
@@ -81,8 +73,8 @@ const StyledSpanTopLeft = styled.span`
 `
 
 const StyledSpanBottomLeft = styled.span`
-  bottom: -20.5px;
-  left: -23.5px;
+  bottom: -22px;
+  left: -21px;
   -webkit-transform: rotate(270deg);
   transform: rotate(270deg);
   position: absolute;
@@ -92,8 +84,8 @@ const StyledSpanBottomLeft = styled.span`
 `
 
 const StyledSpanBottomRight = styled.span`
-  bottom: -20.5px;
-  right: -23.5px;
+  bottom: -22px;
+  right: -22px;
   -webkit-transform: rotate(180deg);
   transform: rotate(180deg);
   position: absolute;

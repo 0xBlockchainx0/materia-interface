@@ -54,7 +54,20 @@ export interface Colors {
   cyan1: Color
   cyan2: Color
   grey: Color
-  transparent: Color
+  transparent: Color,
+  buttonMateriaPrimaryBackgroundFirstColor: Color
+  buttonMateriaPrimaryBackgroundSecondColor: Color
+  buttonMateriaPrimaryBackgroundHoverFirstColor: Color
+  buttonMateriaPrimaryBackgroundHoverSecondColor: Color
+  buttonMateriaErrorBackgroundFirstColor: Color
+  buttonMateriaErrorBackgroundSecondColor: Color
+  buttonMateriaErrorBackgroundHoverFirstColor: Color
+  buttonMateriaErrorBackgroundHoverSecondColor: Color
+  buttonMateriaPrimaryBorderColor: Color
+  buttonMateriaPrimaryHoverBorderColor: Color
+  buttonMateriaPrimaryTextColor: Color
+  buttonMateriaErrorBorderColor: Color
+  buttonMateriaErrorHoverBorderColor: Color
 }
 
 export interface Grids {

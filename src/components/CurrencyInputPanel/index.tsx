@@ -13,6 +13,7 @@ import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
 
 import { useActiveWeb3React } from '../../hooks'
 import { useTranslation } from 'react-i18next'
+import TokenSphereBox from '../TokenSphereBox'
 
 const InputRow = styled.div<{ selected: boolean }>`
   ${({ theme }) => theme.flexRowNoWrap}
@@ -65,10 +66,10 @@ const TokenImage = styled.div<{ showBackground: boolean }>`
   background: ${props => props.showBackground ? ({ theme }) => theme.tokenBackground : 'unset'}    
   background-size: contain;
   height: 300px;
-    width: 300px;
-    background-position: center;
-    display: table-cell;
-    vertical-align: middle;
+  width: 300px;
+  background-position: center;
+  display: table-cell;
+  vertical-align: middle;
   background-position: center;
   @media (max-width: 1050px) {
     padding: 2rem !important;
@@ -118,18 +119,19 @@ const StyledBalanceMax = styled.button`
   height: 28px;
   background-color: ${({ theme }) => theme.primary5};
   border: 1px solid ${({ theme }) => theme.primary5};
-  border-radius: 0.5rem;
-  font-size: 0.875rem;
-
+  border-radius: 3px;
+  font-size: 0.875rem
   font-weight: 500;
   cursor: pointer;
   margin-right: 0.5rem;
   color: ${({ theme }) => theme.cyan1};
   :hover {
-    border: 1px solid ${({ theme }) => theme.cyan2};
+    text-shadow: 0px 0px 2px 0px #111111; 
+    border-color: ${({ theme }) => theme.cyan2};
+    box-shadow: 0px 0px 6px 0px #b0deff;
   }
   :focus {
-    border: 1px solid ${({ theme }) => theme.cyan2};
+    border-color: ${({ theme }) => theme.cyan2};
     outline: none;
   }
 
@@ -265,6 +267,7 @@ export default function CurrencyInputPanel({
         )}
       </InputPanel>
       <TokenImageContainer>
+        <TokenSphereBox/>
         <TokenImage showBackground={true}>
           {pair ? (
             <DoubleCurrencyLogo currency0={pair.token0} currency1={pair.token1} size={24} margin={true} radius={true} />
