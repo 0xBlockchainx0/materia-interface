@@ -357,6 +357,14 @@ html {
   font-feature-settings: 'ss01' on, 'ss02' on, 'cv01' on, 'cv03' on;  
 }
 
+.wrapASBlock { margin: 5px 0px 5px 0px }
+.wrapASBlock div.clearfix { clear: both; }
+.wrapASBlock > div { float: left; }
+.wrapASBlock > div + div { float: right; }
+.wrapASBlock > div:first-child { padding-top: 10px }
+
+.swapCaption { text-align: center; margin-top: 20px; width: 100%; text-shadow: 1px 1px #111111; }
+
 `
 
 export const ThemedGlobalStyle = createGlobalStyle`

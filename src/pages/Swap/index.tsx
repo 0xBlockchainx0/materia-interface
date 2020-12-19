@@ -439,6 +439,7 @@ export default function Swap() {
                     Boolean(match) ||
                     pathname.startsWith('/swap')
                   }
+                  style={{ textShadow: '1px 1px #053472' }}
                 >
                   Classic SWAP
               </StyledNavLink>
@@ -446,6 +447,7 @@ export default function Swap() {
                 <StyledNavLink
                   id={`batch-swap`}
                   to={'/batch-swap'}
+                  style={{ textShadow: '1px 1px #053472' }}
                 // isActive={(match, { pathname }) =>
                 //   Boolean(match) ||
                 //   pathname.startsWith('/batchswap')
@@ -661,7 +663,7 @@ export default function Swap() {
           </SwapGridContainer>
         </Wrapper>
         <FooterInfo>
-          <Center>Select two token. Press <ButtonBgItem src={theme.swapButtonSrc} /> button to swap.</Center>
+          <div className="swapCaption">Select two token. Press "Swap" button to swap.</div>
         </FooterInfo>
       </AppBody>
     </>

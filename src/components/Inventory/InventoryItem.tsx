@@ -227,19 +227,9 @@ export default function InventoryItem({
           )}
           <RowBetween marginTop="10px">
             {isERC20 && (
-            <ButtonMateriaPrimary
-              padding="8px"
-              borderRadius="8px"
-            >
-              Approve
-              </ButtonMateriaPrimary>
+            <ButtonMateriaPrimary style={{ width: 'inherit', marginRight: '10px'}}>Approve</ButtonMateriaPrimary>
               )}
-            <ButtonMateriaPrimary
-              padding="8px"
-              borderRadius="8px"
-            >
-              Wrap
-              </ButtonMateriaPrimary>
+            <ButtonMateriaPrimary style={{ width: 'inherit'}}>Wrap</ButtonMateriaPrimary>
           </RowBetween>
         </AutoColumn>
       )}

@@ -25,7 +25,7 @@ export default function Inventory() {
 
   return (
     <InventoryContainer>
-      <InventoryTitle>
+      <InventoryTitle style={{ textShadow: '1px 1px #053472' }}>
         <TYPE.body color={theme.text1} fontWeight={500} fontSize={15} >Inventory</TYPE.body>
       </InventoryTitle>
       {

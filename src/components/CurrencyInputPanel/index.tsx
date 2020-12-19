@@ -192,7 +192,7 @@ export default function CurrencyInputPanel({
           {!hideInput && (
             <LabelRow>
               <RowBetween>
-                <TYPE.body color={theme.blue2} fontWeight={500} fontSize={14}>
+                <TYPE.body color={theme.blue2} fontWeight={500} fontSize={14} style={{ textShadow: '1px 1px #053472' }}>
                   {label}
                 </TYPE.body>
                 {account && (
@@ -201,7 +201,7 @@ export default function CurrencyInputPanel({
                     color={theme.blue2}
                     fontWeight={500}
                     fontSize={14}
-                    style={{ display: 'inline', cursor: 'pointer' }}
+                    style={{ display: 'inline', cursor: 'pointer', textShadow: '1px 1px #053472' }}
                   >
                     {!hideBalance && !!currency && selectedCurrencyBalance
                       ? (customBalanceText ?? 'Balance: ') + selectedCurrencyBalance?.toSignificant(6)
