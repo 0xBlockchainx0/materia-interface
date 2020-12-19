@@ -172,7 +172,7 @@ export function theme(darkMode: boolean, classicMode: boolean): DefaultTheme {
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#04009d', endColorstr='#06004d',GradientType=0 );
   `:
         darkMode ? css`
-        background: linear-gradient(-45deg, rgba(12,20,38, 0.8), rgba(25,101,208, 0.5)); 
+        background: linear-gradient(-45deg, rgba(12,20,38, 0.9), rgba(25,101,208, 0.6)); 
         filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#0c1426",endColorstr="#1965d0",GradientType=1);    `
           :
           css`
@@ -206,7 +206,7 @@ export function theme(darkMode: boolean, classicMode: boolean): DefaultTheme {
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#04009d', endColorstr='#06004d',GradientType=0 );
     `:
     darkMode ? css`
-    background: linear-gradient(180deg, rgba(35, 102, 180, 0.7), rgba(14, 22, 42, 0.2));
+    background: linear-gradient(180deg, rgba(35, 102, 180, 0.8), rgba(14, 22, 42, 0.4));
     `:
       css`
         background: linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 100%);
