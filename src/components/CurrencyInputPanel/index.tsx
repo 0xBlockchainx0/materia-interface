@@ -13,7 +13,6 @@ import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
 
 import { useActiveWeb3React } from '../../hooks'
 import { useTranslation } from 'react-i18next'
-import TokenSphereBox from '../TokenSphereBox'
 
 const InputRow = styled.div<{ selected: boolean }>`
   ${({ theme }) => theme.flexRowNoWrap}
@@ -267,7 +266,6 @@ export default function CurrencyInputPanel({
         )}
       </InputPanel>
       <TokenImageContainer>
-        <TokenSphereBox/>
         <TokenImage showBackground={true}>
           {pair ? (
             <DoubleCurrencyLogo currency0={pair.token0} currency1={pair.token1} size={24} margin={true} radius={true} />
