@@ -207,6 +207,7 @@ export default function Swap() {
   const { independentField, typedValue, recipient } = useSwapState()
   const {
     v2Trade,
+    v2TradeWithoutInteroperable,
     currencyBalances,
     parsedAmount,
     currencies,
@@ -221,6 +222,7 @@ export default function Swap() {
   const { address: recipientAddress } = useENSAddress(recipient)
 
   const trade = showWrap ? undefined : v2Trade
+  const tradeWithoutInteroperable = showWrap ? undefined : v2TradeWithoutInteroperable
   const defaultTrade = showWrap ? undefined : v2Trade
 
   const parsedAmounts = showWrap
@@ -279,7 +281,8 @@ export default function Swap() {
   const noRoute = !route
 
   // check whether the user has approved the router on the input token
-  const [approval, approveCallback] = useApproveCallbackFromTrade(trade, allowedSlippage)
+  // const [approval, approveCallback] = useApproveCallbackFromTrade(trade, allowedSlippage)
+  const [approval, approveCallback] = useApproveCallbackFromTrade(tradeWithoutInteroperable, allowedSlippage)
 
   // check if user has gone through approval process, used to show two step buttons, reset on token change
   const [approvalSubmitted, setApprovalSubmitted] = useState<boolean>(false)
@@ -295,7 +298,7 @@ export default function Swap() {
   const atMaxAmountInput = Boolean(maxAmountInput && parsedAmounts[Field.INPUT]?.equalTo(maxAmountInput))
 
   // the callback to execute the swap
-  const { callback: swapCallback, error: swapCallbackError } = useSwapCallback(trade, allowedSlippage, recipient)
+  const { callback: swapCallback, error: swapCallbackError } = useSwapCallback(trade, tradeWithoutInteroperable, allowedSlippage, recipient)
 
   const { priceImpactWithoutFee } = computeTradePriceBreakdown(trade)
 

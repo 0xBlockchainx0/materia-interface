@@ -42,6 +42,7 @@ type EstimatedSwapCall = SuccessfulCall | FailedCall
  */
 function useSwapCallArguments(
   trade: Trade | undefined, // trade to execute, required
+  tradeWithoutInteroperable: Trade | undefined, // trade to execute (without interoperable), required
   allowedSlippage: number = INITIAL_ALLOWED_SLIPPAGE, // in bips
   recipientAddressOrName: string | null, // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
 ): SwapCall[] {
@@ -50,8 +51,8 @@ function useSwapCallArguments(
   const recipient = recipientAddressOrName === null ? account : recipientAddress
   const deadline = useTransactionDeadline()
   const contract: Contract | null = (!library || !account || !chainId) ? null : getProxyContract(chainId, library, account)
-  const tokenAddressA = trade?.route.path[0]?.address ?? ZERO_ADDRESS
-  const tokenAddressB = trade?.route.path && trade?.route.path.length > 0 ? trade?.route.path[trade?.route.path.length - 1]?.address ?? ZERO_ADDRESS : ZERO_ADDRESS
+  const tokenAddressA = tradeWithoutInteroperable?.route.path[0]?.address ?? ZERO_ADDRESS
+  const tokenAddressB = tradeWithoutInteroperable?.route.path && tradeWithoutInteroperable?.route.path.length > 0 ? tradeWithoutInteroperable?.route.path[tradeWithoutInteroperable?.route.path.length - 1]?.address ?? ZERO_ADDRESS : ZERO_ADDRESS
   const tokenAIsEthItem = useCheckIsEthItem(tokenAddressA)
   const tokenBIsEthItem = useCheckIsEthItem(tokenAddressB)
   const isEthItem: boolean = tokenAIsEthItem?.ethItem
@@ -65,20 +66,22 @@ function useSwapCallArguments(
       : getEthItemCollectionContract(chainId, ethItemCollection, library, account)
   
   console.log('*********************************')
-  console.log('isEthItem: ', isEthItem)
-  console.log('ethItemCollection: ', ethItemCollection)
-  console.log('ethItemObjectId: ', ethItemObjectId?.toString() ?? "0")
-  console.log('needUnwrap: ', needUnwrap)
+  // console.log('isEthItem: ', isEthItem)
+  // console.log('ethItemCollection: ', ethItemCollection)
+  // console.log('ethItemObjectId: ', ethItemObjectId?.toString() ?? "0")
+  // console.log('needUnwrap: ', needUnwrap)
+  console.log('tokenAddressA: ', tokenAddressA)
+  console.log('tokenAddressB: ', tokenAddressB)
   console.log('*********************************')
 
   return useMemo(() => {
     const swapMethods = []
 
-    if (!trade || !recipient || !library || !account || !chainId || !deadline) return []
+    if (!tradeWithoutInteroperable || !recipient || !library || !account || !chainId || !deadline) return []
     if (!contract) { return [] }
 
     swapMethods.push(
-      Router.swapCallParameters(trade, {
+      Router.swapCallParameters(tradeWithoutInteroperable, {
         feeOnTransfer: false,
         allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
         recipient,
@@ -86,9 +89,9 @@ function useSwapCallArguments(
       }, isEthItem, needUnwrap, ethItemObjectId?.toString() ?? "0")
     )
 
-    // if (!isEthItem && trade.tradeType === TradeType.EXACT_INPUT) {
+    // if (!isEthItem && tradeWithoutInteroperable.tradeType === TradeType.EXACT_INPUT) {
     //   swapMethods.push(
-    //     Router.swapCallParameters(trade, {
+    //     Router.swapCallParameters(tradeWithoutInteroperable, {
     //       feeOnTransfer: true,
     //       allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
     //       recipient,
@@ -110,27 +113,28 @@ function useSwapCallArguments(
       parameters: parameters,
       contract: contract
     }))
-  }, [account, allowedSlippage, chainId, deadline, library, recipient, trade])
+  }, [account, allowedSlippage, chainId, deadline, library, recipient, tradeWithoutInteroperable])
 }
 
 // returns a function that will execute a swap, if the parameters are all valid
 // and the user has approved the slippage adjusted input amount for the trade
 export function useSwapCallback(
   trade: Trade | undefined, // trade to execute, required
+  tradeWithoutInteroperable: Trade | undefined, // trade to execute (without interoperable), required
   allowedSlippage: number = INITIAL_ALLOWED_SLIPPAGE, // in bips
   recipientAddressOrName: string | null // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
 ): { state: SwapCallbackState; callback: null | (() => Promise<string>); error: string | null } {
   const { account, chainId, library } = useActiveWeb3React()
 
-  const swapCalls = useSwapCallArguments(trade, allowedSlippage, recipientAddressOrName)
+  const swapCalls = useSwapCallArguments(trade, tradeWithoutInteroperable, allowedSlippage, recipientAddressOrName)
   const addTransaction = useTransactionAdder()
 
   const { address: recipientAddress } = useENS(recipientAddressOrName)
   const recipient = recipientAddressOrName === null ? account : recipientAddress
 
-  console.log('*********************************')
-  console.log('swapCalls: ', swapCalls)
-  console.log('*********************************')
+  // console.log('*********************************')
+  // console.log('swapCalls: ', swapCalls)
+  // console.log('*********************************')
 
   return useMemo(() => {
     if (!trade || !library || !account || !chainId) {

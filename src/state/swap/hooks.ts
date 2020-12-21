@@ -16,6 +16,7 @@ import { SwapState } from './reducer'
 import { useUserSlippageTolerance } from '../user/hooks'
 import { computeSlippageAdjustedAmounts } from '../../utils/prices'
 import { USD } from '../../constants'
+import useGetEthItemInteroperable from '../../hooks/useGetEthItemInteroperable'
 
 export function useSwapState(): AppState['swap'] {
   return useSelector<AppState, AppState['swap']>(state => state.swap)
@@ -109,36 +110,55 @@ export function useDerivedSwapInfo(): {
   currencies: { [field in Field]?: Currency }
   currencyBalances: { [field in Field]?: CurrencyAmount }
   parsedAmount: CurrencyAmount | undefined
-  v2Trade: Trade | undefined
+  v2Trade: Trade | undefined,
+  v2TradeWithoutInteroperable: Trade | undefined,
   inputError?: string
 } {
   const { account } = useActiveWeb3React()
-
+  const swapState =  useSwapState()
   const {
     independentField,
     typedValue,
     [Field.INPUT]: { currencyId: inputCurrencyId },
     [Field.OUTPUT]: { currencyId: outputCurrencyId },
     recipient
-  } = useSwapState()
-
+  } = swapState
+  
+  const inputCurrencyInteroperableId = useGetEthItemInteroperable(inputCurrencyId)
+  const outputCurrencyInteroperableId = useGetEthItemInteroperable(outputCurrencyId)
   const inputCurrency = useCurrency(inputCurrencyId)
   const outputCurrency = useCurrency(outputCurrencyId)
+  const inputCurrencyInteroperable = useCurrency(inputCurrencyInteroperableId)
+  const outputCurrencyInteroperable = useCurrency(outputCurrencyInteroperableId)
+
+  // console.log('***************************************')
+  // console.log('inputCurrencyId: ', inputCurrencyId)
+  // console.log('inputCurrencyInteroperableId: ', inputCurrencyInteroperableId)
+  // console.log('inputCurrencyInteroperable: ', inputCurrencyInteroperable)
+  // console.log('outputCurrencyId: ', outputCurrencyId)
+  // console.log('outputCurrencyInteroperableId: ', outputCurrencyInteroperableId)
+  // console.log('outputCurrencyInteroperable: ', outputCurrencyInteroperable)
+  // console.log('***************************************')
+
   const recipientLookup = useENS(recipient ?? undefined)
   const to: string | null = (recipient === null ? account : recipientLookup.address) ?? null
 
   const relevantTokenBalances = useCurrencyBalances(account ?? undefined, [
-    inputCurrency ?? undefined,
-    outputCurrency ?? undefined
+    inputCurrencyInteroperable ?? inputCurrency ?? undefined,
+    outputCurrencyInteroperable ?? outputCurrency ?? undefined
   ])
 
   const isExactIn: boolean = independentField === Field.INPUT
-  const parsedAmount = tryParseAmount(typedValue, (isExactIn ? inputCurrency : outputCurrency) ?? undefined)
+  const parsedAmount = tryParseAmount(typedValue, (isExactIn ? (inputCurrencyInteroperable ?? inputCurrency) : (outputCurrencyInteroperable ?? outputCurrency)) ?? undefined)
 
-  const bestTradeExactIn = useTradeExactIn(isExactIn ? parsedAmount : undefined, outputCurrency ?? undefined)
-  const bestTradeExactOut = useTradeExactOut(inputCurrency ?? undefined, !isExactIn ? parsedAmount : undefined)
+  const bestTradeExactIn = useTradeExactIn(isExactIn ? parsedAmount : undefined, (outputCurrencyInteroperable ?? outputCurrency) ?? undefined)
+  const bestTradeExactOut = useTradeExactOut((inputCurrencyInteroperable ?? inputCurrency) ?? undefined, !isExactIn ? parsedAmount : undefined)
+
+  const bestTradeWithoutInteroperableExactIn = useTradeExactIn(isExactIn ? parsedAmount : undefined, outputCurrency ?? undefined)
+  const bestTradeWithoutInteroperableExactOut = useTradeExactOut(inputCurrency ?? undefined, !isExactIn ? parsedAmount : undefined)
 
   const v2Trade = isExactIn ? bestTradeExactIn : bestTradeExactOut
+  const tradeWithoutInteroperable = isExactIn ? bestTradeWithoutInteroperableExactIn : bestTradeWithoutInteroperableExactOut
 
   const currencyBalances = {
     [Field.INPUT]: relevantTokenBalances[0],
@@ -148,6 +168,8 @@ export function useDerivedSwapInfo(): {
   const currencies: { [field in Field]?: Currency } = {
     [Field.INPUT]: inputCurrency ?? undefined,
     [Field.OUTPUT]: outputCurrency ?? undefined
+    // [Field.INPUT]: inputCurrencyInteroperable ?? inputCurrency ?? undefined,
+    // [Field.OUTPUT]: outputCurrencyInteroperable ?? outputCurrency ?? undefined
   }
 
   let inputError: string | undefined
@@ -197,6 +219,7 @@ export function useDerivedSwapInfo(): {
     currencyBalances,
     parsedAmount,
     v2Trade: v2Trade ?? undefined,
+    v2TradeWithoutInteroperable: tradeWithoutInteroperable ?? undefined,
     inputError,
   }
 }
