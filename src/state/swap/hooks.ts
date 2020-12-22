@@ -1,6 +1,6 @@
 import useENS from '../../hooks/useENS'
 import { parseUnits } from '@ethersproject/units'
-import { ChainId, Currency, CurrencyAmount, ETHER, JSBI, Token, TokenAmount, Trade } from '@materia-dex/sdk'
+import { ChainId, Currency, CurrencyAmount, ETHER, IETH, JSBI, Token, TokenAmount, Trade } from '@materia-dex/sdk'
 import { ParsedQs } from 'qs'
 import { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -114,7 +114,7 @@ export function useDerivedSwapInfo(): {
   v2TradeWithoutInteroperable: Trade | undefined,
   inputError?: string
 } {
-  const { account } = useActiveWeb3React()
+  const { account, chainId } = useActiveWeb3React()
   const swapState =  useSwapState()
   const {
     independentField,

@@ -6,7 +6,7 @@ import { AutoColumn } from '../Column'
 import styled from 'styled-components'
 import { RowBetween } from '../Row'
 import { TYPE, CloseIcon } from '../../theme'
-import { ButtonConfirmed, ButtonError, ButtonMateriaError } from '../Button'
+import { ButtonConfirmed, ButtonError, ButtonMateriaConfirmed, ButtonMateriaError } from '../Button'
 import ProgressCircles from '../ProgressSteps'
 import CurrencyInputPanel from '../CurrencyInputPanel'
 import { TokenAmount, Pair } from '@materia-dex/sdk'
@@ -219,20 +219,20 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
             </div>
 
             <TYPE.black>
-              {hypotheticalRewardRate.multiply((60 * 60 * 24 * 7).toString()).toSignificant(4, { groupSeparator: ',' })}{' '}
-              GIL / week
+              {hypotheticalRewardRate.multiply((60 * 60 * 24).toString()).toSignificant(4)}{' '}
+              GIL / day
             </TYPE.black>
           </HypotheticalRewardRate>
 
           <RowBetween>
-            <ButtonConfirmed
+            <ButtonMateriaConfirmed
               mr="0.5rem"
               onClick={onAttemptToApprove}
               confirmed={approval === ApprovalState.APPROVED || signatureData !== null}
               disabled={approval !== ApprovalState.NOT_APPROVED || signatureData !== null}
             >
               Approve
-            </ButtonConfirmed>
+            </ButtonMateriaConfirmed>
             <ButtonMateriaError
               disabled={!!error || (signatureData === null && approval !== ApprovalState.APPROVED)}
               error={!!error && !!parsedAmount}

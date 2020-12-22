@@ -8,7 +8,8 @@ import { useRemovePopup } from '../../state/application/hooks'
 import ListUpdatePopup from './ListUpdatePopup'
 import TransactionPopup from './TransactionPopup'
 
-export const StyledClose = styled(X)`
+// export const StyledClose = styled(X)`
+export const StyledClose = styled.div`
   position: absolute;
   right: 10px;
   top: 10px;
@@ -95,7 +96,8 @@ export default function PopupItem({
 
   return (
     <Popup>
-      <StyledClose color={theme.text2} onClick={removeThisPopup} />
+      {/* <StyledClose color={theme.text2} onClick={removeThisPopup} /> */}
+      <StyledClose color={theme.text2} onClick={removeThisPopup}><X /></StyledClose>
       {popupContent}
       {removeAfterMs !== null ? <AnimatedFader style={faderStyle} /> : null}
     </Popup>

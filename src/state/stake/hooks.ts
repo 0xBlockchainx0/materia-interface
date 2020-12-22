@@ -17,24 +17,6 @@ export const STAKING_REWARDS_INFO: {
     stakingRewardAddress: string
   }[]
 } = {
-  [ChainId.MAINNET]: [
-    {
-      tokens: [IETH[ChainId.MAINNET], DAI],
-      stakingRewardAddress: '0xa1484C3aa22a66C62b77E0AE78E15258bd0cB711'
-    },
-    {
-      tokens: [IETH[ChainId.MAINNET], USDC],
-      stakingRewardAddress: '0x7FBa4B8Dc5E7616e59622806932DBea72537A56b'
-    },
-    {
-      tokens: [IETH[ChainId.MAINNET], USDT],
-      stakingRewardAddress: '0x6C3e4cb2E96B01F4b866965A91ed4437839A121a'
-    },
-    {
-      tokens: [IETH[ChainId.MAINNET], WBTC[ChainId.MAINNET]],
-      stakingRewardAddress: '0xCA35e32e7926b96A9988f61d510E038108d8068e'
-    }
-  ],
   // [ChainId.MAINNET]: [
   //   {
   //     tokens: [USD[ChainId.MAINNET], IETH[ChainId.MAINNET]],
@@ -49,20 +31,20 @@ export const STAKING_REWARDS_INFO: {
   //     stakingRewardAddress: '0xa1484C3aa22a66C62b77E0AE78E15258bd0cB711'
   //   }
   // ],
-  // [ChainId.ROPSTEN]: [
-  //   {
-  //     tokens: [USD[ChainId.ROPSTEN], IETH[ChainId.ROPSTEN]],
-  //     stakingRewardAddress: '0xa1484C3aa22a66C62b77E0AE78E15258bd0cB711'
-  //   },
-  //   {
-  //     tokens: [USD[ChainId.ROPSTEN], WBTC[ChainId.ROPSTEN]],
-  //     stakingRewardAddress: '0xa1484C3aa22a66C62b77E0AE78E15258bd0cB711'
-  //   },
-  //   {
-  //     tokens: [USD[ChainId.ROPSTEN], GIL[ChainId.ROPSTEN]],
-  //     stakingRewardAddress: '0xa1484C3aa22a66C62b77E0AE78E15258bd0cB711'
-  //   }
-  // ]
+  [ChainId.ROPSTEN]: [
+    // {
+    //   tokens: [USD[ChainId.ROPSTEN], IETH[ChainId.ROPSTEN]],
+    //   stakingRewardAddress: '0xa1484C3aa22a66C62b77E0AE78E15258bd0cB711'
+    // },
+    // {
+    //   tokens: [USD[ChainId.ROPSTEN], WBTC[ChainId.ROPSTEN]],
+    //   stakingRewardAddress: '0xa1484C3aa22a66C62b77E0AE78E15258bd0cB711'
+    // },
+    {
+      tokens: [USD[ChainId.ROPSTEN], GIL[ChainId.ROPSTEN]],
+      stakingRewardAddress: '0x134c16A18D5794F227B64893c5486bBDd87d752B'
+    }
+  ]
 }
 
 export interface StakingInfo {

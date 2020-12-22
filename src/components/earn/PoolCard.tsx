@@ -14,6 +14,8 @@ import { unwrappedToken } from '../../utils/wrappedCurrency'
 import { useTotalSupply } from '../../data/TotalSupply'
 import { usePair } from '../../data/Reserves'
 import useUSDCPrice from '../../utils/useUSDCPrice'
+import { useActiveWeb3React } from '../../hooks'
+import { USD } from '../../constants'
 
 const StatContainer = styled.div`
   display: flex;
@@ -66,42 +68,46 @@ const BottomSection = styled.div<{ showBackground: boolean }>`
 `
 
 export default function PoolCard({ stakingInfo }: { stakingInfo: StakingInfo }) {
+  const { account, chainId } = useActiveWeb3React()
+
   const token0 = stakingInfo.tokens[0]
   const token1 = stakingInfo.tokens[1]
 
   const currency0 = unwrappedToken(token0)
   const currency1 = unwrappedToken(token1)
+  const currencyUSD = unwrappedToken(USD[chainId ?? 1])
 
   const isStaking = Boolean(stakingInfo.stakedAmount.greaterThan('0'))
 
   // get the color of the token
-  const token = currency0 === ETHER ? token1 : token0
-  const IETH = currency0 === ETHER ? token0 : token1
+  const token = currency0 === currencyUSD ? token1 : token0
+  const tokenUSD = currency0 === currencyUSD ? token0 : token1
+
   const backgroundColor = useColor(token)
 
   const totalSupplyOfStakingToken = useTotalSupply(stakingInfo.stakedAmount.token)
   const [, stakingTokenPair] = usePair(...stakingInfo.tokens)
 
   // let returnOverMonth: Percent = new Percent('0')
-  let valueOfTotalStakedAmountInIETH: TokenAmount | undefined
+  let valueOfTotalStakedAmountInUSD: TokenAmount | undefined
   if (totalSupplyOfStakingToken && stakingTokenPair) {
     // take the total amount of LP tokens staked, multiply by ETH value of all LP tokens, divide by all LP tokens
-    valueOfTotalStakedAmountInIETH = new TokenAmount(
-      IETH,
+    valueOfTotalStakedAmountInUSD = new TokenAmount(
+      tokenUSD,
       JSBI.divide(
         JSBI.multiply(
-          JSBI.multiply(stakingInfo.totalStakedAmount.raw, stakingTokenPair.reserveOf(IETH).raw),
-          JSBI.BigInt(2) // this is b/c the value of LP shares are ~double the value of the IETH they entitle owner to
+          JSBI.multiply(stakingInfo.totalStakedAmount.raw, stakingTokenPair.reserveOf(tokenUSD).raw),
+          JSBI.BigInt(2) // this is b/c the value of LP shares are ~double the value of the tokenUSD they entitle owner to
         ),
         totalSupplyOfStakingToken.raw
       )
     )
   }
 
-  // get the USD value of staked IETH
-  const USDPrice = useUSDCPrice(IETH)
-  const valueOfTotalStakedAmountInUSDC =
-    valueOfTotalStakedAmountInIETH && USDPrice?.quote(valueOfTotalStakedAmountInIETH)
+  // get the USD value of staked tokenUSD
+  // const USDPrice = useUSDCPrice(tokenUSD)
+  // const valueOfTotalStakedAmountInUSDC =
+  //   valueOfTotalStakedAmountInUSD && USDPrice?.quote(valueOfTotalStakedAmountInUSD)
 
   return (
     <Wrapper showBackground={isStaking} bgColor={backgroundColor}>
@@ -125,16 +131,19 @@ export default function PoolCard({ stakingInfo }: { stakingInfo: StakingInfo }) 
         <RowBetween>
           <TYPE.white> Total deposited</TYPE.white>
           <TYPE.white>
-            {valueOfTotalStakedAmountInUSDC
-              ? `$${valueOfTotalStakedAmountInUSDC.toFixed(0, { groupSeparator: ',' })}`
-              : `${valueOfTotalStakedAmountInIETH?.toSignificant(4, { groupSeparator: ',' }) ?? '-'} ETH`}
+            {/* {valueOfTotalStakedAmountInUSDC
+              ? `$${valueOfTotalStakedAmountInUSDC.toFixed(0)}`
+              : `${valueOfTotalStakedAmountInUSD?.toSignificant(4) ?? '-'} ETH`} */}
+            {`${valueOfTotalStakedAmountInUSD?.toSignificant(4) ?? '-'} uSD`}
           </TYPE.white>
         </RowBetween>
         <RowBetween>
           <TYPE.white> Pool rate </TYPE.white>
-          <TYPE.white>{`${stakingInfo.totalRewardRate
-            ?.multiply(`${60 * 60 * 24 * 7}`)
-            ?.toFixed(0, { groupSeparator: ',' })} GIL / week`}</TYPE.white>
+          <TYPE.white>
+            {`${stakingInfo.totalRewardRate
+            ?.multiply(`${60 * 60 * 24}`)
+            ?.toFixed(0)} GIL / day`}
+          </TYPE.white>
         </RowBetween>
       </StatContainer>
 
@@ -147,12 +156,9 @@ export default function PoolCard({ stakingInfo }: { stakingInfo: StakingInfo }) 
             </TYPE.black>
 
             <TYPE.black style={{ textAlign: 'right' }} color={'white'} fontWeight={500}>
-              <span role="img" aria-label="wizard-icon" style={{ marginRight: '0.5rem' }}>
-                ⚡
-              </span>
               {`${stakingInfo.rewardRate
-                ?.multiply(`${60 * 60 * 24 * 7}`)
-                ?.toSignificant(4, { groupSeparator: ',' })} GIL / week`}
+                ?.multiply(`${60 * 60 * 24}`)
+                ?.toSignificant(4)} GIL / day`}
             </TYPE.black>
           </BottomSection>
         </>

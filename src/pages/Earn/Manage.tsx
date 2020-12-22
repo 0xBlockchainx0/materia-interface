@@ -27,7 +27,7 @@ import { useTotalSupply } from '../../data/TotalSupply'
 import { usePair } from '../../data/Reserves'
 import usePrevious from '../../hooks/usePrevious'
 import useUSDCPrice from '../../utils/useUSDCPrice'
-import { BIG_INT_ZERO } from '../../constants'
+import { BIG_INT_ZERO, USD } from '../../constants'
 import AppBody from '../AppBody'
 
 const PageWrapper = styled(AutoColumn)`
@@ -147,10 +147,10 @@ export default function Manage({
   const { account, chainId } = useActiveWeb3React()
 
   // get currencies and pair
-  const [currencyA, currencyB] = [useCurrency(currencyIdA), useCurrency(currencyIdB)]
+  const [currencyA, currencyB, currencyUSD] = [useCurrency(currencyIdA), useCurrency(currencyIdB), useCurrency(USD[chainId ?? 1].address)]
   const tokenA = wrappedCurrency(currencyA ?? undefined, chainId)
   const tokenB = wrappedCurrency(currencyB ?? undefined, chainId)
-
+  
   const [, stakingTokenPair] = usePair(tokenA, tokenB)
   const stakingInfo = useStakingInfo(stakingTokenPair)?.[0]
 
@@ -165,22 +165,22 @@ export default function Manage({
 
   // fade cards if nothing staked or nothing earned yet
   const disableTop = !stakingInfo?.stakedAmount || stakingInfo.stakedAmount.equalTo(JSBI.BigInt(0))
+  const token = currencyA === currencyUSD ? tokenB : tokenA
+  const tokenUSD = currencyA === currencyUSD ? tokenA : tokenB
 
-  const token = currencyA === ETHER ? tokenB : tokenA
-  const IETH = currencyA === ETHER ? tokenA : tokenB
   const backgroundColor = useColor(token)
 
-  // get IETH value of staked LP tokens
+  // get tokenUSD value of staked LP tokens
   const totalSupplyOfStakingToken = useTotalSupply(stakingInfo?.stakedAmount?.token)
-  let valueOfTotalStakedAmountInIETH: TokenAmount | undefined
-  if (totalSupplyOfStakingToken && stakingTokenPair && stakingInfo && IETH) {
-    // take the total amount of LP tokens staked, multiply by ETH value of all LP tokens, divide by all LP tokens
-    valueOfTotalStakedAmountInIETH = new TokenAmount(
-      IETH,
+  let valueOfTotalStakedAmountInUSD: TokenAmount | undefined
+  if (totalSupplyOfStakingToken && stakingTokenPair && stakingInfo && tokenUSD) {
+    // take the total amount of LP tokens staked, multiply by USD value of all LP tokens, divide by all LP tokens
+    valueOfTotalStakedAmountInUSD = new TokenAmount(
+      tokenUSD,
       JSBI.divide(
         JSBI.multiply(
-          JSBI.multiply(stakingInfo.totalStakedAmount.raw, stakingTokenPair.reserveOf(IETH).raw),
-          JSBI.BigInt(2) // this is b/c the value of LP shares are ~double the value of the IETH they entitle owner to
+          JSBI.multiply(stakingInfo.totalStakedAmount.raw, stakingTokenPair.reserveOf(tokenUSD).raw),
+          JSBI.BigInt(2) // this is b/c the value of LP shares are ~double the value of the tokenUSD they entitle owner to
         ),
         totalSupplyOfStakingToken.raw
       )
@@ -190,10 +190,10 @@ export default function Manage({
   const countUpAmount = stakingInfo?.earnedAmount?.toFixed(6) ?? '0'
   const countUpAmountPrevious = usePrevious(countUpAmount) ?? '0'
 
-  // get the USD value of staked IETH
-  const USDPrice = useUSDCPrice(IETH)
-  const valueOfTotalStakedAmountInUSDC =
-    valueOfTotalStakedAmountInIETH && USDPrice?.quote(valueOfTotalStakedAmountInIETH)
+  // get the USD value of staked tokenUSD
+  // const USDPrice = useUSDCPrice(tokenUSD)
+  // const valueOfTotalStakedAmountInUSDC =
+  //   valueOfTotalStakedAmountInUSD && USDPrice?.quote(valueOfTotalStakedAmountInUSD)
 
   const toggleWalletModal = useWalletModalToggle()
 
@@ -256,9 +256,10 @@ export default function Manage({
                     <AutoColumn gap="sm">
                       <TYPE.body style={{ margin: 0 }}>Total deposits</TYPE.body>
                       <TYPE.body fontSize={24} fontWeight={500}>
-                        {valueOfTotalStakedAmountInUSDC
-                          ? `$${valueOfTotalStakedAmountInUSDC.toFixed(0, { groupSeparator: ',' })}`
-                          : `${valueOfTotalStakedAmountInIETH?.toSignificant(4, { groupSeparator: ',' }) ?? '-'} ETH`}
+                        {/* {valueOfTotalStakedAmountInUSDC
+                          ? `$${valueOfTotalStakedAmountInUSDC.toFixed(0)}`
+                          : `${valueOfTotalStakedAmountInUSD?.toSignificant(4) ?? '-'} ETH`} */}
+                          {`${valueOfTotalStakedAmountInUSD?.toSignificant(4) ?? '-'} uSD`}
                       </TYPE.body>
                     </AutoColumn>
                   </PoolData>
@@ -267,9 +268,9 @@ export default function Manage({
                       <TYPE.body style={{ margin: 0 }}>Pool Rate</TYPE.body>
                       <TYPE.body fontSize={24} fontWeight={500}>
                         {stakingInfo?.totalRewardRate
-                          ?.multiply((60 * 60 * 24 * 7).toString())
-                          ?.toFixed(0, { groupSeparator: ',' }) ?? '-'}
-                        {' GIL / week'}
+                          ?.multiply((60 * 60 * 24).toString())
+                          ?.toFixed(0) ?? '-'}
+                        {' GIL / day'}
                       </TYPE.body>
                     </AutoColumn>
                   </PoolData>
@@ -380,9 +381,9 @@ export default function Manage({
                           </TYPE.largeHeader>
                           <TYPE.black fontSize={16} fontWeight={500} style={{paddingLeft: '100px'}}>
                             {stakingInfo?.rewardRate
-                              ?.multiply((60 * 60 * 24 * 7).toString())
-                              ?.toSignificant(4, { groupSeparator: ',' }) ?? '-'}
-                            {' GIL / week'}
+                              ?.multiply((60 * 60 * 24).toString())
+                              ?.toSignificant(4) ?? '-'}
+                            {' GIL / day'}
                           </TYPE.black>
                         </RowBetween>
                       </AutoColumn>
@@ -405,7 +406,7 @@ export default function Manage({
                             onClick={() => setShowUnstakingModal(true)}
                           >
                             Withdraw
-                </ButtonMateriaPrimary>
+                          </ButtonMateriaPrimary>
                         </>
                       )}
                     </DataRow>
