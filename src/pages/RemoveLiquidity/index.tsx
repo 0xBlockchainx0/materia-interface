@@ -8,7 +8,7 @@ import ReactGA from 'react-ga'
 import { RouteComponentProps } from 'react-router'
 import { Text } from 'rebass'
 import styled, { ThemeContext } from 'styled-components'
-import { ButtonMateriaLight, ButtonMateriaError, ButtonConfirmed, ButtonMateriaPrimary } from '../../components/Button'
+import { ButtonMateriaLight, ButtonMateriaError, ButtonMateriaPrimary, ButtonMateriaConfirmed } from '../../components/Button'
 import { LightCard } from '../../components/Card'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
 import TransactionConfirmationModal, { ConfirmationModalContent } from '../../components/TransactionConfirmationModal'
@@ -724,7 +724,7 @@ export default function RemoveLiquidity({
                     <ButtonMateriaLight onClick={toggleWalletModal}>Connect Wallet</ButtonMateriaLight>
                   ) : (
                       <RowBetween>
-                        <ButtonConfirmed
+                        <ButtonMateriaConfirmed
                           onClick={onAttemptToApprove}
                           confirmed={approval === ApprovalState.APPROVED || signatureData !== null}
                           disabled={approval !== ApprovalState.NOT_APPROVED || signatureData !== null}
@@ -739,7 +739,7 @@ export default function RemoveLiquidity({
                           ) : (
                                 'Approve'
                               )}
-                        </ButtonConfirmed>
+                        </ButtonMateriaConfirmed>
                         <ButtonMateriaError
                           onClick={() => {
                             setShowConfirm(true)

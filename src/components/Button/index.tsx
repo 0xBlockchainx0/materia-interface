@@ -277,13 +277,43 @@ export const ButtonWhite = styled(Base)`
 `
 
 const ButtonConfirmedStyle = styled(Base)`
-  background-color: ${({ theme }) => lighten(0.5, theme.green1)};
-  color: ${({ theme }) => theme.green1};
+  width: auto;
+  background-color: linear-gradient(90deg, ${({ theme }) => lighten(0.5, theme.green1)}, ${({ theme }) => theme.green1});
+  border: 1px solid ${({ theme }) => theme.buttonMateriaErrorBorderColor};
+  color: ${({ theme }) => theme.buttonMateriaPrimaryTextColor};
+  padding: 0.2rem 1.5rem;
+  border-radius: 3px;
+  transition: all 0.3s ease;
+  &:hover:enabled{
+    text-shadow: 0px 0px 2px 0px #111111; 
+    background-color: linear-gradient(90deg, ${({ theme }) => lighten(0.5, theme.green1)}, ${({ theme }) => theme.green1});
+    border-color: ${({ theme }) => theme.buttonMateriaErrorHoverBorderColor};
+    box-shadow: 0px 0px 6px 0px #b0deff;
+  }
+  &:disabled {
+    background-color: linear-gradient(90deg, ${({ theme }) => lighten(0.5, theme.green1)}, ${({ theme }) => theme.green1});
+    opacity: ${({ altDisabledStyle }) => (altDisabledStyle ? '0.7' : '1')};
+    border-radius: 3px;
+  }
+  background-color: ${({ theme }) => theme.green1};
   border: 1px solid ${({ theme }) => theme.green1};
-
+  &:focus {
+    box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.05, theme.green1)};
+    background-color: ${({ theme }) => darken(0.05, theme.green1)};
+  }
+  &:hover {
+    background-color: ${({ theme }) => darken(0.05, theme.green1)};
+  }
+  &:active {
+    box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.1, theme.green1)};
+    background-color: ${({ theme }) => darken(0.1, theme.green1)};
+  }
   &:disabled {
     opacity: 50%;
     cursor: auto;
+    box-shadow: none;
+    background-color: ${({ theme }) => theme.green1};
+    border: 1px solid ${({ theme }) => theme.green1};
   }
 `
 
@@ -328,6 +358,10 @@ const ButtonErrorStyle = styled(Base)`
   }
 `
 
+const ButtonMateriaConfirmedStyle = styled(ButtonConfirmedStyle)`
+
+`
+
 const ButtonMateriaErrorStyle = styled(ButtonErrorStyle)`
   z-index:2;
 `
@@ -364,7 +398,7 @@ export function ButtonMateriaConfirmed({
 }: { hide?: boolean; confirmed?: boolean; altDisabledStyle?: boolean } & ButtonProps) {
   if (!hide) {
     if (confirmed) {
-      return <ButtonConfirmedStyle {...rest} />
+      return <ButtonMateriaConfirmedStyle {...rest} />
     } else {
       return <ButtonMateriaPrimary {...rest} altDisabledStyle={altDisabledStyle} />
     }

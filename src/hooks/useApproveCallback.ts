@@ -2,7 +2,7 @@ import { MaxUint256 } from '@ethersproject/constants'
 import { TransactionResponse } from '@ethersproject/providers'
 import { Trade, TokenAmount, CurrencyAmount, ETHER } from '@materia-dex/sdk'
 import { useCallback, useMemo } from 'react'
-import { PROXY_ADDRESS } from '../constants'
+import { PROXY_ADDRESS, ZERO_ADDRESS } from '../constants'
 import { useTokenAllowance } from '../data/Allowances'
 import { Field } from '../state/swap/actions'
 import { useTransactionAdder, useHasPendingApproval } from '../state/transactions/hooks'
@@ -10,6 +10,7 @@ import { computeSlippageAdjustedAmounts } from '../utils/prices'
 import { calculateGasMargin } from '../utils'
 import { useTokenContract } from './useContract'
 import { useActiveWeb3React } from './index'
+import useCheckIsEthItem from './useCheckIsEthItem'
 
 
 export enum ApprovalState {
@@ -28,11 +29,13 @@ export function useApproveCallback(
   const token = amountToApprove instanceof TokenAmount ? amountToApprove.token : undefined
   const currentAllowance = useTokenAllowance(token, account ?? undefined, spender)
   const pendingApproval = useHasPendingApproval(token?.address, spender)
+  const ethItem = useCheckIsEthItem(token?.address ?? ZERO_ADDRESS)?.ethItem ?? false
 
   // check the current approval status
   const approvalState: ApprovalState = useMemo(() => {
     if (!amountToApprove || !spender) return ApprovalState.UNKNOWN
     if (amountToApprove.currency === ETHER) return ApprovalState.APPROVED
+    if (ethItem) return ApprovalState.APPROVED
     // we might not have enough data to know whether or not we need to approve
     if (!currentAllowance) return ApprovalState.UNKNOWN
 
@@ -93,7 +96,7 @@ export function useApproveCallback(
         console.debug('Failed to approve token', error)
         throw error
       })
-  }, [approvalState, token, tokenContract, amountToApprove, spender, addTransaction])
+  }, [approvalState, token, ethItem, tokenContract, amountToApprove, spender, addTransaction])
 
   return [approvalState, approve]
 }
