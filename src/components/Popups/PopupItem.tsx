@@ -21,8 +21,8 @@ export const StyledClose = styled.div`
 export const Popup = styled.div`
   display: inline-block;
   border: 2px solid ${({ theme }) => theme.cyan2};
-  margin-top: -5rem;
-  margin-bottom: 5rem !important;
+  // margin-top: -5rem;
+  // margin-bottom: 5rem !important;
   width: 100%;
   padding: 1em;
   background-color: ${({ theme }) => theme.bg2};
