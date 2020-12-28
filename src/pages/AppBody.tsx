@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import appBackground from '../assets/images/app-background.png'
+import { useIsClassicMode } from '../state/user/hooks'
 import frameCorner from '../assets/images/trailer_frame_corner.png'
 
 export const BodyWrapper = styled.div`
@@ -117,9 +117,12 @@ const CornerBox = () => {
  * The styled container element that wraps the content of most pages and the tabs.
  */
 export default function AppBody({ children }: { children: React.ReactNode }) {
+  const classicMode = useIsClassicMode()
   return (
     <StyledBox>
-      <CornerBox />
+      {!classicMode && (
+        <CornerBox />
+      )}
       <BodyWrapper>
         {children}
       </BodyWrapper>

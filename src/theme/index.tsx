@@ -48,43 +48,58 @@ export function colors(darkMode: boolean, classicMode: boolean): Colors {
     black,
 
     // text
-    text1: darkMode ? '#FFFFFF' : '#000000',
-    text2: darkMode ? '#C3C5CB' : '#565A69',
-    text3: darkMode ? '#6C7284' : '#888D9B',
-    text4: darkMode ? '#565A69' : '#C3C5CB',
-    text5: darkMode ? '#2C2F36' : '#EDEEF2',
+    text1: classicMode ? '#FFFFFF' : darkMode ? '#FFFFFF' : '#000000',
+    text2: classicMode ? '#C3C5CB' : darkMode ? '#C3C5CB' : '#565A69',
+    text3: classicMode ? '#6C7284' : darkMode ? '#6C7284' : '#888D9B',
+    text4: classicMode ? '#565A69' : darkMode ? '#565A69' : '#C3C5CB',
+    text5: classicMode ? '#2C2F36' : darkMode ? '#2C2F36' : '#EDEEF2',
 
     // backgrounds / greys
-    bg1: darkMode ? '#212429' : '#FFFFFF',
-    bg2: darkMode ? '#001835' : '#F7F8FA',
-    bg3: darkMode ? '#40444F' : '#EDEEF2',
-    bg4: darkMode ? '#565A69' : '#CED0D9',
-    bg5: darkMode ? '#6C7284' : '#888D9B',
-    bg6: darkMode ? "#1a1a1a" : "#1a1a1a",
-    bg7: darkMode ? "#002852" : "#002852",
-    bg8: darkMode ? "rgb(0, 0, 0, 0.5)" : "rgb(255, 255, 255, 0.5)",
+    bg1: classicMode ? '#212429' : darkMode ? '#212429' : '#FFFFFF',
+    bg2: classicMode ? '#001835' : darkMode ? '#001835' : '#F7F8FA',
+    bg3: classicMode ? '#40444F' : darkMode ? '#40444F' : '#EDEEF2',
+    bg4: classicMode ? '#565A69' : darkMode ? '#565A69' : '#CED0D9',
+    bg5: classicMode ? '#6C7284' : darkMode ? '#6C7284' : '#888D9B',
+    bg6: classicMode ? '#1a1a1a' : darkMode ? "#1a1a1a" : "#1a1a1a",
+    bg7: classicMode ? '#002852' : darkMode ? "#002852" : "#002852",
+    bg8: classicMode ? 'rgb(0, 0, 0, 0.5)' : darkMode ? "rgb(0, 0, 0, 0.5)" : "rgb(255, 255, 255, 0.5)",
 
     //specialty colors
-    modalBG: darkMode ? 'rgba(0,0,0,.425)' : 'rgba(0,0,0,0.3)',
-    advancedBG: darkMode ? 'rgba(0,0,0,0.1)' : 'rgba(239,241,244)',
+    modalBG: classicMode ? 'rgba(0,0,0,.425)' : darkMode ? 'rgba(0,0,0,.425)' : 'rgba(0,0,0,0.3)',
+    advancedBG: classicMode ? 'rgba(0,0,0,0.1)' : darkMode ? 'rgba(0,0,0,0.1)' : 'rgba(239,241,244)',
 
     //border
-    border1: darkMode ? '#1e9de3' : '#9cd0f5',
+    border1: classicMode ? '#1e9de3' : darkMode ? '#1e9de3' : '#9cd0f5',
 
     //primary colors
-    primary1: darkMode ? '#2172E5' : '#ff007a',
-    primary2: darkMode ? '#3680E7' : '#FF8CC3',
-    primary3: darkMode ? '#4D8FEA' : '#FF99C9',
-    primary4: darkMode ? '#376bad70' : '#F6DDE8',
-    primary5: darkMode ? '#153d6f70' : '#FDEAF1',
+    primary1: classicMode ? '#2172E5' : darkMode ? '#2172E5' : '#ff007a',
+    primary2: classicMode ? '#3680E7' : darkMode ? '#3680E7' : '#FF8CC3',
+    primary3: classicMode ? '#4D8FEA' : darkMode ? '#4D8FEA' : '#FF99C9',
+    primary4: classicMode ? '#376bad70' : darkMode ? '#376bad70' : '#F6DDE8',
+    primary5: classicMode ? '#153d6f70' : darkMode ? '#153d6f70' : '#FDEAF1',
 
     // color text
-    primaryText1: darkMode ? '#6da8ff' : '#ff007a',
+    primaryText1: classicMode ? '#6da8ff' : darkMode ? '#6da8ff' : '#ff007a',
 
     // secondary colors
-    secondary1: darkMode ? '#2172E5' : '#ff007a',
-    secondary2: darkMode ? '#17000b26' : '#F6DDE8',
-    secondary3: darkMode ? '#17000b26' : '#FDEAF1',
+    secondary1: classicMode ? '#2172E5' : darkMode ? '#2172E5' : '#ff007a',
+    secondary2: classicMode ? '#17000b26' : darkMode ? '#17000b26' : '#F6DDE8',
+    secondary3: classicMode ? '#17000b26' : darkMode ? '#17000b26' : '#FDEAF1',
+
+    // custom
+    buttonMateriaPrimaryBackgroundFirstColor: classicMode ? 'rgba(1, 0, 6, 0.8)' : darkMode ? 'rgba(1, 0, 6, 0.8)' : 'rgba(1, 0, 6, 0.8)',
+    buttonMateriaPrimaryBackgroundSecondColor: classicMode ? 'rgba(0, 23, 67, 0.5)' : darkMode ? 'rgba(0, 23, 67, 0.5)' : 'rgba(0, 23, 67, 0.5)',
+    buttonMateriaPrimaryBackgroundHoverFirstColor: classicMode ? 'rgba(28, 155, 224, 0.8)' : darkMode ? 'rgba(28, 155, 224, 0.8)' : 'rgba(28, 155, 224, 0.8)',
+    buttonMateriaPrimaryBackgroundHoverSecondColor: classicMode ? 'rgba(28, 155, 224, 0.8)' : darkMode ? 'rgba(28, 155, 224, 0.8)' : 'rgba(28, 155, 224, 0.8)',
+    buttonMateriaPrimaryBorderColor: classicMode ? '#054fa4' : darkMode ? '#054fa4' : '#054fa4',
+    buttonMateriaPrimaryHoverBorderColor: classicMode ? '#26aff3' : darkMode ? '#26aff3' : '#26aff3',
+    buttonMateriaPrimaryTextColor: classicMode ? '#ffffff' : darkMode ? '#ffffff' : '#ffffff',
+    buttonMateriaErrorBackgroundFirstColor: classicMode ? 'rgba(251, 62, 73, 0.8)' : darkMode ? 'rgba(251, 62, 73, 0.8)' : 'rgba(251, 62, 73, 0.8)',
+    buttonMateriaErrorBackgroundSecondColor: classicMode ? 'rgba(226, 9, 22, 0.8)' : darkMode ? 'rgba(226, 9, 22, 0.8)' : 'rgba(226, 9, 22, 0.8)',
+    buttonMateriaErrorBackgroundHoverFirstColor: classicMode ? 'rgba(247, 97, 106, 0.8)' : darkMode ? 'rgba(247, 97, 106, 0.8)' : 'rgba(247, 97, 106, 0.8)',
+    buttonMateriaErrorBackgroundHoverSecondColor: classicMode ? 'rgba(247, 44, 56, 0.8)' : darkMode ? 'rgba(247, 44, 56, 0.8)' : 'rgba(247, 44, 56, 0.8)',
+    buttonMateriaErrorBorderColor: classicMode ? '#e43843' : darkMode ? '#e43843' : '#e43843',
+    buttonMateriaErrorHoverBorderColor: classicMode ? '#f9c4c7' : darkMode ? '#f9c4c7' : '#f9c4c7',
 
     // other
     red1: '#FF6871',
@@ -98,20 +113,7 @@ export function colors(darkMode: boolean, classicMode: boolean): Colors {
     cyan2: '#1992d3',
     grey: '#999999',
     transparent: 'transparent',
-    buttonMateriaPrimaryBackgroundFirstColor: 'rgba(1, 0, 6, 0.8)',
-    buttonMateriaPrimaryBackgroundSecondColor: 'rgba(0, 23, 67, 0.5)',
-    buttonMateriaPrimaryBackgroundHoverFirstColor: 'rgba(28, 155, 224, 0.8)',
-    buttonMateriaPrimaryBackgroundHoverSecondColor: 'rgba(1, 43, 119, 0.5)',
-    buttonMateriaPrimaryBorderColor: '#054fa4',
-    buttonMateriaPrimaryHoverBorderColor: '#26aff3',
-    buttonMateriaPrimaryTextColor: '#ffffff',
-    buttonMateriaErrorBackgroundFirstColor: 'rgba(251, 62, 73, 0.8)',
-    buttonMateriaErrorBackgroundSecondColor: 'rgba(226, 9, 22, 0.8)',
-    buttonMateriaErrorBackgroundHoverFirstColor: 'rgba(247, 97, 106, 0.8)',
-    buttonMateriaErrorBackgroundHoverSecondColor: 'rgba(247, 44, 56, 0.8)',
-    buttonMateriaErrorBorderColor: '#e43843',
-    buttonMateriaErrorHoverBorderColor: '#f9c4c7'
-
+    
     // dont wanna forget these blue yet
     // blue4: darkMode ? '#153d6f70' : '#C4D9F8',
     // blue5: darkMode ? '#153d6f70' : '#EBF4FF',
@@ -182,7 +184,12 @@ export function theme(darkMode: boolean, classicMode: boolean): DefaultTheme {
     background: linear-gradient(168deg, rgba(156,208,245,1) 0%, rgba(156,208,245,1) 100%);
     `,
 
-    styledBoxBorder: darkMode ? css`
+    styledBoxBorder: 
+    classicMode ?
+    css`
+      border: 0px;
+    `:
+    darkMode ? css`
       border: 1px solid #1e9de3;
     `:
       css`
@@ -212,13 +219,21 @@ export function theme(darkMode: boolean, classicMode: boolean): DefaultTheme {
         background: linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 100%);
     `,
 
-    backgroundContainer2: darkMode ? css`
+    backgroundContainer2: 
+    classicMode ? css`
+    background: linear-gradient(180deg, rgba(0, 27, 49, 0.5) 0%, rgba(0, 27, 49, 0.5) 100%);
+    `:
+    darkMode ? css`
     background: linear-gradient(180deg, rgba(0, 27, 49, 0.5) 0%, rgba(0, 27, 49, 0.5) 100%);
     `:
       css`
         background: linear-gradient(180deg, rgba(211,221,250) 0%, rgba(211,221,250) 100%);
     `,
-    backgroundContainer3: darkMode ? css`
+    backgroundContainer3: 
+    classicMode ? css`
+    background: linear-gradient(180deg, rgba(0,77,161,1) 0%, rgba(5,30,64,1) 100%);
+    `:
+    darkMode ? css`
     background: linear-gradient(180deg, rgba(0,77,161,1) 0%, rgba(5,30,64,1) 100%);
     `:
       css`
