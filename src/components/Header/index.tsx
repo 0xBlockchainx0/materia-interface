@@ -10,7 +10,7 @@ import styled from 'styled-components'
 import Logo from '../../assets/images/materia-logo-light.png'
 import LogoDark from '../../assets/images/materia-logo.png'
 import { useActiveWeb3React } from '../../hooks'
-import { useDarkModeManager } from '../../state/user/hooks'
+import { useClassicModeManager, useDarkModeManager } from '../../state/user/hooks'
 import { useETHBalances, useAggregateUniBalance } from '../../state/wallet/hooks'
 import { CardNoise } from '../earn/styled'
 import { CountUp } from 'use-count-up'
@@ -186,11 +186,11 @@ const Title = styled.a`
   }
 `
 
-const UniIcon = styled.div`
+const MateriaIcon = styled.div`
   transition: transform 0.3s ease;
-  // :hover {
-  //   transform: rotate(-5deg);
-  // }
+  :hover {
+    transform: rotate(-5deg);
+  }
 `
 
 const activeClassName = 'ACTIVE'
@@ -266,6 +266,7 @@ export default function Header() {
 
   const userEthBalance = useETHBalances(account ? [account] : [])?.[account ?? '']
   const [isDark] = useDarkModeManager()
+  const [isClassic] = useClassicModeManager()
 
   const aggregateBalance: TokenAmount | undefined = useAggregateUniBalance()
 
@@ -277,9 +278,9 @@ export default function Header() {
     <HeaderFrame>
       <HeaderRow>
         <Title href=".">
-          <UniIcon>
-            <img width={'100px'} src={isDark ? LogoDark : Logo} alt="logo" />
-          </UniIcon>
+          <MateriaIcon>
+            <img width={'100px'} src={isDark||isClassic ? LogoDark : Logo} alt="logo" />
+          </MateriaIcon>
         </Title>
         <HeaderLinks>
           <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
