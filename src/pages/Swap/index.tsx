@@ -423,7 +423,7 @@ export default function Swap() {
               </div>
             </ItemColumn>
             <InventoryColumn>
-              <Inventory />
+              <Inventory onCurrencySelect={handleOutputSelect} />
             </InventoryColumn>
             <SwapPageContainer>
               <SwapMenu>
@@ -605,12 +605,12 @@ export default function Swap() {
                           hide={!isValid || approval !== ApprovalState.APPROVED || (priceImpactSeverity > 3 && !isExpertMode)}
                           error={isValid && priceImpactSeverity > 2}
                           showSwap={!(!isValid || approval !== ApprovalState.APPROVED || (priceImpactSeverity > 3 && !isExpertMode))}
-                          onMouseEnter={() => { setIsShown(true); if(classicMode){play()} }}
-                          onMouseLeave={() => { setIsShown(false); if(classicMode){stop() }}}
+                          onMouseEnter={() => { setIsShown(true); if (classicMode) { play() } }}
+                          onMouseLeave={() => { setIsShown(false); if (classicMode) { stop() } }}
                         >
                           {isShown && classicMode && (
-                                  <FFCursorImg src={FFCursor} />
-                                )}
+                            <FFCursorImg src={FFCursor} />
+                          )}
                           <Text fontSize={16} fontWeight={500}>
                             {priceImpactSeverity > 3 && !isExpertMode
                               ? `Price Impact High`
@@ -637,8 +637,8 @@ export default function Swap() {
                                 disabled={!isValid || (priceImpactSeverity > 3 && !isExpertMode) || !!swapCallbackError}
                                 error={isValid && priceImpactSeverity > 2 && !swapCallbackError}
                                 showSwap={!(!isValid || (priceImpactSeverity > 3 && !isExpertMode) || !!swapCallbackError)}
-                                onMouseEnter={() => { setIsShown(true); if(classicMode){play()} }}
-                                onMouseLeave={() => { setIsShown(false); if(classicMode){stop() }}}
+                                onMouseEnter={() => { setIsShown(true); if (classicMode) { play() } }}
+                                onMouseLeave={() => { setIsShown(false); if (classicMode) { stop() } }}
                               >
                                 {isShown && classicMode && (
                                   <FFCursorImg src={FFCursor} />

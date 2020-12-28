@@ -65,14 +65,14 @@ function useSwapCallArguments(
       ? null
       : getEthItemCollectionContract(chainId, ethItemCollection, library, account)
   
-  console.log('*********************************')
+  // console.log('*********************************')
   // console.log('isEthItem: ', isEthItem)
   // console.log('ethItemCollection: ', ethItemCollection)
   // console.log('ethItemObjectId: ', ethItemObjectId?.toString() ?? "0")
   // console.log('needUnwrap: ', needUnwrap)
-  console.log('tokenAddressA: ', tokenAddressA)
-  console.log('tokenAddressB: ', tokenAddressB)
-  console.log('*********************************')
+  // console.log('tokenAddressA: ', tokenAddressA)
+  // console.log('tokenAddressB: ', tokenAddressB)
+  // console.log('*********************************')
 
   return useMemo(() => {
     const swapMethods = []

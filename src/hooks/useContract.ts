@@ -3,8 +3,9 @@ import { abi as STAKING_REWARDS_ABI } from '@uniswap/liquidity-staker/build/Stak
 import { abi as MERKLE_DISTRIBUTOR_ABI } from '@uniswap/merkle-distributor/build/MerkleDistributor.json'
 import { ChainId, IETH } from '@materia-dex/sdk'
 import { abi as IMateriaPairABI } from '@materia-dex/materia-contracts-core/build/IMateriaPair.json'
+import { abi as IERC20WrapperV1_ABI } from '@materia-dex/materia-contracts-proxy/build/IERC20WrapperV1.json'
 import { useMemo } from 'react'
-import { MERKLE_DISTRIBUTOR_ADDRESS, GIL } from '../constants'
+import { MERKLE_DISTRIBUTOR_ADDRESS, GIL, ERC20WRAPPER } from '../constants'
 import {
   ARGENT_WALLET_DETECTOR_ABI,
   ARGENT_WALLET_DETECTOR_MAINNET_ADDRESS
@@ -46,7 +47,7 @@ export function useTokenContract(tokenAddress?: string, withSignerIfPossible?: b
 
 export function useIETHContract(withSignerIfPossible?: boolean): Contract | null {
   const { chainId } = useActiveWeb3React()
-  return useContract(chainId ? IETH[chainId].address : undefined, IETH_ABI, withSignerIfPossible)
+  return useContract(chainId ? ERC20WRAPPER[chainId] : undefined, IERC20WrapperV1_ABI, withSignerIfPossible)
 }
 
 export function useArgentWalletDetectorContract(): Contract | null {
@@ -95,12 +96,6 @@ export function useMerkleDistributorContract(): Contract | null {
   const { chainId } = useActiveWeb3React()
   return useContract(chainId ? MERKLE_DISTRIBUTOR_ADDRESS[chainId] : undefined, MERKLE_DISTRIBUTOR_ABI, true)
 }
-
-//TODO Import Gil ABI
-// export function useGilContract(): Contract | null {
-//   const { chainId } = useActiveWeb3React()
-//   return useContract(chainId ? GIL[chainId].address : undefined, GIL_ABI, true)
-// }
 
 export function useStakingContract(stakingAddress?: string, withSignerIfPossible?: boolean): Contract | null {
   return useContract(stakingAddress, STAKING_REWARDS_ABI, withSignerIfPossible)

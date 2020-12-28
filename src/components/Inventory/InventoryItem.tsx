@@ -5,7 +5,7 @@ import { ButtonMateriaPrimary, ButtonEmpty, ButtonPrimary } from '../Button'
 import { RowBetween, RowFixed } from '../Row'
 import { AutoColumn } from '../Column'
 import { Text } from 'rebass'
-import { ChevronDown, ChevronUp } from 'react-feather'
+import { ChevronDown, ChevronUp, CornerDownRight } from 'react-feather'
 import { Input as NumericalInput } from '../NumericalInput'
 import { Currency, CurrencyAmount, ETHER, JSBI, Token, TokenAmount } from '@materia-dex/sdk'
 import { useActiveWeb3React } from '../../hooks'
@@ -15,6 +15,8 @@ import { useDerivedWrapInfo, useWrapActionHandlers, useWrapState } from '../../s
 import CurrencyInputPanel from '../CurrencyInputPanel'
 import Dropdown from 'react-dropdown';
 import 'react-dropdown/style.css';
+import { ZERO_ADDRESS } from '../../constants'
+import { unwrappedToken } from '../../utils/wrappedCurrency'
 
 
 const Item = styled.div`
@@ -87,6 +89,7 @@ interface InventoryItemProps {
   tokenType?: string | null,
   balance?: string | null,
   wrapped?: boolean,
+  onCurrencySelect: (currency: Currency) => void
 }
 
 export default function InventoryItem({
@@ -97,6 +100,7 @@ export default function InventoryItem({
   tokenAddress,
   balance,
   wrapped = false,
+  onCurrencySelect
 }: InventoryItemProps) {
   const theme = useContext(ThemeContext)
   const [showMore, setShowMore] = useState(false)
@@ -139,7 +143,6 @@ export default function InventoryItem({
 
   const onSelect = useCallback(
     (value) => {
-      console.log(value)
       switch (value.value) {
         case 'ERC20':
           setIsERC20(true)
@@ -159,6 +162,19 @@ export default function InventoryItem({
       }
     },
     [setIsERC20, setIsERC721, setIsERC1155]
+  )
+
+  const onTokenSelection = useCallback(
+    (token) => {
+      let currency = ETHER
+
+      if (token.symbol != 'ETH') {
+        currency = unwrappedToken(token)
+      }
+      
+      onCurrencySelect(currency)
+    },
+    [onCurrencySelect]
   )
 
   return (
@@ -184,6 +200,14 @@ export default function InventoryItem({
             padding="6px 8px"
             borderRadius="12px"
             width="fit-content"
+            onClick={() => { onTokenSelection(token) }}
+          >
+            <CornerDownRight size="20" style={{ marginLeft: '10px' }} />
+          </ButtonEmpty>
+          {/* <ButtonEmpty
+            padding="6px 8px"
+            borderRadius="12px"
+            width="fit-content"
             onClick={() => { setShowMore(!showMore) }}
           >
             {showMore ? (
@@ -196,13 +220,13 @@ export default function InventoryItem({
                   <ChevronDown size="20" style={{ marginLeft: '10px' }} />
                 </>
               )}
-          </ButtonEmpty>
+          </ButtonEmpty> */}
         </ButtonColumn>
       </GridContainer>
 
       {showMore && (
         <AutoColumn>
-          <Text fontSize={10} fontWeight={500} style={{ marginBottom: '10px'}}>{tokenAddress}</Text>
+          <Text fontSize={10} fontWeight={500} style={{ marginBottom: '10px' }}>{tokenAddress}</Text>
           <FixedHeightRow>
             <>
               <NumericalInput
@@ -218,18 +242,18 @@ export default function InventoryItem({
               )}
             </>
           </FixedHeightRow>
-          {tokenAddress!=='' &&(
+          {tokenAddress !== '' && (
             <div className="wrapASBlock">
               <div>Wrap as</div>
-              <div><Dropdown options={options} onChange={onSelect} value={defaultOption} /></div> 
-              <div className="clearfix"></div>           
+              <div><Dropdown options={options} onChange={onSelect} value={defaultOption} /></div>
+              <div className="clearfix"></div>
             </div>
           )}
           <RowBetween marginTop="10px">
             {isERC20 && (
-            <ButtonMateriaPrimary style={{ width: 'inherit', marginRight: '10px'}}>Approve</ButtonMateriaPrimary>
-              )}
-            <ButtonMateriaPrimary style={{ width: 'inherit'}}>Wrap</ButtonMateriaPrimary>
+              <ButtonMateriaPrimary style={{ width: 'inherit', marginRight: '10px' }}>Approve</ButtonMateriaPrimary>
+            )}
+            <ButtonMateriaPrimary style={{ width: 'inherit' }}>Wrap</ButtonMateriaPrimary>
           </RowBetween>
         </AutoColumn>
       )}

@@ -1,5 +1,6 @@
-import { Currency, currencyEquals, ETHER, IETH } from '@materia-dex/sdk'
+import { Currency, currencyEquals, ETHER, IETH, JSBI } from '@materia-dex/sdk'
 import { useMemo } from 'react'
+import { ETHEREUM_OBJECT_ID } from '../constants'
 import { tryParseAmount } from '../state/swap/hooks'
 import { useTransactionAdder } from '../state/transactions/hooks'
 import { useCurrencyBalance } from '../state/wallet/hooks'
@@ -42,9 +43,8 @@ export default function useWrapCallback(
         execute:
           sufficientBalance && inputAmount
             ? async () => {
-                // Da gestire WRAP da ETH in EthItem
                 try {
-                  const txReceipt = await iethContract.deposit({ value: `0x${inputAmount.raw.toString(16)}` })
+                  const txReceipt = await iethContract.mintETH({ value: `0x${inputAmount.raw.toString(16)}` })
                   addTransaction(txReceipt, { summary: `Wrap ${inputAmount.toSignificant(6)} ETH to IETH` })
                 } catch (error) {
                   console.error('Could not deposit', error)
@@ -59,9 +59,9 @@ export default function useWrapCallback(
         execute:
           sufficientBalance && inputAmount
             ? async () => {
-                // Da gestire UNWRAP da EthItem in ETH
                 try {
-                  const txReceipt = await iethContract.withdraw(`0x${inputAmount.raw.toString(16)}`)
+                  const objectId = JSBI.BigInt(ETHEREUM_OBJECT_ID)
+                  const txReceipt = await iethContract.burn(`0x${objectId.toString(16)}`, `0x${inputAmount.raw.toString(16)}`)
                   addTransaction(txReceipt, { summary: `Unwrap ${inputAmount.toSignificant(6)} IETH to ETH` })
                 } catch (error) {
                   console.error('Could not withdraw', error)
