@@ -11,6 +11,7 @@ import { fortmatic, injected, portis } from '../../connectors'
 import { OVERLAY_READY } from '../../connectors/Fortmatic'
 import { SUPPORTED_WALLETS } from '../../constants'
 import usePrevious from '../../hooks/usePrevious'
+import { useLocalStorage } from '../../hooks/useLocalStorage'
 import { ApplicationModal } from '../../state/application/actions'
 import { useModalOpen, useWalletModalToggle } from '../../state/application/hooks'
 import { ExternalLink } from '../../theme'
@@ -19,6 +20,7 @@ import AccountDetails from '../AccountDetails'
 import Modal from '../Modal'
 import Option from './Option'
 import PendingView from './PendingView'
+import DocLink from '../../components/DocLink'
 
 const CloseIcon = styled.div`
   position: absolute;
@@ -107,6 +109,27 @@ const HoverText = styled.div`
   :hover {
     cursor: pointer;
   }
+`
+
+const TermsRow = styled.div`
+  display: flex;
+  //justify-content: center;
+  margin-bottom: 10px;
+  padding: 1rem;
+  background-color: ${({ theme }) => theme.primary4};
+  border-radius: 5px;
+  border: 1px solid ${({ theme }) => theme.border1};
+`
+
+const TermsText = styled.span`
+  margin-left: 1rem;
+`
+
+const WarningRow = styled.div`
+  margin-bottom: 1rem;
+  color: ${({ theme }) => theme.red1};
+  display: flex;
+  justify-content: center;
 `
 
 const WALLET_VIEWS = {
@@ -202,8 +225,13 @@ export default function WalletModal({
     })
   }, [toggleWalletModal])
 
+  const [termAndConditionsAccepted, setTermAndConditionsAccepted]
+    = useLocalStorage('termAndConditionsAccepted', false)
+
+  const [warning, setWarning] = useState(false);
+
   // get wallets user can switch too, depending on device/browser
-  function getOptions() {
+  function getOptions(isAccepted: boolean) {
     const isMetamask = window.ethereum && window.ethereum.isMetaMask
     return Object.keys(SUPPORTED_WALLETS).map(key => {
       const option = SUPPORTED_WALLETS[key]
@@ -218,6 +246,10 @@ export default function WalletModal({
           return (
             <Option
               onClick={() => {
+                if (isAccepted !== true) {
+                  setWarning(true)
+                  return
+                }
                 option.connector !== connector && !option.href && tryActivation(option.connector)
               }}
               id={`connect-${key}`}
@@ -271,6 +303,12 @@ export default function WalletModal({
           <Option
             id={`connect-${key}`}
             onClick={() => {
+
+              if (termAndConditionsAccepted !== true) {
+                setWarning(true)
+                return
+              }
+
               option.connector === connector
                 ? setWalletView(WALLET_VIEWS.ACCOUNT)
                 : !option.href && tryActivation(option.connector)
@@ -300,8 +338,8 @@ export default function WalletModal({
             {error instanceof UnsupportedChainIdError ? (
               <h5>Please connect to the appropriate Ethereum network.</h5>
             ) : (
-              'Error connecting. Try refreshing the page.'
-            )}
+                'Error connecting. Try refreshing the page.'
+              )}
           </ContentWrapper>
         </UpperSection>
       )
@@ -334,11 +372,33 @@ export default function WalletModal({
             </HoverText>
           </HeaderRow>
         ) : (
-          <HeaderRow>
-            <HoverText>Connect to a wallet</HoverText>
-          </HeaderRow>
-        )}
+            <HeaderRow>
+              <HoverText>Connect to a wallet</HoverText>
+            </HeaderRow>
+          )}
         <ContentWrapper>
+
+          <TermsRow>
+            <label>
+              <input
+                name="isGoing"
+                type="checkbox"
+                checked={termAndConditionsAccepted}
+                onChange={(event) => {
+                  if (event.target.checked) {
+                    setWarning(false)
+                  }
+                  setTermAndConditionsAccepted(event.target.checked)
+                }} />
+              <TermsText>
+                I accept {'  '}
+                <DocLink title="ToS" href={process.env.PUBLIC_URL + '/docs/terms_of_service.pdf'} />
+                {'  '} and {'  '}
+                <DocLink title="Privacy Policy" href={process.env.PUBLIC_URL + '/docs/privacy_policy.pdf'} />
+              </TermsText>
+            </label>
+          </TermsRow>
+          {warning ? <WarningRow>Please accept terms and conditions first</WarningRow> : ''}
           {walletView === WALLET_VIEWS.PENDING ? (
             <PendingView
               connector={pendingWallet}
@@ -347,8 +407,8 @@ export default function WalletModal({
               tryActivation={tryActivation}
             />
           ) : (
-            <OptionGrid>{getOptions()}</OptionGrid>
-          )}
+              <OptionGrid>{getOptions(termAndConditionsAccepted)}</OptionGrid>
+            )}
           {walletView !== WALLET_VIEWS.PENDING && (
             <Blurb>
               <span>New to Ethereum? &nbsp;</span>{' '}

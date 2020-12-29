@@ -73,7 +73,7 @@ const PoolData = styled(DataCard)`
 `
 
 const VoteCard = styled(DataCard)`
-  background: radial-gradient(76.02% 75.41% at 1.84% 0%, #27ae60 0%, #000000 100%);
+  // background: radial-gradient(76.02% 75.41% at 1.84% 0%, #27ae60 0%, #000000 100%);
   overflow: hidden;
 `
 
@@ -150,7 +150,7 @@ export default function Manage({
   const [currencyA, currencyB, currencyUSD] = [useCurrency(currencyIdA), useCurrency(currencyIdB), useCurrency(USD[chainId ?? 1].address)]
   const tokenA = wrappedCurrency(currencyA ?? undefined, chainId)
   const tokenB = wrappedCurrency(currencyB ?? undefined, chainId)
-  
+
   const [, stakingTokenPair] = usePair(tokenA, tokenB)
   const stakingInfo = useStakingInfo(stakingTokenPair)?.[0]
 
@@ -259,7 +259,7 @@ export default function Manage({
                         {/* {valueOfTotalStakedAmountInUSDC
                           ? `$${valueOfTotalStakedAmountInUSDC.toFixed(0)}`
                           : `${valueOfTotalStakedAmountInUSD?.toSignificant(4) ?? '-'} ETH`} */}
-                          {`${valueOfTotalStakedAmountInUSD?.toSignificant(4) ?? '-'} uSD`}
+                        {`${valueOfTotalStakedAmountInUSD?.toSignificant(4) ?? '-'} uSD`}
                       </TYPE.body>
                     </AutoColumn>
                   </PoolData>
@@ -379,7 +379,7 @@ export default function Manage({
                               duration={1}
                             />
                           </TYPE.largeHeader>
-                          <TYPE.black fontSize={16} fontWeight={500} style={{paddingLeft: '100px'}}>
+                          <TYPE.black fontSize={16} fontWeight={500} style={{ paddingLeft: '100px' }}>
                             {stakingInfo?.rewardRate
                               ?.multiply((60 * 60 * 24).toString())
                               ?.toSignificant(4) ?? '-'}

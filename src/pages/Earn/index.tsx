@@ -41,7 +41,6 @@ const EarnCard = styled(DataCard)`
   overflow: hidden;
 `
 
-
 const PoolSection = styled.div`
   display: grid;
   grid-template-columns: 1fr;
@@ -73,7 +72,7 @@ export default function Earn() {
   }
 `
 
-const ItemColumn = styled.div`
+  const ItemColumn = styled.div`
   @media (min-width: 601px) and (max-width: 1350px) {
     // display: none;
   }
@@ -84,7 +83,7 @@ const ItemColumn = styled.div`
 `
 
   const stakingRewardsExist = Boolean(typeof chainId === 'number' && (STAKING_REWARDS_INFO[chainId]?.length ?? 0) > 0)
-  
+
   return (
     <>
       <AppBody>
