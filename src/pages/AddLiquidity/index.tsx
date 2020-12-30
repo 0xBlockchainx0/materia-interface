@@ -14,7 +14,7 @@ import { MinimalPositionCard } from '../../components/PositionCard'
 import Row, { AutoRow, RowBetween, RowFlat, RowFixed } from '../../components/Row'
 import { darken } from 'polished'
 
-import { PROXY_ADDRESS, ZERO_ADDRESS } from '../../constants'
+import { ORCHESTRATOR_ADDRESS, ZERO_ADDRESS } from '../../constants'
 import { PairState } from '../../data/Reserves'
 import { useCurrency } from '../../hooks/Tokens'
 import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
@@ -25,7 +25,7 @@ import { useDerivedMintInfo, useMintActionHandlers, useMintState } from '../../s
 
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import { useIsExpertMode, useUserSlippageTolerance } from '../../state/user/hooks'
-import { calculateGasMargin, calculateSlippageAmount, getEthItemCollectionContract, getProxyContract } from '../../utils'
+import { calculateGasMargin, calculateSlippageAmount, getEthItemCollectionContract, getOrchestratorContract } from '../../utils'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { wrappedCurrency } from '../../utils/wrappedCurrency'
 import { Dots } from '../Pool/styleds'
@@ -267,14 +267,14 @@ export default function AddLiquidity({
   )
 
   // check whether the user has approved the router on the tokens
-  const [approvalA, approveACallback] = useApproveCallback(parsedAmounts[Field.CURRENCY_A], PROXY_ADDRESS)
-  const [approvalB, approveBCallback] = useApproveCallback(parsedAmounts[Field.CURRENCY_B], PROXY_ADDRESS)
+  const [approvalA, approveACallback] = useApproveCallback(parsedAmounts[Field.CURRENCY_A], ORCHESTRATOR_ADDRESS)
+  const [approvalB, approveBCallback] = useApproveCallback(parsedAmounts[Field.CURRENCY_B], ORCHESTRATOR_ADDRESS)
 
   const addTransaction = useTransactionAdder()
 
   async function onAdd(checkIsEthItem: Result | undefined) {
     if (!chainId || !library || !account) return
-    const router = getProxyContract(chainId, library, account)
+    const router = getOrchestratorContract(chainId, library, account)
     const isEthItem: boolean = checkIsEthItem?.ethItem
     const ethItemCollection: string = checkIsEthItem?.collection
     const ethItemObjectId: JSBI = JSBI.BigInt(checkIsEthItem?.itemId ?? 0)
@@ -317,21 +317,17 @@ export default function AddLiquidity({
       ethItemArgs = web3.eth.abi.encodeParameters(
         ["uint256", "bytes"],
         [operation, web3.eth.abi.encodeParameters(
-          ["address", "address", "uint", "uint", "uint", "uint", "address", "uint", "bool"],
+          ["uint", "uint", "uint", "address", "uint"],
           [
-            wrappedCurrency(currencyA, chainId)?.address ?? '',
-            wrappedCurrency(currencyB, chainId)?.address ?? '',
             parsedAmountA.raw.toString(),
             parsedAmountB.raw.toString(),
             amountsMin[Field.CURRENCY_A].toString(),
-            amountsMin[Field.CURRENCY_B].toString(),
             account,
-            deadline.toHexString(),
-            true
+            deadline.toHexString()
           ]
         )]
       )
-      args = [account, PROXY_ADDRESS, ethItemObjectId?.toString() ?? "0", parsedAmountB.raw.toString(), ethItemArgs]
+      args = [account, ORCHESTRATOR_ADDRESS, ethItemObjectId?.toString() ?? "0", parsedAmountB.raw.toString(), ethItemArgs]
       value = null
     }
     else {
@@ -341,10 +337,9 @@ export default function AddLiquidity({
         method = router.addLiquidityETH
         methodName = "addLiquidityETH"
         args = [
-          wrappedCurrency(tokenBIsETH ? currencyA : currencyB, chainId)?.address ?? '', // token
           (tokenBIsETH ? parsedAmountA : parsedAmountB).raw.toString(), // token desired
-          amountsMin[tokenBIsETH ? Field.CURRENCY_A : Field.CURRENCY_B].toString(), // token min
           amountsMin[tokenBIsETH ? Field.CURRENCY_B : Field.CURRENCY_A].toString(), // eth min
+          amountsMin[tokenBIsETH ? Field.CURRENCY_A : Field.CURRENCY_B].toString(), // token min
           account,
           deadline.toHexString()
         ]
@@ -354,15 +349,13 @@ export default function AddLiquidity({
         method = router.addLiquidity
         methodName = "addLiquidity"
         args = [
-          wrappedCurrency(currencyA, chainId)?.address ?? '',
           wrappedCurrency(currencyB, chainId)?.address ?? '',
-          parsedAmountA.raw.toString(),
           parsedAmountB.raw.toString(),
-          amountsMin[Field.CURRENCY_A].toString(),
+          parsedAmountA.raw.toString(),
           amountsMin[Field.CURRENCY_B].toString(),
+          amountsMin[Field.CURRENCY_A].toString(),
           account,
           deadline.toHexString(),
-          false
         ]
         value = null
       }
@@ -370,6 +363,8 @@ export default function AddLiquidity({
 
     // console.log('*********************************')
     // console.log('isETH: ', isETH)
+    // console.log('CurrencyA: ', currencyA)
+    // console.log('CurrencyB: ', currencyB)
     // console.log('CurrencyA ETH: ', currencyA === ETHER)
     // console.log('CurrencyB ETH: ', currencyB === ETHER)
     // console.log('isEthItem: ', isEthItem)

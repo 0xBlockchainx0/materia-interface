@@ -6,7 +6,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { abi as IMateriaProxyABI } from '@materia-dex/materia-contracts-proxy/build/IMateriaProxy.json'
 import { abi as IERC1155ABI } from '@materia-dex/materia-contracts-proxy/build/IERC1155.json'
 import { abi as IERC20WrapperV1 } from '@materia-dex/materia-contracts-proxy/build/IERC20WrapperV1.json'
-import { PROXY_ADDRESS } from '../constants'
+import { ORCHESTRATOR_ADDRESS } from '../constants'
 import { ChainId, JSBI, Percent, Token, CurrencyAmount, Currency, ETHER } from '@materia-dex/sdk'
 import { TokenAddressMap } from '../state/lists/hooks'
 
@@ -100,8 +100,8 @@ export function getContract(address: string, ABI: any, library: Web3Provider, ac
 }
 
 // account is optional
-export function getProxyContract(_: number, library: Web3Provider, account?: string): Contract {
-  return getContract(PROXY_ADDRESS, IMateriaProxyABI, library, account)
+export function getOrchestratorContract(_: number, library: Web3Provider, account?: string): Contract {
+  return getContract(ORCHESTRATOR_ADDRESS, IMateriaProxyABI, library, account)
 }
 
 export function getEthItemCollectionContract(_: number, ethItemCollectionAddress: string, library: Web3Provider, account?: string): Contract {

@@ -1,6 +1,6 @@
 import { Contract } from 'ethers'
 import { Result, useSingleCallResult } from '../state/multicall/hooks'
-import { getProxyContract } from '../utils'
+import { getOrchestratorContract } from '../utils'
 import { useActiveWeb3React } from './index'
 
 /**
@@ -8,7 +8,7 @@ import { useActiveWeb3React } from './index'
  */
 export default function useCheckIsEthItem(tokenAddress: string): Result | undefined {
   const { account, chainId, library } = useActiveWeb3React()
-  const contract: Contract | null = (!library || !account || !chainId) ? null : getProxyContract(chainId, library, account)
+  const contract: Contract | null = (!library || !account || !chainId) ? null : getOrchestratorContract(chainId, library, account)
   const { result: checkIsEthItem } = useSingleCallResult(contract, 'isEthItem', [tokenAddress])
 
   return checkIsEthItem

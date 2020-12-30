@@ -4,7 +4,7 @@ import { JSBI, Percent, Router, SwapParameters, Trade, TradeType } from '@materi
 import { useMemo } from 'react'
 import { BIPS_BASE, INITIAL_ALLOWED_SLIPPAGE, ZERO_ADDRESS } from '../constants'
 import { useTransactionAdder } from '../state/transactions/hooks'
-import { calculateGasMargin, getEthItemCollectionContract, getProxyContract, isAddress, shortenAddress } from '../utils'
+import { calculateGasMargin, getEthItemCollectionContract, getOrchestratorContract, isAddress, shortenAddress } from '../utils'
 import isZero from '../utils/isZero'
 import { useActiveWeb3React } from './index'
 import useTransactionDeadline from './useTransactionDeadline'
@@ -50,7 +50,7 @@ function useSwapCallArguments(
   const { address: recipientAddress } = useENS(recipientAddressOrName)
   const recipient = recipientAddressOrName === null ? account : recipientAddress
   const deadline = useTransactionDeadline()
-  const contract: Contract | null = (!library || !account || !chainId) ? null : getProxyContract(chainId, library, account)
+  const contract: Contract | null = (!library || !account || !chainId) ? null : getOrchestratorContract(chainId, library, account)
   const tokenAddressA = tradeWithoutInteroperable?.route.path[0]?.address ?? ZERO_ADDRESS
   const tokenAddressB = tradeWithoutInteroperable?.route.path && tradeWithoutInteroperable?.route.path.length > 0 ? tradeWithoutInteroperable?.route.path[tradeWithoutInteroperable?.route.path.length - 1]?.address ?? ZERO_ADDRESS : ZERO_ADDRESS
   const tokenAIsEthItem = useCheckIsEthItem(tokenAddressA)
