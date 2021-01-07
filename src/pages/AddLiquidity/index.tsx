@@ -216,6 +216,8 @@ export default function AddLiquidity({
     currencies,
     pair,
     pairState,
+    pairWithoutInteroperable,
+    pairStateWithoutInteroperable,
     currencyBalances,
     parsedAmounts,
     price,
@@ -313,7 +315,6 @@ export default function AddLiquidity({
       estimate = collectionContract.estimateGas.safeTransferFrom
       method = collectionContract.safeTransferFrom
       methodName = "safeTransferFrom"
-      //(address tokenA, address tokenB, uint amountADesired, uint amountBDesired, uint amountAMin, uint amountBMin, address to, uint deadline, bool callback)
       ethItemArgs = web3.eth.abi.encodeParameters(
         ["uint256", "bytes"],
         [operation, web3.eth.abi.encodeParameters(
@@ -361,19 +362,19 @@ export default function AddLiquidity({
       }
     }
 
-    // console.log('*********************************')
-    // console.log('isETH: ', isETH)
-    // console.log('CurrencyA: ', currencyA)
-    // console.log('CurrencyB: ', currencyB)
-    // console.log('CurrencyA ETH: ', currencyA === ETHER)
-    // console.log('CurrencyB ETH: ', currencyB === ETHER)
-    // console.log('isEthItem: ', isEthItem)
-    // console.log('ethItemCollection: ', ethItemCollection)
-    // console.log('ethItemObjectId: ', ethItemObjectId?.toString() ?? "0")
-    // console.log('methodName: ', methodName)
-    // console.log('args: ', args)
-    // console.log('value: ', value)
-    // console.log('*********************************')
+    console.log('*********************************')
+    console.log('isETH: ', isETH)
+    console.log('CurrencyA: ', currencyA)
+    console.log('CurrencyB: ', currencyB)
+    console.log('CurrencyA ETH: ', currencyA === ETHER)
+    console.log('CurrencyB ETH: ', currencyB === ETHER)
+    console.log('isEthItem: ', isEthItem)
+    console.log('ethItemCollection: ', ethItemCollection)
+    console.log('ethItemObjectId: ', ethItemObjectId?.toString() ?? "0")
+    console.log('methodName: ', methodName)
+    console.log('args: ', args)
+    console.log('value: ', value)
+    console.log('*********************************')
 
     setAttemptingTxn(true)
     await estimate(...args, value ? { value } : {})

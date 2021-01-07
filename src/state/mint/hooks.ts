@@ -5,6 +5,8 @@ import { PairState, usePair } from '../../data/Reserves'
 import { useTotalSupply } from '../../data/TotalSupply'
 
 import { useActiveWeb3React } from '../../hooks'
+import { useCurrency } from '../../hooks/Tokens'
+import useGetEthItemInteroperable from '../../hooks/useGetEthItemInteroperable'
 import { wrappedCurrency, wrappedCurrencyAmount } from '../../utils/wrappedCurrency'
 import { AppDispatch, AppState } from '../index'
 import { tryParseAmount } from '../swap/hooks'
@@ -25,6 +27,8 @@ export function useDerivedMintInfo(
   currencies: { [field in Field]?: Currency }
   pair?: Pair | null
   pairState: PairState
+  pairWithoutInteroperable?: Pair | null
+  pairStateWithoutInteroperable: PairState
   currencyBalances: { [field in Field]?: CurrencyAmount }
   parsedAmounts: { [field in Field]?: CurrencyAmount }
   price?: Price
@@ -48,8 +52,19 @@ export function useDerivedMintInfo(
     [currencyA, currencyB]
   )
 
+  // wrapped currencies
+  const wrappedCurrencyA = wrappedCurrency(currencyA, chainId)
+  const wrappedCurrencyB = wrappedCurrency(currencyB, chainId)
+
+  // interoperables
+  const currencyAInteroperableAddress = useGetEthItemInteroperable(wrappedCurrencyA?.address)
+  const currencyBInteroperableAddress = useGetEthItemInteroperable(wrappedCurrencyB?.address)
+  const currencyAInteroperable = useCurrency(currencyAInteroperableAddress)
+  const currencyBInteroperable = useCurrency(currencyBInteroperableAddress)
+  
   // pair
-  const [pairState, pair] = usePair(currencies[Field.CURRENCY_A], currencies[Field.CURRENCY_B])
+  const [pairStateWithoutInteroperable, pairWithoutInteroperable] = usePair(currencies[Field.CURRENCY_A], currencies[Field.CURRENCY_B])
+  const [pairState, pair] = usePair(currencyAInteroperable ?? currencies[Field.CURRENCY_A], currencyBInteroperable ?? currencies[Field.CURRENCY_B])
   const totalSupply = useTotalSupply(pair?.liquidityToken)
 
   const noLiquidity: boolean =
@@ -158,6 +173,8 @@ export function useDerivedMintInfo(
     currencies,
     pair,
     pairState,
+    pairWithoutInteroperable,
+    pairStateWithoutInteroperable,
     currencyBalances,
     parsedAmounts,
     price,

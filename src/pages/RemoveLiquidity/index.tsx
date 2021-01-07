@@ -239,7 +239,7 @@ export default function RemoveLiquidity({
     if (!currencyAmountA || !currencyAmountB) {
       throw new Error('missing currency amounts')
     }
-    const router = getOrchestratorContract(chainId, library, account)
+    const orchestrator = getOrchestratorContract(chainId, library, account)
 
     const amountsMin = {
       [Field.CURRENCY_A]: calculateSlippageAmount(currencyAmountA, allowedSlippage)[0],
@@ -260,10 +260,8 @@ export default function RemoveLiquidity({
     if (approval === ApprovalState.APPROVED) {
       // removeLiquidityETH
       if (oneCurrencyIsETH) {
-        // methodNames = ['removeLiquidityETH', 'removeLiquidityETHSupportingFeeOnTransferTokens']
         methodNames = ['removeLiquidityETH']
         args = [
-          currencyBIsETH ? tokenA.address : tokenB.address,
           liquidityAmount.raw.toString(),
           amountsMin[currencyBIsETH ? Field.CURRENCY_A : Field.CURRENCY_B].toString(),
           amountsMin[currencyBIsETH ? Field.CURRENCY_B : Field.CURRENCY_A].toString(),
@@ -275,11 +273,10 @@ export default function RemoveLiquidity({
       else {
         methodNames = ['removeLiquidity']
         args = [
-          tokenA.address,
           tokenB.address,
           liquidityAmount.raw.toString(),
-          amountsMin[Field.CURRENCY_A].toString(),
           amountsMin[Field.CURRENCY_B].toString(),
+          amountsMin[Field.CURRENCY_A].toString(),
           account,
           deadline.toHexString()
         ]
@@ -289,13 +286,11 @@ export default function RemoveLiquidity({
     else if (signatureData !== null) {
       // removeLiquidityETHWithPermit
       if (oneCurrencyIsETH) {
-        // methodNames = ['removeLiquidityETHWithPermit', 'removeLiquidityETHWithPermitSupportingFeeOnTransferTokens']
         methodNames = ['removeLiquidityETHWithPermit']
         args = [
-          currencyBIsETH ? tokenA.address : tokenB.address,
           liquidityAmount.raw.toString(),
-          amountsMin[currencyBIsETH ? Field.CURRENCY_A : Field.CURRENCY_B].toString(),
           amountsMin[currencyBIsETH ? Field.CURRENCY_B : Field.CURRENCY_A].toString(),
+          amountsMin[currencyBIsETH ? Field.CURRENCY_A : Field.CURRENCY_B].toString(),
           account,
           signatureData.deadline,
           false,
@@ -308,11 +303,10 @@ export default function RemoveLiquidity({
       else {
         methodNames = ['removeLiquidityWithPermit']
         args = [
-          tokenA.address,
           tokenB.address,
           liquidityAmount.raw.toString(),
-          amountsMin[Field.CURRENCY_A].toString(),
           amountsMin[Field.CURRENCY_B].toString(),
+          amountsMin[Field.CURRENCY_A].toString(),
           account,
           signatureData.deadline,
           false,
@@ -327,7 +321,7 @@ export default function RemoveLiquidity({
 
     const safeGasEstimates: (BigNumber | undefined)[] = await Promise.all(
       methodNames.map(methodName =>
-        router.estimateGas[methodName](...args)
+        orchestrator.estimateGas[methodName](...args)
           .then(calculateGasMargin)
           .catch(error => {
             console.error(`estimateGas failed`, methodName, args, error)
@@ -348,7 +342,7 @@ export default function RemoveLiquidity({
       const safeGasEstimate = safeGasEstimates[indexOfSuccessfulEstimation]
 
       setAttemptingTxn(true)
-      await router[methodName](...args, {
+      await orchestrator[methodName](...args, {
         gasLimit: safeGasEstimate
       })
         .then((response: TransactionResponse) => {

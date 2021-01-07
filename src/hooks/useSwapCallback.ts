@@ -52,14 +52,10 @@ function useSwapCallArguments(
   const deadline = useTransactionDeadline()
   const contract: Contract | null = (!library || !account || !chainId) ? null : getOrchestratorContract(chainId, library, account)
   const tokenAddressA = tradeWithoutInteroperable?.route.path[0]?.address ?? ZERO_ADDRESS
-  const tokenAddressB = tradeWithoutInteroperable?.route.path && tradeWithoutInteroperable?.route.path.length > 0 ? tradeWithoutInteroperable?.route.path[tradeWithoutInteroperable?.route.path.length - 1]?.address ?? ZERO_ADDRESS : ZERO_ADDRESS
   const tokenAIsEthItem = useCheckIsEthItem(tokenAddressA)
-  const tokenBIsEthItem = useCheckIsEthItem(tokenAddressB)
   const isEthItem: boolean = tokenAIsEthItem?.ethItem
   const ethItemCollection: string = tokenAIsEthItem?.collection
   const ethItemObjectId: JSBI = JSBI.BigInt(tokenAIsEthItem?.itemId ?? 0)
-  // const needUnwrap: boolean = tokenBIsEthItem?.ethItem ? false : true
-  const needUnwrap: boolean = false
   const collectionContract: Contract | null =
     (!library || !account || !chainId || !isEthItem)
       ? null
@@ -69,9 +65,7 @@ function useSwapCallArguments(
   // console.log('isEthItem: ', isEthItem)
   // console.log('ethItemCollection: ', ethItemCollection)
   // console.log('ethItemObjectId: ', ethItemObjectId?.toString() ?? "0")
-  // console.log('needUnwrap: ', needUnwrap)
   // console.log('tokenAddressA: ', tokenAddressA)
-  // console.log('tokenAddressB: ', tokenAddressB)
   // console.log('*********************************')
 
   return useMemo(() => {
@@ -86,19 +80,8 @@ function useSwapCallArguments(
         allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
         recipient,
         deadline: deadline.toNumber()
-      }, isEthItem, needUnwrap, ethItemObjectId?.toString() ?? "0")
+      }, isEthItem, ethItemObjectId?.toString() ?? "0")
     )
-
-    // if (!isEthItem && tradeWithoutInteroperable.tradeType === TradeType.EXACT_INPUT) {
-    //   swapMethods.push(
-    //     Router.swapCallParameters(tradeWithoutInteroperable, {
-    //       feeOnTransfer: true,
-    //       allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
-    //       recipient,
-    //       deadline: deadline.toNumber()
-    //     }, isEthItem, needUnwrap, ethItemObjectId?.toString() ?? "0")
-    //   )
-    // }
 
     if (isEthItem) {
       if (!collectionContract) { return [] }

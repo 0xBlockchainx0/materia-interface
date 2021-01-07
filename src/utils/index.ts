@@ -3,7 +3,7 @@ import { getAddress } from '@ethersproject/address'
 import { AddressZero } from '@ethersproject/constants'
 import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
 import { BigNumber } from '@ethersproject/bignumber'
-import { abi as IMateriaProxyABI } from '@materia-dex/materia-contracts-proxy/build/IMateriaProxy.json'
+import { abi as IMateriaOrchestratorABI } from '@materia-dex/materia-contracts-proxy/build/IMateriaOrchestrator.json'
 import { abi as IERC1155ABI } from '@materia-dex/materia-contracts-proxy/build/IERC1155.json'
 import { abi as IERC20WrapperV1 } from '@materia-dex/materia-contracts-proxy/build/IERC20WrapperV1.json'
 import { ORCHESTRATOR_ADDRESS } from '../constants'
@@ -101,7 +101,7 @@ export function getContract(address: string, ABI: any, library: Web3Provider, ac
 
 // account is optional
 export function getOrchestratorContract(_: number, library: Web3Provider, account?: string): Contract {
-  return getContract(ORCHESTRATOR_ADDRESS, IMateriaProxyABI, library, account)
+  return getContract(ORCHESTRATOR_ADDRESS, IMateriaOrchestratorABI, library, account)
 }
 
 export function getEthItemCollectionContract(_: number, ethItemCollectionAddress: string, library: Web3Provider, account?: string): Contract {
