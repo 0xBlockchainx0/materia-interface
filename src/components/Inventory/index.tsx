@@ -4,6 +4,8 @@ import styled, { ThemeContext } from 'styled-components'
 import { useUserTokens } from '../../state/wallet/hooks';
 import { TYPE } from '../../theme';
 import InventoryItem from './InventoryItem'
+import { Scrollbars } from 'react-custom-scrollbars';
+
 
 const InventoryContainer = styled.div`
   @media (max-width: 1350px) {
@@ -13,7 +15,8 @@ const InventoryContainer = styled.div`
   padding-top: 0.5rem;
   overflow-y: auto;
   max-height: 550px;
-`
+  overflow: hidden;
+  `
 
 const InventoryTitle = styled.div`
   margin-bottom: 10px;
@@ -34,6 +37,7 @@ export default function Inventory({
       <InventoryTitle style={{ textShadow: '1px 1px #053472' }}>
         <TYPE.body color={theme.text1} fontWeight={500} fontSize={15} >Inventory</TYPE.body>
       </InventoryTitle>
+      <Scrollbars autoHeight autoHeightMin={500} autoHide>
       {
         userTokens && userTokens.length > 0 ? (
           userTokens.map((userToken: any) => {
@@ -48,6 +52,7 @@ export default function Inventory({
           :
           (<TYPE.body color={theme.text1} fontWeight={400} fontSize={12}>No items in your inventory</TYPE.body>)
       }
+      </Scrollbars>
     </InventoryContainer>
   )
 }

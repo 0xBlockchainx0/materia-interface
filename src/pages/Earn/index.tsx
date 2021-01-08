@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { FittedAutoColumn } from '../../components/Column'
+import { AutoColumn, FittedAutoColumn } from '../../components/Column'
 import styled, { ThemeContext } from 'styled-components'
 import { STAKING_REWARDS_INFO, useStakingInfo } from '../../state/stake/hooks'
 import { TYPE, ExternalLink } from '../../theme'
@@ -97,10 +97,10 @@ export default function Earn() {
           </ItemColumn>
           <InfoContainer>
             <EarnCard>
-              <CardSection>
-                <FittedAutoColumn gap="md">
+            <CardSection>
+                <AutoColumn gap="md">
                   <RowBetween>
-                    <TYPE.white fontWeight={600}>Materia liquidity mining</TYPE.white>
+                  <TYPE.white fontWeight={600}>Materia liquidity mining</TYPE.white>
                   </RowBetween>
                   <RowBetween>
                     <TYPE.white fontSize={14}>
@@ -115,25 +115,31 @@ export default function Earn() {
                     <br />
                     <TYPE.white fontSize={14}>Read more about DFO</TYPE.white>
                   </ExternalLink>
-                </FittedAutoColumn>
+                </AutoColumn>
               </CardSection>
               <CardBGImage />
               <CardNoise />
             </EarnCard>
           </InfoContainer>
           <PoolsContainer>
-            <PoolSection>
-              {stakingRewardsExist && stakingInfos?.length === 0 ? (
-                <Loader style={{ margin: 'auto' }} />
-              ) : !stakingRewardsExist ? (
-                'No active rewards'
-              ) : (
-                    stakingInfos?.map(stakingInfo => {
-                      // need to sort by added liquidity here
-                      return <PoolCard key={stakingInfo.stakingRewardAddress} stakingInfo={stakingInfo} />
-                    })
-                  )}
-            </PoolSection>
+            <AutoColumn gap="lg" style={{ width: '100%', maxWidth: '720px' }}>
+              <DataRow style={{ alignItems: 'baseline' }}>
+                <TYPE.mediumHeader style={{ marginTop: '0.5rem' }}>Participating pools</TYPE.mediumHeader>
+                <Countdown exactEnd={stakingInfos?.[0]?.periodFinish} />
+              </DataRow>
+              <PoolSection>
+                {stakingRewardsExist && stakingInfos?.length === 0 ? (
+                  <Loader style={{ margin: 'auto' }} />
+                ) : !stakingRewardsExist ? (
+                  'No active rewards'
+                ) : (
+                      stakingInfos?.map(stakingInfo => {
+                        // need to sort by added liquidity here
+                        return <PoolCard key={stakingInfo.stakingRewardAddress} stakingInfo={stakingInfo} />
+                      })
+                    )}
+              </PoolSection>
+            </AutoColumn>
           </PoolsContainer>
         </LMGridContainer>
       </AppBody>
