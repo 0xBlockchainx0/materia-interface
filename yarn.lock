@@ -2680,10 +2680,10 @@
     yargs-unparser "^1.6.0"
     yn "^3.1.1"
 
-"@materia-dex/sdk@^1.3.2":
-  version "1.3.2"
-  resolved "https://registry.yarnpkg.com/@materia-dex/sdk/-/sdk-1.3.2.tgz#8304c9f41b8dcc132d262cc3568c04a7e1292057"
-  integrity sha512-GEByUaE+1IW12tNPyQZ6flE9gF/IYozb2q6aS7sgmg8l83bpZWPQXR1o4AJssVdDtPA8Bg0kaW2zbZuv/VMtjg==
+"@materia-dex/sdk@^1.3.3":
+  version "1.3.3"
+  resolved "https://registry.yarnpkg.com/@materia-dex/sdk/-/sdk-1.3.3.tgz#28774bbd7e37c7f827de7762c7675915a1a10a03"
+  integrity sha512-DVpBL4Mn0heqEuaWI7D2LSNsaTrX1mCDiVNXS4ErOfASNBsfDw01hJJq4pWCnkiGYlV4MzdA6fdBmEUc7KoNTA==
   dependencies:
     "@materia-dex/materia-contracts-core" "^1.1.1"
     "@materia-dex/materia-contracts-proxy" "^1.1.3"
