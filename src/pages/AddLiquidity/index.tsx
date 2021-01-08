@@ -570,7 +570,7 @@ export default function AddLiquidity({
               <CardNoise />
             </VoteCard>
             <AutoColumn gap="lg" justify="center">
-              <AutoColumn gap="lg" style={{ width: '100%' }}>
+              <AutoColumn gap="0.5rem" style={{ width: '100%' }}>
                 <TitleRow style={{ marginTop: '1rem' }} padding={'0'}>
                   <HideSmall>
                     <TYPE.mediumHeader style={{ marginTop: '0.5rem', justifySelf: 'flex-start' }}>

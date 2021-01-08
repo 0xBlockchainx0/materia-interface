@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, ETHER, JSBI, Pair, Percent, Price, TokenAmount } from '@materia-dex/sdk'
+import { Currency, CurrencyAmount, ETHER, IETH, JSBI, Pair, Percent, Price, TokenAmount } from '@materia-dex/sdk'
 import { useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { PairState, usePair } from '../../data/Reserves'
@@ -59,16 +59,19 @@ export function useDerivedMintInfo(
   // interoperables
   const currencyAInteroperableAddress = useGetEthItemInteroperable(wrappedCurrencyA?.address)
   const currencyBInteroperableAddress = useGetEthItemInteroperable(wrappedCurrencyB?.address)
-  const currencyAInteroperable = useCurrency(currencyAInteroperableAddress)
-  const currencyBInteroperable = useCurrency(currencyBInteroperableAddress)
   
+  let currencyAInteroperable = useCurrency(currencyAInteroperableAddress)
+  let currencyBInteroperable = useCurrency(currencyBInteroperableAddress)
+
+  currencyAInteroperable = currencyA === ETHER ? IETH[chainId ?? 1] : currencyAInteroperable
+  currencyBInteroperable = currencyB === ETHER ? IETH[chainId ?? 1] : currencyBInteroperable
+
   // pair
   const [pairStateWithoutInteroperable, pairWithoutInteroperable] = usePair(currencies[Field.CURRENCY_A], currencies[Field.CURRENCY_B])
   const [pairState, pair] = usePair(currencyAInteroperable ?? currencies[Field.CURRENCY_A], currencyBInteroperable ?? currencies[Field.CURRENCY_B])
   const totalSupply = useTotalSupply(pair?.liquidityToken)
 
-  const noLiquidity: boolean =
-    pairState === PairState.NOT_EXISTS || Boolean(totalSupply && JSBI.equal(totalSupply.raw, ZERO))
+  const noLiquidity: boolean = pairState === PairState.NOT_EXISTS || Boolean(totalSupply && JSBI.equal(totalSupply.raw, ZERO))
 
   // balances
   const balances = useCurrencyBalances(account ?? undefined, [
@@ -167,6 +170,19 @@ export function useDerivedMintInfo(
   if (currencyBAmount && currencyBalances?.[Field.CURRENCY_B]?.lessThan(currencyBAmount)) {
     error = 'Insufficient ' + currencies[Field.CURRENCY_B]?.symbol + ' balance'
   }
+
+  console.log('*********************************')
+  console.log('CurrencyA: ', currencyA)
+  console.log('CurrencyB: ', currencyB)
+  console.log('CurrencyA ETH: ', currencyA === ETHER)
+  console.log('CurrencyB ETH: ', currencyB === ETHER)
+  console.log('currencyAInteroperableAddress: ', currencyAInteroperableAddress)
+  console.log('currencyBInteroperableAddress: ', currencyBInteroperableAddress)
+  console.log('pair: ', pair)
+  console.log('pairState: ', pairState)
+  console.log('pairWithoutInteroperable: ', pairWithoutInteroperable)
+  console.log('pairStateWithoutInteroperable: ', pairStateWithoutInteroperable)
+  console.log('*********************************')
 
   return {
     dependentField,

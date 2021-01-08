@@ -51,7 +51,7 @@ const PoolGridContainer = styled.div`
   grid-template-columns: 30px 30% auto;
 
   @media (min-width: 601px) and (max-width: 1350px) {
-    grid-template-columns: 50px auto !important;
+    grid-template-columns: 30px 30% auto !important;
   }
   @media (max-width: 600px) {
     grid-template-columns: auto !important;
@@ -537,7 +537,7 @@ export default function RemoveLiquidity({
             </VoteCard>
             <AutoColumn gap="lg" justify="center">
               {pair ? (
-                <AutoColumn style={{ minWidth: '20rem', width: '100%', maxWidth: '400px', marginTop: '1rem' }}>
+                <AutoColumn style={{ width: '100%', maxWidth: '400px', marginTop: '1rem' }}>
                   <MinimalPositionCard showUnwrapped={oneCurrencyIsIETH} pair={pair} />
                 </AutoColumn>
               ) : null}
