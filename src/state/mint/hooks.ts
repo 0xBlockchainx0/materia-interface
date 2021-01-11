@@ -108,6 +108,7 @@ export function useDerivedMintInfo(
       return undefined
     }
   }, [noLiquidity, otherTypedValue, currencies, dependentField, independentAmount, currencyA, chainId, currencyB, pair])
+
   const parsedAmounts: { [field in Field]: CurrencyAmount | undefined } = {
     [Field.CURRENCY_A]: independentField === Field.CURRENCY_A ? independentAmount : dependentAmount,
     [Field.CURRENCY_B]: independentField === Field.CURRENCY_A ? dependentAmount : independentAmount
@@ -171,18 +172,18 @@ export function useDerivedMintInfo(
     error = 'Insufficient ' + currencies[Field.CURRENCY_B]?.symbol + ' balance'
   }
 
-  console.log('*********************************')
-  console.log('CurrencyA: ', currencyA)
-  console.log('CurrencyB: ', currencyB)
-  console.log('CurrencyA ETH: ', currencyA === ETHER)
-  console.log('CurrencyB ETH: ', currencyB === ETHER)
-  console.log('currencyAInteroperableAddress: ', currencyAInteroperableAddress)
-  console.log('currencyBInteroperableAddress: ', currencyBInteroperableAddress)
-  console.log('pair: ', pair)
-  console.log('pairState: ', pairState)
-  console.log('pairWithoutInteroperable: ', pairWithoutInteroperable)
-  console.log('pairStateWithoutInteroperable: ', pairStateWithoutInteroperable)
-  console.log('*********************************')
+  // console.log('*********************************')
+  // console.log('CurrencyA: ', currencyA)
+  // console.log('CurrencyB: ', currencyB)
+  // console.log('CurrencyA ETH: ', currencyA === ETHER)
+  // console.log('CurrencyB ETH: ', currencyB === ETHER)
+  // console.log('currencyAInteroperableAddress: ', currencyAInteroperableAddress)
+  // console.log('currencyBInteroperableAddress: ', currencyBInteroperableAddress)
+  // console.log('pair: ', pair)
+  // console.log('pairState: ', pairState)
+  // console.log('pairWithoutInteroperable: ', pairWithoutInteroperable)
+  // console.log('pairStateWithoutInteroperable: ', pairStateWithoutInteroperable)
+  // console.log('*********************************')
 
   return {
     dependentField,

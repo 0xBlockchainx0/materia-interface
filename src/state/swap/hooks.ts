@@ -131,14 +131,14 @@ export function useDerivedSwapInfo(): {
   const inputCurrencyInteroperable = useCurrency(inputCurrencyInteroperableId)
   const outputCurrencyInteroperable = useCurrency(outputCurrencyInteroperableId)
 
-  console.log('***************************************')
-  console.log('inputCurrencyId: ', inputCurrencyId)
-  console.log('inputCurrencyInteroperableId: ', inputCurrencyInteroperableId)
-  console.log('inputCurrencyInteroperable: ', inputCurrencyInteroperable)
-  console.log('outputCurrencyId: ', outputCurrencyId)
-  console.log('outputCurrencyInteroperableId: ', outputCurrencyInteroperableId)
-  console.log('outputCurrencyInteroperable: ', outputCurrencyInteroperable)
-  console.log('***************************************')
+  // console.log('***************************************')
+  // console.log('inputCurrencyId: ', inputCurrencyId)
+  // console.log('inputCurrencyInteroperableId: ', inputCurrencyInteroperableId)
+  // console.log('inputCurrencyInteroperable: ', inputCurrencyInteroperable)
+  // console.log('outputCurrencyId: ', outputCurrencyId)
+  // console.log('outputCurrencyInteroperableId: ', outputCurrencyInteroperableId)
+  // console.log('outputCurrencyInteroperable: ', outputCurrencyInteroperable)
+  // console.log('***************************************')
 
   const recipientLookup = useENS(recipient ?? undefined)
   const to: string | null = (recipient === null ? account : recipientLookup.address) ?? null

@@ -364,6 +364,8 @@ export default function AddLiquidity({
 
     console.log('*********************************')
     console.log('isETH: ', isETH)
+    console.log('approvalA: ', approvalA)
+    console.log('approvalB: ', approvalB)
     console.log('CurrencyA: ', currencyA)
     console.log('CurrencyB: ', currencyB)
     console.log('CurrencyA ETH: ', currencyA === ETHER)

@@ -99,6 +99,16 @@ export function useApproveCallback(
       })
   }, [approvalState, token, ethItem, tokenContract, amountToApprove, spender, addTransaction])
 
+
+  // console.log('*********************************')
+  // console.log('ethItem: ', ethItem)
+  // console.log('isUSD: ', isUSD)
+  // console.log('token: ', token?.address)
+  // console.log('approvalState: ', approvalState)
+  // console.log('spender: ', spender)
+  // console.log('account: ', account)
+  // console.log('*********************************')
+
   return [approvalState, approve]
 }
 

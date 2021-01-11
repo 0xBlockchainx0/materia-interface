@@ -20,7 +20,7 @@ import Row, { RowBetween, RowFixed } from '../../components/Row'
 
 import Slider from '../../components/Slider'
 import CurrencyLogo from '../../components/CurrencyLogo'
-import { ORCHESTRATOR_ADDRESS } from '../../constants'
+import { ORCHESTRATOR_ADDRESS, USD } from '../../constants'
 import { useActiveWeb3React } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
 import { usePairContract } from '../../hooks/useContract'
@@ -32,7 +32,7 @@ import { StyledInternalLink, TYPE } from '../../theme'
 import { calculateGasMargin, calculateSlippageAmount, getOrchestratorContract } from '../../utils'
 import { currencyId } from '../../utils/currencyId'
 import useDebouncedChangeHandler from '../../utils/useDebouncedChangeHandler'
-import { wrappedCurrency } from '../../utils/wrappedCurrency'
+import { unwrappedToken, wrappedCurrency } from '../../utils/wrappedCurrency'
 import AppBody from '../AppBody'
 import { ClickableText, MaxButton, Wrapper } from '../Pool/styleds'
 import { useApproveCallback, ApprovalState } from '../../hooks/useApproveCallback'
@@ -250,7 +250,10 @@ export default function RemoveLiquidity({
     const liquidityAmount = parsedAmounts[Field.LIQUIDITY]
     if (!liquidityAmount) throw new Error('missing liquidity amount')
 
-    const currencyBIsETH = currencyB === ETHER
+    const currencyUSD = USD[chainId ?? 1]
+    const currencyBIsUSD =  wrappedCurrency(currencyB, chainId)?.address == currencyUSD.address
+
+    const currencyBIsETH = currencyB === ETHER    
     const oneCurrencyIsETH = currencyA === ETHER || currencyBIsETH
 
     if (!tokenA || !tokenB) throw new Error('could not wrap')
@@ -273,10 +276,10 @@ export default function RemoveLiquidity({
       else {
         methodNames = ['removeLiquidity']
         args = [
-          tokenB.address,
+          currencyBIsUSD ? tokenA.address : tokenB.address,
           liquidityAmount.raw.toString(),
-          amountsMin[Field.CURRENCY_B].toString(),
-          amountsMin[Field.CURRENCY_A].toString(),
+          amountsMin[currencyBIsUSD ? Field.CURRENCY_A : Field.CURRENCY_B].toString(),
+          amountsMin[currencyBIsUSD ? Field.CURRENCY_B : Field.CURRENCY_A].toString(),
           account,
           deadline.toHexString()
         ]
@@ -299,14 +302,14 @@ export default function RemoveLiquidity({
           signatureData.s
         ]
       }
-      // removeLiquidityETHWithPermit
+      // removeLiquidityWithPermit
       else {
         methodNames = ['removeLiquidityWithPermit']
         args = [
-          tokenB.address,
+          currencyBIsUSD ? tokenA.address : tokenB.address,
           liquidityAmount.raw.toString(),
-          amountsMin[Field.CURRENCY_B].toString(),
-          amountsMin[Field.CURRENCY_A].toString(),
+          amountsMin[currencyBIsUSD ? Field.CURRENCY_A : Field.CURRENCY_B].toString(),
+          amountsMin[currencyBIsUSD ? Field.CURRENCY_B : Field.CURRENCY_A].toString(),
           account,
           signatureData.deadline,
           false,
@@ -318,6 +321,21 @@ export default function RemoveLiquidity({
     } else {
       throw new Error('Attempting to confirm without approval or a signature. Please contact support.')
     }
+
+    console.log('*********************************')
+    console.log('oneCurrencyIsETH: ', oneCurrencyIsETH)
+    console.log('tokenA: ', tokenA.address)
+    console.log('tokenB: ', tokenB.address)
+    console.log('currencyA: ', currencyA)
+    console.log('currencyB: ', currencyB)
+    console.log('currencyUSD: ', currencyUSD)
+    console.log('CurrencyA ETH: ', currencyA === ETHER)
+    console.log('CurrencyB ETH: ', currencyB === ETHER)
+    console.log('CurrencyA USD: ', currencyA === currencyUSD)
+    console.log('CurrencyB USD: ', currencyB === currencyUSD)
+    console.log('methodNames: ', methodNames)
+    console.log('args: ', args)
+    console.log('*********************************')
 
     const safeGasEstimates: (BigNumber | undefined)[] = await Promise.all(
       methodNames.map(methodName =>
