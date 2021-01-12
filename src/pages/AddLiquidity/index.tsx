@@ -17,7 +17,7 @@ import { darken } from 'polished'
 import { ORCHESTRATOR_ADDRESS, ZERO_ADDRESS } from '../../constants'
 import { PairState } from '../../data/Reserves'
 import { useCurrency } from '../../hooks/Tokens'
-import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
+import { ApprovalState, useApproveCallback, useInteroperableApproveCallback } from '../../hooks/useApproveCallback'
 import useTransactionDeadline from '../../hooks/useTransactionDeadline'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import { Field } from '../../state/mint/actions'
@@ -216,8 +216,6 @@ export default function AddLiquidity({
     currencies,
     pair,
     pairState,
-    pairWithoutInteroperable,
-    pairStateWithoutInteroperable,
     currencyBalances,
     parsedAmounts,
     price,
@@ -225,7 +223,13 @@ export default function AddLiquidity({
     liquidityMinted,
     poolTokenPercentage,
     error
-  } = useDerivedMintInfo(currencyA ?? undefined, currencyB ?? undefined)
+  } = useDerivedMintInfo(currencyA ?? undefined, currencyB ?? undefined, true)
+  const {
+    pair: originalPair,
+    pairState: originalPairState,
+    currencyBalances: originalCurrencyBalances,
+    parsedAmounts: originalParsedAmounts
+  } = useDerivedMintInfo(currencyA ?? undefined, currencyB ?? undefined, false)
   const currencyBAddress = currencyB ? (wrappedCurrency(currencyB, chainId)?.address ?? ZERO_ADDRESS) : ZERO_ADDRESS
   const checkIsEthItem = useCheckIsEthItem(currencyBAddress)
   const { onFieldAInput, onFieldBInput } = useMintActionHandlers(noLiquidity)
@@ -247,30 +251,66 @@ export default function AddLiquidity({
     [dependentField]: noLiquidity ? otherTypedValue : parsedAmounts[dependentField]?.toSignificant(6) ?? ''
   }
 
+  // console.log('*********************************')
+  // console.log('noLiquidity: ', noLiquidity)
+  // console.log('typedValue: ', typedValue)
+  // console.log('otherTypedValue: ', otherTypedValue)
+  // console.log('independentField: ', independentField)
+  // console.log('dependentField: ', dependentField)
+  // console.log('parsedAmounts: ', parsedAmounts)
+  // console.log('formattedAmounts: ', formattedAmounts)
+  // console.log('*********************************')
+
   // get the max amounts user can add
   const maxAmounts: { [field in Field]?: TokenAmount } = [Field.CURRENCY_A, Field.CURRENCY_B].reduce(
     (accumulator, field) => {
       return {
         ...accumulator,
-        [field]: maxAmountSpend(currencyBalances[field])
+        [field]: maxAmountSpend(originalCurrencyBalances[field])
       }
     },
     {}
   )
+
+  // // get the max amounts user can add
+  // const maxAmounts: { [field in Field]?: TokenAmount } = [Field.CURRENCY_A, Field.CURRENCY_B].reduce(
+  //   (accumulator, field) => {
+  //     return {
+  //       ...accumulator,
+  //       [field]: maxAmountSpend(currencyBalances[field])
+  //     }
+  //   },
+  //   {}
+  // )
 
   const atMaxAmounts: { [field in Field]?: TokenAmount } = [Field.CURRENCY_A, Field.CURRENCY_B].reduce(
     (accumulator, field) => {
       return {
         ...accumulator,
-        [field]: maxAmounts[field]?.equalTo(parsedAmounts[field] ?? '0')
+        [field]: maxAmounts[field]?.equalTo(originalParsedAmounts[field] ?? '0')
       }
     },
     {}
   )
 
+  // const atMaxAmounts: { [field in Field]?: TokenAmount } = [Field.CURRENCY_A, Field.CURRENCY_B].reduce(
+  //   (accumulator, field) => {
+  //     return {
+  //       ...accumulator,
+  //       [field]: maxAmounts[field]?.equalTo(parsedAmounts[field] ?? '0')
+  //     }
+  //   },
+  //   {}
+  // )
+
   // check whether the user has approved the router on the tokens
-  const [approvalA, approveACallback] = useApproveCallback(parsedAmounts[Field.CURRENCY_A], ORCHESTRATOR_ADDRESS)
-  const [approvalB, approveBCallback] = useApproveCallback(parsedAmounts[Field.CURRENCY_B], ORCHESTRATOR_ADDRESS)
+  const [approvalA, approveACallback] = useInteroperableApproveCallback(originalParsedAmounts[Field.CURRENCY_A], parsedAmounts[Field.CURRENCY_A], ORCHESTRATOR_ADDRESS)
+  const [approvalB, approveBCallback] = useInteroperableApproveCallback(originalParsedAmounts[Field.CURRENCY_B], parsedAmounts[Field.CURRENCY_B], ORCHESTRATOR_ADDRESS)
+  // const [approvalA, approveACallback] = useApproveCallback(parsedAmounts[Field.CURRENCY_A], ORCHESTRATOR_ADDRESS)
+  // const [approvalB, approveBCallback] = useApproveCallback(parsedAmounts[Field.CURRENCY_B], ORCHESTRATOR_ADDRESS)
+
+  // const [originalApprovalA, originalApproveACallback] = useApproveCallback(originalParsedAmounts[Field.CURRENCY_A], ORCHESTRATOR_ADDRESS)
+  // const [originalApprovalB, originalApproveBCallback] = useApproveCallback(originalParsedAmounts[Field.CURRENCY_B], ORCHESTRATOR_ADDRESS)
 
   const addTransaction = useTransactionAdder()
 
@@ -362,21 +402,27 @@ export default function AddLiquidity({
       }
     }
 
-    // console.log('*********************************')
+    console.log('*********************************')
     // console.log('isETH: ', isETH)
-    // console.log('approvalA: ', approvalA)
-    // console.log('approvalB: ', approvalB)
-    // console.log('CurrencyA: ', currencyA)
-    // console.log('CurrencyB: ', currencyB)
-    // console.log('CurrencyA ETH: ', currencyA === ETHER)
-    // console.log('CurrencyB ETH: ', currencyB === ETHER)
+    console.log('approvalA: ', approvalA)
+    console.log('approvalB: ', approvalB)
+    // console.log('originalApprovalA: ', originalApprovalA)
+    // console.log('originalApprovalB: ', originalApprovalB)
+    // console.log('parsedAmountsA: ', parsedAmounts[Field.CURRENCY_A])
+    // console.log('parsedAmountsB: ', parsedAmounts[Field.CURRENCY_B])
+    console.log('originalParsedAmountsA: ', originalParsedAmounts[Field.CURRENCY_A])
+    console.log('originalParsedAmountsB: ', originalParsedAmounts[Field.CURRENCY_B])
+    // console.log('currencyA: ', currencyA)
+    // console.log('currencyB: ', currencyB)
+    // console.log('currencyA ETH: ', currencyA === ETHER)
+    // console.log('currencyB ETH: ', currencyB === ETHER)
     // console.log('isEthItem: ', isEthItem)
     // console.log('ethItemCollection: ', ethItemCollection)
     // console.log('ethItemObjectId: ', ethItemObjectId?.toString() ?? "0")
     // console.log('methodName: ', methodName)
     // console.log('args: ', args)
     // console.log('value: ', value)
-    // console.log('*********************************')
+    console.log('*********************************')
 
     setAttemptingTxn(true)
     await estimate(...args, value ? { value } : {})

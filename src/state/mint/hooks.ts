@@ -9,7 +9,7 @@ import { useCurrency } from '../../hooks/Tokens'
 import useGetEthItemInteroperable from '../../hooks/useGetEthItemInteroperable'
 import { wrappedCurrency, wrappedCurrencyAmount } from '../../utils/wrappedCurrency'
 import { AppDispatch, AppState } from '../index'
-import { tryParseAmount } from '../swap/hooks'
+import { tryParseAmount, trySaferParseAmount, trySaferParseAmountIncludingZeroValues } from '../swap/hooks'
 import { useCurrencyBalances } from '../wallet/hooks'
 import { Field, typeInput } from './actions'
 
@@ -21,14 +21,13 @@ export function useMintState(): AppState['mint'] {
 
 export function useDerivedMintInfo(
   currencyA: Currency | undefined,
-  currencyB: Currency | undefined
+  currencyB: Currency | undefined,
+  interoperable: boolean | false
 ): {
   dependentField: Field
   currencies: { [field in Field]?: Currency }
   pair?: Pair | null
   pairState: PairState
-  pairWithoutInteroperable?: Pair | null
-  pairStateWithoutInteroperable: PairState
   currencyBalances: { [field in Field]?: CurrencyAmount }
   parsedAmounts: { [field in Field]?: CurrencyAmount }
   price?: Price
@@ -59,16 +58,21 @@ export function useDerivedMintInfo(
   // interoperables
   const currencyAInteroperableAddress = useGetEthItemInteroperable(wrappedCurrencyA?.address)
   const currencyBInteroperableAddress = useGetEthItemInteroperable(wrappedCurrencyB?.address)
-  
-  let currencyAInteroperable = useCurrency(currencyAInteroperableAddress)
-  let currencyBInteroperable = useCurrency(currencyBInteroperableAddress)
+
+  let currencyAInteroperable: Currency | undefined = useCurrency(currencyAInteroperableAddress) ?? undefined
+  let currencyBInteroperable: Currency | undefined = useCurrency(currencyBInteroperableAddress) ?? undefined
 
   currencyAInteroperable = currencyA === ETHER ? IETH[chainId ?? 1] : currencyAInteroperable
   currencyBInteroperable = currencyB === ETHER ? IETH[chainId ?? 1] : currencyBInteroperable
+  
+  const [interoperablePairState, interoperablePair] = usePair(currencyAInteroperable ?? currencies[Field.CURRENCY_A], currencyBInteroperable ?? currencies[Field.CURRENCY_B])
+  const [originalPairState, originalPair] = usePair(currencies[Field.CURRENCY_A], currencies[Field.CURRENCY_B])
 
   // pair
-  const [pairStateWithoutInteroperable, pairWithoutInteroperable] = usePair(currencies[Field.CURRENCY_A], currencies[Field.CURRENCY_B])
-  const [pairState, pair] = usePair(currencyAInteroperable ?? currencies[Field.CURRENCY_A], currencyBInteroperable ?? currencies[Field.CURRENCY_B])
+  const [pairState, pair] = interoperable 
+    ? [interoperablePairState, interoperablePair]
+    : [originalPairState, originalPair]
+  
   const totalSupply = useTotalSupply(pair?.liquidityToken)
 
   const noLiquidity: boolean = pairState === PairState.NOT_EXISTS || Boolean(totalSupply && JSBI.equal(totalSupply.raw, ZERO))
@@ -82,21 +86,45 @@ export function useDerivedMintInfo(
     [Field.CURRENCY_A]: balances[0],
     [Field.CURRENCY_B]: balances[1]
   }
-
+  
   // amounts
-  const independentAmount: CurrencyAmount | undefined = tryParseAmount(typedValue, currencies[independentField])
+  const indipendentAmountField = interoperable 
+    ? ((independentField === Field.CURRENCY_A ? currencyAInteroperable : currencyBInteroperable) ?? currencies[independentField]) 
+    : currencies[independentField]
+  // const independentAmount: CurrencyAmount | undefined = tryParseAmount(typedValue, currencies[independentField])
+  const independentAmount: CurrencyAmount | undefined = trySaferParseAmount(
+    typedValue, 
+    indipendentAmountField, 
+    (independentField === Field.CURRENCY_A ? currencyAInteroperable : currencyBInteroperable)?.decimals ?? indipendentAmountField?.decimals
+  )
   const dependentAmount: CurrencyAmount | undefined = useMemo(() => {
     if (noLiquidity) {
-      if (otherTypedValue && currencies[dependentField]) {
-        return tryParseAmount(otherTypedValue, currencies[dependentField])
+      // if (otherTypedValue && currencies[dependentField]) {
+      //   return tryParseAmount(otherTypedValue, currencies[dependentField])
+      // }
+      if (!interoperable) {
+        if (currencies[dependentField]) {
+          return trySaferParseAmountIncludingZeroValues(
+            (otherTypedValue == '' ? '0' : otherTypedValue) ?? '0', 
+            currencies[dependentField], 
+            (dependentField === Field.CURRENCY_B ? currencyBInteroperable : currencyAInteroperable)?.decimals ?? currencies[dependentField]?.decimals
+          )
+        }
+      }
+      else {
+        if (otherTypedValue && currencies[dependentField]) {
+          return tryParseAmount(otherTypedValue, currencies[dependentField])
+        }
       }
       return undefined
     } else if (independentAmount) {
       // we wrap the currencies just to get the price in terms of the other token
       const wrappedIndependentAmount = wrappedCurrencyAmount(independentAmount, chainId)
-      const [tokenA, tokenB] = [wrappedCurrency(currencyA, chainId), wrappedCurrency(currencyB, chainId)]
+      // const [tokenA, tokenB] = [wrappedCurrency(currencyA, chainId), wrappedCurrency(currencyB, chainId)]
+      const [tokenA, tokenB] = [wrappedCurrency(interoperable ? currencyAInteroperable ?? currencyA : currencyA, chainId), wrappedCurrency(interoperable ? currencyBInteroperable ?? currencyB : currencyB, chainId)]
       if (tokenA && tokenB && wrappedIndependentAmount && pair) {
-        const dependentCurrency = dependentField === Field.CURRENCY_B ? currencyB : currencyA
+        // const dependentCurrency = dependentField === Field.CURRENCY_B ? currencyB : currencyA
+        const dependentCurrency = dependentField === Field.CURRENCY_B ? (interoperable ? currencyBInteroperable ?? currencyB : currencyB) : (interoperable ? currencyAInteroperable ?? currencyA : currencyA)
         const dependentTokenAmount =
           dependentField === Field.CURRENCY_B
             ? pair.priceOf(tokenA).quote(wrappedIndependentAmount)
@@ -107,7 +135,16 @@ export function useDerivedMintInfo(
     } else {
       return undefined
     }
-  }, [noLiquidity, otherTypedValue, currencies, dependentField, independentAmount, currencyA, chainId, currencyB, pair])
+  }, [noLiquidity, otherTypedValue, currencies, dependentField, independentAmount, currencyA, currencyAInteroperable, chainId, currencyB, currencyBInteroperable, pair, interoperable])
+
+  // console.log('*********************************')
+  // console.log('interoperable: ', interoperable)
+  // console.log('indipendentAmountField: ', indipendentAmountField)
+  // console.log('independentField: ', independentField)
+  // console.log('dependentField: ', dependentField)
+  // console.log('independentAmount: ', independentAmount)
+  // console.log('dependentAmount: ', dependentAmount)
+  // console.log('*********************************')
 
   const parsedAmounts: { [field in Field]: CurrencyAmount | undefined } = {
     [Field.CURRENCY_A]: independentField === Field.CURRENCY_A ? independentAmount : dependentAmount,
@@ -181,8 +218,6 @@ export function useDerivedMintInfo(
   // console.log('currencyBInteroperableAddress: ', currencyBInteroperableAddress)
   // console.log('pair: ', pair)
   // console.log('pairState: ', pairState)
-  // console.log('pairWithoutInteroperable: ', pairWithoutInteroperable)
-  // console.log('pairStateWithoutInteroperable: ', pairStateWithoutInteroperable)
   // console.log('*********************************')
 
   return {
@@ -190,8 +225,6 @@ export function useDerivedMintInfo(
     currencies,
     pair,
     pairState,
-    pairWithoutInteroperable,
-    pairStateWithoutInteroperable,
     currencyBalances,
     parsedAmounts,
     price,
