@@ -40,13 +40,13 @@ export function useApproveCallback(
     // we might not have enough data to know whether or not we need to approve
     if (!currentAllowance) return ApprovalState.UNKNOWN
 
-    console.log('*********************************')
-    console.log('amountToApprove.currency: ', amountToApprove.currency)
-    console.log('amountToApprove.token: ', token)
-    console.log('amountToApprove: ', amountToApprove?.toSignificant(6))
-    console.log('currentAllowance: ', currentAllowance?.toSignificant(6))
-    console.log('currentAllowance.lessThan(amountToApprove): ', currentAllowance.lessThan(amountToApprove))
-    console.log('*********************************')
+    // console.log('*********************************')
+    // console.log('amountToApprove.currency: ', amountToApprove.currency)
+    // console.log('amountToApprove.token: ', token)
+    // console.log('amountToApprove: ', amountToApprove?.toSignificant(6))
+    // console.log('currentAllowance: ', currentAllowance?.toSignificant(6))
+    // console.log('currentAllowance.lessThan(amountToApprove): ', currentAllowance.lessThan(amountToApprove))
+    // console.log('*********************************')
 
     // amountToApprove will be defined if currentAllowance is
     return currentAllowance.lessThan(amountToApprove)
@@ -141,16 +141,16 @@ export function useInteroperableApproveCallback(
     // we might not have enough data to know whether or not we need to approve
     if (!currentAllowance) return ApprovalState.UNKNOWN
 
-    console.log('*********************************')
-    console.log('amountToApprove.currency: ', amountToApprove.currency)
-    console.log('interoperableAmountToApprove.currency: ', interoperableAmountToApprove.currency)
-    console.log('amountToApprove.token: ', token)
-    console.log('amountToApprove: ', amountToApprove?.toSignificant(6))
-    console.log('interoperableAmountToApprove: ', interoperableAmountToApprove?.toSignificant(6))
-    console.log('currentAllowance: ', currentAllowance?.toSignificant(6))
-    console.log('currentAllowance.lessThan(amountToApprove): ', currentAllowance.lessThan(amountToApprove))
-    console.log('currentAllowance.lessThan(interoperableAmountToApprove): ', currentAllowance.lessThan(interoperableAmountToApprove))
-    console.log('*********************************')
+    // console.log('*********************************')
+    // console.log('amountToApprove.currency: ', amountToApprove.currency)
+    // console.log('interoperableAmountToApprove.currency: ', interoperableAmountToApprove.currency)
+    // console.log('amountToApprove.token: ', token)
+    // console.log('amountToApprove: ', amountToApprove?.toSignificant(6))
+    // console.log('interoperableAmountToApprove: ', interoperableAmountToApprove?.toSignificant(6))
+    // console.log('currentAllowance: ', currentAllowance?.toSignificant(6))
+    // console.log('currentAllowance.lessThan(amountToApprove): ', currentAllowance.lessThan(amountToApprove))
+    // console.log('currentAllowance.lessThan(interoperableAmountToApprove): ', currentAllowance.lessThan(interoperableAmountToApprove))
+    // console.log('*********************************')
 
     // interoperableAmountToApprove will be defined if currentAllowance is
     return currentAllowance.lessThan(interoperableAmountToApprove)
