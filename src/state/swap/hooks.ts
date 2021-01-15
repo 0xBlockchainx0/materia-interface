@@ -17,6 +17,7 @@ import { useUserSlippageTolerance } from '../user/hooks'
 import { computeSlippageAdjustedAmounts } from '../../utils/prices'
 import { USD } from '../../constants'
 import useGetEthItemInteroperable from '../../hooks/useGetEthItemInteroperable'
+import { formatUnits } from 'ethers/lib/utils'
 
 export function useSwapState(): AppState['swap'] {
   return useSelector<AppState, AppState['swap']>(state => state.swap)
@@ -146,6 +147,36 @@ export function trySaferParseAmountIncludingZeroValues(value?: string, currency?
     }
   }
   // necessary for all paths to return a value
+  return undefined
+}
+
+export function decodeInteroperableValueToERC20TokenAmount(currencyAmount?: CurrencyAmount, erc20CurrencyAmount?: CurrencyAmount): CurrencyAmount | undefined {
+  if (!currencyAmount || !erc20CurrencyAmount) {
+    return undefined
+  }
+  const value = currencyAmount.toExact()
+  const currency = currencyAmount.currency
+  const erc20Currency = erc20CurrencyAmount.currency
+
+  if (!value || !currency || !erc20Currency) {
+    return undefined
+  }
+  try {
+    const typedValueParsed = parseUnits(value, currency.decimals).toString()
+    const typedValueFormatted = Number(formatUnits(typedValueParsed, currency.decimals - erc20Currency.decimals))
+
+    // console.log('*********************************')
+    // console.log('typedValueParsed: ', typedValueParsed)
+    // console.log('typedValueFormatted: ', typedValueFormatted)
+    // console.log('*********************************')
+
+    return erc20Currency instanceof Token
+      ? new TokenAmount(erc20Currency, JSBI.BigInt(typedValueFormatted))
+      : CurrencyAmount.ether(JSBI.BigInt(typedValueFormatted))
+  } catch (error) {
+    // should fail if the user specifies too many decimal places of precision (or maybe exceed max uint?)
+    console.log(`Failed to parse input amount: "${value}"`, error)
+  }
   return undefined
 }
 

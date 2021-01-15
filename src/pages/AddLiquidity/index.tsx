@@ -14,7 +14,7 @@ import { MinimalPositionCard } from '../../components/PositionCard'
 import Row, { AutoRow, RowBetween, RowFlat, RowFixed } from '../../components/Row'
 import { darken } from 'polished'
 
-import { ORCHESTRATOR_ADDRESS, ZERO_ADDRESS } from '../../constants'
+import { ORCHESTRATOR_ADDRESS, USD, ZERO_ADDRESS } from '../../constants'
 import { PairState } from '../../data/Reserves'
 import { useCurrency } from '../../hooks/Tokens'
 import { ApprovalState, useApproveCallback, useInteroperableApproveCallback } from '../../hooks/useApproveCallback'
@@ -51,6 +51,7 @@ import { Result } from '../../state/multicall/hooks'
 import { Contract } from 'ethers'
 import Web3 from 'web3'
 import useCheckIsEthItem from '../../hooks/useCheckIsEthItem'
+import { decodeInteroperableValueToERC20TokenAmount } from '../../state/swap/hooks'
 
 const VoteCard = styled(DataCard)`
   background: rgba(0, 27, 49, 0.5) !important;
@@ -306,11 +307,6 @@ export default function AddLiquidity({
   // check whether the user has approved the router on the tokens
   const [approvalA, approveACallback] = useInteroperableApproveCallback(originalParsedAmounts[Field.CURRENCY_A], parsedAmounts[Field.CURRENCY_A], ORCHESTRATOR_ADDRESS)
   const [approvalB, approveBCallback] = useInteroperableApproveCallback(originalParsedAmounts[Field.CURRENCY_B], parsedAmounts[Field.CURRENCY_B], ORCHESTRATOR_ADDRESS)
-  // const [approvalA, approveACallback] = useApproveCallback(parsedAmounts[Field.CURRENCY_A], ORCHESTRATOR_ADDRESS)
-  // const [approvalB, approveBCallback] = useApproveCallback(parsedAmounts[Field.CURRENCY_B], ORCHESTRATOR_ADDRESS)
-
-  // const [originalApprovalA, originalApproveACallback] = useApproveCallback(originalParsedAmounts[Field.CURRENCY_A], ORCHESTRATOR_ADDRESS)
-  // const [originalApprovalB, originalApproveBCallback] = useApproveCallback(originalParsedAmounts[Field.CURRENCY_B], ORCHESTRATOR_ADDRESS)
 
   const addTransaction = useTransactionAdder()
 
@@ -325,9 +321,24 @@ export default function AddLiquidity({
         ? null
         : getEthItemCollectionContract(chainId, ethItemCollection, library, account)
 
-    const { [Field.CURRENCY_A]: parsedAmountA, [Field.CURRENCY_B]: parsedAmountB } = parsedAmounts
+    if (!currencyA || !currencyB) {
+      return
+    }
 
-    if (!parsedAmountA || !parsedAmountB || !currencyA || !currencyB || !deadline) {
+    const currencyUSD = USD[chainId ?? 1]
+    const currencyBIsUSD =  wrappedCurrency(currencyB, chainId)?.address == currencyUSD.address
+
+    // const { [Field.CURRENCY_A]: parsedAmountA, [Field.CURRENCY_B]: parsedAmountB } = parsedAmounts
+    // const modifiedParsedAmountA = currencyBIsUSD 
+    const parsedAmountA = currencyBIsUSD 
+      ? decodeInteroperableValueToERC20TokenAmount(parsedAmounts[Field.CURRENCY_A], originalParsedAmounts[Field.CURRENCY_A]) 
+      : parsedAmounts[Field.CURRENCY_A] 
+    // const modifiedParsedAmountB = currencyBIsUSD 
+    const parsedAmountB = currencyBIsUSD 
+      ? parsedAmounts[Field.CURRENCY_B] 
+      : decodeInteroperableValueToERC20TokenAmount(parsedAmounts[Field.CURRENCY_B], originalParsedAmounts[Field.CURRENCY_B])
+    
+    if (!parsedAmountA || !parsedAmountB || !deadline) {
       return
     }
 
@@ -337,7 +348,7 @@ export default function AddLiquidity({
       [Field.CURRENCY_A]: calculateSlippageAmount(parsedAmountA, noLiquidity ? 0 : allowedSlippage)[0],
       [Field.CURRENCY_B]: calculateSlippageAmount(parsedAmountB, noLiquidity ? 0 : allowedSlippage)[0]
     }
-
+    
     let estimate
     let method: (...args: any) => Promise<TransactionResponse>
     let methodName: string
@@ -358,17 +369,23 @@ export default function AddLiquidity({
       ethItemArgs = web3.eth.abi.encodeParameters(
         ["uint256", "bytes"],
         [operation, web3.eth.abi.encodeParameters(
+          // (uint bridgeAmountDesired, uint tokenAmountMin, uint bridgeAmountMin, address to, uint deadline)
           ["uint", "uint", "uint", "address", "uint"],
           [
-            parsedAmountA.raw.toString(),
-            parsedAmountB.raw.toString(),
-            amountsMin[Field.CURRENCY_A].toString(),
+            currencyBIsUSD ? parsedAmountB.raw.toString() : parsedAmountA.raw.toString(),
+            currencyBIsUSD ? parsedAmountA.raw.toString() : parsedAmountB.raw.toString(),
+            currencyBIsUSD ? amountsMin[Field.CURRENCY_B].toString() : amountsMin[Field.CURRENCY_A].toString(),
             account,
             deadline.toHexString()
           ]
         )]
       )
-      args = [account, ORCHESTRATOR_ADDRESS, ethItemObjectId?.toString() ?? "0", parsedAmountB.raw.toString(), ethItemArgs]
+      args = [
+        account, 
+        ORCHESTRATOR_ADDRESS, 
+        ethItemObjectId?.toString() ?? "0", 
+        currencyBIsUSD ? amountsMin[Field.CURRENCY_A].toString() : amountsMin[Field.CURRENCY_B].toString(),
+        ethItemArgs]
       value = null
     }
     else {
@@ -377,6 +394,7 @@ export default function AddLiquidity({
         estimate = router.estimateGas.addLiquidityETH
         method = router.addLiquidityETH
         methodName = "addLiquidityETH"
+        // (uint bridgeAmountDesired, uint EthAmountMin, uint bridgeAmountMin, address to, uint deadline)
         args = [
           (tokenBIsETH ? parsedAmountA : parsedAmountB).raw.toString(), // token desired
           amountsMin[tokenBIsETH ? Field.CURRENCY_B : Field.CURRENCY_A].toString(), // eth min
@@ -386,15 +404,17 @@ export default function AddLiquidity({
         ]
         value = BigNumber.from((tokenBIsETH ? parsedAmountB : parsedAmountA).raw.toString())
       } else {
+        
         estimate = router.estimateGas.addLiquidity
         method = router.addLiquidity
         methodName = "addLiquidity"
+        // (address token, uint tokenAmountDesired, uint bridgeAmountDesired, uint tokenAmountMin, uint bridgeAmountMin, address to, uint deadline)
         args = [
-          wrappedCurrency(currencyB, chainId)?.address ?? '',
-          parsedAmountB.raw.toString(),
-          parsedAmountA.raw.toString(),
-          amountsMin[Field.CURRENCY_B].toString(),
-          amountsMin[Field.CURRENCY_A].toString(),
+          wrappedCurrency(currencyBIsUSD ? currencyA : currencyB, chainId)?.address ?? '',
+          currencyBIsUSD ? parsedAmountA.raw.toString() : parsedAmountB.raw.toString(),
+          currencyBIsUSD ? parsedAmountB.raw.toString() : parsedAmountA.raw.toString(),
+          currencyBIsUSD ? amountsMin[Field.CURRENCY_A].toString() : amountsMin[Field.CURRENCY_B].toString(),
+          currencyBIsUSD ? amountsMin[Field.CURRENCY_B].toString() : amountsMin[Field.CURRENCY_A].toString(),
           account,
           deadline.toHexString(),
         ]
@@ -408,10 +428,22 @@ export default function AddLiquidity({
     // console.log('approvalB: ', approvalB)
     // console.log('originalApprovalA: ', originalApprovalA)
     // console.log('originalApprovalB: ', originalApprovalB)
-    console.log('parsedAmountsA: ', parsedAmounts[Field.CURRENCY_A])
-    console.log('parsedAmountsB: ', parsedAmounts[Field.CURRENCY_B])
-    console.log('originalParsedAmountsA: ', originalParsedAmounts[Field.CURRENCY_A])
-    console.log('originalParsedAmountsB: ', originalParsedAmounts[Field.CURRENCY_B])
+    console.log('parsedAmountA: ', parsedAmountA)
+    console.log('parsedAmountB: ', parsedAmountB)
+    console.log('parsedAmountA value: ', parsedAmountA?.toSignificant(6))
+    console.log('parsedAmountB value: ', parsedAmountB?.toSignificant(6))
+    // console.log('modifiedParsedAmountA: ', modifiedParsedAmountA)
+    // console.log('modifiedParsedAmountB: ', modifiedParsedAmountB)
+    // console.log('modifiedParsedAmountA value: ', modifiedParsedAmountA?.toSignificant(6))
+    // console.log('modifiedParsedAmountB value: ', modifiedParsedAmountB?.toSignificant(6))
+    // console.log('parsedAmountsA: ', parsedAmounts[Field.CURRENCY_A])
+    // console.log('parsedAmountsB: ', parsedAmounts[Field.CURRENCY_B])
+    // console.log('parsedAmountsA value: ', parsedAmounts[Field.CURRENCY_A]?.toSignificant(6))
+    // console.log('parsedAmountsB value: ', parsedAmounts[Field.CURRENCY_B]?.toSignificant(6))
+    // console.log('originalParsedAmountsA: ', originalParsedAmounts[Field.CURRENCY_A])
+    // console.log('originalParsedAmountsB: ', originalParsedAmounts[Field.CURRENCY_B])
+    // console.log('originalParsedAmountsA value: ', originalParsedAmounts[Field.CURRENCY_A]?.toSignificant(6))
+    // console.log('originalParsedAmountsB value: ', originalParsedAmounts[Field.CURRENCY_B]?.toSignificant(6))
     // console.log('currencyA: ', currencyA)
     // console.log('currencyB: ', currencyB)
     // console.log('currencyA ETH: ', currencyA === ETHER)
