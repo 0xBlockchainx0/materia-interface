@@ -25,7 +25,7 @@ import { INITIAL_ALLOWED_SLIPPAGE } from '../../constants'
 
 import { useActiveWeb3React } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
-import { ApprovalState, useApproveCallbackFromTrade } from '../../hooks/useApproveCallback'
+import { ApprovalState, useApproveCallbackFromTrade, useInteroperableApproveCallbackFromTrade } from '../../hooks/useApproveCallback'
 import useENSAddress from '../../hooks/useENSAddress'
 import { useSwapCallback } from '../../hooks/useSwapCallback'
 
@@ -207,12 +207,17 @@ export default function Swap() {
   const { independentField, typedValue, recipient } = useSwapState()
   const {
     v2Trade,
-    v2TradeWithoutInteroperable,
     currencyBalances,
     parsedAmount,
-    currencies,
+    // currencies,
     inputError: swapInputError
-  } = useDerivedSwapInfo()
+  } = useDerivedSwapInfo(true)
+  const {
+    v2Trade: v2OriginalTrade,
+    currencyBalances: originalCurrencyBalances,
+    parsedAmount: originalParsedAmount,
+    currencies: currencies,
+  } = useDerivedSwapInfo(false)
   const { wrapType, execute: onWrap, inputError: wrapInputError } = useWrapCallback(
     currencies[Field.INPUT],
     currencies[Field.OUTPUT],
@@ -222,8 +227,7 @@ export default function Swap() {
   const { address: recipientAddress } = useENSAddress(recipient)
 
   const trade = showWrap ? undefined : v2Trade
-  const tradeWithoutInteroperable = showWrap ? undefined : v2TradeWithoutInteroperable
-  const defaultTrade = showWrap ? undefined : v2Trade
+  const originalTrade = showWrap ? undefined : v2OriginalTrade
 
   const parsedAmounts = showWrap
     ? {
@@ -233,6 +237,16 @@ export default function Swap() {
     : {
       [Field.INPUT]: independentField === Field.INPUT ? parsedAmount : trade?.inputAmount,
       [Field.OUTPUT]: independentField === Field.OUTPUT ? parsedAmount : trade?.outputAmount
+    }
+
+  const originalParsedAmounts = showWrap
+    ? {
+      [Field.INPUT]: originalParsedAmount,
+      [Field.OUTPUT]: originalParsedAmount
+    }
+    : {
+      [Field.INPUT]: independentField === Field.INPUT ? originalParsedAmount : originalTrade?.inputAmount,
+      [Field.OUTPUT]: independentField === Field.OUTPUT ? originalParsedAmount : originalTrade?.outputAmount
     }
 
   const { onSwitchTokens, onCurrencySelection, onUserInput, onChangeRecipient } = useSwapActionHandlers()
@@ -281,8 +295,7 @@ export default function Swap() {
   const noRoute = !route
 
   // check whether the user has approved the router on the input token
-  // const [approval, approveCallback] = useApproveCallbackFromTrade(trade, allowedSlippage)
-  const [approval, approveCallback] = useApproveCallbackFromTrade(tradeWithoutInteroperable, allowedSlippage)
+  const [approval, approveCallback] = useInteroperableApproveCallbackFromTrade(originalTrade, trade, allowedSlippage)
 
   // check if user has gone through approval process, used to show two step buttons, reset on token change
   const [approvalSubmitted, setApprovalSubmitted] = useState<boolean>(false)
@@ -294,11 +307,13 @@ export default function Swap() {
     }
   }, [approval, approvalSubmitted])
 
-  const maxAmountInput: CurrencyAmount | undefined = maxAmountSpend(currencyBalances[Field.INPUT])
-  const atMaxAmountInput = Boolean(maxAmountInput && parsedAmounts[Field.INPUT]?.equalTo(maxAmountInput))
+  // const maxAmountInput: CurrencyAmount | undefined = maxAmountSpend(currencyBalances[Field.INPUT])
+  // const atMaxAmountInput = Boolean(maxAmountInput && parsedAmounts[Field.INPUT]?.equalTo(maxAmountInput))
+  const maxAmountInput: CurrencyAmount | undefined = maxAmountSpend(originalCurrencyBalances[Field.INPUT])
+  const atMaxAmountInput = Boolean(maxAmountInput && originalParsedAmounts[Field.INPUT]?.equalTo(maxAmountInput))
 
   // the callback to execute the swap
-  const { callback: swapCallback, error: swapCallbackError } = useSwapCallback(trade, tradeWithoutInteroperable, allowedSlippage, recipient)
+  const { callback: swapCallback, error: swapCallbackError } = useSwapCallback(trade, originalTrade, allowedSlippage, recipient)
 
   const { priceImpactWithoutFee } = computeTradePriceBreakdown(trade)
 
@@ -389,6 +404,15 @@ export default function Swap() {
   const [play, { stop }] = useSound(alarm)
   const classicMode = useIsClassicMode()
 
+  console.log('*********************************')
+  console.log('isValid: ', isValid)
+  console.log('priceImpactSeverity: ', priceImpactSeverity)
+  console.log('isExpertMode: ', isExpertMode)
+  console.log('swapCallbackError: ', !!swapCallbackError)
+  console.log('originalTrade: ', originalTrade)
+  console.log('trade: ', trade)
+  console.log('*********************************')
+
   return (
     <>
       {/* <TokenWarningModal
@@ -427,14 +451,6 @@ export default function Swap() {
             </InventoryColumn>
             <SwapPageContainer>
               <SwapMenu>
-
-                {/* <SwapMenuItem active={true}>
-                  <TYPE.body color={theme.text1} fontWeight={500} fontSize={14}>Classic SWAP</TYPE.body>
-                </SwapMenuItem>
-                <SwapMenuItem>
-                  <TYPE.body color={theme.text1} fontWeight={500} fontSize={14}>Batch SWAP (coming soon)</TYPE.body>
-                </SwapMenuItem> */}
-
                 <StyledNavLink
                   id={`classic-swap`}
                   to={'/swap'}

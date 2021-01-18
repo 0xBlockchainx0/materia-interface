@@ -237,3 +237,16 @@ export function useApproveCallbackFromTrade(trade?: Trade, allowedSlippage = 0) 
   )
   return useApproveCallback(amountToApprove, ORCHESTRATOR_ADDRESS)
 }
+
+// wraps useInteroperableApproveCallback in the context of a swap
+export function useInteroperableApproveCallbackFromTrade(originalTrade?: Trade, trade?: Trade, allowedSlippage = 0) {
+  const amountToApprove = useMemo(
+    () => (trade ? computeSlippageAdjustedAmounts(originalTrade, allowedSlippage)[Field.INPUT] : undefined),
+    [originalTrade, allowedSlippage]
+  )
+  const interoperableAmountToApprove = useMemo(
+    () => (trade ? computeSlippageAdjustedAmounts(trade, allowedSlippage)[Field.INPUT] : undefined),
+    [trade, allowedSlippage]
+  )
+  return useInteroperableApproveCallback(amountToApprove, interoperableAmountToApprove, ORCHESTRATOR_ADDRESS)
+}

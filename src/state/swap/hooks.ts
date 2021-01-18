@@ -15,7 +15,7 @@ import { Field, replaceSwapState, selectCurrency, setRecipient, switchCurrencies
 import { SwapState } from './reducer'
 import { useUserSlippageTolerance } from '../user/hooks'
 import { computeSlippageAdjustedAmounts } from '../../utils/prices'
-import { USD } from '../../constants'
+import { ERC20WRAPPER, FACTORY_ADDRESS, MATERIA_DFO_ADDRESS, ORCHESTRATOR_ADDRESS, UNISWAP_V2_FACTORY_ADDRESS, UNISWAP_V2_ROUTER_V1_ADDRESS, UNISWAP_V2_ROUTER_V2_ADDRESS, USD } from '../../constants'
 import useGetEthItemInteroperable from '../../hooks/useGetEthItemInteroperable'
 import { formatUnits } from 'ethers/lib/utils'
 
@@ -113,8 +113,8 @@ export function trySaferParseAmount(value?: string, currency?: Currency, decimal
         }
       }
     } catch (error) {
-        // should fail if the user specifies too many decimal places of precision (or maybe exceed max uint?)
-        console.debug(`Failed to parse input amount with provided decimals: "${value}"`, error)
+      // should fail if the user specifies too many decimal places of precision (or maybe exceed max uint?)
+      console.debug(`Failed to parse input amount with provided decimals: "${value}"`, error)
     }
   }
   // necessary for all paths to return a value
@@ -142,8 +142,8 @@ export function trySaferParseAmountIncludingZeroValues(value?: string, currency?
           : CurrencyAmount.ether(JSBI.BigInt(typedValueParsed))
       }
     } catch (error) {
-        // should fail if the user specifies too many decimal places of precision (or maybe exceed max uint?)
-        console.debug(`Failed to parse input amount with provided decimals: "${value}"`, error)
+      // should fail if the user specifies too many decimal places of precision (or maybe exceed max uint?)
+      console.debug(`Failed to parse input amount with provided decimals: "${value}"`, error)
     }
   }
   // necessary for all paths to return a value
@@ -162,8 +162,18 @@ export function decodeInteroperableValueToERC20TokenAmount(currencyAmount?: Curr
     return undefined
   }
   try {
+    const formattedDecimals = currency.decimals - erc20Currency.decimals
     const typedValueParsed = parseUnits(value, currency.decimals).toString()
-    const typedValueFormatted = Number(formatUnits(typedValueParsed, currency.decimals - erc20Currency.decimals))
+    
+    let typedValueFormatted: Number = Number(0)
+
+    if (formattedDecimals >= 0) {
+      typedValueFormatted = Number(formatUnits(typedValueParsed, formattedDecimals))
+    }
+    else {
+      // EthItem can't unwrap token with more than 18 decimals 
+      throw 'Too much decimals for EthItem'
+    }
 
     // console.log('*********************************')
     // console.log('typedValueParsed: ', typedValueParsed)
@@ -181,9 +191,14 @@ export function decodeInteroperableValueToERC20TokenAmount(currencyAmount?: Curr
 }
 
 const BAD_RECIPIENT_ADDRESSES: string[] = [
-  '0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f', // v2 factory
-  '0xf164fC0Ec4E93095b804a4795bBe1e041497b92a', // v2 router 01
-  '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D' // v2 router 02
+  UNISWAP_V2_FACTORY_ADDRESS,
+  UNISWAP_V2_ROUTER_V1_ADDRESS,
+  UNISWAP_V2_ROUTER_V2_ADDRESS,
+  FACTORY_ADDRESS,
+  ORCHESTRATOR_ADDRESS,
+  MATERIA_DFO_ADDRESS,
+  ERC20WRAPPER[ChainId.ROPSTEN],
+  ERC20WRAPPER[ChainId.MAINNET]
 ]
 
 /**
@@ -199,16 +214,17 @@ function involvesAddress(trade: Trade, checksummedAddress: string): boolean {
 }
 
 // from the current swap inputs, compute the best trade and return it.
-export function useDerivedSwapInfo(): {
+export function useDerivedSwapInfo(
+  interoperable: boolean | false
+): {
   currencies: { [field in Field]?: Currency }
   currencyBalances: { [field in Field]?: CurrencyAmount }
   parsedAmount: CurrencyAmount | undefined
   v2Trade: Trade | undefined,
-  v2TradeWithoutInteroperable: Trade | undefined,
   inputError?: string
 } {
   const { account, chainId } = useActiveWeb3React()
-  const swapState =  useSwapState()
+  const swapState = useSwapState()
   const {
     independentField,
     typedValue,
@@ -216,15 +232,21 @@ export function useDerivedSwapInfo(): {
     [Field.OUTPUT]: { currencyId: outputCurrencyId },
     recipient
   } = swapState
-  
+
   const inputCurrencyInteroperableId = useGetEthItemInteroperable(inputCurrencyId)
   const outputCurrencyInteroperableId = useGetEthItemInteroperable(outputCurrencyId)
-  const inputCurrency = useCurrency(inputCurrencyId)
-  const outputCurrency = useCurrency(outputCurrencyId)
-  const inputCurrencyInteroperable = useCurrency(inputCurrencyInteroperableId)
-  const outputCurrencyInteroperable = useCurrency(outputCurrencyInteroperableId)
+
+  const inputCurrency: Currency | undefined = useCurrency(inputCurrencyId) ?? undefined
+  const outputCurrency: Currency | undefined = useCurrency(outputCurrencyId) ?? undefined
+
+  let inputCurrencyInteroperable: Currency | undefined =  useCurrency(inputCurrencyInteroperableId) ?? undefined
+  let outputCurrencyInteroperable: Currency | undefined = useCurrency(outputCurrencyInteroperableId) ?? undefined
+
+  inputCurrencyInteroperable = inputCurrency === ETHER ? IETH[chainId ?? 1] : inputCurrencyInteroperable
+  outputCurrencyInteroperable = outputCurrency === ETHER ? IETH[chainId ?? 1] : outputCurrencyInteroperable
 
   // console.log('***************************************')
+  // console.log('interoperable: ', interoperable)
   // console.log('inputCurrencyId: ', inputCurrencyId)
   // console.log('inputCurrencyInteroperableId: ', inputCurrencyInteroperableId)
   // console.log('inputCurrencyInteroperable: ', inputCurrencyInteroperable)
@@ -236,33 +258,63 @@ export function useDerivedSwapInfo(): {
   const recipientLookup = useENS(recipient ?? undefined)
   const to: string | null = (recipient === null ? account : recipientLookup.address) ?? null
 
+  const originalRelevantTokenBalances = useCurrencyBalances(account ?? undefined, [
+    inputCurrency ?? undefined,
+    outputCurrency ?? undefined
+  ])
+
   const relevantTokenBalances = useCurrencyBalances(account ?? undefined, [
-    inputCurrencyInteroperable ?? inputCurrency ?? undefined,
-    outputCurrencyInteroperable ?? outputCurrency ?? undefined
+    interoperable ? (inputCurrencyInteroperable ?? inputCurrency) : inputCurrency ?? undefined,
+    interoperable ? (outputCurrencyInteroperable ?? outputCurrency) : outputCurrency ?? undefined
   ])
 
   const isExactIn: boolean = independentField === Field.INPUT
-  const parsedAmount = tryParseAmount(typedValue, (isExactIn ? (inputCurrencyInteroperable ?? inputCurrency) : (outputCurrencyInteroperable ?? outputCurrency)) ?? undefined)
+  const parsedAmount = tryParseAmount(
+    typedValue,
+    (isExactIn ?
+      (interoperable ? (inputCurrencyInteroperable ?? inputCurrency) : inputCurrency) :
+      (interoperable ? (outputCurrencyInteroperable ?? outputCurrency) : outputCurrency)
+      ?? undefined))
 
-  const bestTradeExactIn = useTradeExactIn(isExactIn ? parsedAmount : undefined, (outputCurrencyInteroperable ?? outputCurrency) ?? undefined)
-  const bestTradeExactOut = useTradeExactOut((inputCurrencyInteroperable ?? inputCurrency) ?? undefined, !isExactIn ? parsedAmount : undefined)
-
-  const bestTradeWithoutInteroperableExactIn = useTradeExactIn(isExactIn ? parsedAmount : undefined, outputCurrency ?? undefined)
-  const bestTradeWithoutInteroperableExactOut = useTradeExactOut(inputCurrency ?? undefined, !isExactIn ? parsedAmount : undefined)
+  const bestTradeExactIn = useTradeExactIn(
+    (isExactIn ? parsedAmount : undefined),
+    (interoperable ?
+      (outputCurrencyInteroperable ?? outputCurrency) :
+      outputCurrency)
+    ?? undefined
+  )
+  const bestTradeExactOut = useTradeExactOut(
+    (interoperable ?
+      (inputCurrencyInteroperable ?? inputCurrency) :
+      inputCurrency)
+    ?? undefined,
+    (!isExactIn ? parsedAmount : undefined)
+  )
 
   const v2Trade = isExactIn ? bestTradeExactIn : bestTradeExactOut
-  const tradeWithoutInteroperable = isExactIn ? bestTradeWithoutInteroperableExactIn : bestTradeWithoutInteroperableExactOut
+
+  // console.log('***************************************')
+  // console.log('interoperable: ', interoperable)
+  // console.log('isExactIn: ', isExactIn)
+  // console.log('parsedAmount: ', parsedAmount)
+  // console.log('bestTradeExactIn: ', bestTradeExactIn)
+  // console.log('bestTradeExactOut: ', bestTradeExactOut)
+  // console.log('v2Trade: ', v2Trade)
+  // console.log('***************************************')
 
   const currencyBalances = {
     [Field.INPUT]: relevantTokenBalances[0],
     [Field.OUTPUT]: relevantTokenBalances[1]
   }
 
+  const originalCurrencyBalances = {
+    [Field.INPUT]: originalRelevantTokenBalances[0],
+    [Field.OUTPUT]: originalRelevantTokenBalances[1]
+  }
+
   const currencies: { [field in Field]?: Currency } = {
-    [Field.INPUT]: inputCurrency ?? undefined,
-    [Field.OUTPUT]: outputCurrency ?? undefined
-    // [Field.INPUT]: inputCurrencyInteroperable ?? inputCurrency ?? undefined,
-    // [Field.OUTPUT]: outputCurrencyInteroperable ?? outputCurrency ?? undefined
+    [Field.INPUT]: interoperable ? (inputCurrencyInteroperable ?? inputCurrency) : inputCurrency ?? undefined,
+    [Field.OUTPUT]: interoperable ? (outputCurrencyInteroperable ?? outputCurrency) : outputCurrency ?? undefined
   }
 
   let inputError: string | undefined
@@ -296,8 +348,15 @@ export function useDerivedSwapInfo(): {
   const slippageAdjustedAmounts = v2Trade && allowedSlippage && computeSlippageAdjustedAmounts(v2Trade, allowedSlippage)
 
   // compare input balance to max input
+  // const [balanceIn, amountIn] = [
+  //   currencyBalances[Field.INPUT],
+  //   slippageAdjustedAmounts
+  //     ? slippageAdjustedAmounts[Field.INPUT]
+  //     : null
+  // ]
+
   const [balanceIn, amountIn] = [
-    currencyBalances[Field.INPUT],
+    originalCurrencyBalances[Field.INPUT],
     slippageAdjustedAmounts
       ? slippageAdjustedAmounts[Field.INPUT]
       : null
@@ -312,7 +371,6 @@ export function useDerivedSwapInfo(): {
     currencyBalances,
     parsedAmount,
     v2Trade: v2Trade ?? undefined,
-    v2TradeWithoutInteroperable: tradeWithoutInteroperable ?? undefined,
     inputError,
   }
 }
