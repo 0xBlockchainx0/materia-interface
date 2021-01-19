@@ -42,7 +42,7 @@ type EstimatedSwapCall = SuccessfulCall | FailedCall
  */
 function useSwapCallArguments(
   trade: Trade | undefined, // trade to execute, required
-  tradeWithoutInteroperable: Trade | undefined, // trade to execute (without interoperable), required
+  originalTrade: Trade | undefined, // trade to execute (without interoperable), required
   allowedSlippage: number = INITIAL_ALLOWED_SLIPPAGE, // in bips
   recipientAddressOrName: string | null, // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
 ): SwapCall[] {
@@ -51,7 +51,7 @@ function useSwapCallArguments(
   const recipient = recipientAddressOrName === null ? account : recipientAddress
   const deadline = useTransactionDeadline()
   const contract: Contract | null = (!library || !account || !chainId) ? null : getOrchestratorContract(chainId, library, account)
-  const tokenAddressA = tradeWithoutInteroperable?.route.path[0]?.address ?? ZERO_ADDRESS
+  const tokenAddressA = originalTrade?.route.path[0]?.address ?? ZERO_ADDRESS
   const tokenAIsEthItem = useCheckIsEthItem(tokenAddressA)
   const isEthItem: boolean = tokenAIsEthItem?.ethItem
   const ethItemCollection: string = tokenAIsEthItem?.collection
@@ -71,11 +71,11 @@ function useSwapCallArguments(
   return useMemo(() => {
     const swapMethods = []
 
-    if (!tradeWithoutInteroperable || !recipient || !library || !account || !chainId || !deadline) return []
+    if (!originalTrade || !recipient || !library || !account || !chainId || !deadline) return []
     if (!contract) { return [] }
 
     swapMethods.push(
-      Router.swapCallParameters(tradeWithoutInteroperable, {
+      Router.swapCallParameters(originalTrade, {
         feeOnTransfer: false,
         allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
         recipient,
@@ -96,20 +96,20 @@ function useSwapCallArguments(
       parameters: parameters,
       contract: contract
     }))
-  }, [account, allowedSlippage, chainId, deadline, library, recipient, tradeWithoutInteroperable])
+  }, [account, allowedSlippage, chainId, deadline, library, recipient, originalTrade])
 }
 
 // returns a function that will execute a swap, if the parameters are all valid
 // and the user has approved the slippage adjusted input amount for the trade
 export function useSwapCallback(
   trade: Trade | undefined, // trade to execute, required
-  tradeWithoutInteroperable: Trade | undefined, // trade to execute (without interoperable), required
+  originalTrade: Trade | undefined, // trade to execute (without interoperable), required
   allowedSlippage: number = INITIAL_ALLOWED_SLIPPAGE, // in bips
   recipientAddressOrName: string | null // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
 ): { state: SwapCallbackState; callback: null | (() => Promise<string>); error: string | null } {
   const { account, chainId, library } = useActiveWeb3React()
 
-  const swapCalls = useSwapCallArguments(trade, tradeWithoutInteroperable, allowedSlippage, recipientAddressOrName)
+  const swapCalls = useSwapCallArguments(trade, originalTrade, allowedSlippage, recipientAddressOrName)
   const addTransaction = useTransactionAdder()
 
   const { address: recipientAddress } = useENS(recipientAddressOrName)
@@ -120,7 +120,7 @@ export function useSwapCallback(
   // console.log('*********************************')
 
   return useMemo(() => {
-    if (!trade || !library || !account || !chainId) {
+    if (!trade || !originalTrade || !library || !account || !chainId) {
       return { state: SwapCallbackState.INVALID, callback: null, error: 'Missing dependencies' }
     }
     if (!recipient) {
@@ -181,9 +181,16 @@ export function useSwapCallback(
             'gasEstimate' in el && (ix === list.length - 1 || 'gasEstimate' in list[ix + 1])
         )
 
+        console.log('*********************************')
+        console.log('successfulEstimation: ', successfulEstimation)
+        console.log('*********************************')
+
         if (!successfulEstimation) {
           const errorCalls = estimatedCalls.filter((call): call is FailedCall => 'error' in call)
-          if (errorCalls.length > 0) throw errorCalls[errorCalls.length - 1].error
+          if (errorCalls.length > 0) {
+            throw errorCalls[errorCalls.length - 1].error
+          }
+          
           throw new Error('Unexpected error. Please contact support: none of the calls threw an error')
         }
 
@@ -200,8 +207,10 @@ export function useSwapCallback(
           ...(value && !isZero(value) ? { value, from: account } : { from: account })
         })
           .then((response: any) => {
-            const inputSymbol = trade.inputAmount.currency.symbol
-            const outputSymbol = trade.outputAmount.currency.symbol
+            const inputSymbol = originalTrade.inputAmount.currency.symbol
+            const outputSymbol = originalTrade.outputAmount.currency.symbol
+            // const inputSymbol = trade.inputAmount.currency.symbol
+            // const outputSymbol = trade.outputAmount.currency.symbol
             const inputAmount = trade.inputAmount.toSignificant(3)
             const outputAmount = trade.outputAmount.toSignificant(3)
 
@@ -235,5 +244,5 @@ export function useSwapCallback(
       },
       error: null
     }
-  }, [trade, library, account, chainId, recipient, recipientAddressOrName, swapCalls, addTransaction])
+  }, [trade, originalTrade, library, account, chainId, recipient, recipientAddressOrName, swapCalls, addTransaction])
 }
