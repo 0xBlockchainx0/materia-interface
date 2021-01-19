@@ -186,16 +186,13 @@ export default function Swap() {
   const {
     v2Trade,
     currencyBalances,
+    originalCurrencyBalances,
     parsedAmount,
-    // currencies,
+    currencies,
+    originalCurrencies,
     inputError: swapInputError
   } = useDerivedSwapInfo(true)
-  const {
-    v2Trade: v2OriginalTrade,
-    currencyBalances: originalCurrencyBalances,
-    parsedAmount: originalParsedAmount,
-    currencies: currencies,
-  } = useDerivedSwapInfo(false)
+
   const { wrapType, execute: onWrap, inputError: wrapInputError } = useWrapCallback(
     currencies[Field.INPUT],
     currencies[Field.OUTPUT],
@@ -205,7 +202,6 @@ export default function Swap() {
   const { address: recipientAddress } = useENSAddress(recipient)
 
   const trade = showWrap ? undefined : v2Trade
-  const originalTrade = showWrap ? undefined : v2OriginalTrade
 
   const parsedAmounts = showWrap
     ? {
@@ -215,16 +211,6 @@ export default function Swap() {
     : {
       [Field.INPUT]: independentField === Field.INPUT ? parsedAmount : trade?.inputAmount,
       [Field.OUTPUT]: independentField === Field.OUTPUT ? parsedAmount : trade?.outputAmount
-    }
-
-  const originalParsedAmounts = showWrap
-    ? {
-      [Field.INPUT]: originalParsedAmount,
-      [Field.OUTPUT]: originalParsedAmount
-    }
-    : {
-      [Field.INPUT]: independentField === Field.INPUT ? originalParsedAmount : originalTrade?.inputAmount,
-      [Field.OUTPUT]: independentField === Field.OUTPUT ? originalParsedAmount : originalTrade?.outputAmount
     }
 
   const { onSwitchTokens, onCurrencySelection, onUserInput, onChangeRecipient } = useSwapActionHandlers()
@@ -273,7 +259,7 @@ export default function Swap() {
   const noRoute = !route
 
   // check whether the user has approved the router on the input token
-  const [approval, approveCallback] = useInteroperableApproveCallbackFromTrade(originalTrade, trade, allowedSlippage)
+  const [approval, approveCallback] = useInteroperableApproveCallbackFromTrade(trade, allowedSlippage)
 
   // check if user has gone through approval process, used to show two step buttons, reset on token change
   const [approvalSubmitted, setApprovalSubmitted] = useState<boolean>(false)
@@ -285,13 +271,11 @@ export default function Swap() {
     }
   }, [approval, approvalSubmitted])
 
-  // const maxAmountInput: CurrencyAmount | undefined = maxAmountSpend(currencyBalances[Field.INPUT])
-  // const atMaxAmountInput = Boolean(maxAmountInput && parsedAmounts[Field.INPUT]?.equalTo(maxAmountInput))
   const maxAmountInput: CurrencyAmount | undefined = maxAmountSpend(originalCurrencyBalances[Field.INPUT])
-  const atMaxAmountInput = Boolean(maxAmountInput && originalParsedAmounts[Field.INPUT]?.equalTo(maxAmountInput))
+  const atMaxAmountInput = Boolean(maxAmountInput && parsedAmounts[Field.INPUT]?.equalTo(maxAmountInput))
 
   // the callback to execute the swap
-  const { callback: swapCallback, error: swapCallbackError } = useSwapCallback(trade, originalTrade, allowedSlippage, recipient)
+  const { callback: swapCallback, error: swapCallbackError } = useSwapCallback(trade, allowedSlippage, recipient)
 
   const { priceImpactWithoutFee } = computeTradePriceBreakdown(trade)
 
@@ -316,8 +300,8 @@ export default function Swap() {
                 ? 'Swap w/o Send + recipient'
                 : 'Swap w/ Send',
           label: [
-            trade?.inputAmount?.currency?.symbol,
-            trade?.outputAmount?.currency?.symbol,
+            originalCurrencies[Field.INPUT]?.symbol,
+            originalCurrencies[Field.OUTPUT]?.symbol,
             v2Trade
           ].join('/')
         })
@@ -387,8 +371,8 @@ export default function Swap() {
   console.log('priceImpactSeverity: ', priceImpactSeverity)
   console.log('isExpertMode: ', isExpertMode)
   console.log('swapCallbackError: ', !!swapCallbackError)
-  console.log('originalTrade: ', originalTrade)
   console.log('trade: ', trade)
+  console.log('route: ', route)
   console.log('*********************************')
 
   return (
@@ -409,6 +393,7 @@ export default function Swap() {
             isOpen={showConfirm}
             trade={trade}
             originalTrade={tradeToConfirm}
+            originalCurrencies={originalCurrencies}
             onAcceptChanges={handleAcceptChanges}
             attemptingTxn={attemptingTxn}
             txHash={txHash}
@@ -443,11 +428,11 @@ export default function Swap() {
                         label={independentField === Field.OUTPUT && !showWrap && trade ? 'From (estimated)' : 'From'}
                         value={formattedAmounts[Field.INPUT]}
                         showMaxButton={!atMaxAmountInput}
-                        currency={currencies[Field.INPUT]}
+                        currency={originalCurrencies[Field.INPUT]}
                         onUserInput={handleTypeInput}
                         onMax={handleMaxInput}
                         onCurrencySelect={handleInputSelect}
-                        otherCurrency={currencies[Field.OUTPUT]}
+                        otherCurrency={originalCurrencies[Field.OUTPUT]}
                         id="swap-currency-input"
                       />
                     </AutoColumn>
@@ -462,7 +447,7 @@ export default function Swap() {
                               setApprovalSubmitted(false) // reset 2 step UI for approvals
                               onSwitchTokens()
                             }}
-                            color={currencies[Field.INPUT] && currencies[Field.OUTPUT] ? theme.primary1 : theme.text2}
+                            color={originalCurrencies[Field.INPUT] && originalCurrencies[Field.OUTPUT] ? theme.primary1 : theme.text2}
                           />
                         </ArrowWrapper>
                         {recipient === null && !showWrap && isExpertMode ? (
@@ -505,9 +490,9 @@ export default function Swap() {
                         onUserInput={handleTypeOutput}
                         label={independentField === Field.INPUT && !showWrap && trade ? 'To (estimated)' : 'To'}
                         showMaxButton={false}
-                        currency={currencies[Field.OUTPUT]}
+                        currency={originalCurrencies[Field.OUTPUT]}
                         onCurrencySelect={handleOutputSelect}
-                        otherCurrency={currencies[Field.INPUT]}
+                        otherCurrency={originalCurrencies[Field.INPUT]}
                         id="swap-currency-output"
                       />
 
@@ -557,7 +542,7 @@ export default function Swap() {
                           ) : approvalSubmitted && approval === ApprovalState.APPROVED ? (
                             'Approved'
                           ) : (
-                                'Approve ' + currencies[Field.INPUT]?.symbol
+                                'Approve ' + originalCurrencies[Field.INPUT]?.symbol
                               )}
                         </ButtonMateriaConfirmed>
                         <ButtonMateriaError

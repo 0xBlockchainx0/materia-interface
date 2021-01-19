@@ -122,12 +122,11 @@ export function useApproveCallback(
 
 // returns a variable indicating the state of the approval and a function which approves if necessary or early returns
 export function useInteroperableApproveCallback(
-  amountToApprove?: CurrencyAmount,
   interoperableAmountToApprove?: CurrencyAmount,
   spender?: string
 ): [ApprovalState, () => Promise<void>] {
   const { account, chainId } = useActiveWeb3React()
-  const token = amountToApprove instanceof TokenAmount ? amountToApprove.token : undefined
+  const token = interoperableAmountToApprove instanceof TokenAmount ? interoperableAmountToApprove.token : undefined
   const currentAllowance = useTokenAllowance(token, account ?? undefined, spender)
   const pendingApproval = useHasPendingApproval(token?.address, spender)
   const ethItem = useCheckIsEthItem(token?.address ?? ZERO_ADDRESS)?.ethItem ?? false
@@ -135,8 +134,8 @@ export function useInteroperableApproveCallback(
 
   // check the current approval status
   const approvalState: ApprovalState = useMemo(() => {
-    if (!amountToApprove || !interoperableAmountToApprove || !spender) return ApprovalState.UNKNOWN
-    if (amountToApprove.currency === ETHER) return ApprovalState.APPROVED
+    if (!interoperableAmountToApprove || !spender) return ApprovalState.UNKNOWN
+    if (interoperableAmountToApprove.currency === ETHER) return ApprovalState.APPROVED
     if (ethItem && !isUSD) return ApprovalState.APPROVED
     // we might not have enough data to know whether or not we need to approve
     if (!currentAllowance) return ApprovalState.UNKNOWN
@@ -158,7 +157,7 @@ export function useInteroperableApproveCallback(
         ? ApprovalState.PENDING
         : ApprovalState.NOT_APPROVED
       : ApprovalState.APPROVED
-  }, [amountToApprove, interoperableAmountToApprove, currentAllowance, pendingApproval, spender])
+  }, [interoperableAmountToApprove, currentAllowance, pendingApproval, spender])
 
   const tokenContract = useTokenContract(token?.address)
   const addTransaction = useTransactionAdder()
@@ -175,11 +174,6 @@ export function useInteroperableApproveCallback(
 
     if (!tokenContract) {
       console.error('tokenContract is null')
-      return
-    }
-
-    if (!amountToApprove) {
-      console.error('missing amount to approve')
       return
     }
 
@@ -206,7 +200,7 @@ export function useInteroperableApproveCallback(
       })
       .then((response: TransactionResponse) => {
         addTransaction(response, {
-          summary: 'Approve ' + amountToApprove.currency.symbol,
+          summary: 'Approve ' + interoperableAmountToApprove.currency.symbol,
           approval: { tokenAddress: token.address, spender: spender }
         })
       })
@@ -214,7 +208,7 @@ export function useInteroperableApproveCallback(
         console.debug('Failed to approve token', error)
         throw error
       })
-  }, [approvalState, token, ethItem, tokenContract, amountToApprove, interoperableAmountToApprove, spender, addTransaction])
+  }, [approvalState, token, ethItem, tokenContract, interoperableAmountToApprove, interoperableAmountToApprove, spender, addTransaction])
 
 
   // console.log('*********************************')
@@ -239,14 +233,10 @@ export function useApproveCallbackFromTrade(trade?: Trade, allowedSlippage = 0) 
 }
 
 // wraps useInteroperableApproveCallback in the context of a swap
-export function useInteroperableApproveCallbackFromTrade(originalTrade?: Trade, trade?: Trade, allowedSlippage = 0) {
-  const amountToApprove = useMemo(
-    () => (trade ? computeSlippageAdjustedAmounts(originalTrade, allowedSlippage)[Field.INPUT] : undefined),
-    [originalTrade, allowedSlippage]
-  )
+export function useInteroperableApproveCallbackFromTrade(trade?: Trade, allowedSlippage = 0) {
   const interoperableAmountToApprove = useMemo(
     () => (trade ? computeSlippageAdjustedAmounts(trade, allowedSlippage)[Field.INPUT] : undefined),
     [trade, allowedSlippage]
   )
-  return useInteroperableApproveCallback(amountToApprove, interoperableAmountToApprove, ORCHESTRATOR_ADDRESS)
+  return useInteroperableApproveCallback(interoperableAmountToApprove, ORCHESTRATOR_ADDRESS)
 }

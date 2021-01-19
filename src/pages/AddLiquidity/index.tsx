@@ -302,8 +302,8 @@ export default function AddLiquidity({
   // )
 
   // check whether the user has approved the router on the tokens
-  const [approvalA, approveACallback] = useInteroperableApproveCallback(originalParsedAmounts[Field.CURRENCY_A], parsedAmounts[Field.CURRENCY_A], ORCHESTRATOR_ADDRESS)
-  const [approvalB, approveBCallback] = useInteroperableApproveCallback(originalParsedAmounts[Field.CURRENCY_B], parsedAmounts[Field.CURRENCY_B], ORCHESTRATOR_ADDRESS)
+  const [approvalA, approveACallback] = useInteroperableApproveCallback(originalParsedAmounts[Field.CURRENCY_A], ORCHESTRATOR_ADDRESS)
+  const [approvalB, approveBCallback] = useInteroperableApproveCallback(originalParsedAmounts[Field.CURRENCY_B], ORCHESTRATOR_ADDRESS)
 
   const addTransaction = useTransactionAdder()
 

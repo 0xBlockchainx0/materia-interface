@@ -1,5 +1,6 @@
-import { currencyEquals, Trade } from '@materia-dex/sdk'
+import { Currency, currencyEquals, Trade } from '@materia-dex/sdk'
 import React, { useCallback, useMemo } from 'react'
+import { Field } from '../../state/swap/actions'
 import TransactionConfirmationModal, {
   ConfirmationModalContent,
   TransactionErrorContent
@@ -25,6 +26,7 @@ function tradeMeaningfullyDiffers(tradeA: Trade, tradeB: Trade): boolean {
 export default function ConfirmSwapModal({
   trade,
   originalTrade,
+  originalCurrencies,
   onAcceptChanges,
   allowedSlippage,
   onConfirm,
@@ -38,6 +40,7 @@ export default function ConfirmSwapModal({
   isOpen: boolean
   trade: Trade | undefined
   originalTrade: Trade | undefined
+  originalCurrencies: { [field in Field]?: Currency }
   attemptingTxn: boolean
   txHash: string | undefined
   recipient: string | null
@@ -78,8 +81,8 @@ export default function ConfirmSwapModal({
 
   // text to show while loading
   const pendingText = `Swapping ${trade?.inputAmount?.toSignificant(6)} ${
-    trade?.inputAmount?.currency?.symbol
-  } for ${trade?.outputAmount?.toSignificant(6)} ${trade?.outputAmount?.currency?.symbol}`
+    originalCurrencies[Field.INPUT]?.symbol
+  } for ${trade?.outputAmount?.toSignificant(6)} ${originalCurrencies[Field.OUTPUT]?.symbol}`
 
   const confirmationContent = useCallback(
     () =>

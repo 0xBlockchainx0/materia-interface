@@ -42,7 +42,6 @@ type EstimatedSwapCall = SuccessfulCall | FailedCall
  */
 function useSwapCallArguments(
   trade: Trade | undefined, // trade to execute, required
-  originalTrade: Trade | undefined, // trade to execute (without interoperable), required
   allowedSlippage: number = INITIAL_ALLOWED_SLIPPAGE, // in bips
   recipientAddressOrName: string | null, // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
 ): SwapCall[] {
@@ -51,7 +50,7 @@ function useSwapCallArguments(
   const recipient = recipientAddressOrName === null ? account : recipientAddress
   const deadline = useTransactionDeadline()
   const contract: Contract | null = (!library || !account || !chainId) ? null : getOrchestratorContract(chainId, library, account)
-  const tokenAddressA = originalTrade?.route.path[0]?.address ?? ZERO_ADDRESS
+  const tokenAddressA = trade?.route.path[0]?.address ?? ZERO_ADDRESS
   const tokenAIsEthItem = useCheckIsEthItem(tokenAddressA)
   const isEthItem: boolean = tokenAIsEthItem?.ethItem
   const ethItemCollection: string = tokenAIsEthItem?.collection
@@ -71,11 +70,11 @@ function useSwapCallArguments(
   return useMemo(() => {
     const swapMethods = []
 
-    if (!originalTrade || !recipient || !library || !account || !chainId || !deadline) return []
+    if (!trade || !recipient || !library || !account || !chainId || !deadline) return []
     if (!contract) { return [] }
 
     swapMethods.push(
-      Router.swapCallParameters(originalTrade, {
+      Router.swapCallParameters(trade, {
         feeOnTransfer: false,
         allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
         recipient,
@@ -96,20 +95,19 @@ function useSwapCallArguments(
       parameters: parameters,
       contract: contract
     }))
-  }, [account, allowedSlippage, chainId, deadline, library, recipient, originalTrade])
+  }, [account, allowedSlippage, chainId, deadline, library, recipient, trade])
 }
 
 // returns a function that will execute a swap, if the parameters are all valid
 // and the user has approved the slippage adjusted input amount for the trade
 export function useSwapCallback(
   trade: Trade | undefined, // trade to execute, required
-  originalTrade: Trade | undefined, // trade to execute (without interoperable), required
   allowedSlippage: number = INITIAL_ALLOWED_SLIPPAGE, // in bips
   recipientAddressOrName: string | null // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
 ): { state: SwapCallbackState; callback: null | (() => Promise<string>); error: string | null } {
   const { account, chainId, library } = useActiveWeb3React()
 
-  const swapCalls = useSwapCallArguments(trade, originalTrade, allowedSlippage, recipientAddressOrName)
+  const swapCalls = useSwapCallArguments(trade, allowedSlippage, recipientAddressOrName)
   const addTransaction = useTransactionAdder()
 
   const { address: recipientAddress } = useENS(recipientAddressOrName)
@@ -120,7 +118,7 @@ export function useSwapCallback(
   // console.log('*********************************')
 
   return useMemo(() => {
-    if (!trade || !originalTrade || !library || !account || !chainId) {
+    if (!trade || !library || !account || !chainId) {
       return { state: SwapCallbackState.INVALID, callback: null, error: 'Missing dependencies' }
     }
     if (!recipient) {
@@ -207,8 +205,8 @@ export function useSwapCallback(
           ...(value && !isZero(value) ? { value, from: account } : { from: account })
         })
           .then((response: any) => {
-            const inputSymbol = originalTrade.inputAmount.currency.symbol
-            const outputSymbol = originalTrade.outputAmount.currency.symbol
+            const inputSymbol = trade.inputAmount.currency.symbol
+            const outputSymbol = trade.outputAmount.currency.symbol
             // const inputSymbol = trade.inputAmount.currency.symbol
             // const outputSymbol = trade.outputAmount.currency.symbol
             const inputAmount = trade.inputAmount.toSignificant(3)
@@ -244,5 +242,5 @@ export function useSwapCallback(
       },
       error: null
     }
-  }, [trade, originalTrade, library, account, chainId, recipient, recipientAddressOrName, swapCalls, addTransaction])
+  }, [trade, library, account, chainId, recipient, recipientAddressOrName, swapCalls, addTransaction])
 }
