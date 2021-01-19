@@ -44,25 +44,9 @@ const Input = styled.input<{ error?: boolean }>`
   overflow: hidden;
   text-overflow: ellipsis;
   font-weight: 500;
-  width: 100%;
-  ::placeholder {
-    color: ${({ theme }) => theme.text4};
-  }
+  width: 100%;  
   padding: 0px;
-  -webkit-appearance: textfield;
-
-  ::-webkit-search-decoration {
-    -webkit-appearance: none;
-  }
-
-  ::-webkit-outer-spin-button,
-  ::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-  }
-
-  ::placeholder {
-    color: ${({ theme }) => theme.text4};
-  }
+  -webkit-appearance: textfield;  
 `
 
 export default function AddressInputPanel({

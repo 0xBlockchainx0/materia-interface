@@ -1,7 +1,9 @@
-import React from 'react'
-import styled from 'styled-components'
+import React, {  useContext } from 'react'
+import styled, { ThemeContext } from 'styled-components'
 import { useIsClassicMode } from '../state/user/hooks'
 import frameCorner from '../assets/images/trailer_frame_corner.png'
+import { Route, Router } from 'react-router-dom'
+import { FeatureTitle } from '../theme'
 
 export const BodyWrapper = styled.div`
   position: relative;
@@ -93,7 +95,6 @@ const StyledSpanBottomRight = styled.span`
   height: 39px;
   width: 39px;
 `
-
 const CornerBox = () => {
   return (
     <>
@@ -117,15 +118,29 @@ const CornerBox = () => {
  * The styled container element that wraps the content of most pages and the tabs.
  */
 export default function AppBody({ children }: { children: React.ReactNode }) {
-  const classicMode = useIsClassicMode()
+  const classicMode = useIsClassicMode();
+  const theme = useContext(ThemeContext);
+  var bodyTitle = '';
+  
+  if(window.location.href.indexOf('/swap') > -1) {
+    bodyTitle = 'swap';
+  }
+  else if (window.location.href.indexOf('/lm') > -1) {
+    bodyTitle = 'liquidity mining';
+  }
+  else if (window.location.href.indexOf('/add') > -1) {
+    bodyTitle = 'Pool';
+  }
+
   return (
     <StyledBox>
       {!classicMode && (
         <CornerBox />
       )}
       <BodyWrapper>
+        <FeatureTitle className={theme.name}>{bodyTitle}</FeatureTitle>        
         {children}
       </BodyWrapper>
     </StyledBox>
-  )
+  );
 }

@@ -12,7 +12,7 @@ import {
   useUserSlippageTolerance,
   useClassicModeManager
 } from '../../state/user/hooks'
-import { TYPE } from '../../theme'
+import { TYPE, SettingsMenuFlyout } from '../../theme'
 import { ButtonError } from '../Button'
 import { AutoColumn } from '../Column'
 import Modal from '../Modal'
@@ -21,33 +21,17 @@ import { RowBetween, RowFixed } from '../Row'
 import Toggle from '../Toggle'
 import TransactionSettings from '../TransactionSettings'
 
-
-const StyledMenuIcon = styled(Settings)`
-  height: 20px;
-  width: 20px;
-
-  > * {
-    stroke: ${({ theme }) => theme.text1};
-  }
-`
-
 const StyledMenuText = styled.b`
-  :hover {
-    cursor: pointer;
-  }
+  :hover { cursor: pointer; }
   margin-top: -0.3rem;
 `
 
 const StyledCloseIcon = styled(X)`
   height: 20px;
   width: 20px;
-  :hover {
-    cursor: pointer;
-  }
+  :hover { cursor: pointer; }
 
-  > * {
-    stroke: ${({ theme }) => theme.text1};
-  }
+  > * { stroke: ${({ theme }) => theme.text1}; }
 `
 
 const StyledMenuButton = styled.button`
@@ -88,34 +72,6 @@ const StyledMenu = styled.div`
   position: relative;
   border: none;
   text-align: left;
-`
-
-const MenuFlyout = styled.span`
-  min-width: 20.125rem;
-  background-color: ${({ theme }) => theme.bg2};
-  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),0px 24px 32px rgba(0, 0, 0, 0.01);
-  border-radius: 5px;
-  display: flex;
-  flex-direction: column;
-  font-size: 1rem;
-  position: absolute;
-  top: -21rem;
-  right: 1rem;
-  z-index: 100;
-
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-    min-width: 18.125rem;
-    right: -46px;
-  `};
-
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    min-width: 18.125rem;
-    top: -22rem;
-    right: 2rem;
-    @media (max-width: 960px) {
-      top: -19.5rem;
-    }
-  `};
 `
 
 const Break = styled.div`
@@ -171,9 +127,7 @@ export default function SettingsTab() {
                 Expert mode turns off the confirm transaction prompt and allows high slippage trades that often result
                 in bad rates and lost funds.
               </Text>
-              <Text fontWeight={600} fontSize={20}>
-                ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING.
-              </Text>
+              <Text fontWeight={600} fontSize={20}>ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING.</Text>
               <ButtonError
                 error={true}
                 padding={'12px'}
@@ -193,7 +147,7 @@ export default function SettingsTab() {
         </ModalContentWrapper>
       </Modal>
       <StyledMenuButton onClick={toggle} id="open-settings-dialog-button">
-        <StyledMenuIcon />
+        <Settings size={15} stroke={theme.text1} />
         {/*
         {expertMode ? (
           <EmojiWrapper>
@@ -204,57 +158,31 @@ export default function SettingsTab() {
         ) : null}
         */}
       </StyledMenuButton>
-      <StyledMenuText onClick={toggle}>
-        Settings
-      </StyledMenuText>
+      <StyledMenuText onClick={toggle}>Settings</StyledMenuText>
       {open && (
-        <MenuFlyout>
+        <SettingsMenuFlyout className={theme.name}>
           <AutoColumn gap="md" style={{ padding: '1rem' }}>
-            <Text fontWeight={600} fontSize={14}>
-              Transaction Settings
-            </Text>
-            <TransactionSettings
-              rawSlippage={userSlippageTolerance}
-              setRawSlippage={setUserslippageTolerance}
-              deadline={ttl}
-              setDeadline={setTtl}
-            />
-            <Text fontWeight={600} fontSize={14}>
-              Interface Settings
-            </Text>
+            <div className="sectionHeader">Transaction Settings</div>
+            <TransactionSettings rawSlippage={userSlippageTolerance} setRawSlippage={setUserslippageTolerance} deadline={ttl} setDeadline={setTtl} />
+            <div className="sectionHeader">Interface Settings</div>
             <RowBetween>
               <RowFixed>
-                <TYPE.black fontWeight={400} fontSize={14} color={theme.text2}>
-                  Toggle Expert Mode
-                </TYPE.black>
+                <div className="sectionOption">Toggle Expert Mode</div>
                 <QuestionHelper text="Bypasses confirmation modals and allows high slippage trades. Use at your own risk." />
               </RowFixed>
               <Toggle
                 id="toggle-expert-mode-button"
                 isActive={expertMode}
-                toggle={
-                  expertMode
-                    ? () => {
-                        toggleExpertMode()
-                        setShowConfirmation(false)
-                      }
-                    : () => {
-                        toggle()
-                        setShowConfirmation(true)
-                      }
-                }
-              />
+                toggle={ expertMode ? () => { toggleExpertMode(); setShowConfirmation(false); } : () => { toggle(); setShowConfirmation(true); } } />
             </RowBetween>
             <RowBetween>
               <RowFixed>
-                <TYPE.black fontWeight={400} fontSize={14} color={theme.text2}>
-                  Toggle Classic Mode
-                </TYPE.black>
+                <div className="sectionOption">Toggle Classic Mode</div>
               </RowFixed>
               <Toggle isActive={classicMode} toggle={toggleClassicMode} />
             </RowBetween> 
           </AutoColumn>
-        </MenuFlyout>
+        </SettingsMenuFlyout>
       )}
     </StyledMenu>
   )

@@ -55,9 +55,7 @@ export const SearchInput = styled.input`
 
   font-size: 18px;
 
-  ::placeholder {
-    color: ${({ theme }) => theme.text3};
-  }
+  //::placeholder { color: ${({ theme }) => theme.text3}; }
   transition: border 100ms;
   :focus {
     border: 1px solid ${({ theme }) => theme.primary1};
@@ -67,7 +65,7 @@ export const SearchInput = styled.input`
 export const Separator = styled.div`
   width: 100%;
   height: 1px;
-  background-color: ${({ theme }) => theme.bg2};
+  background-color: ${({ theme }) => theme.border1};
 `
 
 export const SeparatorDark = styled.div`

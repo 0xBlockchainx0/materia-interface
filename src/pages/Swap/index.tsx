@@ -39,14 +39,14 @@ import {
   useSwapState
 } from '../../state/swap/hooks'
 import { useExpertModeManager, useUserSlippageTolerance } from '../../state/user/hooks'
-import { LinkStyledButton, TYPE } from '../../theme'
+import { LinkStyledButton, TYPE, SwapMenu, SwapMenuItem, StyledNavLink } from '../../theme'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { computeTradePriceBreakdown, warningSeverity } from '../../utils/prices'
 import AppBody, { ButtonBgItem } from '../AppBody'
 import { ClickableText } from '../Pool/styleds'
 import Loader from '../../components/Loader'
 import Inventory from '../../components/Inventory'
-import { darken } from 'polished'
+import { darken, linearGradient } from 'polished'
 import FFCursor from '../../assets/images/FF7Cursor.png'
 import useSound from 'use-sound'
 
@@ -68,29 +68,13 @@ const SwapCurrencyContainer = styled.div`
   }
 `
 
-const Divider = styled.div`
-  border: 1px solid ${({ theme }) => theme.cyan1};
-  margin-top: 0.2rem;
-`
-
 const SwapPageContainer = styled.div`
   padding: 1rem 0.5rem 1rem 0.5rem;
   min-height: 580px;
   ${({ theme }) => theme.backgroundContainer}
 `
-
-const SwapMenu = styled.div`
-  display: inline-flex;
-`
-
-const SwapMenuItem = styled.div<{ active?: boolean }>`
-  padding-right: 1rem;
-  opacity: ${({ active }) => (active ? '1' : '0.4')};
-`
-
-
-const activeClassName = 'ACTIVE'
-const StyledNavLink = styled(NavLink).attrs({
+/*const activeClassName = 'ACTIVE'
+ const StyledNavLink = styled(NavLink).attrs({
   activeClassName
 })`
   ${({ theme }) => theme.flexRowNoWrap}
@@ -115,7 +99,7 @@ const StyledNavLink = styled(NavLink).attrs({
   :focus {
     color: ${({ theme }) => darken(0.1, theme.cyan1)};
   }
-`
+` */
 
 const TradePriceContainer = styled.div`
   margin-top: auto;
@@ -141,16 +125,11 @@ min-height: 580px;
 ${({ theme }) => theme.backgroundContainer}
 @media (max-width: 1350px) { display: none; }
 `
-
 const ItemColumn = styled.div`
-  @media (min-width: 601px) and (max-width: 1350px) {
-    // display: none;
-  }
-  @media (max-width: 600px) {
-    display: none;
-  }
+  width: 0px;
+  @media (min-width: 601px) and (max-width: 1350px) { /*display: none;*/ }
+  @media (max-width: 600px) { display: none; }
 `
-
 
 export const Center = styled.div`
   display: flex;
@@ -172,7 +151,6 @@ export const FFCursorImg = styled.img`
   margin: 12px 0px 0px -250px;
   z-index: 999;
   `
-
 export default function Swap() {
   const loadedUrlParams = useDefaultsFromURLSearch()
 
@@ -417,16 +395,12 @@ export default function Swap() {
             onDismiss={handleConfirmDismiss}
           />
           <SwapGridContainer>
-            <ItemColumn>
-              <div style={{ writingMode: 'vertical-rl', textOrientation: 'mixed' }}>
-                <p style={{ fontSize: 'xx-large', margin: '0px 0px 0px -10px', color: '#fff' }}>Swap</p>
-              </div>
-            </ItemColumn>
+            <ItemColumn></ItemColumn>
             <InventoryColumn>
               <Inventory onCurrencySelect={handleOutputSelect} />
             </InventoryColumn>
             <SwapPageContainer>
-              <SwapMenu>
+              <SwapMenu className={theme.name}>
 
                 {/* <SwapMenuItem active={true}>
                   <TYPE.body color={theme.text1} fontWeight={500} fontSize={14}>Classic SWAP</TYPE.body>
@@ -435,31 +409,16 @@ export default function Swap() {
                   <TYPE.body color={theme.text1} fontWeight={500} fontSize={14}>Batch SWAP (coming soon)</TYPE.body>
                 </SwapMenuItem> */}
 
-                <StyledNavLink
-                  id={`classic-swap`}
-                  to={'/swap'}
-                  isActive={(match, { pathname }) =>
-                    Boolean(match) ||
-                    pathname.startsWith('/swap')
-                  }
-                  style={{ textShadow: '1px 1px #053472' }}
-                >
-                  Classic SWAP
-              </StyledNavLink>
+                <StyledNavLink id={`classic-swap`} to={'/swap'} 
+                  className={ `${theme.name}` }
+                  isActive={(match, { pathname }) => Boolean(match) || pathname.startsWith('/swap') }
+                  style={{ textShadow: '1px 1px #053472' }}>Classic SWAP</StyledNavLink>
 
-                <StyledNavLink
-                  id={`batch-swap`}
-                  to={'/batch-swap'}
-                  style={{ textShadow: '1px 1px #053472' }}
-                // isActive={(match, { pathname }) =>
-                //   Boolean(match) ||
-                //   pathname.startsWith('/batchswap')
-                // }
-                >
-                  Batch SWAP (coming soon)
-              </StyledNavLink>
+                <StyledNavLink id={`batch-swap`} to={'/batch-swap'} 
+                  className={ `disabled ${theme.name}` }
+                  //isActive={(match, { pathname }) => Boolean(match) || pathname.startsWith('/batchswap') }
+                  style={{ textShadow: '1px 1px #053472' }}>Batch SWAP (coming soon)</StyledNavLink>
               </SwapMenu>
-              <Divider></Divider>
               <div>
                 <SwapCurrencyContainer>
                   <div>

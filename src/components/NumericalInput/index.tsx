@@ -18,23 +18,7 @@ const StyledInput = styled.input<{ error?: boolean; fontSize?: string; align?: s
   text-overflow: ellipsis;
   padding: 0px;
   -webkit-appearance: textfield;
-
-  ::-webkit-search-decoration {
-    -webkit-appearance: none;
-  }
-
-  [type='number'] {
-    -moz-appearance: textfield;
-  }
-
-  ::-webkit-outer-spin-button,
-  ::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-  }
-
-  ::placeholder {
-    color: ${({ theme }) => theme.text4};
-  }
+  [type='number'] { -moz-appearance: textfield; }
 
   // @media (max-width: 450px) {
   //   margin-left: -4rem;

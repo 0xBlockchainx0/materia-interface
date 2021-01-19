@@ -1,6 +1,6 @@
 import React, { useCallback, useContext, useState } from 'react'
 import styled, { ThemeContext } from 'styled-components'
-import { TYPE } from '../../theme'
+import { GridContainer, InventoryItemContainer, InventoryItemIcon } from '../../theme'
 import { ButtonMateriaPrimary, ButtonEmpty, ButtonPrimary } from '../Button'
 import { RowBetween, RowFixed } from '../Row'
 import { AutoColumn } from '../Column'
@@ -18,44 +18,9 @@ import 'react-dropdown/style.css';
 import { ZERO_ADDRESS } from '../../constants'
 import { unwrappedToken } from '../../utils/wrappedCurrency'
 
-
-const Item = styled.div`
-  padding: 1rem;
-  margin-bottom: 0.15rem;
-  width: 100%;
-  height: auto;
-  ${({ theme }) => theme.backgroundContainer2}
-  background-size: cover;
-`
-
-const GridContainer = styled.div`
-  display: grid;
-  grid-template-columns: 80% auto;
-`
-
-const ButtonColumn = styled.div`
-  margin: auto;
-`
-
-const TokenType = styled.span`
-  margin: 5px 0px 5px 10px;
-  display: inline-block;
-  // color: ${({ theme }) => theme.cyan1}
-`
-
-const BalanceRow = styled.div`
-  display: inline-flex;
-  margin: 5px 0px;
-`
-
-const BalanceText = styled.div`
-margin-left: 5px;
-`
-
 export const FixedHeightRow = styled(RowBetween)`
   height: auto;
 `
-
 const StyledBalanceMax = styled.button`
   height: 28px;
   background-color: ${({ theme }) => theme.primary5};
@@ -178,50 +143,48 @@ export default function InventoryItem({
   )
 
   return (
-    <Item>
+    <InventoryItemContainer className={theme.name}>
       <GridContainer>
         <div>
-          <TYPE.body color={theme.text1} fontWeight={500} fontSize={15}>{tokenName} ({tokenSymbol})</TYPE.body>
-          <BalanceRow>
-            <TYPE.body color={theme.blue2} fontWeight={500} fontSize={12}>Balance:</TYPE.body>
-            <BalanceText>
-              <TYPE.body color={theme.text1} fontWeight={500} fontSize={12}>{balance}</TYPE.body>
-            </BalanceText>
-            {tokenType
+          <div>{tokenName} ({tokenSymbol})</div>
+          <div className="balanceRow">
+              <div>Balance:</div>
+              <div>{balance}</div>
+              {tokenType
               && (
-                <TokenType>
-                  <TYPE.body color={theme.cyan1} fontWeight={500} fontSize={15}>{tokenType}</TYPE.body>
-                </TokenType>
+                <span className="tokenType">
+                  <span>{tokenType}</span>
+                </span>
               )}
-          </BalanceRow>
+          </div>
         </div>
-        <ButtonColumn>
+        <div className="margin-auto">
           <ButtonEmpty
-            padding="6px 8px"
-            borderRadius="12px"
-            width="fit-content"
-            onClick={() => { onTokenSelection(token) }}
-          >
-            <CornerDownRight size="20" style={{ marginLeft: '10px' }} />
-          </ButtonEmpty>
-          {/* <ButtonEmpty
-            padding="6px 8px"
-            borderRadius="12px"
-            width="fit-content"
-            onClick={() => { setShowMore(!showMore) }}
-          >
-            {showMore ? (
-              <>
-                {' '}
-                <ChevronUp size="20" style={{ marginLeft: '10px' }} />
-              </>
-            ) : (
+              padding="6px 8px"
+              borderRadius="12px"
+              width="fit-content"
+              onClick={() => { onTokenSelection(token) }}
+            >
+              <InventoryItemIcon className={ `inventoryItemIcon ${theme.name}` }/>              
+            </ButtonEmpty>
+            {/* <ButtonEmpty
+              padding="6px 8px"
+              borderRadius="12px"
+              width="fit-content"
+              onClick={() => { setShowMore(!showMore) }}
+            >
+              {showMore ? (
                 <>
-                  <ChevronDown size="20" style={{ marginLeft: '10px' }} />
+                  {' '}
+                  <ChevronUp size="20" style={{ marginLeft: '10px' }} />
                 </>
-              )}
-          </ButtonEmpty> */}
-        </ButtonColumn>
+              ) : (
+                  <>
+                    <ChevronDown size="20" style={{ marginLeft: '10px' }} />
+                  </>
+                )}
+            </ButtonEmpty> */}
+        </div>
       </GridContainer>
 
       {showMore && (
@@ -257,6 +220,6 @@ export default function InventoryItem({
           </RowBetween>
         </AutoColumn>
       )}
-    </Item>
+    </InventoryItemContainer>
   )
 }

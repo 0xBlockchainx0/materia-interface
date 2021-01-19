@@ -26,7 +26,7 @@ import { Dots } from '../swap/styleds'
 import Modal from '../Modal'
 import usePrevious from '../../hooks/usePrevious'
 import Clock from 'react-live-clock';
-import { Moon, Sun } from 'react-feather'
+import { Moon, Sun, Clock as TimeIcon } from 'react-feather'
 
 const HeaderFrame = styled.div`
   display: grid;
@@ -308,7 +308,11 @@ export default function Footer() {
     <FooterControls>
       <FooterElementClock>
         <TransparentCard>
-          Time: <Clock format={'HH:mm:ss'} ticking={true} />
+          <TimeIcon size={15} style={{
+            marginTop: '-1px',
+            verticalAlign: 'middle',
+            marginRight: '3px'
+          }} /> <Clock format={'HH:mm:ss'} ticking={true} />
         </TransparentCard>
       </FooterElementClock>
       <FooterElement>
@@ -328,7 +332,7 @@ export default function Footer() {
       </FooterElement>
       <FooterElementWrap>
         <StyledButton type="button" onClick={toggleDarkMode}>
-          {darkMode ? <Sun size={20} /> : <Moon size={20} />}
+          {darkMode ? <Sun size={15} /> : <Moon size={15} />}
         </StyledButton>
         <Menu />
         <Settings />

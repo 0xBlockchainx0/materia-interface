@@ -5,6 +5,7 @@ export interface Colors {
   // base
   white: Color
   black: Color
+  placeholderColor: Color
 
   // text
   text1: Color
@@ -78,6 +79,9 @@ export interface Grids {
 
 declare module 'styled-components' {
   export interface DefaultTheme extends Colors {
+
+    name: string,
+
     grids: Grids
 
     // shadows
