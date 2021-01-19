@@ -108,6 +108,8 @@ export function useTradeExactOut(currencyIn?: Currency, currencyAmountOut?: Curr
 
   console.log('*********************************')
   console.log('useTradeExactOut allowedPairs: ', allowedPairs)
+  console.log('useTradeExactOut currencyIn: ', currencyIn)
+  console.log('useTradeExactOut currencyAmountOut: ', currencyAmountOut)
   console.log('*********************************')
 
   return useMemo(() => {

@@ -1,4 +1,4 @@
-import { Trade, TradeType } from '@materia-dex/sdk'
+import { Currency, Trade, TradeType } from '@materia-dex/sdk'
 import React, { useContext, useMemo, useState } from 'react'
 import { Repeat } from 'react-feather'
 import { Text } from 'rebass'
@@ -20,12 +20,14 @@ import { StyledBalanceMaxMini, SwapCallbackError } from './styleds'
 
 export default function SwapModalFooter({
   trade,
+  originalCurrencies,
   onConfirm,
   allowedSlippage,
   swapErrorMessage,
   disabledConfirm
 }: {
   trade: Trade
+  originalCurrencies: { [field in Field]?: Currency }
   allowedSlippage: number
   onConfirm: () => void
   swapErrorMessage: string | undefined
@@ -59,7 +61,7 @@ export default function SwapModalFooter({
               paddingLeft: '10px'
             }}
           >
-            {formatExecutionPrice(trade, showInverted)}
+            {formatExecutionPrice(trade, originalCurrencies, showInverted)}
             <StyledBalanceMaxMini onClick={() => setShowInverted(!showInverted)}>
               <Repeat size={14} />
             </StyledBalanceMaxMini>
@@ -81,8 +83,8 @@ export default function SwapModalFooter({
             </TYPE.black>
             <TYPE.black fontSize={14} marginLeft={'4px'}>
               {trade.tradeType === TradeType.EXACT_INPUT
-                ? trade.outputAmount.currency.symbol
-                : trade.inputAmount.currency.symbol}
+                ? originalCurrencies[Field.OUTPUT]?.symbol
+                : originalCurrencies[Field.INPUT]?.symbol}
             </TYPE.black>
           </RowFixed>
         </RowBetween>
@@ -103,7 +105,7 @@ export default function SwapModalFooter({
             <QuestionHelper text="A portion of each trade (0.30%) goes to liquidity providers as a protocol incentive." />
           </RowFixed>
           <TYPE.black fontSize={14}>
-            {realizedLPFee ? realizedLPFee?.toSignificant(6) + ' ' + trade.inputAmount.currency.symbol : '-'}
+            {realizedLPFee ? realizedLPFee?.toSignificant(6) + ' ' + originalCurrencies[Field.INPUT]?.symbol : '-'}
           </TYPE.black>
         </RowBetween>
       </AutoColumn>

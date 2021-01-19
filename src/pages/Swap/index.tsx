@@ -1,4 +1,4 @@
-import { CurrencyAmount, JSBI, Token, Trade } from '@materia-dex/sdk'
+import { CurrencyAmount, ETHER, JSBI, Token, Trade } from '@materia-dex/sdk'
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { useIsClassicMode } from '../../state/user/hooks'
 import { ArrowDown, ArrowRightCircle } from 'react-feather'
@@ -49,6 +49,7 @@ import Inventory from '../../components/Inventory'
 import { darken, linearGradient } from 'polished'
 import FFCursor from '../../assets/images/FF7Cursor.png'
 import useSound from 'use-sound'
+import { wrappedCurrency } from '../../utils/wrappedCurrency'
 
 const SwapGridContainer = styled.div`
   display: grid;
@@ -168,7 +169,7 @@ export default function Swap() {
     setDismissTokenWarning(true)
   }, [])
 
-  const { account } = useActiveWeb3React()
+  const { account, chainId } = useActiveWeb3React()
   const theme = useContext(ThemeContext)
 
   // toggle wallet when disconnected
@@ -275,7 +276,15 @@ export default function Swap() {
   const atMaxAmountInput = Boolean(maxAmountInput && parsedAmounts[Field.INPUT]?.equalTo(maxAmountInput))
 
   // the callback to execute the swap
-  const { callback: swapCallback, error: swapCallbackError } = useSwapCallback(trade, allowedSlippage, recipient)
+  const { callback: swapCallback, error: swapCallbackError } = useSwapCallback(
+    trade, 
+    allowedSlippage, 
+    recipient, 
+    wrappedCurrency(originalCurrencies[Field.INPUT], chainId), 
+    wrappedCurrency(originalCurrencies[Field.OUTPUT], chainId),
+    originalCurrencies[Field.INPUT] == ETHER,
+    originalCurrencies[Field.OUTPUT] == ETHER
+  )
 
   const { priceImpactWithoutFee } = computeTradePriceBreakdown(trade)
 
@@ -464,6 +473,7 @@ export default function Swap() {
                             <RowBetween align="center">
                               <TradePrice
                                 price={trade?.executionPrice}
+                                originalCurrencies={originalCurrencies}
                                 showInverted={showInverted}
                                 setShowInverted={setShowInverted}
                               />
@@ -621,7 +631,7 @@ export default function Swap() {
                   </SwapButton>
                 </BottomGrouping>
               </div>
-              <AdvancedSwapDetailsDropdown trade={trade} />
+              <AdvancedSwapDetailsDropdown trade={trade} originalCurrencies={originalCurrencies} />
             </SwapPageContainer>
           </SwapGridContainer>
         </Wrapper>
