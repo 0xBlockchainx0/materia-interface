@@ -37,6 +37,20 @@ function useContract(address: string | undefined, ABI: any, withSignerIfPossible
   }, [address, ABI, library, withSignerIfPossible, account])
 }
 
+function useContracts(addresses: string[] | undefined, ABI: any, withSignerIfPossible = true): Contract[] | null {
+  const { library, account } = useActiveWeb3React()
+
+  return useMemo(() => {
+    if (!addresses || !ABI || !library) return null
+    try {
+      return addresses.map((address) => getContract(address, ABI, library, withSignerIfPossible && account ? account : undefined))
+    } catch (error) {
+      console.error('Failed to get contract', error)
+      return null
+    }
+  }, [addresses, ABI, library, withSignerIfPossible, account])
+}
+
 export function useV2MigratorContract(): Contract | null {
   return useContract(MIGRATOR_ADDRESS, MIGRATOR_ABI, true)
 }

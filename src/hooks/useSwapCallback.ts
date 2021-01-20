@@ -127,9 +127,9 @@ export function useSwapCallback(
   const { address: recipientAddress } = useENS(recipientAddressOrName)
   const recipient = recipientAddressOrName === null ? account : recipientAddress
 
-  console.log('*********************************')
-  console.log('swapCalls: ', swapCalls)
-  console.log('*********************************')
+  // console.log('*********************************')
+  // console.log('swapCalls: ', swapCalls)
+  // console.log('*********************************')
 
   return useMemo(() => {
     if (!trade || !tokenIn || !tokenOut || !library || !account || !chainId) {
