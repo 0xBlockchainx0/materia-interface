@@ -277,18 +277,18 @@ export function useDerivedSwapInfo(
 
   const v2Trade = isExactIn ? bestTradeExactIn : bestTradeExactOut
 
-  console.log('***************************************')
-  console.log('interoperable: ', interoperable)
-  console.log('inputCurrency: ', inputCurrency)
-  console.log('outputCurrency: ', outputCurrency)
-  console.log('inputCurrencyInteroperable: ', inputCurrencyInteroperable)
-  console.log('outputCurrencyInteroperable: ', outputCurrencyInteroperable)
-  console.log('isExactIn: ', isExactIn)
-  console.log('parsedAmount: ', parsedAmount)
-  console.log('bestTradeExactIn: ', bestTradeExactIn)
-  console.log('bestTradeExactOut: ', bestTradeExactOut)
-  console.log('v2Trade: ', v2Trade)
-  console.log('***************************************')
+  // console.log('***************************************')
+  // console.log('interoperable: ', interoperable)
+  // console.log('inputCurrency: ', inputCurrency)
+  // console.log('outputCurrency: ', outputCurrency)
+  // console.log('inputCurrencyInteroperable: ', inputCurrencyInteroperable)
+  // console.log('outputCurrencyInteroperable: ', outputCurrencyInteroperable)
+  // console.log('isExactIn: ', isExactIn)
+  // console.log('parsedAmount: ', parsedAmount)
+  // console.log('bestTradeExactIn: ', bestTradeExactIn)
+  // console.log('bestTradeExactOut: ', bestTradeExactOut)
+  // console.log('v2Trade: ', v2Trade)
+  // console.log('***************************************')
 
   const currencyBalances = {
     [Field.INPUT]: relevantTokenBalances[0],
