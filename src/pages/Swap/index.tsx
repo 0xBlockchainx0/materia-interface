@@ -195,8 +195,8 @@ export default function Swap() {
   } = useDerivedSwapInfo(true)
 
   const { wrapType, execute: onWrap, inputError: wrapInputError } = useWrapCallback(
-    currencies[Field.INPUT],
-    currencies[Field.OUTPUT],
+    originalCurrencies[Field.INPUT],
+    originalCurrencies[Field.OUTPUT],
     typedValue
   )
   const showWrap: boolean = wrapType !== WrapType.NOT_APPLICABLE

@@ -56,7 +56,7 @@ function useSwapCallArguments(
   const contract: Contract | null = (!library || !account || !chainId) ? null : getOrchestratorContract(chainId, library, account)
   const tokenAddressA = tokenIn?.address ?? ZERO_ADDRESS
   const tokenAIsEthItem = useCheckIsEthItem(tokenAddressA)
-  const isEthItem: boolean = tokenAIsEthItem?.ethItem
+  const isEthItem: boolean = tokenAIsEthItem?.ethItem && !etherIn
   const ethItemCollection: string = tokenAIsEthItem?.collection
   const ethItemObjectId: JSBI = JSBI.BigInt(tokenAIsEthItem?.itemId ?? 0)
   const collectionContract: Contract | null =
