@@ -37,6 +37,17 @@ function useContract(address: string | undefined, ABI: any, withSignerIfPossible
   }, [address, ABI, library, withSignerIfPossible, account])
 }
 
+function useContractCustom(address: string | undefined, ABI: any, withSignerIfPossible = true): Contract | null {
+  const { library, account } = useActiveWeb3React()
+  if (!address || !ABI || !library) return null
+  try {
+    return getContract(address, ABI, library, withSignerIfPossible && account ? account : undefined)
+  } catch (error) {
+    console.error('Failed to get contract', error)
+    return null
+  }
+}
+
 function useContracts(addresses: string[] | undefined, ABI: any, withSignerIfPossible = true): Contract[] | null {
   const { library, account } = useActiveWeb3React()
 
@@ -99,6 +110,10 @@ export function useBytes32TokenContract(tokenAddress?: string, withSignerIfPossi
 
 export function usePairContract(pairAddress?: string, withSignerIfPossible?: boolean): Contract | null {
   return useContract(pairAddress, IMateriaPairABI, withSignerIfPossible)
+}
+
+export function usePairContractCustom(pairAddress?: string, withSignerIfPossible?: boolean): Contract | null {
+  return useContractCustom(pairAddress, IMateriaPairABI, withSignerIfPossible)
 }
 
 export function useMulticallContract(): Contract | null {

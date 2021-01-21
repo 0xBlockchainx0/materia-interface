@@ -254,3 +254,26 @@ export function useSingleCallResult(
     return toCallState(result, contract?.interface, fragment, latestBlockNumber)
   }, [result, contract, fragment, latestBlockNumber])
 }
+
+export function useSingleCallResultCustom(
+  contract: Contract | null | undefined,
+  methodName: string,
+  inputs?: OptionalMethodInputs,
+  options?: ListenerOptions
+): CallState {
+  const fragment = contract?.interface?.getFunction(methodName)
+
+  const calls = contract && fragment && isValidMethodArgs(inputs)
+  ? [
+      {
+        address: contract.address,
+        callData: contract.interface.encodeFunctionData(fragment, inputs)
+      }
+    ]
+  : []
+
+  const result = useCallsData(calls, options)[0]
+  const latestBlockNumber = useBlockNumber()
+
+  return toCallState(result, contract?.interface, fragment, latestBlockNumber)
+}
