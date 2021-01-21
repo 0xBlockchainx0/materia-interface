@@ -1,11 +1,10 @@
 import React, { useCallback, useContext, useState } from 'react'
 import styled, { ThemeContext } from 'styled-components'
-import { GridContainer, InventoryItemContainer, InventoryItemIcon } from '../../theme'
-import { ButtonMateriaPrimary, ButtonEmpty, ButtonPrimary } from '../Button'
+import { GridContainer, InventoryItemContainer, IconButton } from '../../theme'
+import { ButtonMateriaPrimary } from '../Button'
 import { RowBetween, RowFixed } from '../Row'
 import { AutoColumn } from '../Column'
 import { Text } from 'rebass'
-import { ChevronDown, ChevronUp, CornerDownRight } from 'react-feather'
 import { Input as NumericalInput } from '../NumericalInput'
 import { Currency, CurrencyAmount, ETHER, JSBI, Token, TokenAmount } from '@materia-dex/sdk'
 import { useActiveWeb3React } from '../../hooks'
@@ -15,8 +14,8 @@ import { useDerivedWrapInfo, useWrapActionHandlers, useWrapState } from '../../s
 import CurrencyInputPanel from '../CurrencyInputPanel'
 import Dropdown from 'react-dropdown';
 import 'react-dropdown/style.css';
-import { ZERO_ADDRESS } from '../../constants'
 import { unwrappedToken } from '../../utils/wrappedCurrency'
+import { ChevronUp, ChevronDown, ExternalLink } from 'react-feather'
 
 export const FixedHeightRow = styled(RowBetween)`
   height: auto;
@@ -159,31 +158,12 @@ export default function InventoryItem({
           </div>
         </div>
         <div className="margin-auto">
-          <ButtonEmpty
-              padding="6px 8px"
-              borderRadius="12px"
-              width="fit-content"
-              onClick={() => { onTokenSelection(token) }}
-            >
-              <InventoryItemIcon className={ `inventoryItemIcon ${theme.name}` }/>              
-            </ButtonEmpty>
-            {/* <ButtonEmpty
-              padding="6px 8px"
-              borderRadius="12px"
-              width="fit-content"
-              onClick={() => { setShowMore(!showMore) }}
-            >
-              {showMore ? (
-                <>
-                  {' '}
-                  <ChevronUp size="20" style={{ marginLeft: '10px' }} />
-                </>
-              ) : (
-                  <>
-                    <ChevronDown size="20" style={{ marginLeft: '10px' }} />
-                  </>
-                )}
-            </ButtonEmpty> */}
+          <IconButton className={ `${theme.name} hidden` } onClick={() => { setShowMore(!showMore) }}>              
+              {showMore ? ( <ChevronUp/> ) : ( <ChevronDown/> )}
+          </IconButton>
+          <IconButton className={theme.name} onClick={() => { onTokenSelection(token) }}>              
+              <ExternalLink/>
+          </IconButton>           
         </div>
       </GridContainer>
 

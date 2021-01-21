@@ -1,6 +1,4 @@
 import React, { useMemo } from 'react'
-import sky from '../assets/images/sky.png'
-import skyWhite from '../assets/images/sky-white.png'
 import { NavLink } from 'react-router-dom'
 import styled, {
   ThemeProvider as StyledComponentsThemeProvider,
@@ -9,13 +7,9 @@ import styled, {
   DefaultTheme
 } from 'styled-components'
 import { useIsClassicMode, useIsDarkMode } from '../state/user/hooks'
-import { Text, TextProps } from 'rebass'
+import { Text, TextProps, Button } from 'rebass'
 import { Colors } from './styled'
-import tokenbackgroundDark from '../assets/images/token-background.png'
-import tokenbackgroundLight from '../assets/images/token-background-light.png'
-import tokenbackgroundClassic from '../assets/images/token-background-classic.png'
-import swapButtonBgDark from '../assets/images/button-background.png'
-import swapButtonBgLight from '../assets/images/button-background-light.png'
+import { images } from './images'
 
 export * from './components'
 
@@ -38,14 +32,34 @@ const mediaWidthTemplates: { [width in keyof typeof MEDIA_WIDTHS]: typeof css } 
   {}
 ) as any
 
-const white = '#FFFFFF'
-const black = '#000000'
+const hexToRGB = (hexColor: string, alpha: number = 1) => {
+  var parts = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hexColor);
+  var result = parts ? {
+    r: parseInt(parts[1], 16),
+    g: parseInt(parts[2], 16),
+    b: parseInt(parts[3], 16)
+  } : null;
+  
+  return (!result ? colors(false, false).black : 'rgba(' + result.r + ', ' + result.g + ', ' + result.b + ', ' +  alpha.toString() + ')');
+}
 
 export function colors(darkMode: boolean, classicMode: boolean): Colors {
   return {
     // base
-    white,
-    black,
+    white: '#FFFFFF',
+    black: '#000000',
+    transparent: 'transparent',
+
+    azure1: classicMode ? '#000000' : darkMode ? '#95e1ff' : '#000000',
+    azure2: classicMode ? '#000000' : darkMode ? '#23bee5' : '#000000',
+    azure3: classicMode ? '#000000' : darkMode ? '#2d72e9' : '#000000',
+    blue1: classicMode ? '#000000' : darkMode ? '#1e98dc' : '#000000',
+    blue2: classicMode ? '#000000' : darkMode ? '#022b63' : '#000000',
+    blue3: classicMode ? '#000000' : darkMode ? '#082751' : '#000000',
+    grey1: classicMode ? '#000000' : darkMode ? '#5e6873' : '#000000',
+    yellowGreen: classicMode ? '#000000' : darkMode ? '#878e13' : '#000000',
+    yellowLight: classicMode ? '#000000' : darkMode ? '#ffffbe' : '#000000', 
+
     placeholderColor: classicMode ? '#000000' : darkMode ? '#FFFFFF' : '#000000',
 
     // text
@@ -61,7 +75,7 @@ export function colors(darkMode: boolean, classicMode: boolean): Colors {
     bg3: classicMode ? '#40444F' : darkMode ? '#40444F' : '#EDEEF2',
     bg4: classicMode ? '#565A69' : darkMode ? '#565A69' : '#CED0D9',
     bg5: classicMode ? '#6C7284' : darkMode ? '#6C7284' : '#888D9B',
-    bg6: classicMode ? '#1a1a1a' : darkMode ? "#1a1a1a" : "#1a1a1a",
+    bg6: classicMode ? '#1a1a1a' : darkMode ? "#1a1a1a" : "#1a1a1a", 
     bg7: classicMode ? '#002852' : darkMode ? "#002852" : "#002852",
     bg8: classicMode ? 'rgb(0, 0, 0, 0.5)' : darkMode ? "rgb(0, 0, 0, 0.8)" : "rgb(255, 255, 255, 0.5)",
 
@@ -108,16 +122,18 @@ export function colors(darkMode: boolean, classicMode: boolean): Colors {
     green1: '#27AE60',
     yellow1: '#FFE270',
     yellow2: '#F3841E',
-    blue1: '#2172E5',
-    blue2: '#1671BB',
+    //blue1: '#2172E5',
+    //blue2: '#1671BB',
     cyan1: '#2f9ab8',
     cyan2: '#1992d3',
     grey: '#999999',
-    transparent: 'transparent',
+    
     
     // dont wanna forget these blue yet
     // blue4: darkMode ? '#153d6f70' : '#C4D9F8',
     // blue5: darkMode ? '#153d6f70' : '#EBF4FF',
+
+    //adatpters
   }
 }
 
@@ -140,52 +156,8 @@ export function theme(darkMode: boolean, classicMode: boolean): DefaultTheme {
     mediaWidth: mediaWidthTemplates,
 
     // css snippets
-    flexColumnNoWrap: css`
-      display: flex;
-      flex-flow: column nowrap;
-    `,
-    flexRowNoWrap: css`
-      display: flex;
-      flex-flow: row nowrap;
-    `,
-
-    bodyBackground: 
-    classicMode ?
-    css`
-      background: linear-gradient(rgba(0,0,0,.9), rgba(0,0,0,.9));
-    `:
-    darkMode ? css`
-      background: linear-gradient(rgba(0,0,0,.1), rgba(0,0,0,.1)), url(${sky}) no-repeat fixed top;
-    `:
-      css`
-      background: linear-gradient(rgba(255,255,255,.1), rgba(255,255,255,.1)), url(${skyWhite}) no-repeat fixed top;
-    `,
-
-    bodyWrapperBackground:
-      classicMode ?
-        css`
-    border: solid 1px #424542;
-    box-shadow: 1px 1px #e7dfe7, -1px -1px #e7dfe7, 1px -1px #e7dfe7, -1px 1px #e7dfe7, 0 -2px #9c9a9c, -2px 0 #7b757b,
-      0 2px #424542;
-    background: #04009d;
-    background: -moz-linear-gradient(top, #04009d 0%, #06004d 100%);
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #04009d), color-stop(100%, #06004d));
-    background: -webkit-linear-gradient(top, #04009d 0%, #06004d 100%);
-    background: -o-linear-gradient(top, #04009d 0%, #06004d 100%);
-    background: -ms-linear-gradient(top, #04009d 0%, #06004d 100%);
-    background: linear-gradient(to bottom, #04009d 0%, #06004d 100%);
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#04009d', endColorstr='#06004d',GradientType=0 );
-  `:
-        darkMode ? css`
-        background: linear-gradient(-45deg, rgba(12,20,38, 0.9), rgba(25,101,208, 0.6)); 
-        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#0c1426",endColorstr="#1965d0",GradientType=1);    `
-          :
-          css`
-    background: rgb(156,208,245, 0.7);
-    background: -moz-linear-gradient(168deg, rgba(156,208,245,1) 0%, rgba(156,208,245,1) 100%);
-    background: -webkit-linear-gradient(168deg, rgba(156,208,245,1) 0%, rgba(156,208,245,1) 100%);
-    background: linear-gradient(168deg, rgba(156,208,245,1) 0%, rgba(156,208,245,1) 100%);
-    `,
+    flexColumnNoWrap: css` display: flex; flex-flow: column nowrap; `,
+    flexRowNoWrap: css` display: flex; flex-flow: row nowrap;`,
 
     styledBoxBorder: 
     classicMode ?
@@ -243,16 +215,16 @@ export function theme(darkMode: boolean, classicMode: boolean): DefaultTheme {
         background: linear-gradient(180deg, rgba(239,241,244) 0%, rgba(239,241,244) 100%);
     `,
     tokenBackground: 
-    classicMode ? 
-    'url(' + tokenbackgroundClassic + ') no-repeat' :
-    darkMode ? 'url(' + tokenbackgroundDark + ') no-repeat' : 'url(' + tokenbackgroundLight + ') no-repeat',
+    classicMode ?  
+    'url(' + images.token.classic + ') no-repeat' :
+    darkMode ? 'url(' + images.token.dark + ') no-repeat' : 'url(' + images.token.light + ') no-repeat',
 
     swapButtonBg: 
     darkMode ?
-      css`background-image:url(${swapButtonBgDark})` :
-      css`background-image:url(${swapButtonBgLight})`,
+      css`background-image:url(${images.swap.dark})` :
+      css`background-image:url(${images.swap.light})`,
 
-    swapButtonSrc: darkMode ? swapButtonBgDark : swapButtonBgLight,
+    swapButtonSrc: darkMode ? images.swap.dark : images.swap.light,
 
     advancedDetailsFooter: classicMode ? css`
     border: solid 1px #424542;
@@ -272,7 +244,9 @@ export function theme(darkMode: boolean, classicMode: boolean): DefaultTheme {
     :css`
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden; 
-    `
+    `,
+    
+    hexToRGB: hexToRGB
   }
 }
 
@@ -337,13 +311,11 @@ export const TYPE = {
 }
 
 export const FixedGlobalStyle = createGlobalStyle`
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
 html, input, textarea, button { font-family: 'Inter', sans-serif; font-display: fallback; }
 @supports (font-variation-settings: normal) {
-  html, input, textarea, button {
-    font-family: 'Inter var', sans-serif;
-  }
+  html, input, textarea, button { font-family: 'Inter', sans-serif; }
 }
-
 html, body { margin: 0; padding: 0; }
 a { color: ${colors(false, false).blue1}; }
 * { box-sizing: border-box; }
@@ -376,10 +348,25 @@ html {
 body {
   min-height: 100vh;
   background-position: 0 -30vh;
-  ${({ theme }) => theme.bodyBackground}
   background-blend-mode: luminosity;
-  /* also change the blend mode to what suits you, from darken, to other many options as you deem fit */
   background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: ${({ theme }) => (
+      (theme.name == 'classic' ? '0% 0%' : 'top center' )
+  )};
+  background-image: ${({ theme }) => (
+    (theme.name == 'classic' ? 'none' : (
+      theme.name == 'dark' ? 'url(' + images.backgrounds.dark + ')' : 
+      'url(../assets/images/sky-white.png)'
+    ))
+  )};
+  background-color: ${({ theme }) => (
+    (theme.name == 'classic' ? 'linear-gradient(rgba(0,0,0,.9), rgba(0,0,0,.9))' : (
+      theme.name == 'dark' ? 'transparent' : 
+      'linear-gradient(rgba(255,255,255,.1), rgba(255,255,255,.1))'
+    ))
+  )};
 }
 
 ::placeholder { color: ${({ theme }) => theme.placeholderColor}; }
@@ -387,6 +374,110 @@ body {
 ::-webkit-outer-spin-button, ::-webkit-inner-spin-button { -webkit-appearance: none; }
 
 .margin-auto { margin: auto; }
+.clear-fix { clear:both !important; float:none !important; }
+`
+export const AppWrapper = styled.div`
+  display: flex;
+  flex-flow: column;
+  align-items: flex-start;
+  overflow-x: hidden;
+`
+export const HeaderWrapper = styled.div`
+${({ theme }) => theme.flexRowNoWrap}
+width: 100%;
+justify-content: space-between;
+`
+export const BodyWrapper = styled.div`
+display: flex;
+flex-direction: column;
+width: 100%;
+padding-top: 25px;
+align-items: center;
+flex: 1;
+overflow-y: auto;
+overflow-x: hidden;
+z-index: 10;  
+${({ theme }) => theme.mediaWidth.upToSmall`
+  padding-left: 16px;
+  padding-right: 16px;
+  padding-bottom: 16px;
+  padding-top: 0rem;
+`};
+
+z-index: 1;
+`
+export const Marginer = styled.div`
+  margin-top: 5rem;
+`
+export const MainContainer = styled.div`
+  margin: 0 auto;
+  padding: 5px;
+  position: relative;
+  max-width: 1200px;
+  min-height: 620px;
+  width: 100%;
+  display: inline-block;
+  z-index: 0;
+
+  &.dark { border: solid 1px ${({ theme }) => theme.azure1}; }
+  &.light {}
+  &.classic {}
+
+  @media (max-width: 600px) { max-width: 90% !important; }
+  @media (max-width: 1200px) { max-width: 90%; }
+`
+export const MainContainerExtraDecorator = styled.div`
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+
+  &.top { top:0px; left:0px; }
+  &.bottom { bottom: 0px; left: 0px; transform: scaleX(-1); }
+
+  &:before, &:after {
+    position: absolute;
+    content: " ";
+    display: block;
+    width: 52px;
+    height: 55px; 
+    background-color: transparent;   
+  }
+
+  &:before { top: -37px; left: -36px; }
+  &:after { bottom: -37px; right: -36px; transform: rotate(180deg); }
+
+  &.dark:before {
+    background-image: url(${(images.decorators.largeBoxes.dark)});
+    background-position: left top;
+    background-repeat: no-repeat;
+  }
+  &.dark:after {
+    background-image: url(${(images.decorators.largeBoxes.dark)});
+    background-position: left top;
+    background-repeat: no-repeat;
+  }
+
+  &.light:before {}
+  &.light:after {}
+
+  &.classic:before {}
+  &.classic:after {}
+`
+export const MainContainerContentWrapper = styled.div`
+  position: relative;
+  max-width: 1200px;
+  min-height: 620px;
+  width: 100%;
+  border-radius: 3px;
+  padding: 20px 58px;
+  background-size: cover;
+
+  &.dark {
+    background: linear-gradient(-45deg, ${({ theme }) => theme.blue2}00 60%, ${({ theme }) => theme.azure3} 100%);
+  }
+  &.light {}
+  &.classic {}
 `
 export const FeatureTitle = styled.h2`
   writing-mode: vertical-rl;
@@ -399,7 +490,8 @@ export const FeatureTitle = styled.h2`
   text-transform: capitalize;
   display: inline-block;
   z-index: 10;
-  font-weight: 400;
+  font-weight: 300;
+  font-size: 33px;
   padding-top: 15px;
   padding-bottom: 170px;
   overflow: hidden;
@@ -412,7 +504,7 @@ export const FeatureTitle = styled.h2`
     content: "";
     height: 220%;
     display: block;
-    left: -29px;
+    left: -40px;
     top: -15px;
     position: relative;
     width: 1px;
@@ -433,13 +525,31 @@ export const FeatureTitle = styled.h2`
   
   @media (max-width: 600px) { display: none; }
 `
-export const SectionTitle = styled.h6 `
+export const FeatureChildrenContainer = styled.div`
+  border-radius:3px;
+  max-width: 1200px;
+  min-height: 580px;
+  padding: 20px;
+
   &.dark {
-    color: #ffffff;
-    padding: 7px 32% 7px 10px;
-    background: linear-gradient(to right, rgb(15, 63, 115) 50%, rgba(149, 225, 255, 0) 100%);
-    border-left: 1px solid #95e1ff;
-    box-shadow: -5px 0 5px -3px #95e1ff;
+    background: linear-gradient(-45deg, ${({ theme }) => theme.blue2}00 40%, ${({ theme }) => theme.azure3} 100%);
+  }
+  &.light {}
+  &.classic {}
+`
+export const SectionTitle = styled.h6`
+  font-weight: 200;
+  font-size: 23px;
+  position: relative;
+  display: inline-block;
+  margin: 0px 0px 20px 0px;
+  text-transform: capitalize;
+  padding:0px;
+  width: 80%;
+
+  &.dark {
+    color: ${({ theme }) => theme.azure1};
+    text-shadow: 2px 3px 5px ${({ theme }) => theme.blue3};
   }
 
   &.light {
@@ -449,16 +559,7 @@ export const SectionTitle = styled.h6 `
     border-left: none;
   }
 
-  &.dark:before {
-    content: " ";
-    display: block;
-    width: 100.5%;
-    height: 1px;
-    position: absolute;
-    top: 0px;
-    left: 0px;
-    background: linear-gradient(to right, #95e1ff 0%, rgba(15,63,115,0));
-  }
+  &.dark:before { }
 
   &.dark:after {
     content: " ";
@@ -470,17 +571,22 @@ export const SectionTitle = styled.h6 `
     left: 0px;
     background: linear-gradient(to right, #95e1ff 0%, rgba(15,63,115,0));
   }
-
-  font-weight: 400;
-  font-size: 15px;
-  position: relative;
-  display: inline-block;
-  margin: 0px 0px 10px 0px;
-  text-transform: uppercase;
+`
+export const InventoryColumn = styled.div`
+  min-height: 580px;
+  @media (max-width: 1350px) { display: none; }
+`
+export const InventoryContainer = styled.div`
+  margin-right: 1rem;
+  overflow-y: auto;
+  max-height: 550px;
+  overflow: hidden;
+  @media (max-width: 1350px) { display: none; }
 `
 export const InventoryItemContainer = styled.div`
-  padding: 1rem; 
-  margin-bottom: 0.15rem;
+  padding: 20px 15px 20px 15px; 
+  margin-left: 3px;
+  margin-bottom: 1px;
   width: 100%;
   height: auto;
   background-size: cover;
@@ -490,7 +596,7 @@ export const InventoryItemContainer = styled.div`
   color: ${({ theme }) => theme.text1};
 
   &.dark {
-    background: linear-gradient(90deg, rgba(0,27,49,0.0) 0%, rgba(0,27,49,0.5) 100%);
+    background: linear-gradient(90deg, ${({ theme }) => theme.hexToRGB(theme.black, 1)} 0%, ${({ theme }) => theme.hexToRGB(theme.black, 0)} 100%);
     text-shadow: 1px 1px #000;
   }
 
@@ -498,11 +604,11 @@ export const InventoryItemContainer = styled.div`
     content: " ";
     display: block;
     position: absolute;
-    width: 1px;
-    height: 94%;
-    top: 3%;
-    left: 1px;
-    background-color: #95e1ff;
+    width: 2px;
+    height: 100%;
+    top: 0px;
+    left: -3px;
+    background-color: ${({ theme }) => theme.black};
   }
 
   &.light {
@@ -523,9 +629,7 @@ export const InventoryItemContainer = styled.div`
     margin-right: 5px;
   }
 
-  &.dark .balanceRow > div:first-child {
-    color: #95e1ff;
-  }
+  &.dark .balanceRow > div:first-child { color: ${({ theme }) => theme.azure2}; }
 
   &.light .balanceRow > div:first-child,
   &.classic .balanceRow > div:first-child, {
@@ -537,25 +641,73 @@ export const InventoryItemContainer = styled.div`
     display: inline-block;
   }
 `
+export const SimpleTextParagraph = styled.p`
+  font-size: 13px;
+  margin: 20px 0px;
+  text-align: left;
+
+  &.dark { font-weight:400; text-shadow: 1px 1px #000000; }
+  &.light {}
+  &.classic {}
+`
+export const SimpleInformationsTextParagraph = styled(SimpleTextParagraph)`
+  &.dark { color: ${({ theme }) => theme.azure1}; }
+  &.light {}
+  &.classic {}
+`
+const BaseButton = styled(Button)<{ width?: string, borderRadius?: string }>`
+  padding: 0px !important;
+  width: ${({ width }) => (width ? width : 'auto')};
+  border-radius: ${({ borderRadius }) => (borderRadius ? borderRadius : '0px')};
+  display: inline-block;
+  text-align: center;
+  border-color: transparent;
+  outline: none;
+  text-decoration: none;
+  display: flex;
+  justify-content: center;
+  flex-wrap: nowrap;
+  align-items: center;
+  position: relative;
+  background: none;
+
+  &:disabled { cursor: auto; }
+  > * { user-select: none; }
+  &.hidden { display: none !important; }
+`
+export const IconButton = styled(BaseButton)<{ width?: string, borderRadius?: string }>`
+  cursor: pointer;
+  width: fit-content;
+  margin-left: 10px !important;
+
+  & > svg { width: 14px; height: 14px; }
+
+  &.dark > svg { stroke: ${({ theme }) => theme.azure1}; }
+  &.light > svg {}
+  &.classic > svg {}
+
+  &.dark:hover > svg, &.dark:focus > svg { filter: drop-shadow(0px 0px 3px ${({ theme }) => theme.yellowLight}); }
+  &.light:hover > svg, &.light:focus > svg {  }
+  &.light:classic > svg, &.light:classic > svg {  }
+`
 export const GridContainer = styled.div`
   display: grid;
   grid-template-columns: 80% auto;
 `
-export const InventoryItemIcon = styled.div`
-  width: 8px;
-  height: 8px;
-  border: solid 1px;
-  rotate: 45deg;
-
-  &.dark { background-color: #2172e5; border-color: #53ade6; box-shadow: 1px 0px 4px #95e1ff; }
-  &.light { border-color: #FF6871; }
-  &.classic {}
+export const SwapPageGridContainer = styled.div`
+  display: grid;
+  grid-template-columns: 30% auto;
+  @media (min-width: 601px) and (max-width: 1350px) { grid-template-columns: auto !important; }
+  @media (max-width: 600px) { grid-template-columns: auto !important; }
 `
-export const SwapMenu = styled.div`
-  display: table;
-  width: 100%;
-  margin-bottom: 10px;
+export const PageItemsContainer = styled.div`
+  &.dark {}
+  &.light {}
+  &.classic {}
 
+  &.swap { min-height: 580px; }
+`
+export const TabsBar = styled.div`
   &.dark { }
   &.light {}
   &.classic {}
@@ -567,29 +719,55 @@ export const SwapMenu = styled.div`
     left: 0;
     position: relative;
     height: 1px;
-    bottom: -43px;
-    background: linear-gradient(90deg,rgba(129,205,243,0) 0,#81cdf3 25%, #81cdf3 75%, rgba(129,205,243,0));
-  }
-  
-  &.dark:after, &.light:after {
-    content: "";
-    width: 100%;
-    display: block;
-    left: 0;
-    position: relative;
-    height: 44px;
-    bottom: 0px;
-    z-index: -1;
-    background: radial-gradient(ellipse at bottom,#0d95ff 0,rgba(13,149,255,0) 60%);
-    @media (max-width: 375px) { height: 50px; }
+    bottom: -29px;
+    background: linear-gradient(90deg,rgba(129,205,243,0) 0,#81cdf3 5%, #81cdf3 95%, rgba(129,205,243,0));
   }
 
-  & > a { display: block; float: left; }
+  &.dark:after, &.light:after { }
 `
-export const SwapMenuItem = styled.div<{ active?: boolean }>`
-  padding-right: 1rem;
-  opacity: ${({ active }) => (active ? '1' : '0.4')};
+const tabLinkItemActiveClasName = 'active'
+export const TabLinkItem = styled(NavLink).attrs({ tabLinkItemActiveClasName })`
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: left;
+  outline: none;
+  cursor: pointer;
+  text-decoration: none;
+  font-size: 18px;
+  width: fit-content;
+  margin: 0 12px;
+  font-weight: 400;
+  float: right;
+  
+  &.dark { color: ${({ theme }) => theme.white}; text-shadow: 3px 5px ${({ theme }) => theme.blue3}; }
+  &.light { color: ${({ theme }) => theme.grey1}; }
+  &.classic { color: #C3C5CB; }
+
+  &.${tabLinkItemActiveClasName} { }
+
+  &.dark.${tabLinkItemActiveClasName} { color: ${({ theme }) => theme.azure1}; }
+  &.light.${tabLinkItemActiveClasName} { color: #2f9ab8; }
+  &.classic.${tabLinkItemActiveClasName} { color: #2f9ab8; }
+
+  &.dark:hover, &.dark:focus { color: ${({ theme }) => theme.azure1}; }
+  &.light:hover, &.light:focus { }
+  &.classic:hover, &.classic:focus { }
+
+  &.dark.disabled, &.light.disabled, &.classic.disabled { opacity: 0.7; color: ${({ theme }) => theme.grey1}; }
+
+  &.dark.disabled:hover, &.dark.disabled:focus,
+  &.light.disabled:hover, &.light.disabled:focus,
+  &.classic.disabled:hover, &.classic.disabled:focus { opacity: 1; }
 `
+export const SwapPageContentContainer = styled.div`
+  margin-top:40px;
+  @media (min-width: 1050px) {
+    display: grid;
+    grid-template-columns: 37.5% 25% 37.5%;
+  }
+`
+
+
 export const StyledNavLinkActiveClassName = 'active'
 export const StyledNavLink = styled(NavLink).attrs({ StyledNavLinkActiveClassName })`
   display: flex;
@@ -624,6 +802,8 @@ export const StyledNavLink = styled(NavLink).attrs({ StyledNavLinkActiveClassNam
   &.light.disabled:hover, &.light.disabled:focus,
   &.classic.disabled:hover, &.classic.disabled:focus { opacity: 0.7; }
 `
+
+
 export const CurrencyFormPanel = styled.div<{ hideInput?: boolean }>`
   display: flex;
   flex-flow: column nowrap;
@@ -710,7 +890,6 @@ const SettingsMenuOptionBase = styled.button`
   &.light:hover, &.light:focus { background-color: #1a1a1a; }
   &.classic:hover, &.classic:focus { background-color: #1a1a1a; }
 `
-
 export const SettingsMenuOption = styled(SettingsMenuOptionBase)<{ active: boolean }>`
   margin-right: 8px;
 

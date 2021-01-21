@@ -4,7 +4,7 @@ import { useIsClassicMode } from '../../state/user/hooks'
 import { ArrowDown, ArrowRightCircle } from 'react-feather'
 import ReactGA from 'react-ga'
 import { Text } from 'rebass'
-import { NavLink, RouteComponentProps } from 'react-router-dom'
+
 import styled, { ThemeContext } from 'styled-components'
 import AddressInputPanel from '../../components/AddressInputPanel'
 import { ButtonMateriaLight, ButtonMateriaPrimary, ButtonMateriaConfirmed, ButtonMateriaError } from '../../components/Button'
@@ -39,67 +39,32 @@ import {
   useSwapState
 } from '../../state/swap/hooks'
 import { useExpertModeManager, useUserSlippageTolerance } from '../../state/user/hooks'
-import { LinkStyledButton, TYPE, SwapMenu, SwapMenuItem, StyledNavLink } from '../../theme'
+import AppBody from '../AppBody'
+import { 
+  LinkStyledButton, 
+  TYPE, 
+  SwapPageGridContainer, 
+  InventoryColumn, 
+  PageItemsContainer,
+  TabsBar,
+  TabLinkItem,
+  SwapPageContentContainer } from '../../theme'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { computeTradePriceBreakdown, warningSeverity } from '../../utils/prices'
-import AppBody, { ButtonBgItem } from '../AppBody'
 import { ClickableText } from '../Pool/styleds'
 import Loader from '../../components/Loader'
 import Inventory from '../../components/Inventory'
-import { darken, linearGradient } from 'polished'
 import FFCursor from '../../assets/images/FF7Cursor.png'
 import useSound from 'use-sound'
 
-const SwapGridContainer = styled.div`
-  display: grid;
-  grid-template-columns: 30px 30% auto;
-  @media (min-width: 601px) and (max-width: 1350px) {
-    grid-template-columns: 50px auto !important;
-  }
-  @media (max-width: 600px) {
-    grid-template-columns: auto !important;
-  }
-`
+export const ButtonBgItem = styled.img`
+  height: 3ch;
+  margin: 0px 5px;
+`;
 
 const SwapCurrencyContainer = styled.div`
-  @media (min-width: 1050px) {
-    display: grid;
-    grid-template-columns: 37.5% 25% 37.5%;
-  }
+
 `
-
-const SwapPageContainer = styled.div`
-  padding: 1rem 0.5rem 1rem 0.5rem;
-  min-height: 580px;
-  ${({ theme }) => theme.backgroundContainer}
-`
-/*const activeClassName = 'ACTIVE'
- const StyledNavLink = styled(NavLink).attrs({
-  activeClassName
-})`
-  ${({ theme }) => theme.flexRowNoWrap}
-  align-items: left;
-  border-radius: 3rem;
-  outline: none;
-  cursor: pointer;
-  text-decoration: none;
-  color: ${({ theme }) => theme.text2};
-  font-size: 1rem;
-  width: fit-content;
-  margin: 0 12px;
-  font-weight: 500;
-
-  &.${activeClassName} {
-    // border-radius: 12px;
-    font-weight: 600;
-    color: ${({ theme }) => theme.cyan1};
-  }
-
-  :hover,
-  :focus {
-    color: ${({ theme }) => darken(0.1, theme.cyan1)};
-  }
-` */
 
 const TradePriceContainer = styled.div`
   margin-top: auto;
@@ -115,20 +80,6 @@ const SwapButton = styled.div`
   display: flex;
   padding: 1rem 0rem;
   width:auto;
-`
-
-const InventoryColumn = styled.div`
-padding: 0.5rem 0rem 1rem 1rem;
-border-radius: 2px 2px 0px 0px;
-font-size: smaller;
-min-height: 580px;
-${({ theme }) => theme.backgroundContainer}
-@media (max-width: 1350px) { display: none; }
-`
-const ItemColumn = styled.div`
-  width: 0px;
-  @media (min-width: 601px) and (max-width: 1350px) { /*display: none;*/ }
-  @media (max-width: 600px) { display: none; }
 `
 
 export const Center = styled.div`
@@ -418,25 +369,23 @@ export default function Swap() {
             swapErrorMessage={swapErrorMessage}
             onDismiss={handleConfirmDismiss}
           />
-          <SwapGridContainer>
-            <ItemColumn></ItemColumn>
+          <SwapPageGridContainer>
             <InventoryColumn>
               <Inventory onCurrencySelect={handleOutputSelect} />
             </InventoryColumn>
-            <SwapPageContainer>
-              <SwapMenu className={theme.name}>
-                <StyledNavLink id={`classic-swap`} to={'/swap'} 
-                  className={ `${theme.name}` }
-                  isActive={(match, { pathname }) => Boolean(match) || pathname.startsWith('/swap') }
-                  style={{ textShadow: '1px 1px #053472' }}>Classic SWAP</StyledNavLink>
-
-                <StyledNavLink id={`batch-swap`} to={'/batch-swap'} 
+            <PageItemsContainer className={theme.name}>
+              <TabsBar className={theme.name}>
+                <TabLinkItem id={`batch-swap`} to={'/batch-swap'} 
                   className={ `disabled ${theme.name}` }
                   //isActive={(match, { pathname }) => Boolean(match) || pathname.startsWith('/batchswap') }
-                  style={{ textShadow: '1px 1px #053472' }}>Batch SWAP (coming soon)</StyledNavLink>
-              </SwapMenu>
-              <div>
-                <SwapCurrencyContainer>
+                  >Batch SWAP (coming soon)</TabLinkItem>
+                <TabLinkItem id={`classic-swap`} to={'/swap'} 
+                    className={ `${theme.name}` }
+                    isActive={(match, { pathname }) => Boolean(match) || pathname.startsWith('/swap') }
+                  >Classic SWAP</TabLinkItem>
+              </TabsBar>
+              <div className="clear-fix">
+                <SwapPageContentContainer className={theme.name}>
                   <div>
                     <AutoColumn gap={'lg'}>
                       <CurrencyInputPanel
@@ -526,7 +475,7 @@ export default function Swap() {
                       ) : null}
                     </AutoColumn>
                   </div>
-                </SwapCurrencyContainer>
+                </SwapPageContentContainer>
                 <BottomGrouping>
                   <SwapButton>
                     {!account ? (
@@ -637,8 +586,8 @@ export default function Swap() {
                 </BottomGrouping>
               </div>
               <AdvancedSwapDetailsDropdown trade={trade} />
-            </SwapPageContainer>
-          </SwapGridContainer>
+            </PageItemsContainer>
+          </SwapPageGridContainer>
         </Wrapper>
         <FooterInfo>
           <div className="swapCaption">Select two token. Press "Swap" button to swap.</div>

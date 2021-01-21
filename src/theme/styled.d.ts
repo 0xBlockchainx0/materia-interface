@@ -7,6 +7,16 @@ export interface Colors {
   black: Color
   placeholderColor: Color
 
+  azure1: Color,
+  azure2: Color,
+  azure2: Color,
+  azure3: Color,
+  blue1: Color,
+  blue2: Color,
+  grey1: Color,
+  yellowGreen: Color,
+  yellowLight: Color,
+
   // text
   text1: Color
   text2: Color
@@ -52,6 +62,7 @@ export interface Colors {
   yellow2: Color
   blue1: Color
   blue2: Color
+  blue3: Color
   cyan1: Color
   cyan2: Color
   grey: Color
@@ -99,9 +110,7 @@ declare module 'styled-components' {
     flexColumnNoWrap: FlattenSimpleInterpolation
     flexRowNoWrap: FlattenSimpleInterpolation
 
-    bodyBackground: FlattenSimpleInterpolation
-
-    bodyWrapperBackground: FlattenSimpleInterpolation
+    
     styledBoxBorder: FlattenSimpleInterpolation
 
     backgroundContainer: FlattenSimpleInterpolation
@@ -112,5 +121,7 @@ declare module 'styled-components' {
     swapButtonBg: FlattenSimpleInterpolation
     swapButtonSrc: string
     advancedDetailsFooter:FlattenSimpleInterpolation
+
+    hexToRGB: ThemedCssFunction<string, number>
   }
 }
