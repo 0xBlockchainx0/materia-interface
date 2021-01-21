@@ -1,4 +1,4 @@
-import { TokenAmount, Pair, Currency } from '@materia-dex/sdk'
+import { TokenAmount, Pair, Currency, JSBI } from '@materia-dex/sdk'
 import { useMemo } from 'react'
 import { abi as IMateriaPairABI } from '@materia-dex/materia-contracts-core/build/IMateriaPair.json'
 import { Interface } from '@ethersproject/abi'
@@ -8,6 +8,7 @@ import { useMultipleContractSingleData } from '../state/multicall/hooks'
 import { wrappedCurrency } from '../utils/wrappedCurrency'
 
 const PAIR_INTERFACE = new Interface(IMateriaPairABI)
+const PAIR_BASE_FEE = JSBI.BigInt(30)
 
 export enum PairState {
   LOADING,
@@ -37,13 +38,20 @@ export function usePairs(currencies: [Currency | undefined, Currency | undefined
   )
 
   const results = useMultipleContractSingleData(pairAddresses, PAIR_INTERFACE, 'getReserves')
+  const swapFees = useMultipleContractSingleData(pairAddresses, PAIR_INTERFACE, 'swapFee')
 
   return useMemo(() => {
     return results.map((result, i) => {
       const { result: reserves, loading } = result
       const tokenA = tokens[i][0]
       const tokenB = tokens[i][1]
+      const { result: swapFee } = swapFees[i]
 
+      let calculatedSwapFee = PAIR_BASE_FEE
+
+      if (swapFee) 
+        calculatedSwapFee = JSBI.BigInt(parseInt(Object.keys(swapFee).map(key => swapFee[key])[0]) * 10) ?? PAIR_BASE_FEE
+      
       if (loading) return [PairState.LOADING, null]
       if (!tokenA || !tokenB || tokenA.equals(tokenB)) return [PairState.INVALID, null]
       if (!reserves) return [PairState.NOT_EXISTS, null]
@@ -51,7 +59,7 @@ export function usePairs(currencies: [Currency | undefined, Currency | undefined
       const [token0, token1] = tokenA.sortsBefore(tokenB) ? [tokenA, tokenB] : [tokenB, tokenA]
       return [
         PairState.EXISTS,
-        new Pair(new TokenAmount(token0, reserve0.toString()), new TokenAmount(token1, reserve1.toString()))
+        new Pair(new TokenAmount(token0, reserve0.toString()), new TokenAmount(token1, reserve1.toString()), calculatedSwapFee)
       ]
     })
   }, [results, tokens])

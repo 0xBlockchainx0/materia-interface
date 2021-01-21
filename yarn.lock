@@ -2714,10 +2714,10 @@
     yargs-unparser "^1.6.0"
     yn "^3.1.1"
 
-"@materia-dex/sdk@^1.4.2":
-  version "1.4.2"
-  resolved "https://registry.yarnpkg.com/@materia-dex/sdk/-/sdk-1.4.2.tgz#830043d8c1e8c28943ad7b17c6ea64027f0d89ff"
-  integrity sha512-Adkf+zLlP9SLvQ3iaXz/MBa42UntNQOjrNaOcAwySDddfK2/Z57IttCO/nCJzUHRP5qQc5X9KgrBB0ZxuFRC9w==
+"@materia-dex/sdk@^1.4.4":
+  version "1.4.4"
+  resolved "https://registry.yarnpkg.com/@materia-dex/sdk/-/sdk-1.4.4.tgz#d697c2c719f227f68ec8268985da4bfb6501f27a"
+  integrity sha512-4d4LTiiX74sBCih6ifhqI9In3ADhXJHl1VANdjoKgojT2o75GRAgfdZv0b8x5J2qU/pTivTDyN+rfq3TnlZ9zw==
   dependencies:
     "@ethersproject/units" "^5.0.9"
     "@materia-dex/materia-contracts-core" "^1.1.3"
@@ -3490,10 +3490,10 @@
   resolved "https://registry.yarnpkg.com/@uniswap/merkle-distributor/-/merkle-distributor-1.0.1.tgz#dc3d911f65a860fc3f0cae074bdcd08ed6a27a4d"
   integrity sha512-5gDiTI5hrXIh5UWTrxKYjw30QQDnpl8ckDSpefldNenDlYO1RKkdUYMYpvrqGi2r7YzLYTlO6+TDlNs6O7hDRw==
 
-"@uniswap/token-lists@^1.0.0-beta.17":
-  version "1.0.0-beta.17"
-  resolved "https://registry.yarnpkg.com/@uniswap/token-lists/-/token-lists-1.0.0-beta.17.tgz#a861fe96a0f3de91b01eae05dec05a6a2018b38e"
-  integrity sha512-UVRmSsP/ghJ7Dg8BHYjAZmZL96jHlZKrFoIEuKD3g1E4FbahfwS2j2KAaf6iQuLx6RWo8PQmDZ99rfK6T2xi8w==
+"@uniswap/token-lists@^1.0.0-beta.18":
+  version "1.0.0-beta.19"
+  resolved "https://registry.yarnpkg.com/@uniswap/token-lists/-/token-lists-1.0.0-beta.19.tgz#5256db144fba721a6233f43b92ffb388cbd58327"
+  integrity sha512-19V3KM7DAe40blWW1ApiaSYwqbq0JTKMO3yChGBrXzQBl+BoQZRTNZ4waCyoZ5QM45Q0Mxd6bCn6jXcH9G1kjg==
 
 "@walletconnect/client@^1.1.1-alpha.0":
   version "1.1.1-alpha.0"

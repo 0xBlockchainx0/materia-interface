@@ -195,15 +195,15 @@ export default function AddLiquidity({
 
   const allPairsWithLiquidity = pairs.map(([, pair]) => pair).filter((pair): pair is Pair => Boolean(pair))
 
-  console.log('***************************************')
-  console.log('allPairsWithLiquidity: ', allPairsWithLiquidity)
-  console.log('liquidityTokensWithBalances: ', liquidityTokensWithBalances)
-  console.log('fetchingPairBalances: ', fetchingPairBalances)
-  console.log('pairsBalances: ', pairsBalances)
-  console.log('liquidityTokens: ', liquidityTokens)
-  console.log('tokenPairsWithLiquidityTokens: ', tokenPairsWithLiquidityTokens)
-  console.log('trackedTokenPairs: ', trackedTokenPairs)
-  console.log('***************************************')
+  // console.log('***************************************')
+  // console.log('allPairsWithLiquidity: ', allPairsWithLiquidity)
+  // console.log('liquidityTokensWithBalances: ', liquidityTokensWithBalances)
+  // console.log('fetchingPairBalances: ', fetchingPairBalances)
+  // console.log('pairsBalances: ', pairsBalances)
+  // console.log('liquidityTokens: ', liquidityTokens)
+  // console.log('tokenPairsWithLiquidityTokens: ', tokenPairsWithLiquidityTokens)
+  // console.log('trackedTokenPairs: ', trackedTokenPairs)
+  // console.log('***************************************')
 
   // AddLiquidity
   const currencyA = useCurrency(currencyIdA)

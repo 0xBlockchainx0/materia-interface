@@ -37,7 +37,7 @@ function useContract(address: string | undefined, ABI: any, withSignerIfPossible
   }, [address, ABI, library, withSignerIfPossible, account])
 }
 
-function useContractCustom(address: string | undefined, ABI: any, withSignerIfPossible = true): Contract | null {
+function useUnmemoizedContract(address: string | undefined, ABI: any, withSignerIfPossible = true): Contract | null {
   const { library, account } = useActiveWeb3React()
   if (!address || !ABI || !library) return null
   try {
@@ -112,8 +112,8 @@ export function usePairContract(pairAddress?: string, withSignerIfPossible?: boo
   return useContract(pairAddress, IMateriaPairABI, withSignerIfPossible)
 }
 
-export function usePairContractCustom(pairAddress?: string, withSignerIfPossible?: boolean): Contract | null {
-  return useContractCustom(pairAddress, IMateriaPairABI, withSignerIfPossible)
+export function useUnmemoizedPairContract(pairAddress?: string, withSignerIfPossible?: boolean): Contract | null {
+  return useUnmemoizedContract(pairAddress, IMateriaPairABI, withSignerIfPossible)
 }
 
 export function useMulticallContract(): Contract | null {
