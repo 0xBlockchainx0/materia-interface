@@ -170,9 +170,11 @@ export default function AddLiquidity({
     })),
     [trackedTokenPairs]
   )
+
   const liquidityTokens = useMemo(() => tokenPairsWithLiquidityTokens.map(tpwlt => tpwlt.liquidityToken), [
     tokenPairsWithLiquidityTokens
   ])
+
   const [pairsBalances, fetchingPairBalances] = useTokenBalancesWithLoadingIndicator(
     account ?? undefined,
     liquidityTokens
@@ -192,6 +194,16 @@ export default function AddLiquidity({
     fetchingPairBalances || pairs?.length < liquidityTokensWithBalances.length || pairs?.some(Pair => !Pair)
 
   const allPairsWithLiquidity = pairs.map(([, pair]) => pair).filter((pair): pair is Pair => Boolean(pair))
+
+  // console.log('***************************************')
+  // console.log('allPairsWithLiquidity: ', allPairsWithLiquidity)
+  // console.log('liquidityTokensWithBalances: ', liquidityTokensWithBalances)
+  // console.log('fetchingPairBalances: ', fetchingPairBalances)
+  // console.log('pairsBalances: ', pairsBalances)
+  // console.log('liquidityTokens: ', liquidityTokens)
+  // console.log('tokenPairsWithLiquidityTokens: ', tokenPairsWithLiquidityTokens)
+  // console.log('trackedTokenPairs: ', trackedTokenPairs)
+  // console.log('***************************************')
 
   // AddLiquidity
   const currencyA = useCurrency(currencyIdA)
@@ -302,8 +314,8 @@ export default function AddLiquidity({
   // )
 
   // check whether the user has approved the router on the tokens
-  const [approvalA, approveACallback] = useInteroperableApproveCallback(originalParsedAmounts[Field.CURRENCY_A], parsedAmounts[Field.CURRENCY_A], ORCHESTRATOR_ADDRESS)
-  const [approvalB, approveBCallback] = useInteroperableApproveCallback(originalParsedAmounts[Field.CURRENCY_B], parsedAmounts[Field.CURRENCY_B], ORCHESTRATOR_ADDRESS)
+  const [approvalA, approveACallback] = useInteroperableApproveCallback(originalParsedAmounts[Field.CURRENCY_A], ORCHESTRATOR_ADDRESS)
+  const [approvalB, approveBCallback] = useInteroperableApproveCallback(originalParsedAmounts[Field.CURRENCY_B], ORCHESTRATOR_ADDRESS)
 
   const addTransaction = useTransactionAdder()
 

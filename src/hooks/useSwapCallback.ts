@@ -1,6 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { Contract } from '@ethersproject/contracts'
-import { JSBI, Percent, Router, SwapParameters, Trade, TradeType } from '@materia-dex/sdk'
+import { Currency, JSBI, Percent, Router, SwapParameters, Token, Trade, TradeType } from '@materia-dex/sdk'
 import { useMemo } from 'react'
 import { BIPS_BASE, INITIAL_ALLOWED_SLIPPAGE, ZERO_ADDRESS } from '../constants'
 import { useTransactionAdder } from '../state/transactions/hooks'
@@ -42,18 +42,21 @@ type EstimatedSwapCall = SuccessfulCall | FailedCall
  */
 function useSwapCallArguments(
   trade: Trade | undefined, // trade to execute, required
-  originalTrade: Trade | undefined, // trade to execute (without interoperable), required
   allowedSlippage: number = INITIAL_ALLOWED_SLIPPAGE, // in bips
   recipientAddressOrName: string | null, // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
+  tokenIn: Token | undefined, // input token from swap
+  tokenOut: Token | undefined, // output token from swap
+  etherIn: boolean, // check if ETH in
+  etherOut: boolean, // check if ETH out
 ): SwapCall[] {
   const { account, chainId, library } = useActiveWeb3React()
   const { address: recipientAddress } = useENS(recipientAddressOrName)
   const recipient = recipientAddressOrName === null ? account : recipientAddress
   const deadline = useTransactionDeadline()
   const contract: Contract | null = (!library || !account || !chainId) ? null : getOrchestratorContract(chainId, library, account)
-  const tokenAddressA = originalTrade?.route.path[0]?.address ?? ZERO_ADDRESS
+  const tokenAddressA = tokenIn?.address ?? ZERO_ADDRESS
   const tokenAIsEthItem = useCheckIsEthItem(tokenAddressA)
-  const isEthItem: boolean = tokenAIsEthItem?.ethItem
+  const isEthItem: boolean = tokenAIsEthItem?.ethItem && !etherIn
   const ethItemCollection: string = tokenAIsEthItem?.collection
   const ethItemObjectId: JSBI = JSBI.BigInt(tokenAIsEthItem?.itemId ?? 0)
   const collectionContract: Contract | null =
@@ -71,16 +74,22 @@ function useSwapCallArguments(
   return useMemo(() => {
     const swapMethods = []
 
-    if (!originalTrade || !recipient || !library || !account || !chainId || !deadline) return []
+    if (!trade || !tokenIn || !tokenOut || !recipient || !library || !account || !chainId || !deadline) return []
     if (!contract) { return [] }
 
     swapMethods.push(
-      Router.swapCallParameters(originalTrade, {
+      Router.swapCallParameters(trade, {
         feeOnTransfer: false,
         allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
         recipient,
         deadline: deadline.toNumber()
-      }, isEthItem, ethItemObjectId?.toString() ?? "0")
+      },
+      tokenIn,
+      tokenOut,
+      etherIn,
+      etherOut,
+      isEthItem,
+      ethItemObjectId?.toString() ?? "0")
     )
 
     if (isEthItem) {
@@ -96,20 +105,23 @@ function useSwapCallArguments(
       parameters: parameters,
       contract: contract
     }))
-  }, [account, allowedSlippage, chainId, deadline, library, recipient, originalTrade])
+  }, [account, allowedSlippage, chainId, deadline, library, recipient, trade])
 }
 
 // returns a function that will execute a swap, if the parameters are all valid
 // and the user has approved the slippage adjusted input amount for the trade
 export function useSwapCallback(
   trade: Trade | undefined, // trade to execute, required
-  originalTrade: Trade | undefined, // trade to execute (without interoperable), required
   allowedSlippage: number = INITIAL_ALLOWED_SLIPPAGE, // in bips
-  recipientAddressOrName: string | null // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
+  recipientAddressOrName: string | null, // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
+  tokenIn: Token | undefined, // input token from swap
+  tokenOut: Token | undefined, // output token from swap
+  etherIn: boolean, // check if ETH in
+  etherOut: boolean, // check if ETH out
 ): { state: SwapCallbackState; callback: null | (() => Promise<string>); error: string | null } {
   const { account, chainId, library } = useActiveWeb3React()
 
-  const swapCalls = useSwapCallArguments(trade, originalTrade, allowedSlippage, recipientAddressOrName)
+  const swapCalls = useSwapCallArguments(trade, allowedSlippage, recipientAddressOrName, tokenIn, tokenOut, etherIn, etherOut)
   const addTransaction = useTransactionAdder()
 
   const { address: recipientAddress } = useENS(recipientAddressOrName)
@@ -120,7 +132,7 @@ export function useSwapCallback(
   // console.log('*********************************')
 
   return useMemo(() => {
-    if (!trade || !originalTrade || !library || !account || !chainId) {
+    if (!trade || !tokenIn || !tokenOut || !library || !account || !chainId) {
       return { state: SwapCallbackState.INVALID, callback: null, error: 'Missing dependencies' }
     }
     if (!recipient) {
@@ -181,9 +193,9 @@ export function useSwapCallback(
             'gasEstimate' in el && (ix === list.length - 1 || 'gasEstimate' in list[ix + 1])
         )
 
-        console.log('*********************************')
-        console.log('successfulEstimation: ', successfulEstimation)
-        console.log('*********************************')
+        // console.log('*********************************')
+        // console.log('successfulEstimation: ', successfulEstimation)
+        // console.log('*********************************')
 
         if (!successfulEstimation) {
           const errorCalls = estimatedCalls.filter((call): call is FailedCall => 'error' in call)
@@ -207,10 +219,8 @@ export function useSwapCallback(
           ...(value && !isZero(value) ? { value, from: account } : { from: account })
         })
           .then((response: any) => {
-            const inputSymbol = originalTrade.inputAmount.currency.symbol
-            const outputSymbol = originalTrade.outputAmount.currency.symbol
-            // const inputSymbol = trade.inputAmount.currency.symbol
-            // const outputSymbol = trade.outputAmount.currency.symbol
+            const inputSymbol = tokenIn.symbol
+            const outputSymbol = tokenOut.symbol
             const inputAmount = trade.inputAmount.toSignificant(3)
             const outputAmount = trade.outputAmount.toSignificant(3)
 
@@ -244,5 +254,5 @@ export function useSwapCallback(
       },
       error: null
     }
-  }, [trade, originalTrade, library, account, chainId, recipient, recipientAddressOrName, swapCalls, addTransaction])
+  }, [trade, tokenIn, tokenOut, library, account, chainId, recipient, recipientAddressOrName, swapCalls, addTransaction])
 }

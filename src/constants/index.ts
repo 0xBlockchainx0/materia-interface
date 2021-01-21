@@ -3,12 +3,9 @@ import { AbstractConnector } from '@web3-react/abstract-connector'
 
 import { fortmatic, injected, portis, walletconnect, walletlink } from '../connectors'
 
-export const FACTORY_ADDRESS = '0x8167211D76890c91c1d67c5Dceda6769b875eC77'
-export const ORCHESTRATOR_ADDRESS = '0xe42BA6E8Ac3c2Da24AEFC2bb9d056AD2Bc4d5907'
+export const FACTORY_ADDRESS = '0xeF663993b89aD5eDFdF77E2f7b97CD18d2A497e4'
+export const ORCHESTRATOR_ADDRESS = '0x0bae0744F6D7C8137fB4D727fdfeE91c1B4eed44'
 export const MATERIA_DFO_ADDRESS = '0x2272f81205db240f6fCbC87ace0A5F1Cf7E49E5A'
-export const UNISWAP_V2_FACTORY_ADDRESS = '0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f'
-export const UNISWAP_V2_ROUTER_V1_ADDRESS = '0xf164fC0Ec4E93095b804a4795bBe1e041497b92a'
-export const UNISWAP_V2_ROUTER_V2_ADDRESS = '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D'
 export const TIMELOCK_ADDRESS = '0x1a9C8182C09F50C8318d769245beA52c32BE35BC'
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 export const ETHEREUM_OBJECT_ID = '11027808402393750762873608378930398077418220124669629658698890017122249518391'
@@ -44,11 +41,11 @@ export const USD: { [chainId in ChainId]: Token } = {
 }
 
 export const WBTC: { [chainId in ChainId]: Token } = {
-  [ChainId.MAINNET]: new Token(ChainId.MAINNET, '0x2260fac5e5542a773aa44fbcfedf7c193bc2c599', 18, 'WBTC', 'Wrapped BTC'),
-  [ChainId.RINKEBY]: new Token(ChainId.RINKEBY, ZERO_ADDRESS, 18, 'WBTC', 'Wrapped BTC'),
-  [ChainId.ROPSTEN]: new Token(ChainId.ROPSTEN, '0x65058d7081fcdc3cd8727dbb7f8f9d52cefdd291', 18, 'WBTC', 'Wrapped BTC'),
-  [ChainId.GÖRLI]: new Token(ChainId.GÖRLI,     ZERO_ADDRESS, 18, 'WBTC', 'Wrapped BTC'),
-  [ChainId.KOVAN]: new Token(ChainId.KOVAN,     ZERO_ADDRESS, 18, 'WBTC', 'Wrapped BTC'),
+  [ChainId.MAINNET]: new Token(ChainId.MAINNET, '0x2260fac5e5542a773aa44fbcfedf7c193bc2c599', 8, 'WBTC', 'Wrapped BTC'),
+  [ChainId.RINKEBY]: new Token(ChainId.RINKEBY, ZERO_ADDRESS, 8, 'WBTC', 'Wrapped BTC'),
+  [ChainId.ROPSTEN]: new Token(ChainId.ROPSTEN, '0x65058d7081fcdc3cd8727dbb7f8f9d52cefdd291', 8, 'WBTC', 'Wrapped BTC'),
+  [ChainId.GÖRLI]: new Token(ChainId.GÖRLI,     ZERO_ADDRESS, 8, 'WBTC', 'Wrapped BTC'),
+  [ChainId.KOVAN]: new Token(ChainId.KOVAN,     ZERO_ADDRESS, 8, 'WBTC', 'Wrapped BTC'),
 }
 
 export const DAI = new Token(ChainId.MAINNET, '0x6B175474E89094C44Da98b954EedeAC495271d0F', 18, 'DAI', 'Dai Stablecoin')
@@ -77,11 +74,19 @@ const IETH_ONLY: ChainTokenList = {
   [ChainId.KOVAN]: [IETH[ChainId.KOVAN]]
 }
 
+const USD_ONLY: ChainTokenList = {
+  [ChainId.MAINNET]: [USD[ChainId.MAINNET]],
+  [ChainId.ROPSTEN]: [USD[ChainId.ROPSTEN]],
+  [ChainId.RINKEBY]: [USD[ChainId.RINKEBY]],
+  [ChainId.GÖRLI]: [USD[ChainId.GÖRLI]],
+  [ChainId.KOVAN]: [USD[ChainId.KOVAN]]
+}
+
 // used to construct intermediary pairs for trading
 export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
-  ...IETH_ONLY,
-  [ChainId.MAINNET]: [...IETH_ONLY[ChainId.MAINNET], USD[ChainId.MAINNET]],
-  [ChainId.ROPSTEN]: [...IETH_ONLY[ChainId.ROPSTEN], USD[ChainId.ROPSTEN]]
+  ...USD_ONLY,
+  [ChainId.MAINNET]: [...USD_ONLY[ChainId.MAINNET]],
+  [ChainId.ROPSTEN]: [...USD_ONLY[ChainId.ROPSTEN]]
 }
 
 /**
@@ -96,16 +101,16 @@ export const CUSTOM_BASES: { [chainId in ChainId]?: { [tokenAddress: string]: To
 
 // used for display in the default list when adding liquidity
 export const SUGGESTED_BASES: ChainTokenList = {
-  ...IETH_ONLY,
-  [ChainId.MAINNET]: [...IETH_ONLY[ChainId.MAINNET], USD[ChainId.MAINNET]],
-  [ChainId.ROPSTEN]: [...IETH_ONLY[ChainId.ROPSTEN], USD[ChainId.ROPSTEN]]
+  ...USD_ONLY,
+  [ChainId.MAINNET]: [...USD_ONLY[ChainId.MAINNET]],
+  [ChainId.ROPSTEN]: [...USD_ONLY[ChainId.ROPSTEN]]
 }
 
 // used to construct the list of all pairs we consider by default in the frontend
 export const BASES_TO_TRACK_LIQUIDITY_FOR: ChainTokenList = {
-  ...IETH_ONLY,
-  [ChainId.MAINNET]: [...IETH_ONLY[ChainId.MAINNET], USD[ChainId.MAINNET]],
-  [ChainId.ROPSTEN]: [...IETH_ONLY[ChainId.ROPSTEN], USD[ChainId.ROPSTEN]]
+  ...USD_ONLY,
+  [ChainId.MAINNET]: [...USD_ONLY[ChainId.MAINNET]],
+  [ChainId.ROPSTEN]: [...USD_ONLY[ChainId.ROPSTEN]]
 }
 
 export const PINNED_PAIRS: { readonly [chainId in ChainId]?: [Token, Token][] } = {

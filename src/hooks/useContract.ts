@@ -37,6 +37,31 @@ function useContract(address: string | undefined, ABI: any, withSignerIfPossible
   }, [address, ABI, library, withSignerIfPossible, account])
 }
 
+function useUnmemoizedContract(address: string | undefined, ABI: any, withSignerIfPossible = true): Contract | null {
+  const { library, account } = useActiveWeb3React()
+  if (!address || !ABI || !library) return null
+  try {
+    return getContract(address, ABI, library, withSignerIfPossible && account ? account : undefined)
+  } catch (error) {
+    console.error('Failed to get contract', error)
+    return null
+  }
+}
+
+function useContracts(addresses: string[] | undefined, ABI: any, withSignerIfPossible = true): Contract[] | null {
+  const { library, account } = useActiveWeb3React()
+
+  return useMemo(() => {
+    if (!addresses || !ABI || !library) return null
+    try {
+      return addresses.map((address) => getContract(address, ABI, library, withSignerIfPossible && account ? account : undefined))
+    } catch (error) {
+      console.error('Failed to get contract', error)
+      return null
+    }
+  }, [addresses, ABI, library, withSignerIfPossible, account])
+}
+
 export function useV2MigratorContract(): Contract | null {
   return useContract(MIGRATOR_ADDRESS, MIGRATOR_ABI, true)
 }
@@ -85,6 +110,10 @@ export function useBytes32TokenContract(tokenAddress?: string, withSignerIfPossi
 
 export function usePairContract(pairAddress?: string, withSignerIfPossible?: boolean): Contract | null {
   return useContract(pairAddress, IMateriaPairABI, withSignerIfPossible)
+}
+
+export function useUnmemoizedPairContract(pairAddress?: string, withSignerIfPossible?: boolean): Contract | null {
+  return useUnmemoizedContract(pairAddress, IMateriaPairABI, withSignerIfPossible)
 }
 
 export function useMulticallContract(): Contract | null {

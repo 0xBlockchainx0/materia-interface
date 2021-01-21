@@ -15,7 +15,7 @@ import { Field, replaceSwapState, selectCurrency, setRecipient, switchCurrencies
 import { SwapState } from './reducer'
 import { useUserSlippageTolerance } from '../user/hooks'
 import { computeSlippageAdjustedAmounts } from '../../utils/prices'
-import { ERC20WRAPPER, FACTORY_ADDRESS, MATERIA_DFO_ADDRESS, ORCHESTRATOR_ADDRESS, UNISWAP_V2_FACTORY_ADDRESS, UNISWAP_V2_ROUTER_V1_ADDRESS, UNISWAP_V2_ROUTER_V2_ADDRESS, USD } from '../../constants'
+import { ERC20WRAPPER, FACTORY_ADDRESS, MATERIA_DFO_ADDRESS, ORCHESTRATOR_ADDRESS, USD } from '../../constants'
 import useGetEthItemInteroperable from '../../hooks/useGetEthItemInteroperable'
 import { formatUnits } from 'ethers/lib/utils'
 
@@ -164,7 +164,7 @@ export function decodeInteroperableValueToERC20TokenAmount(currencyAmount?: Curr
   try {
     const formattedDecimals = currency.decimals - erc20Currency.decimals
     const typedValueParsed = parseUnits(value, currency.decimals).toString()
-    
+
     let typedValueFormatted: Number = Number(0)
 
     if (formattedDecimals >= 0) {
@@ -191,9 +191,6 @@ export function decodeInteroperableValueToERC20TokenAmount(currencyAmount?: Curr
 }
 
 const BAD_RECIPIENT_ADDRESSES: string[] = [
-  UNISWAP_V2_FACTORY_ADDRESS,
-  UNISWAP_V2_ROUTER_V1_ADDRESS,
-  UNISWAP_V2_ROUTER_V2_ADDRESS,
   FACTORY_ADDRESS,
   ORCHESTRATOR_ADDRESS,
   MATERIA_DFO_ADDRESS,
@@ -218,7 +215,9 @@ export function useDerivedSwapInfo(
   interoperable: boolean | false
 ): {
   currencies: { [field in Field]?: Currency }
+  originalCurrencies: { [field in Field]?: Currency }
   currencyBalances: { [field in Field]?: CurrencyAmount }
+  originalCurrencyBalances: { [field in Field]?: CurrencyAmount }
   parsedAmount: CurrencyAmount | undefined
   v2Trade: Trade | undefined,
   inputError?: string
@@ -232,28 +231,18 @@ export function useDerivedSwapInfo(
     [Field.OUTPUT]: { currencyId: outputCurrencyId },
     recipient
   } = swapState
-
+  
   const inputCurrencyInteroperableId = useGetEthItemInteroperable(inputCurrencyId)
   const outputCurrencyInteroperableId = useGetEthItemInteroperable(outputCurrencyId)
 
   const inputCurrency: Currency | undefined = useCurrency(inputCurrencyId) ?? undefined
   const outputCurrency: Currency | undefined = useCurrency(outputCurrencyId) ?? undefined
 
-  let inputCurrencyInteroperable: Currency | undefined =  useCurrency(inputCurrencyInteroperableId) ?? undefined
+  let inputCurrencyInteroperable: Currency | undefined = useCurrency(inputCurrencyInteroperableId) ?? undefined
   let outputCurrencyInteroperable: Currency | undefined = useCurrency(outputCurrencyInteroperableId) ?? undefined
 
   inputCurrencyInteroperable = inputCurrency === ETHER ? IETH[chainId ?? 1] : inputCurrencyInteroperable
   outputCurrencyInteroperable = outputCurrency === ETHER ? IETH[chainId ?? 1] : outputCurrencyInteroperable
-
-  // console.log('***************************************')
-  // console.log('interoperable: ', interoperable)
-  // console.log('inputCurrencyId: ', inputCurrencyId)
-  // console.log('inputCurrencyInteroperableId: ', inputCurrencyInteroperableId)
-  // console.log('inputCurrencyInteroperable: ', inputCurrencyInteroperable)
-  // console.log('outputCurrencyId: ', outputCurrencyId)
-  // console.log('outputCurrencyInteroperableId: ', outputCurrencyInteroperableId)
-  // console.log('outputCurrencyInteroperable: ', outputCurrencyInteroperable)
-  // console.log('***************************************')
 
   const recipientLookup = useENS(recipient ?? undefined)
   const to: string | null = (recipient === null ? account : recipientLookup.address) ?? null
@@ -269,25 +258,20 @@ export function useDerivedSwapInfo(
   ])
 
   const isExactIn: boolean = independentField === Field.INPUT
-  const parsedAmount = tryParseAmount(
-    typedValue,
+
+  const parsedAmount = tryParseAmount(typedValue,
     (isExactIn ?
-      (interoperable ? (inputCurrencyInteroperable ?? inputCurrency) : inputCurrency) :
-      (interoperable ? (outputCurrencyInteroperable ?? outputCurrency) : outputCurrency)
-      ?? undefined))
+      inputCurrencyInteroperable ?? inputCurrency :
+      outputCurrencyInteroperable ?? outputCurrency)
+    ?? undefined
+  )
 
   const bestTradeExactIn = useTradeExactIn(
     (isExactIn ? parsedAmount : undefined),
-    (interoperable ?
-      (outputCurrencyInteroperable ?? outputCurrency) :
-      outputCurrency)
-    ?? undefined
+    (outputCurrencyInteroperable ?? outputCurrency) ?? undefined
   )
   const bestTradeExactOut = useTradeExactOut(
-    (interoperable ?
-      (inputCurrencyInteroperable ?? inputCurrency) :
-      inputCurrency)
-    ?? undefined,
+    (inputCurrencyInteroperable ?? inputCurrency) ?? undefined,
     (!isExactIn ? parsedAmount : undefined)
   )
 
@@ -295,6 +279,10 @@ export function useDerivedSwapInfo(
 
   // console.log('***************************************')
   // console.log('interoperable: ', interoperable)
+  // console.log('inputCurrency: ', inputCurrency)
+  // console.log('outputCurrency: ', outputCurrency)
+  // console.log('inputCurrencyInteroperable: ', inputCurrencyInteroperable)
+  // console.log('outputCurrencyInteroperable: ', outputCurrencyInteroperable)
   // console.log('isExactIn: ', isExactIn)
   // console.log('parsedAmount: ', parsedAmount)
   // console.log('bestTradeExactIn: ', bestTradeExactIn)
@@ -306,15 +294,18 @@ export function useDerivedSwapInfo(
     [Field.INPUT]: relevantTokenBalances[0],
     [Field.OUTPUT]: relevantTokenBalances[1]
   }
+  const currencies: { [field in Field]?: Currency } = {
+    [Field.INPUT]: interoperable ? (inputCurrencyInteroperable ?? inputCurrency) : inputCurrency ?? undefined,
+    [Field.OUTPUT]: interoperable ? (outputCurrencyInteroperable ?? outputCurrency) : outputCurrency ?? undefined
+  }
 
   const originalCurrencyBalances = {
     [Field.INPUT]: originalRelevantTokenBalances[0],
     [Field.OUTPUT]: originalRelevantTokenBalances[1]
   }
-
-  const currencies: { [field in Field]?: Currency } = {
-    [Field.INPUT]: interoperable ? (inputCurrencyInteroperable ?? inputCurrency) : inputCurrency ?? undefined,
-    [Field.OUTPUT]: interoperable ? (outputCurrencyInteroperable ?? outputCurrency) : outputCurrency ?? undefined
+  const originalCurrencies: { [field in Field]?: Currency } = {
+    [Field.INPUT]: inputCurrency ?? undefined,
+    [Field.OUTPUT]: outputCurrency ?? undefined
   }
 
   let inputError: string | undefined
@@ -326,7 +317,7 @@ export function useDerivedSwapInfo(
     inputError = inputError ?? 'Enter an amount'
   }
 
-  if (!currencies[Field.INPUT] || !currencies[Field.OUTPUT]) {
+  if (!originalCurrencies[Field.INPUT] || !originalCurrencies[Field.OUTPUT]) {
     inputError = inputError ?? 'Select a token'
   }
 
@@ -348,13 +339,6 @@ export function useDerivedSwapInfo(
   const slippageAdjustedAmounts = v2Trade && allowedSlippage && computeSlippageAdjustedAmounts(v2Trade, allowedSlippage)
 
   // compare input balance to max input
-  // const [balanceIn, amountIn] = [
-  //   currencyBalances[Field.INPUT],
-  //   slippageAdjustedAmounts
-  //     ? slippageAdjustedAmounts[Field.INPUT]
-  //     : null
-  // ]
-
   const [balanceIn, amountIn] = [
     originalCurrencyBalances[Field.INPUT],
     slippageAdjustedAmounts
@@ -363,12 +347,14 @@ export function useDerivedSwapInfo(
   ]
 
   if (balanceIn && amountIn && balanceIn.lessThan(amountIn)) {
-    inputError = 'Insufficient ' + amountIn.currency.symbol + ' balance'
+    inputError = 'Insufficient ' + originalCurrencies[Field.INPUT]?.symbol + ' balance'
   }
 
   return {
     currencies,
+    originalCurrencies,
     currencyBalances,
+    originalCurrencyBalances,
     parsedAmount,
     v2Trade: v2Trade ?? undefined,
     inputError,
