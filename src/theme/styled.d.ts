@@ -11,6 +11,8 @@ export interface Colors {
   azure2: Color,
   azure2: Color,
   azure3: Color,
+  azure4: Color,
+  azure5: Color,
   blue1: Color,
   blue2: Color,
   grey1: Color,

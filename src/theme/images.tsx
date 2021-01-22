@@ -1,5 +1,6 @@
 import darkBackground from '../assets/images/backgrounds/dark.png'
 import darkFrameCorner from '../assets/images/large-box-corner-decoration.png'
+import darkGridDecorator from '../assets/images/dark-grid-decorator.png'
 
 import tokenbackgroundDark from '../assets/images/token-background.png'
 import tokenbackgroundLight from '../assets/images/token-background-light.png'
@@ -14,6 +15,11 @@ export const images = {
       classic: null
     },
     decorators: {
+      grid: {
+        dark: darkGridDecorator,
+        light: null,
+        classic: null
+      },
       largeBoxes: {
         dark: darkFrameCorner,
         light: null,

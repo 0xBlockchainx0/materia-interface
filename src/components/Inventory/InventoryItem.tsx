@@ -1,6 +1,6 @@
 import React, { useCallback, useContext, useState } from 'react'
 import styled, { ThemeContext } from 'styled-components'
-import { GridContainer, InventoryItemContainer, IconButton } from '../../theme'
+import { GridContainer, InventoryItemContainer, IconButton, ActionButton } from '../../theme'
 import { ButtonMateriaPrimary } from '../Button'
 import { RowBetween, RowFixed } from '../Row'
 import { AutoColumn } from '../Column'
@@ -19,30 +19,6 @@ import { ChevronUp, ChevronDown, ExternalLink } from 'react-feather'
 
 export const FixedHeightRow = styled(RowBetween)`
   height: auto;
-`
-const StyledBalanceMax = styled.button`
-  height: 28px;
-  background-color: ${({ theme }) => theme.primary5};
-  border: 1px solid ${({ theme }) => theme.primary5};
-  border-radius: 3px;
-  font-size: 0.875rem;
-  font-weight: 500;
-  cursor: pointer;
-  margin-right: 0.5rem;
-  color: ${({ theme }) => theme.cyan1};
-  :hover {
-    text-shadow: 0px 0px 2px 0px #111111; 
-    border: 1px solid ${({ theme }) => theme.cyan2};
-    box-shadow: 0px 0px 6px 0px #b0deff;
-  }
-  :focus {
-    border: 1px solid ${({ theme }) => theme.cyan2};
-    outline: none;
-  }
-
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-    margin-right: 0.5rem;
-  `};
 `
 
 interface InventoryItemProps {
@@ -158,7 +134,7 @@ export default function InventoryItem({
           </div>
         </div>
         <div className="margin-auto">
-          <IconButton className={ `${theme.name} hidden` } onClick={() => { setShowMore(!showMore) }}>              
+          <IconButton className={ `${theme.name}` } onClick={() => { setShowMore(!showMore) }}>              
               {showMore ? ( <ChevronUp/> ) : ( <ChevronDown/> )}
           </IconButton>
           <IconButton className={theme.name} onClick={() => { onTokenSelection(token) }}>              
@@ -181,7 +157,7 @@ export default function InventoryItem({
                 }}
               />
               {account && token && (
-                <StyledBalanceMax onClick={handleMaxButton}>MAX</StyledBalanceMax>
+                <ActionButton className={theme.name} onClick={handleMaxButton}>MAX</ActionButton>
               )}
             </>
           </FixedHeightRow>
