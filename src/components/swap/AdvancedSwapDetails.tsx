@@ -3,7 +3,7 @@ import React, { useContext } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 import { Field } from '../../state/swap/actions'
 import { useUserSlippageTolerance } from '../../state/user/hooks'
-import { TYPE, ExternalLink } from '../../theme'
+import { SecondaryPanelBoxContainer, SecondaryPanelBoxContainerExtraDecorator, TYPE, ExternalLink } from '../../theme'
 import { computeSlippageAdjustedAmounts, computeTradePriceBreakdown } from '../../utils/prices'
 import { AutoColumn } from '../Column'
 import QuestionHelper from '../QuestionHelper'
@@ -30,7 +30,8 @@ function TradeSummary({ trade, originalCurrencies, allowedSlippage }: {
 
   return (
     <>
-      <AutoColumn style={{ padding: '0 20px' }}>
+      
+      <AutoColumn style={{ padding: '0 20px' }}>       
         <RowBetween>
           <RowFixed>
             <TYPE.black fontSize={14} fontWeight={400} color={theme.cyan1}>

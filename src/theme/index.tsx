@@ -58,6 +58,7 @@ export function colors(darkMode: boolean, classicMode: boolean): Colors {
     blue1: classicMode ? '#000000' : darkMode ? '#1e98dc' : '#000000',
     blue2: classicMode ? '#000000' : darkMode ? '#022b63' : '#000000',
     blue3: classicMode ? '#000000' : darkMode ? '#082751' : '#000000',
+    blue4: classicMode ? '#000000' : darkMode ? '#081f3f' : '#000000',
     grey1: classicMode ? '#000000' : darkMode ? '#5e6873' : '#000000',
     yellowGreen: classicMode ? '#000000' : darkMode ? '#878e13' : '#000000',
     yellowLight: classicMode ? '#000000' : darkMode ? '#ffffbe' : '#000000', 
@@ -338,9 +339,6 @@ html {
 .wrapASBlock > div { float: left; }
 .wrapASBlock > div + div { float: right; }
 .wrapASBlock > div:first-child { padding-top: 10px }
-
-.swapCaption { text-align: center; margin-top: 20px; width: 100%; text-shadow: 1px 1px #111111; }
-
 `
 export const ThemedGlobalStyle = createGlobalStyle`
 html {
@@ -378,6 +376,24 @@ body {
 
 .margin-auto { margin: auto; }
 .clear-fix { clear:both !important; float:none !important; }
+
+.tokenSymbolImage {
+  width: 110px;
+  height: auto;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: unset;
+  box-shadow: ${({ theme }) => (
+    (theme.name == 'classic' ? 
+      '0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),0px 24px 32px rgba(0, 0, 0, 0.01)' : (
+      theme.name == 'dark' ? 
+      '0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),0px 24px 32px rgba(0, 0, 0, 0.01)' : 
+      'none'
+    ))
+  )};
+}
+
 `
 export const AppWrapper = styled.div`
   display: flex;
@@ -387,27 +403,27 @@ export const AppWrapper = styled.div`
 `
 export const HeaderWrapper = styled.div`
 ${({ theme }) => theme.flexRowNoWrap}
-width: 100%;
-justify-content: space-between;
+  width: 100%;
+  justify-content: space-between;
 `
 export const BodyWrapper = styled.div`
-display: flex;
-flex-direction: column;
-width: 100%;
-padding-top: 25px;
-align-items: center;
-flex: 1;
-overflow-y: auto;
-overflow-x: hidden;
-z-index: 10;  
-${({ theme }) => theme.mediaWidth.upToSmall`
-  padding-left: 16px;
-  padding-right: 16px;
-  padding-bottom: 16px;
-  padding-top: 0rem;
-`};
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding-top: 25px;
+  align-items: center;
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  z-index: 10;  
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    padding-left: 16px;
+    padding-right: 16px;
+    padding-bottom: 16px;
+    padding-top: 0rem;
+  `};
 
-z-index: 1;
+  z-index: 1;
 `
 export const Marginer = styled.div`
   margin-top: 5rem;
@@ -498,7 +514,7 @@ export const MainContainerContentWrapper = styled.div`
   min-height: 620px;
   width: 100%;
   border-radius: 3px;
-  padding: 5px 40px;
+  padding: 5px 5px 5px 40px;
   background-size: cover;
 
   &.dark {
@@ -524,7 +540,7 @@ export const FeatureTitle = styled.h2`
   padding-bottom: 170px;
   overflow: hidden;
 
-  &.dark { color: ${({ theme }) => theme.azure5}; text-shadow: 1px 1px 2px ${({ theme }) => theme.blue2};  }
+  &.dark { color: ${({ theme }) => theme.azure5}; }
   &.light { color: #000000; }
   &.classic { color: #FFFFFF; }
 
@@ -565,10 +581,7 @@ export const SectionTitle = styled.h6`
   padding:0px;
   width: 80%;
 
-  &.dark {
-    color: ${({ theme }) => theme.azure1};
-    text-shadow: 2px 3px 5px ${({ theme }) => theme.blue3};
-  }
+  &.dark { color: ${({ theme }) => theme.azure1}; }
 
   &.light {
     color: #000000;
@@ -597,7 +610,7 @@ export const InventoryColumn = styled.div`
 export const InventoryContainer = styled.div`
   margin-right: 1rem;
   overflow-y: auto;
-  max-height: 550px;
+  max-height: 580px;
   overflow: hidden;
   @media (max-width: 1350px) { display: none; }
 `
@@ -614,7 +627,6 @@ export const InventoryItemContainer = styled.div`
 
   &.dark {
     background: linear-gradient(90deg, ${({ theme }) => theme.hexToRGB(theme.black, 1)} 0%, ${({ theme }) => theme.hexToRGB(theme.black, 0)} 100%);
-    text-shadow: 1px 1px ${({ theme }) => theme.black};
   }
 
   &.dark:after {
@@ -663,7 +675,7 @@ export const SimpleTextParagraph = styled.p`
   margin: 20px 0px;
   text-align: left;
 
-  &.dark { font-weight:400; text-shadow: 1px 1px #000000; }
+  &.dark { font-weight:400; }
   &.light {}
   &.classic {}
 `
@@ -724,6 +736,23 @@ export const PageItemsContainer = styled.div`
 
   &.swap { min-height: 580px; }
 `
+export const FooterInfo = styled.div`
+  font-size: small;
+  z-index: 99;
+  text-align: center;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 30% auto;  
+
+  &.dark {}
+  &.light {}
+  &.classic {}
+
+  &.dark > div.swapCaption {     
+    margin: 0px auto -20px auto;
+  }
+
+`
 export const TabsBar = styled.div`
   &.dark { }
   &.light {}
@@ -742,8 +771,8 @@ export const TabsBar = styled.div`
 
   &.dark:after, &.light:after { }
 `
-const tabLinkItemActiveClasName = 'active'
-export const TabLinkItem = styled(NavLink).attrs({ tabLinkItemActiveClasName })`
+const tabLinkItemActiveClassName = 'active'
+export const TabLinkItem = styled(NavLink).attrs({ tabLinkItemActiveClassName })`
   display: flex;
   flex-flow: row nowrap;
   align-items: left;
@@ -756,15 +785,15 @@ export const TabLinkItem = styled(NavLink).attrs({ tabLinkItemActiveClasName })`
   font-weight: 400;
   float: right;
   
-  &.dark { color: ${({ theme }) => theme.white}; text-shadow: 3px 5px ${({ theme }) => theme.blue3}; }
+  &.dark { color: ${({ theme }) => theme.white}; }
   &.light { color: ${({ theme }) => theme.grey1}; }
   &.classic { color: #C3C5CB; }
 
-  &.${tabLinkItemActiveClasName} { }
+  &.${tabLinkItemActiveClassName} { }
 
-  &.dark.${tabLinkItemActiveClasName} { color: ${({ theme }) => theme.azure1}; }
-  &.light.${tabLinkItemActiveClasName} { color: #2f9ab8; }
-  &.classic.${tabLinkItemActiveClasName} { color: #2f9ab8; }
+  &.dark.${tabLinkItemActiveClassName} { color: ${({ theme }) => theme.azure1}; }
+  &.light.${tabLinkItemActiveClassName} { color: #2f9ab8; }
+  &.classic.${tabLinkItemActiveClassName} { color: #2f9ab8; }
 
   &.dark:hover, &.dark:focus { color: ${({ theme }) => theme.azure1}; }
   &.light:hover, &.light:focus { }
@@ -840,11 +869,11 @@ export const CurrencyFormPanel = styled.div<{ hideInput?: boolean }>`
   & > .itemsContainer .label { font-weight: 400; font-size: 14px; display: inline; }
   & > .itemsContainer .label.link { cursor: pointer; }
 
-  &.dark > .itemsContainer .label { color: #95e1ff; text-shadow: 1px 1px #000; }
-  &.light > .itemsContainer .label { text-shadow: 1px 1px #053472; }
+  &.dark > .itemsContainer .label { color: #95e1ff; }
+  &.light > .itemsContainer .label { }
   &.classic > .itemsContainer .label {}
 `
-export const ActionButton = styled(BaseButton)<{ width?: string, borderRadius?: string, selected?: boolean }>`
+export const ActionButton = styled(BaseButton)<{ disabled?: boolean, selected?: boolean, useCustomProperties?: boolean }>`
   border-radius: 3px !important;
   font-size: 12px !important;
   font-weight: 300;
@@ -857,10 +886,14 @@ export const ActionButton = styled(BaseButton)<{ width?: string, borderRadius?: 
     color: ${({ theme }) => theme.yellowGreen} !important;
     border: 1px solid ${({ theme }) => theme.yellowGreen} !important;
     background-color: ${({ theme }) => theme.blue3};
-    text-shadow: 1px 1px ${({ theme }) => theme.blue3};
   }
+
   &.light {}
   &.classic {}
+
+  &.dark:hover, &.dark:focus { box-shadow: 0px 0px 4px ${({ theme }) => theme.yellowGreen}; }
+  &.light:hover, &.light:focus { }
+  &.classic:hover, &.classic:focus { }
 `
 export const DropDownButton = styled(BaseButton)<{ width?: string, borderRadius?: string, selected?: boolean }>`
   align-items: center;
@@ -873,10 +906,7 @@ export const DropDownButton = styled(BaseButton)<{ width?: string, borderRadius?
   user-select: none;
   border: none;
 
-  &.dark {
-    color: ${({ theme }) => theme.azure1 };
-    text-shadow: 1px 2px ${({ theme }) => theme.blue3 }
-  }
+  &.dark { color: ${({ theme }) => theme.azure1 }; }
   &.light {}
   &.classic {}
 
@@ -1018,11 +1048,37 @@ export const OperationButton = styled(Button)<{label?: string, disabled?: boolea
   &.connect-wallet-button { margin-left: -170px; }
   &.wrap-button { margin-left: -190px; }
 `
+export const MainOperationButton = styled(ActionButton)<{ disabled?: boolean, selected?: boolean, useCustomProperties?: boolean }>`
+  font-size: 16px !important;
+  padding: 5px 10px !important;
+
+  &:disabled { opacity: 0.5; }
+
+  &.dark.use-custom-properties.expert-mode:not([disabled]) { 
+    border: 1px solid ${({ theme }) => theme.red1} !important;
+    color: ${({ theme }) => theme.red1} !important;
+  }
+
+  &.dark, &.dark:disabled {
+    color: ${({ theme }) => theme.azure2} !important;
+    border: 1px solid ${({ theme }) => theme.azure2} !important;
+    background-color: ${({ theme }) => theme.blue3};
+  }
+
+  &.dark:hover, &.dark:focus { box-shadow: 0px 0px 4px ${({ theme }) => theme.azure2}; }
+  &.dark.use-custom-properties.expert-mode:hover, 
+  &.dark.use-custom-properties.expert-mode:focus { box-shadow: 0px 0px 4px ${({ theme }) => theme.red2}; }
+  &:disabled.dark:hover, &:disabled.dark:focus { box-shadow: none; } 
+
+  &.light {}
+  &.classic {}
+
+  
+`
 export const TradePriceContainer = styled.div`
   margin-top: 250px;
-  @media (max-width: 960px) { 
-    padding-left: 30px;
-   }
+  @media (max-width: 960px) { padding-left: 30px; }
+  @media (max-width: 1920px) { padding-left: 30px; }
 `
 export const AddRecipientPanel = styled.div`
   position: absolute;
@@ -1092,6 +1148,83 @@ export const Input = styled.input<{ error?: boolean }>`
   &.dark { color: ${({ error, theme }) => (error ? theme.red1 : theme.white)}; }
   &.light {}
   &.classic {}
+`
+export const SwapButtonsContainer = styled.div`
+  justify-content: center;
+  display: flex;
+  padding: 1rem 0rem;
+  width:auto;
+`
+export const SecondaryPanelBoxContainer = styled.div`
+  padding: 5px;
+  position: relative;
+  z-index: 2;
+
+  &.dark { border: solid 1px ${({ theme }) => theme.hexToRGB(theme.azure4, 1)}; } 
+  &.light {}
+  &.classic {}
+
+  &.dark > .inner-content {
+    border-radius: 3px;
+    width: 100%;
+    padding: 5px 5px 5px 5px;
+    background-size: cover;
+    background: linear-gradient(90deg, ${({ theme }) => theme.hexToRGB(theme.blue4, 0.8)} 60%, ${({ theme }) => theme.hexToRGB(theme.blue3, 0.8)} 100%);
+  }
+
+  &.light > .inner-content {}
+  &.classic > .inner-content {}
+`
+export const SecondaryPanelBoxContainerExtraDecorator = styled.div`
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  top: 0px;
+  left: 0px;
+
+  &.top { top:0px; left:0px; }
+  &.bottom { bottom: 0px; left: 0px; transform: scaleX(-1); }
+
+  &:before, &:after {
+    position: absolute;
+    content: " ";
+    display: block;
+    width: 12px;
+    height: 12px; 
+    background-color: transparent; 
+    background-size: 100% 100%;  
+    opacity: 1;
+  }
+
+  &:before { top: -8px; left: -8px; }
+  &:after { bottom: -8px; right: -8px; transform: rotate(180deg); }
+
+  &.dark:before {
+    background-image: url(${(images.decorators.smallBoxes.dark)});
+    background-position: left top;
+    background-repeat: no-repeat;
+  }
+  &.dark:after {
+    background-image: url(${(images.decorators.smallBoxes.dark)});
+    background-position: left top;
+    background-repeat: no-repeat;
+  }
+
+  &.light:before {}
+  &.light:after {}
+
+  &.classic:before {}
+  &.classic:after {}
+`
+
+export const AdvancedDetailsFooter = styled.div<{ show: boolean }>` 
+  display: ${({ show }) => (show ? 'block' : 'none')};
+  transform: ${({ show }) => (show ? 'translateY(0%)' : 'translateY(-100%)')};
+  width: 100%;
+  z-index: -1;
+  transition: transform 300ms ease-in-out;
+  @media (max-width: 600px) { padding-left: -2rem !important; }
 `
 
 export const SettingsMenuFlyout = styled.span`

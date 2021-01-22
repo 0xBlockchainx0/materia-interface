@@ -1,5 +1,6 @@
 import darkBackground from '../assets/images/backgrounds/dark.png'
 import darkFrameCorner from '../assets/images/large-box-corner-decoration.png'
+import darkSecondaryFrameCorner from '../assets/images/small-box-corner-decoration.png'
 import darkGridDecorator from '../assets/images/dark-grid-decorator.png'
 
 import tokenbackgroundDark from '../assets/images/token-background.png'
@@ -28,7 +29,7 @@ export const images = {
         classic: null
       },
       smallBoxes: {
-        dark: null,
+        dark: darkSecondaryFrameCorner,
         light: null,
         classic: null
       }

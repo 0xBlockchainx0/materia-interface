@@ -65,6 +65,7 @@ export interface Colors {
   blue1: Color
   blue2: Color
   blue3: Color
+  blue4: Color
   cyan1: Color
   cyan2: Color
   grey: Color

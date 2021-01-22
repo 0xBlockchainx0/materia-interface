@@ -1,10 +1,10 @@
-import React from 'react'
-import styled from 'styled-components'
+import React, { useContext } from 'react'
+import styled, { ThemeContext } from 'styled-components'
 import { darken, lighten } from 'polished'
-
 import { RowBetween } from '../Row'
 import { ChevronDown } from 'react-feather'
 import { Button as RebassButton, ButtonProps } from 'rebass/styled-components'
+import { MainOperationButton } from '../../theme'
 
 const Base = styled(RebassButton) <{
   padding?: string
@@ -355,15 +355,12 @@ const ButtonMateriaErrorStyle = styled(ButtonErrorStyle)`
   z-index:2;
 `
 
-export const SwapButton = styled(ButtonMateriaPrimary)`
- 
-`
-
-export function ButtonConfirmed({
+export function ButtonConfirmed({  
   confirmed,
   altDisabledStyle,
   ...rest
 }: { confirmed?: boolean; altDisabledStyle?: boolean } & ButtonProps) {
+  const theme = useContext(ThemeContext)
   if (confirmed) {
     return <ButtonConfirmedStyle {...rest} />
   } else {
@@ -372,6 +369,7 @@ export function ButtonConfirmed({
 }
 
 export function ButtonError({ error, ...rest }: { error?: boolean } & ButtonProps) {
+  const theme = useContext(ThemeContext)
   if (error) {
     return <ButtonErrorStyle {...rest} />
   } else {
@@ -385,6 +383,7 @@ export function ButtonMateriaConfirmed({
   altDisabledStyle,
   ...rest
 }: { hide?: boolean; confirmed?: boolean; altDisabledStyle?: boolean } & ButtonProps) {
+  const theme = useContext(ThemeContext)
   if (!hide) {
     if (confirmed) {
       return <ButtonMateriaConfirmedStyle {...rest} />
@@ -401,17 +400,27 @@ export function ButtonMateriaError({
   hide,
   showSwap,
   error,
+  useCustomProperties,
+  isExpertModeActive,
   ...rest
-}: { hide?: boolean; showSwap?: boolean, error?: boolean } & ButtonProps) {
+}: { hide?: boolean; showSwap?: boolean, error?: boolean, useCustomProperties?: boolean, isExpertModeActive?: boolean } & ButtonProps) {
+  const theme = useContext(ThemeContext)
   if (!hide || showSwap) {
-    if (error) {
-      return <ButtonMateriaErrorStyle {...rest} />
+    var className = theme.name + ' ' + (useCustomProperties ? 'use-custom-properties' : '' ) + ' ' + (isExpertModeActive ? 'expert-mode' : ' ')
+    console.log('theme.name => ' + theme.name);
+    console.log('useCustomProperties => ' + useCustomProperties);
+    console.log('isExpertModeActive => ' + isExpertModeActive);
+    console.log('className => ' + className);
+    console.log('showSwap => ' + showSwap);
+    console.log('hide => ' + hide);
+    if (error) {      
+      return <MainOperationButton {...rest} className={className}/>
     } else {
       if (showSwap) {
-        return <SwapButton {...rest} />
+        return <MainOperationButton {...rest} className={className}/>
       }
       else {
-        return <ButtonMateriaPrimary {...rest} />
+        return <MainOperationButton {...rest} className={className}/>
       }
     }
   }
@@ -421,6 +430,7 @@ export function ButtonMateriaError({
 }
 
 export function ButtonDropdown({ disabled = false, children, ...rest }: { disabled?: boolean } & ButtonProps) {
+  const theme = useContext(ThemeContext)
   return (
     <ButtonPrimary {...rest} disabled={disabled}>
       <RowBetween>
@@ -432,6 +442,7 @@ export function ButtonDropdown({ disabled = false, children, ...rest }: { disabl
 }
 
 export function ButtonDropdownLight({ disabled = false, children, ...rest }: { disabled?: boolean } & ButtonProps) {
+  const theme = useContext(ThemeContext)
   return (
     <ButtonOutlined {...rest} disabled={disabled}>
       <RowBetween>
@@ -443,6 +454,7 @@ export function ButtonDropdownLight({ disabled = false, children, ...rest }: { d
 }
 
 export function ButtonRadio({ active, ...rest }: { active?: boolean } & ButtonProps) {
+  const theme = useContext(ThemeContext)
   if (!active) {
     return <ButtonWhite {...rest} />
   } else {

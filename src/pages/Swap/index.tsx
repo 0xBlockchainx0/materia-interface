@@ -1,13 +1,12 @@
 import { CurrencyAmount, ETHER, JSBI, Token, Trade } from '@materia-dex/sdk'
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { useIsClassicMode } from '../../state/user/hooks'
-import { ArrowDown, RefreshCw, Plus, Minus, Link, Maximize2, Minimize2 } from 'react-feather'
+import { RefreshCw, Plus, Minus, Link } from 'react-feather'
 import ReactGA from 'react-ga'
-import { Text } from 'rebass'
 
 import styled, { ThemeContext } from 'styled-components'
 import AddressInputPanel from '../../components/AddressInputPanel'
-import { ButtonMateriaLight, ButtonMateriaPrimary, ButtonMateriaConfirmed, ButtonMateriaError } from '../../components/Button'
+import { ButtonMateriaConfirmed, ButtonMateriaError } from '../../components/Button'
 import Card, { SwapGreyCard } from '../../components/Card'
 import Column, { AutoColumn } from '../../components/Column'
 import ConfirmSwapModal from '../../components/swap/ConfirmSwapModal'
@@ -16,7 +15,7 @@ import { AutoRow, RowBetween, RowCenter } from '../../components/Row'
 import AdvancedSwapDetailsDropdown from '../../components/swap/AdvancedSwapDetailsDropdown'
 
 import confirmPriceImpactWithoutFee from '../../components/swap/confirmPriceImpactWithoutFee'
-import { ArrowWrapper, BottomGrouping, SwapCallbackError, Wrapper } from '../../components/swap/styleds'
+import { BottomGrouping, SwapCallbackError, Wrapper } from '../../components/swap/styleds'
 import TradePrice from '../../components/swap/TradePrice'
 import TokenWarningModal from '../../components/TokenWarningModal'
 import ProgressSteps from '../../components/ProgressSteps'
@@ -41,7 +40,6 @@ import {
 import { useExpertModeManager, useUserSlippageTolerance } from '../../state/user/hooks'
 import AppBody from '../AppBody'
 import { 
-  LinkStyledButton, 
   TYPE, 
   SwapPageGridContainer, 
   InventoryColumn, 
@@ -52,7 +50,10 @@ import {
   TradePriceContainer, 
   SwitchButton,
   OperationButton,
-  AddRecipientPanel } from '../../theme'
+  MainOperationButton,
+  AddRecipientPanel,
+  FooterInfo,
+  SwapButtonsContainer } from '../../theme'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { computeTradePriceBreakdown, warningSeverity } from '../../utils/prices'
 import { ClickableText } from '../Pool/styleds'
@@ -72,12 +73,7 @@ const TradeCard = styled(Card)`
   justify-content: center
 `
 
-const SwapButton = styled.div`
-  justify-content: center;
-  display: flex;
-  padding: 1rem 0rem;
-  width:auto;
-`
+
 
 export const Center = styled.div`
   display: flex;
@@ -85,19 +81,6 @@ export const Center = styled.div`
   justify-content: center;
   padding-top: 5px;
   padding-bottom: 5px;
-`
-
-export const FooterInfo = styled.div`
-  display: flex;
-  margin: 0 auto;
-  font-size: small;
-  z-index: 99;
-`
-
-export const FFCursorImg = styled.img`
-  position: absolute;
-  margin: 12px 0px 0px -250px;
-  z-index: 999;
 `
 
 export default function Swap() {
@@ -460,23 +443,17 @@ export default function Swap() {
                   </div>
                 </SwapPageContentContainer>
                 <BottomGrouping>
-                  <SwapButton>
+                  <SwapButtonsContainer>
                     {!account ? (
-                      // <OperationButton onClick={toggleWalletModal} className={ `connect-wallet-button ${theme.name}` } label="Connect Wallet">
-                      //   <Link/>
-                      // </OperationButton>
-                      <ButtonMateriaLight onClick={toggleWalletModal}>Connect Wallet</ButtonMateriaLight>
+                      <OperationButton onClick={toggleWalletModal} className={ `connect-wallet-button ${theme.name}` } label="Connect Wallet">
+                        <Link/>
+                      </OperationButton>
                     ) : showWrap ? (
-                      // <OperationButton onClick={onWrap} 
-                      //   className={ `wrap-button ${theme.name}` } 
-                      //   disabled={Boolean(wrapInputError)}
-                      //   label={wrapInputError ?? (wrapType === WrapType.WRAP ? 'Wrap' : wrapType === WrapType.UNWRAP ? 'Unwrap' : undefined)}>
-                      //   {wrapInputError ?? (wrapType === WrapType.WRAP ? <Minimize2/> : wrapType === WrapType.UNWRAP ?  <Maximize2/> : undefined)}
-                      // </OperationButton>
-                      <ButtonMateriaPrimary disabled={Boolean(wrapInputError)} onClick={onWrap}>
-                        {wrapInputError ??
-                          (wrapType === WrapType.WRAP ? 'Wrap' : wrapType === WrapType.UNWRAP ? 'Unwrap' : null)}
-                      </ButtonMateriaPrimary>
+                      <MainOperationButton onClick={onWrap} 
+                        className={ `wrap-button ${theme.name}` } 
+                        disabled={Boolean(wrapInputError)}>
+                        {wrapInputError ?? (wrapType === WrapType.WRAP ? 'Wrap' : wrapType === WrapType.UNWRAP ? 'Unwrap' : null)}
+                      </MainOperationButton>
                     ) : noRoute && userHasSpecifiedInputOutput ? (
                       <SwapGreyCard style={{ textAlign: 'center' }}>
                         <TYPE.body color={theme.text1} fontSize={20} fontWeight={500}>Insufficient liquidity for this trade</TYPE.body>
@@ -515,23 +492,17 @@ export default function Swap() {
                               })
                             }
                           }}
-                          width="48%"
                           id="swap-button"
                           disabled={!isValid || approval !== ApprovalState.APPROVED || (priceImpactSeverity > 3 && !isExpertMode)}
                           hide={!isValid || approval !== ApprovalState.APPROVED || (priceImpactSeverity > 3 && !isExpertMode)}
                           error={isValid && priceImpactSeverity > 2}
                           showSwap={!(!isValid || approval !== ApprovalState.APPROVED || (priceImpactSeverity > 3 && !isExpertMode))}
+                          useCustomProperties={priceImpactSeverity > 3 ? true : false}
+                          isExpertModeActive={isExpertMode}
                           onMouseEnter={() => { setIsShown(true); if (classicMode) { play() } }}
-                          onMouseLeave={() => { setIsShown(false); if (classicMode) { stop() } }}
+                          onMouseLeave={() => { setIsShown(false); if (classicMode) { stop() } }}                          
                         >
-                          {isShown && classicMode && (
-                            <FFCursorImg src={FFCursor} />
-                          )}
-                          <Text fontSize={16} fontWeight={500}>
-                            {priceImpactSeverity > 3 && !isExpertMode
-                              ? `Price Impact High`
-                              : `Swap${priceImpactSeverity > 2 ? ' Anyway' : ''}`}
-                          </Text>
+                          {priceImpactSeverity > 3 && !isExpertMode ? `Price Impact High` : `Swap ${priceImpactSeverity > 2 ? 'Anyway' : ''}`}
                         </ButtonMateriaError>
                       </RowCenter>
                     ) : (
@@ -553,19 +524,16 @@ export default function Swap() {
                                 disabled={!isValid || (priceImpactSeverity > 3 && !isExpertMode) || !!swapCallbackError}
                                 error={isValid && priceImpactSeverity > 2 && !swapCallbackError}
                                 showSwap={!(!isValid || (priceImpactSeverity > 3 && !isExpertMode) || !!swapCallbackError)}
+                                useCustomProperties={priceImpactSeverity > 3 ? true : false}
+                                isExpertModeActive={isExpertMode}
                                 onMouseEnter={() => { setIsShown(true); if (classicMode) { play() } }}
                                 onMouseLeave={() => { setIsShown(false); if (classicMode) { stop() } }}
                               >
-                                {isShown && classicMode && (
-                                  <FFCursorImg src={FFCursor} />
-                                )}
-                                <Text fontSize={20} fontWeight={500}>
-                                  {swapInputError
+                                {swapInputError
                                     ? swapInputError
                                     : priceImpactSeverity > 3 && !isExpertMode
                                       ? `Price Impact Too High`
-                                      : `Swap${priceImpactSeverity > 2 ? ' Anyway' : ''}`}
-                                </Text>
+                                      : `Swap ${priceImpactSeverity > 2 ? 'Anyway' : ''}`}
                               </ButtonMateriaError>
                             )}
                     {showApproveFlow && (
@@ -574,14 +542,15 @@ export default function Swap() {
                       </Column>
                     )}
                     {isExpertMode && swapErrorMessage ? <SwapCallbackError error={swapErrorMessage} /> : null}
-                  </SwapButton>
+                  </SwapButtonsContainer>
                 </BottomGrouping>
               </div>
               <AdvancedSwapDetailsDropdown trade={trade} originalCurrencies={originalCurrencies} />
             </PageItemsContainer>
           </SwapPageGridContainer>
         </Wrapper>
-        <FooterInfo>
+        <FooterInfo className={theme.name}>
+          <div></div>
           <div className="swapCaption">Select two token. Press "Swap" button to swap.</div>
         </FooterInfo>
       </AppBody>

@@ -19,7 +19,7 @@ export default function Inventory({
   return (
     <InventoryContainer>
       <SectionTitle className={theme.name}>Inventory</SectionTitle>
-      <Scrollbars autoHeight autoHeightMin={500} autoHide>      
+      <Scrollbars autoHeight autoHeightMin={555} autoHide>      
       {
         userTokens && userTokens.length > 0 ? (
           userTokens.map((userToken: any) => {
