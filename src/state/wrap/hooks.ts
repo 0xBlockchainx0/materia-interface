@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useActiveWeb3React } from '../../hooks'
 import { AppDispatch, AppState } from '../index'
 import { Field, typeInput } from './actions'
-import { Currency, CurrencyAmount, ETHER, JSBI, Token, TokenAmount, Trade } from '@materia-dex/sdk'
+import { Currency, CurrencyAmount, JSBI, Token, TokenAmount } from '@materia-dex/sdk'
 import { parseUnits } from '@ethersproject/units'
 import { useCurrency } from '../../hooks/Tokens'
 
@@ -16,9 +16,9 @@ export function useDerivedWrapInfo(): {
   parsedAmount: CurrencyAmount | undefined
   error?: string
 } {
-  const { account, chainId } = useActiveWeb3React()
+  const { account } = useActiveWeb3React()
   const {
-    independentField,
+    // independentField,
     typedValue,
     [Field.INPUT]: { currencyId: inputCurrencyId },
   } = useWrapState()

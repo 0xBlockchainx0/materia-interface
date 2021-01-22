@@ -149,6 +149,7 @@ export function useAllTokenList(): TokenAddressMap {
     catch (error) {
       console.error('Could not show inventory token list due to error', error)
     }
+    return true;
   })
 
   return allTokenAddressMap;

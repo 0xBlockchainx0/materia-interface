@@ -1,11 +1,11 @@
 import { Contract } from '@ethersproject/contracts'
 import { abi as STAKING_REWARDS_ABI } from '@uniswap/liquidity-staker/build/StakingRewards.json'
 import { abi as MERKLE_DISTRIBUTOR_ABI } from '@uniswap/merkle-distributor/build/MerkleDistributor.json'
-import { ChainId, IETH } from '@materia-dex/sdk'
+import { ChainId } from '@materia-dex/sdk'
 import { abi as IMateriaPairABI } from '@materia-dex/materia-contracts-core/build/IMateriaPair.json'
 import { abi as IERC20WrapperV1_ABI } from '@materia-dex/materia-contracts-proxy/build/IERC20WrapperV1.json'
 import { useMemo } from 'react'
-import { MERKLE_DISTRIBUTOR_ADDRESS, GIL, ERC20WRAPPER } from '../constants'
+import { MERKLE_DISTRIBUTOR_ADDRESS, ERC20WRAPPER } from '../constants'
 import {
   ARGENT_WALLET_DETECTOR_ABI,
   ARGENT_WALLET_DETECTOR_MAINNET_ADDRESS
@@ -16,7 +16,6 @@ import { ERC20_BYTES32_ABI } from '../constants/abis/erc20'
 import ERC20_ABI from '../constants/abis/erc20.json'
 import { MIGRATOR_ABI, MIGRATOR_ADDRESS } from '../constants/abis/migrator'
 import UNISOCKS_ABI from '../constants/abis/unisocks.json'
-import IETH_ABI from '../constants/abis/erc20.json'
 import { MULTICALL_ABI, MULTICALL_NETWORKS } from '../constants/multicall'
 
 import { getContract } from '../utils'
@@ -48,19 +47,19 @@ function useUnmemoizedContract(address: string | undefined, ABI: any, withSigner
   }
 }
 
-function useContracts(addresses: string[] | undefined, ABI: any, withSignerIfPossible = true): Contract[] | null {
-  const { library, account } = useActiveWeb3React()
+// function useContracts(addresses: string[] | undefined, ABI: any, withSignerIfPossible = true): Contract[] | null {
+//   const { library, account } = useActiveWeb3React()
 
-  return useMemo(() => {
-    if (!addresses || !ABI || !library) return null
-    try {
-      return addresses.map((address) => getContract(address, ABI, library, withSignerIfPossible && account ? account : undefined))
-    } catch (error) {
-      console.error('Failed to get contract', error)
-      return null
-    }
-  }, [addresses, ABI, library, withSignerIfPossible, account])
-}
+//   return useMemo(() => {
+//     if (!addresses || !ABI || !library) return null
+//     try {
+//       return addresses.map((address) => getContract(address, ABI, library, withSignerIfPossible && account ? account : undefined))
+//     } catch (error) {
+//       console.error('Failed to get contract', error)
+//       return null
+//     }
+//   }, [addresses, ABI, library, withSignerIfPossible, account])
+// }
 
 export function useV2MigratorContract(): Contract | null {
   return useContract(MIGRATOR_ADDRESS, MIGRATOR_ABI, true)

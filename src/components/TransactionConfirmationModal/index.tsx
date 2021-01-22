@@ -7,7 +7,7 @@ import { Text } from 'rebass'
 import { CloseIcon, CustomLightSpinner } from '../../theme/components'
 import { RowBetween } from '../Row'
 import { AlertTriangle, ArrowUpCircle } from 'react-feather'
-import { ButtonMateriaPrimary, ButtonPrimary } from '../Button'
+import { ButtonMateriaPrimary } from '../Button'
 import { AutoColumn, ColumnCenter } from '../Column'
 import Circle from '../../assets/images/blue-loader.svg'
 

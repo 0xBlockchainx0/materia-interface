@@ -80,11 +80,9 @@ export interface AdvancedSwapDetailsProps {
 }
 
 export function AdvancedSwapDetails({ trade, originalCurrencies }: AdvancedSwapDetailsProps) {
-  const theme = useContext(ThemeContext)
-
   const [allowedSlippage] = useUserSlippageTolerance()
-
-  const showRoute = Boolean(trade && trade.route.path.length > 2)
+  // const theme = useContext(ThemeContext)
+  // const showRoute = Boolean(trade && trade.route.path.length > 2)
 
   return (
     <AutoColumn gap="md">

@@ -66,7 +66,7 @@ export default function ConfirmSwapModal({
         onAcceptChanges={onAcceptChanges}
       />
     ) : null
-  }, [allowedSlippage, onAcceptChanges, recipient, showAcceptChanges, trade])
+  }, [allowedSlippage, onAcceptChanges, recipient, showAcceptChanges, trade, originalCurrencies])
 
   const modalBottom = useCallback(() => {
     return trade ? (
@@ -79,7 +79,7 @@ export default function ConfirmSwapModal({
         allowedSlippage={allowedSlippage}
       />
     ) : null
-  }, [allowedSlippage, onConfirm, showAcceptChanges, swapErrorMessage, trade])
+  }, [allowedSlippage, onConfirm, showAcceptChanges, swapErrorMessage, trade, originalCurrencies])
 
   // text to show while loading
   const pendingText = `Swapping ${trade?.inputAmount?.toSignificant(6)} ${

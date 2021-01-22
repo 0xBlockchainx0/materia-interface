@@ -2,16 +2,14 @@ import React, { useCallback, useContext, useState } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 import { GridContainer, InventoryItemContainer, IconButton, ActionButton } from '../../theme'
 import { ButtonMateriaPrimary } from '../Button'
-import { RowBetween, RowFixed } from '../Row'
+import { RowBetween } from '../Row'
 import { AutoColumn } from '../Column'
 import { Text } from 'rebass'
 import { Input as NumericalInput } from '../NumericalInput'
-import { Currency, CurrencyAmount, ETHER, JSBI, Token, TokenAmount } from '@materia-dex/sdk'
+import { Currency, ETHER, Token } from '@materia-dex/sdk'
 import { useActiveWeb3React } from '../../hooks'
-import { useSwapActionHandlers } from '../../state/swap/hooks'
 import { Field } from '../../state/wrap/actions'
-import { useDerivedWrapInfo, useWrapActionHandlers, useWrapState } from '../../state/wrap/hooks'
-import CurrencyInputPanel from '../CurrencyInputPanel'
+import { useWrapActionHandlers, useWrapState } from '../../state/wrap/hooks'
 import Dropdown from 'react-dropdown';
 import 'react-dropdown/style.css';
 import { unwrappedToken } from '../../utils/wrappedCurrency'
@@ -45,15 +43,15 @@ export default function InventoryItem({
   const theme = useContext(ThemeContext)
   const [showMore, setShowMore] = useState(false)
   const [isERC20, setIsERC20] = useState(true)
-  const [isERC721, setIsERC721] = useState(false)
-  const [isERC1155, setIsERC1155] = useState(false)
+  // const [isERC721, setIsERC721] = useState(false)
+  // const [isERC1155, setIsERC1155] = useState(false)
 
   const { account } = useActiveWeb3React()
   const { onUserInput } = useWrapActionHandlers()
   const handleMaxButton = useCallback(() => {
     onUserInput(Field.INPUT, balance ?? '0.0')
   },
-    [onUserInput]
+    [onUserInput, balance]
   )
 
   const handleNumericalInput = useCallback(
@@ -63,14 +61,14 @@ export default function InventoryItem({
     [onUserInput]
   )
 
-  const {
-    parsedAmount,
-    error,
-  } = useDerivedWrapInfo()
+  // const {
+  //   parsedAmount,
+  // } = useDerivedWrapInfo()
   const { independentField, typedValue } = useWrapState()
-  const parsedAmounts = {
-    [Field.INPUT]: independentField === Field.INPUT ? parsedAmount : balance,
-  }
+  
+  // const parsedAmounts = {
+  //   [Field.INPUT]: independentField === Field.INPUT ? parsedAmount : balance,
+  // }
 
   const formattedAmounts = {
     [independentField]: typedValue
@@ -86,22 +84,23 @@ export default function InventoryItem({
       switch (value.value) {
         case 'ERC20':
           setIsERC20(true)
-          setIsERC721(false)
-          setIsERC1155(false)
+          // setIsERC721(false)
+          // setIsERC1155(false)
           break
-        case 'ERC721':
-          setIsERC20(false)
-          setIsERC721(true)
-          setIsERC1155(false)
-          break
-        case 'ERC1155':
-          setIsERC20(false)
-          setIsERC721(false)
-          setIsERC1155(true)
-          break
+        // case 'ERC721':
+        //   setIsERC20(false)
+        //   setIsERC721(true)
+        //   setIsERC1155(false)
+        //   break
+        // case 'ERC1155':
+        //   setIsERC20(false)
+        //   setIsERC721(false)
+        //   setIsERC1155(true)
+        //   break
       }
     },
-    [setIsERC20, setIsERC721, setIsERC1155]
+    // [setIsERC20, setIsERC721, setIsERC1155]
+    [setIsERC20]
   )
 
   const onTokenSelection = useCallback(

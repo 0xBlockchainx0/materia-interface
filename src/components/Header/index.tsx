@@ -1,23 +1,15 @@
-import { ChainId, TokenAmount } from '@materia-dex/sdk'
-import React, { useState } from 'react'
-import { Text } from 'rebass'
+import React from 'react'
 import { NavLink } from 'react-router-dom'
 import { darken } from 'polished'
-import { useTranslation } from 'react-i18next'
 
 import styled from 'styled-components'
 
 import Logo from '../../assets/images/materia-logo-light.png'
 import LogoDark from '../../assets/images/materia-logo.png'
-import { useActiveWeb3React } from '../../hooks'
 import { useClassicModeManager, useDarkModeManager } from '../../state/user/hooks'
-import { useETHBalances, useAggregateUniBalance } from '../../state/wallet/hooks'
 import { ExternalLink } from '../../theme'
 
-import { YellowCard } from '../Card'
-
 import Row, { RowFixed } from '../Row'
-import usePrevious from '../../hooks/usePrevious'
 import { MATERIA_DFO_ADDRESS } from '../../constants'
 
 const HeaderFrame = styled.div`
@@ -58,24 +50,6 @@ const HeaderLinks = styled(Row)`
     padding: 1rem 0 1rem 1rem;
     justify-content: flex-end;
 `};
-`
-
-const AccountElement = styled.div<{ active: boolean }>`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  background-color: ${({ theme, active }) => (!active ? theme.bg1 : theme.bg3)};
-  border-radius: 12px;
-  white-space: nowrap;
-  width: 100%;
-  cursor: pointer;
-
-  :focus {
-    border: 1px solid blue;
-  }
-  /* :hover {
-    background-color: ${({ theme, active }) => (!active ? theme.bg2 : theme.bg4)};
-  } */
 `
 
 const Title = styled.a`
@@ -160,12 +134,8 @@ const StyledExternalLink = styled(ExternalLink).attrs({
 `
 
 export default function Header() {
-  const { account } = useActiveWeb3React()
   const [isDark] = useDarkModeManager()
   const [isClassic] = useClassicModeManager()
-
-  const aggregateBalance: TokenAmount | undefined = useAggregateUniBalance()
-  const countUpValue = aggregateBalance?.toFixed(0) ?? '0'
 
   return (
     <HeaderFrame>

@@ -1,6 +1,6 @@
-import React, { useContext } from 'react'
-import { AutoColumn, FittedAutoColumn } from '../../components/Column'
-import styled, { ThemeContext } from 'styled-components'
+import React from 'react'
+import { AutoColumn } from '../../components/Column'
+import styled from 'styled-components'
 import { STAKING_REWARDS_INFO, useStakingInfo } from '../../state/stake/hooks'
 import { TYPE, ExternalLink } from '../../theme'
 import PoolCard from '../../components/earn/PoolCard'
@@ -59,19 +59,7 @@ export default function Earn() {
     flex-direction: column;
   `};
   `
-
-  const EarnGridContainer = styled.div`
-  display: grid;
-  grid-template-columns: 5% auto;
-
-  @media (min-width: 601px) and (max-width: 1350px) {
-    grid-template-columns: 50px auto !important;
-  }
-  @media (max-width: 600px) {
-    grid-template-columns: auto !important;
-  }
-`
-
+  
   const ItemColumn = styled.div`
   width: 0px;
   @media (min-width: 601px) and (max-width: 1350px) { /* display: none; */ }

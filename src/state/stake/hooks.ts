@@ -1,6 +1,8 @@
-import { ChainId, CurrencyAmount, JSBI, Token, TokenAmount, IETH, Pair } from '@materia-dex/sdk'
+import { ChainId, CurrencyAmount, JSBI, Token, TokenAmount, Pair } from '@materia-dex/sdk'
+// import { IETH } from '@materia-dex/sdk'
 import { useMemo } from 'react'
-import { DAI, GIL, USD, USDC, USDT, WBTC } from '../../constants'
+import { GIL } from '../../constants'
+// import { USD } from '../../constants'
 import { STAKING_REWARDS_INTERFACE } from '../../constants/abis/staking-rewards'
 import { useActiveWeb3React } from '../../hooks'
 import { NEVER_RELOAD, useMultipleContractSingleData } from '../multicall/hooks'
@@ -17,33 +19,17 @@ export const STAKING_REWARDS_INFO: {
     stakingRewardAddress: string
   }[]
 } = {
-  // [ChainId.MAINNET]: [
-  //   {
-  //     tokens: [USD[ChainId.MAINNET], IETH[ChainId.MAINNET]],
-  //     stakingRewardAddress: '0xa1484C3aa22a66C62b77E0AE78E15258bd0cB711'
-  //   },
-  //   {
-  //     tokens: [USD[ChainId.MAINNET], WBTC[ChainId.MAINNET]],
-  //     stakingRewardAddress: '0xa1484C3aa22a66C62b77E0AE78E15258bd0cB711'
-  //   },
-  //   {
-  //     tokens: [USD[ChainId.MAINNET], GIL[ChainId.MAINNET]],
-  //     stakingRewardAddress: '0xa1484C3aa22a66C62b77E0AE78E15258bd0cB711'
-  //   }
-  // ],
+  [ChainId.MAINNET]: [
+    // {
+    //   tokens: [USD[ChainId.ROPSTEN], IETH[ChainId.ROPSTEN]],
+    //   stakingRewardAddress: '0xa1484C3aa22a66C62b77E0AE78E15258bd0cB711'
+    // },
+  ],
   [ChainId.ROPSTEN]: [
     // {
     //   tokens: [USD[ChainId.ROPSTEN], IETH[ChainId.ROPSTEN]],
     //   stakingRewardAddress: '0xa1484C3aa22a66C62b77E0AE78E15258bd0cB711'
     // },
-    // {
-    //   tokens: [USD[ChainId.ROPSTEN], WBTC[ChainId.ROPSTEN]],
-    //   stakingRewardAddress: '0xa1484C3aa22a66C62b77E0AE78E15258bd0cB711'
-    // },
-    {
-      tokens: [USD[ChainId.ROPSTEN], GIL[ChainId.ROPSTEN]],
-      stakingRewardAddress: '0x134c16A18D5794F227B64893c5486bBDd87d752B'
-    }
   ]
 }
 

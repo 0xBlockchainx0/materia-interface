@@ -11,13 +11,13 @@ import TransactionConfirmationModal, { ConfirmationModalContent } from '../../co
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import DoubleCurrencyLogo from '../../components/DoubleLogo'
 import { MinimalPositionCard } from '../../components/PositionCard'
-import Row, { AutoRow, RowBetween, RowFlat, RowFixed } from '../../components/Row'
+import Row, { AutoRow, RowBetween, RowFlat } from '../../components/Row'
 import { darken } from 'polished'
 
 import { ORCHESTRATOR_ADDRESS, USD, ZERO_ADDRESS } from '../../constants'
 import { PairState } from '../../data/Reserves'
 import { useCurrency } from '../../hooks/Tokens'
-import { ApprovalState, useApproveCallback, useInteroperableApproveCallback } from '../../hooks/useApproveCallback'
+import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
 import useTransactionDeadline from '../../hooks/useTransactionDeadline'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import { Field } from '../../state/mint/actions'
@@ -226,7 +226,7 @@ export default function AddLiquidity({
     currencies,
     pair,
     pairState,
-    currencyBalances,
+    // currencyBalances,
     parsedAmounts,
     price,
     noLiquidity,
@@ -235,8 +235,8 @@ export default function AddLiquidity({
     error
   } = useDerivedMintInfo(currencyA ?? undefined, currencyB ?? undefined, true)
   const {
-    pair: originalPair,
-    pairState: originalPairState,
+    // pair: originalPair,
+    // pairState: originalPairState,
     currencyBalances: originalCurrencyBalances,
     parsedAmounts: originalParsedAmounts
   } = useDerivedMintInfo(currencyA ?? undefined, currencyB ?? undefined, false)
@@ -314,8 +314,8 @@ export default function AddLiquidity({
   // )
 
   // check whether the user has approved the router on the tokens
-  const [approvalA, approveACallback] = useInteroperableApproveCallback(originalParsedAmounts[Field.CURRENCY_A], ORCHESTRATOR_ADDRESS)
-  const [approvalB, approveBCallback] = useInteroperableApproveCallback(originalParsedAmounts[Field.CURRENCY_B], ORCHESTRATOR_ADDRESS)
+  const [approvalA, approveACallback] = useApproveCallback(originalParsedAmounts[Field.CURRENCY_A], ORCHESTRATOR_ADDRESS)
+  const [approvalB, approveBCallback] = useApproveCallback(originalParsedAmounts[Field.CURRENCY_B], ORCHESTRATOR_ADDRESS)
 
   const addTransaction = useTransactionAdder()
 
@@ -371,7 +371,7 @@ export default function AddLiquidity({
     let methodName: string
     let args: Array<string | string[] | number | boolean>
     let value: BigNumber | null
-
+    
     if (isEthItem && !isETH) {
       if (!collectionContract) return
 

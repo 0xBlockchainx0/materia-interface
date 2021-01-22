@@ -1,8 +1,8 @@
-import { Currency, CurrencyAmount, JSBI, TokenAmount } from '@materia-dex/sdk';
+import { Currency } from '@materia-dex/sdk';
 import React, { useContext } from 'react'
-import styled, { ThemeContext } from 'styled-components'
+import { ThemeContext } from 'styled-components'
 import { useUserTokens } from '../../state/wallet/hooks';
-import { TYPE, SectionTitle, InventoryContainer, SimpleInformationsTextParagraph } from '../../theme';
+import { SectionTitle, InventoryContainer, SimpleInformationsTextParagraph } from '../../theme';
 import InventoryItem from './InventoryItem'
 import { Scrollbars } from 'react-custom-scrollbars';
 

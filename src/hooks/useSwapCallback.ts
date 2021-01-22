@@ -1,6 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { Contract } from '@ethersproject/contracts'
-import { Currency, JSBI, Percent, Router, SwapParameters, Token, Trade, TradeType } from '@materia-dex/sdk'
+import { JSBI, Percent, Router, SwapParameters, Token, Trade } from '@materia-dex/sdk'
 import { useMemo } from 'react'
 import { BIPS_BASE, INITIAL_ALLOWED_SLIPPAGE, ZERO_ADDRESS } from '../constants'
 import { useTransactionAdder } from '../state/transactions/hooks'
@@ -63,7 +63,7 @@ function useSwapCallArguments(
     (!library || !account || !chainId || !isEthItem)
       ? null
       : getEthItemCollectionContract(chainId, ethItemCollection, library, account)
-  
+
   // console.log('*********************************')
   // console.log('isEthItem: ', isEthItem)
   // console.log('ethItemCollection: ', ethItemCollection)
@@ -84,12 +84,12 @@ function useSwapCallArguments(
         recipient,
         deadline: deadline.toNumber()
       },
-      tokenIn,
-      tokenOut,
-      etherIn,
-      etherOut,
-      isEthItem,
-      ethItemObjectId?.toString() ?? "0")
+        tokenIn,
+        tokenOut,
+        etherIn,
+        etherOut,
+        isEthItem,
+        ethItemObjectId?.toString() ?? "0")
     )
 
     if (isEthItem) {
@@ -105,7 +105,11 @@ function useSwapCallArguments(
       parameters: parameters,
       contract: contract
     }))
-  }, [account, allowedSlippage, chainId, deadline, library, recipient, trade])
+  }, [
+    account, allowedSlippage, chainId, deadline, library, recipient,
+    trade, collectionContract, contract, ethItemObjectId, etherIn,
+    etherOut, isEthItem, tokenIn, tokenOut
+  ])
 }
 
 // returns a function that will execute a swap, if the parameters are all valid
@@ -202,7 +206,7 @@ export function useSwapCallback(
           if (errorCalls.length > 0) {
             throw errorCalls[errorCalls.length - 1].error
           }
-          
+
           throw new Error('Unexpected error. Please contact support: none of the calls threw an error')
         }
 
