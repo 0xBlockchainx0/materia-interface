@@ -337,6 +337,14 @@ export default function AddLiquidity({
     const currencyUSD = USD[chainId ?? 1]
     const currencyBIsUSD =  wrappedCurrency(currencyB, chainId)?.address == currencyUSD.address
 
+    // console.log('***************************************')
+    // console.log('currencyBIsUSD: ', currencyBIsUSD)
+    // console.log('parsedAmounts[Field.CURRENCY_A]: ', parsedAmounts[Field.CURRENCY_A])
+    // console.log('originalParsedAmounts[Field.CURRENCY_A]: ', originalParsedAmounts[Field.CURRENCY_A])
+    // console.log('parsedAmounts[Field.CURRENCY_B]: ', parsedAmounts[Field.CURRENCY_B])
+    // console.log('originalParsedAmounts[Field.CURRENCY_B]: ', originalParsedAmounts[Field.CURRENCY_B])
+    // console.log('***************************************')
+
     // const { [Field.CURRENCY_A]: parsedAmountA, [Field.CURRENCY_B]: parsedAmountB } = parsedAmounts
     // const modifiedParsedAmountA = currencyBIsUSD 
     const parsedAmountA = currencyBIsUSD 
@@ -382,7 +390,7 @@ export default function AddLiquidity({
           ["uint", "uint", "uint", "address", "uint"],
           [
             currencyBIsUSD ? parsedAmountB.raw.toString() : parsedAmountA.raw.toString(),
-            currencyBIsUSD ? parsedAmountA.raw.toString() : parsedAmountB.raw.toString(),
+            currencyBIsUSD ? amountsMin[Field.CURRENCY_A].toString() : amountsMin[Field.CURRENCY_B].toString(),
             currencyBIsUSD ? amountsMin[Field.CURRENCY_B].toString() : amountsMin[Field.CURRENCY_A].toString(),
             account,
             deadline.toHexString()
@@ -393,7 +401,7 @@ export default function AddLiquidity({
         account, 
         ORCHESTRATOR_ADDRESS, 
         ethItemObjectId?.toString() ?? "0", 
-        currencyBIsUSD ? amountsMin[Field.CURRENCY_A].toString() : amountsMin[Field.CURRENCY_B].toString(),
+        currencyBIsUSD ? parsedAmountA.raw.toString() : parsedAmountB.raw.toString(),
         ethItemArgs]
       value = null
     }

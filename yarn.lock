@@ -2714,10 +2714,10 @@
     yargs-unparser "^1.6.0"
     yn "^3.1.1"
 
-"@materia-dex/sdk@^1.4.4":
-  version "1.4.4"
-  resolved "https://registry.yarnpkg.com/@materia-dex/sdk/-/sdk-1.4.4.tgz#d697c2c719f227f68ec8268985da4bfb6501f27a"
-  integrity sha512-4d4LTiiX74sBCih6ifhqI9In3ADhXJHl1VANdjoKgojT2o75GRAgfdZv0b8x5J2qU/pTivTDyN+rfq3TnlZ9zw==
+"@materia-dex/sdk@^1.4.5":
+  version "1.4.5"
+  resolved "https://registry.yarnpkg.com/@materia-dex/sdk/-/sdk-1.4.5.tgz#7171684d19840253fee5b80b7afc9dbef1c8db52"
+  integrity sha512-wAagCM9vv6ZsqqWKuYvNCaYpKfUa/EHg+Xzoqwa/3k+S8rlYq2Si77aLFunwYE+TaePleuJLK9fwCee5ugKOOQ==
   dependencies:
     "@ethersproject/units" "^5.0.9"
     "@materia-dex/materia-contracts-core" "^1.1.3"
