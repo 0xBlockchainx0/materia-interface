@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
-import { Disc } from 'react-feather'
 import { ImageProps } from 'rebass'
+import { images } from '../../theme/images'
 
 const BAD_SRCS: { [tokenAddress: string]: true } = {}
 
@@ -30,5 +30,5 @@ export default function Logo({ srcs, alt, ...rest }: LogoProps) {
     )
   }
 
-  return <Disc {...rest} />
+  return <img {...rest} alt="Token Image Not Found" src={images.tokenImageNotFound.dark}/>
 }

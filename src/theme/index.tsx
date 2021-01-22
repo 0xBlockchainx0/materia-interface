@@ -61,6 +61,8 @@ export function colors(darkMode: boolean, classicMode: boolean): Colors {
     grey1: classicMode ? '#000000' : darkMode ? '#5e6873' : '#000000',
     yellowGreen: classicMode ? '#000000' : darkMode ? '#878e13' : '#000000',
     yellowLight: classicMode ? '#000000' : darkMode ? '#ffffbe' : '#000000', 
+    red1: '#FF6871',
+    red2: '#F82D3A',
 
     placeholderColor: classicMode ? '#000000' : darkMode ? '#FFFFFF' : '#000000',
 
@@ -119,8 +121,7 @@ export function colors(darkMode: boolean, classicMode: boolean): Colors {
     buttonMateriaErrorHoverBorderColor: classicMode ? '#f9c4c7' : darkMode ? '#f9c4c7' : '#f9c4c7',
 
     // other
-    red1: '#FF6871',
-    red2: '#F82D3A',
+    
     green1: '#27AE60',
     yellow1: '#FFE270',
     yellow2: '#F3841E',
@@ -940,9 +941,155 @@ export const SwitchButton = styled(Button)<{disabled?: boolean}>`
   &.classic:after {}
   &.classic:before {}
 `
+export const OperationButton = styled(Button)<{label?: string, disabled?: boolean}>`
+  padding: 0px !important;
+  border-radius: 0px !important;
+  display: inline-block;
+  text-align: center;
+  border-color: transparent;
+  outline: none;
+  text-decoration: none;
+  display: flex;
+  justify-content: center;
+  flex-wrap: nowrap;
+  align-items: center;
+  position: relative;
+  background: none;
+  transform: rotate(45deg);
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+
+  &:disabled, &.disabled, &.dark.disabled, &.light.disabled, &.classic.disabled,
+  &.dark.disabled:hover, &.dark.disabled:focus,
+  &.light.disabled:hover, &.light.disabled:focus,
+  &.classic.disabled:hover, &.classic.disabled:focus { cursor: auto; opacity: 0.4; box-shadow: none; }
+  > * { user-select: none; }
+  &.hidden { display: none !important; }
+
+  & > svg { width: 15px; height: 15px; transform: rotate(-45deg); margin-left: -1px; margin-bottom: -1px; }
+
+  &:after, &:before {
+    content: "";
+    display:block;
+    position:absolute;
+    width: 216px;
+    height: 1px;
+    transform: rotate(-45deg);    
+  }
+
+  &:after { 
+    content: ${({ label }) => (label ? "\"" + label + "\"" : "\"" + + "\"")}; 
+    bottom: 94px; 
+    right: -144px;
+    background: transparent;
+    text-align: left;
+    padding: 106px 0px 0px 41px;
+  }
+
+  &:before { bottom: 103px; right: -183px;  }
+
+  &.dark { border: solid 1px ${({ theme }) => theme.azure1 }; background-color: ${({ theme }) => theme.black }; }
+  &.light {}
+  &.classic {}
+
+  &.dark:hover, &.dark:focus { box-shadow: 0px 0px 12px ${({ theme }) => theme.azure1 }; }
+  &.dark:hover::after { text-shadow: 0px 0px 12px ${({ theme }) => theme.azure1 }; }
+  &.light:hover, &.light:focus { }
+  &.light:hover::after { }
+  &.classic:hover, &.classic:focus { }
+  &.classic:hover::after { }
+
+  &.dark:before { background: linear-gradient(to right, ${({ theme }) => theme.azure1} 0%, rgba(15,63,115,0) 100%); }
+  &.dark:after {
+    font-weight: 200;
+    font-size:14px;
+    color: ${({ theme }) => theme.azure1 };
+    text-shadow: 1px 1px 2px ${({ theme }) => theme.blue3 }; 
+  }
+
+  &.light:after {}
+  &.light:before {}
+
+  &.classic:after {}
+  &.classic:before {}
+
+  &.add-a-send-button { position: absolute; top: 120px; left: 70px; }  
+  &.connect-wallet-button { margin-left: -170px; }
+  &.wrap-button { margin-left: -190px; }
+`
 export const TradePriceContainer = styled.div`
   margin-top: 250px;
-  padding-left: 10px;
+  padding-left: 30px;
+`
+export const AddRecipientPanel = styled.div`
+  position: absolute;
+  top: 120px;
+  left: 70px;
+`
+export const InputPanel = styled.div`
+  ${({ theme }) => theme.flexColumnNoWrap}
+  position: relative;
+  border-radius: 0px;
+  background-color: transparent;
+  z-index: 1;
+  width: 100%;
+`
+export const ContainerRow = styled.div<{ error: boolean }>`
+  border: none;
+  background: none;
+  position:relative;
+
+  &.dark {}
+  &.light {}
+  &.classic {}
+
+  &:after {
+    content: "";
+    position: absolute;
+    width: 0%;
+    height: 1px;
+    transition: width .3s;
+    bottom: 0px;
+    left: 0px; 
+  }
+
+  &.dark:after { background-color: ${({ theme, error }) => error ? theme.red2 : theme.azure1 }; }
+  &.light:after {}
+  &.classic:after {}
+
+  &:hover::after { width: 100%; }
+
+  & > div.input-container { flex: 1; padding: 3px; }
+  & > div.input-container > label, & > div.input-container > a { 
+    font-size: 13px;
+    font-weight: 300;
+    display: block;
+    float: right;
+    margin: 0px 0px 10px 10px;
+  }
+
+  &.dark > div.input-container > a { color: ${({ theme }) => theme.azure1 }; }
+  &.light > div.input-container > a { }
+  &.classic > div.input-container > a { }
+`
+export const Input = styled.input<{ error?: boolean }>`
+  font-size: 16px;
+  outline: none;
+  border: none;
+  flex: 1 1 auto;
+  width: 0;
+  background-color: transparent;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: 300;
+  width: 100%;  
+  padding: 0px;
+  -webkit-appearance: textfield;  
+
+  &.dark { color: ${({ error, theme }) => (error ? theme.red1 : theme.white)}; }
+  &.light {}
+  &.classic {}
 `
 
 export const SettingsMenuFlyout = styled.span`

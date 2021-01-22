@@ -8,6 +8,8 @@ import tokenbackgroundClassic from '../assets/images/token-background-classic.pn
 import swapButtonBgDark from '../assets/images/button-background.png'
 import swapButtonBgLight from '../assets/images/button-background-light.png'
 
+import tokenImageNotFoundDark from '../assets/images/default-token-image.png'
+
 export const images = {
     backgrounds: {
       dark: darkBackground,
@@ -39,6 +41,11 @@ export const images = {
     swap: {
       dark: swapButtonBgDark,
       light: swapButtonBgLight,
+      classic: null
+    },
+    tokenImageNotFound: {
+      dark: tokenImageNotFoundDark,
+      light: null,
       classic: null
     }
 }

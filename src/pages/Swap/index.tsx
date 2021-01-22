@@ -1,7 +1,7 @@
 import { CurrencyAmount, ETHER, JSBI, Token, Trade } from '@materia-dex/sdk'
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { useIsClassicMode } from '../../state/user/hooks'
-import { ArrowDown, RefreshCw } from 'react-feather'
+import { ArrowDown, RefreshCw, Plus, Minus, Link, Maximize2, Minimize2 } from 'react-feather'
 import ReactGA from 'react-ga'
 import { Text } from 'rebass'
 
@@ -50,7 +50,9 @@ import {
   TabLinkItem,
   SwapPageContentContainer, 
   TradePriceContainer, 
-  SwitchButton } from '../../theme'
+  SwitchButton,
+  OperationButton,
+  AddRecipientPanel } from '../../theme'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { computeTradePriceBreakdown, warningSeverity } from '../../utils/prices'
 import { ClickableText } from '../Pool/styleds'
@@ -404,16 +406,6 @@ export default function Swap() {
                           }}>
                           <RefreshCw/>
                         </SwitchButton>                        
-                        {/* <ArrowWrapper clickable>
-                          <ArrowRightCircle size="16" 
-                            color={originalCurrencies[Field.INPUT] && originalCurrencies[Field.OUTPUT] ? theme.primary1 : theme.text2}
-                          />
-                        </ArrowWrapper> */}
-                        {recipient === null && !showWrap && isExpertMode ? (
-                          <LinkStyledButton id="add-recipient-button" onClick={() => onChangeRecipient('')}>
-                            + Add a send (optional)
-                          </LinkStyledButton>
-                        ) : null}
                       </AutoRow>
                     </AutoColumn>
                     {showWrap ? null : (
@@ -445,6 +437,19 @@ export default function Swap() {
                   </TradePriceContainer>
                   <div>
                     <AutoColumn gap={'lg'}>
+                      {recipient === null && !showWrap && isExpertMode ? (
+                          <OperationButton id="add-recipient-button" onClick={() => onChangeRecipient('')} className={ `add-a-send-button ${theme.name}` } label="Add a send (optional)">
+                            <Plus/>
+                          </OperationButton>
+                      ) : null}
+                      {recipient !== null && !showWrap ? (
+                        <AddRecipientPanel>
+                          <OperationButton id="remove-recipient-button" onClick={() => onChangeRecipient(null)} className={ `remove-send-button ${theme.name}` } label="Remove send">
+                             <Minus/>
+                          </OperationButton>
+                          <AddressInputPanel id="recipient" value={recipient} onChange={onChangeRecipient} />
+                        </AddRecipientPanel>
+                      ) : null}
                       <CurrencyInputPanel
                         value={formattedAmounts[Field.OUTPUT]}
                         onUserInput={handleTypeOutput}
@@ -455,32 +460,22 @@ export default function Swap() {
                         otherCurrency={originalCurrencies[Field.INPUT]}
                         id="swap-currency-output"
                       />
-
-                      {recipient !== null && !showWrap ? (
-                        <>
-                          <AutoRow justify="space-between" style={{ padding: '0 1rem' }}>
-                            <ArrowWrapper clickable={false}>
-                              <ArrowDown size="16" color={theme.text2} />
-                            </ArrowWrapper>
-                            <LinkStyledButton id="remove-recipient-button" onClick={() => onChangeRecipient(null)}>
-                              - Remove send
-                          </LinkStyledButton>
-                          </AutoRow>
-                          <AddressInputPanel id="recipient" value={recipient} onChange={onChangeRecipient} />
-                        </>
-                      ) : null}
                     </AutoColumn>
                   </div>
                 </SwapPageContentContainer>
                 <BottomGrouping>
                   <SwapButton>
                     {!account ? (
-                      <ButtonMateriaLight onClick={toggleWalletModal}>Connect Wallet</ButtonMateriaLight>
+                      <OperationButton onClick={toggleWalletModal} className={ `connect-wallet-button ${theme.name}` } label="Connect Wallet">
+                        <Link/>
+                      </OperationButton>
                     ) : showWrap ? (
-                      <ButtonMateriaPrimary disabled={Boolean(wrapInputError)} onClick={onWrap}>
-                        {wrapInputError ??
-                          (wrapType === WrapType.WRAP ? 'Wrap' : wrapType === WrapType.UNWRAP ? 'Unwrap' : null)}
-                      </ButtonMateriaPrimary>
+                      <OperationButton onClick={onWrap} 
+                        className={ `wrap-button ${theme.name}` } 
+                        disabled={Boolean(wrapInputError)}
+                        label={wrapInputError ?? (wrapType === WrapType.WRAP ? 'Wrap' : wrapType === WrapType.UNWRAP ? 'Unwrap' : undefined)}>
+                        {wrapInputError ?? (wrapType === WrapType.WRAP ? <Minimize2/> : wrapType === WrapType.UNWRAP ?  <Maximize2/> : undefined)}
+                      </OperationButton>
                     ) : noRoute && userHasSpecifiedInputOutput ? (
                       <SwapGreyCard style={{ textAlign: 'center' }}>
                         <TYPE.body color={theme.text1} fontSize={20} fontWeight={500}>Insufficient liquidity for this trade</TYPE.body>
