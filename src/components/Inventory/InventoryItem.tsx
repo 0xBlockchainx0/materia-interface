@@ -145,7 +145,7 @@ export default function InventoryItem({
       {showMore && (
         <AutoColumn>
           <Text fontSize={10} fontWeight={500} style={{ marginBottom: '10px' }}>{tokenAddress}</Text>
-          <FixedHeightRow>
+          {/* <FixedHeightRow>
             <>
               <NumericalInput
                 className="token-amount-input"
@@ -172,7 +172,7 @@ export default function InventoryItem({
               <ButtonMateriaPrimary style={{ width: 'inherit', marginRight: '10px' }}>Approve</ButtonMateriaPrimary>
             )}
             <ButtonMateriaPrimary style={{ width: 'inherit' }}>Wrap</ButtonMateriaPrimary>
-          </RowBetween>
+          </RowBetween> */}
         </AutoColumn>
       )}
     </InventoryItemContainer>

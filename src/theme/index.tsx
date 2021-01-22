@@ -1020,7 +1020,9 @@ export const OperationButton = styled(Button)<{label?: string, disabled?: boolea
 `
 export const TradePriceContainer = styled.div`
   margin-top: 250px;
-  padding-left: 30px;
+  @media (max-width: 960px) { 
+    padding-left: 30px;
+   }
 `
 export const AddRecipientPanel = styled.div`
   position: absolute;

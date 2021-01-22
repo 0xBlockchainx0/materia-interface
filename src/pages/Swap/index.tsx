@@ -462,16 +462,21 @@ export default function Swap() {
                 <BottomGrouping>
                   <SwapButton>
                     {!account ? (
-                      <OperationButton onClick={toggleWalletModal} className={ `connect-wallet-button ${theme.name}` } label="Connect Wallet">
-                        <Link/>
-                      </OperationButton>
+                      // <OperationButton onClick={toggleWalletModal} className={ `connect-wallet-button ${theme.name}` } label="Connect Wallet">
+                      //   <Link/>
+                      // </OperationButton>
+                      <ButtonMateriaLight onClick={toggleWalletModal}>Connect Wallet</ButtonMateriaLight>
                     ) : showWrap ? (
-                      <OperationButton onClick={onWrap} 
-                        className={ `wrap-button ${theme.name}` } 
-                        disabled={Boolean(wrapInputError)}
-                        label={wrapInputError ?? (wrapType === WrapType.WRAP ? 'Wrap' : wrapType === WrapType.UNWRAP ? 'Unwrap' : undefined)}>
-                        {wrapInputError ?? (wrapType === WrapType.WRAP ? <Minimize2/> : wrapType === WrapType.UNWRAP ?  <Maximize2/> : undefined)}
-                      </OperationButton>
+                      // <OperationButton onClick={onWrap} 
+                      //   className={ `wrap-button ${theme.name}` } 
+                      //   disabled={Boolean(wrapInputError)}
+                      //   label={wrapInputError ?? (wrapType === WrapType.WRAP ? 'Wrap' : wrapType === WrapType.UNWRAP ? 'Unwrap' : undefined)}>
+                      //   {wrapInputError ?? (wrapType === WrapType.WRAP ? <Minimize2/> : wrapType === WrapType.UNWRAP ?  <Maximize2/> : undefined)}
+                      // </OperationButton>
+                      <ButtonMateriaPrimary disabled={Boolean(wrapInputError)} onClick={onWrap}>
+                        {wrapInputError ??
+                          (wrapType === WrapType.WRAP ? 'Wrap' : wrapType === WrapType.UNWRAP ? 'Unwrap' : null)}
+                      </ButtonMateriaPrimary>
                     ) : noRoute && userHasSpecifiedInputOutput ? (
                       <SwapGreyCard style={{ textAlign: 'center' }}>
                         <TYPE.body color={theme.text1} fontSize={20} fontWeight={500}>Insufficient liquidity for this trade</TYPE.body>
