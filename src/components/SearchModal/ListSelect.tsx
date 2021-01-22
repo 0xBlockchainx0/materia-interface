@@ -17,7 +17,7 @@ import { CloseIcon, ExternalLink, LinkStyledButton, TYPE } from '../../theme'
 import listVersionLabel from '../../utils/listVersionLabel'
 import { parseENSAddress } from '../../utils/parseENSAddress'
 import uriToHttp from '../../utils/uriToHttp'
-import { ButtonMateriaPrimary, ButtonOutlined, ButtonPrimary, ButtonSecondary } from '../Button'
+import { ButtonMateriaPrimary, ButtonOutlined, ButtonSecondary } from '../Button'
 
 import Column from '../Column'
 import ListLogo from '../ListLogo'

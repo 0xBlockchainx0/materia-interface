@@ -1,6 +1,5 @@
 import React, {  useContext } from 'react'
 import { ThemeContext } from 'styled-components'
-import { useIsClassicMode } from '../state/user/hooks'
 import { MainContainer, 
   MainContainerExtraDecorator, 
   MainContainerContentWrapper, 

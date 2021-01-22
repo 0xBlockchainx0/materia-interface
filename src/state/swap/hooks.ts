@@ -167,18 +167,16 @@ export function decodeInteroperableValueToERC20TokenAmount(currencyAmount?: Curr
 
     let typedValueFormatted: Number = Number(0)
 
-    if (formattedDecimals >= 0) {
-      typedValueFormatted = Number(formatUnits(typedValueParsed, formattedDecimals))
+    if (formattedDecimals > 0) {
+      typedValueFormatted = Math.trunc(Number(formatUnits(typedValueParsed, formattedDecimals)))
+    }
+    else if (formattedDecimals == 0) {
+      typedValueFormatted = Number(typedValueParsed)
     }
     else {
       // EthItem can't unwrap token with more than 18 decimals 
       throw 'Too much decimals for EthItem'
     }
-
-    // console.log('*********************************')
-    // console.log('typedValueParsed: ', typedValueParsed)
-    // console.log('typedValueFormatted: ', typedValueFormatted)
-    // console.log('*********************************')
 
     return erc20Currency instanceof Token
       ? new TokenAmount(erc20Currency, JSBI.BigInt(typedValueFormatted))

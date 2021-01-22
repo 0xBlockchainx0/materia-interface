@@ -11,7 +11,7 @@ import {
   formatExecutionPrice,
   warningSeverity
 } from '../../utils/prices'
-import { ButtonError, ButtonMateriaError } from '../Button'
+import { ButtonMateriaError } from '../Button'
 import { AutoColumn } from '../Column'
 import QuestionHelper from '../QuestionHelper'
 import { AutoRow, RowBetween, RowFixed } from '../Row'

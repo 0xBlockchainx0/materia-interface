@@ -1,7 +1,7 @@
 import { Currency, CurrencyAmount, Fraction, Percent } from '@materia-dex/sdk'
 import React from 'react'
 import { Text } from 'rebass'
-import { ButtonMateriaPrimary, ButtonPrimary } from '../../components/Button'
+import { ButtonMateriaPrimary } from '../../components/Button'
 import { RowBetween, RowFixed } from '../../components/Row'
 import CurrencyLogo from '../../components/CurrencyLogo'
 import { Field } from '../../state/mint/actions'

@@ -11,13 +11,13 @@ import TransactionConfirmationModal, { ConfirmationModalContent } from '../../co
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import DoubleCurrencyLogo from '../../components/DoubleLogo'
 import { MinimalPositionCard } from '../../components/PositionCard'
-import Row, { AutoRow, RowBetween, RowFlat, RowFixed } from '../../components/Row'
+import Row, { AutoRow, RowBetween, RowFlat } from '../../components/Row'
 import { darken } from 'polished'
 
 import { ORCHESTRATOR_ADDRESS, USD, ZERO_ADDRESS } from '../../constants'
 import { PairState } from '../../data/Reserves'
 import { useCurrency } from '../../hooks/Tokens'
-import { ApprovalState, useApproveCallback, useInteroperableApproveCallback } from '../../hooks/useApproveCallback'
+import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
 import useTransactionDeadline from '../../hooks/useTransactionDeadline'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import { Field } from '../../state/mint/actions'
@@ -226,7 +226,7 @@ export default function AddLiquidity({
     currencies,
     pair,
     pairState,
-    currencyBalances,
+    // currencyBalances,
     parsedAmounts,
     price,
     noLiquidity,
@@ -235,8 +235,8 @@ export default function AddLiquidity({
     error
   } = useDerivedMintInfo(currencyA ?? undefined, currencyB ?? undefined, true)
   const {
-    pair: originalPair,
-    pairState: originalPairState,
+    // pair: originalPair,
+    // pairState: originalPairState,
     currencyBalances: originalCurrencyBalances,
     parsedAmounts: originalParsedAmounts
   } = useDerivedMintInfo(currencyA ?? undefined, currencyB ?? undefined, false)
@@ -314,8 +314,8 @@ export default function AddLiquidity({
   // )
 
   // check whether the user has approved the router on the tokens
-  const [approvalA, approveACallback] = useInteroperableApproveCallback(originalParsedAmounts[Field.CURRENCY_A], ORCHESTRATOR_ADDRESS)
-  const [approvalB, approveBCallback] = useInteroperableApproveCallback(originalParsedAmounts[Field.CURRENCY_B], ORCHESTRATOR_ADDRESS)
+  const [approvalA, approveACallback] = useApproveCallback(originalParsedAmounts[Field.CURRENCY_A], ORCHESTRATOR_ADDRESS)
+  const [approvalB, approveBCallback] = useApproveCallback(originalParsedAmounts[Field.CURRENCY_B], ORCHESTRATOR_ADDRESS)
 
   const addTransaction = useTransactionAdder()
 
@@ -336,6 +336,14 @@ export default function AddLiquidity({
 
     const currencyUSD = USD[chainId ?? 1]
     const currencyBIsUSD =  wrappedCurrency(currencyB, chainId)?.address == currencyUSD.address
+
+    // console.log('***************************************')
+    // console.log('currencyBIsUSD: ', currencyBIsUSD)
+    // console.log('parsedAmounts[Field.CURRENCY_A]: ', parsedAmounts[Field.CURRENCY_A])
+    // console.log('originalParsedAmounts[Field.CURRENCY_A]: ', originalParsedAmounts[Field.CURRENCY_A])
+    // console.log('parsedAmounts[Field.CURRENCY_B]: ', parsedAmounts[Field.CURRENCY_B])
+    // console.log('originalParsedAmounts[Field.CURRENCY_B]: ', originalParsedAmounts[Field.CURRENCY_B])
+    // console.log('***************************************')
 
     // const { [Field.CURRENCY_A]: parsedAmountA, [Field.CURRENCY_B]: parsedAmountB } = parsedAmounts
     // const modifiedParsedAmountA = currencyBIsUSD 
@@ -363,7 +371,7 @@ export default function AddLiquidity({
     let methodName: string
     let args: Array<string | string[] | number | boolean>
     let value: BigNumber | null
-
+    
     if (isEthItem && !isETH) {
       if (!collectionContract) return
 
@@ -382,7 +390,7 @@ export default function AddLiquidity({
           ["uint", "uint", "uint", "address", "uint"],
           [
             currencyBIsUSD ? parsedAmountB.raw.toString() : parsedAmountA.raw.toString(),
-            currencyBIsUSD ? parsedAmountA.raw.toString() : parsedAmountB.raw.toString(),
+            currencyBIsUSD ? amountsMin[Field.CURRENCY_A].toString() : amountsMin[Field.CURRENCY_B].toString(),
             currencyBIsUSD ? amountsMin[Field.CURRENCY_B].toString() : amountsMin[Field.CURRENCY_A].toString(),
             account,
             deadline.toHexString()
@@ -393,7 +401,7 @@ export default function AddLiquidity({
         account, 
         ORCHESTRATOR_ADDRESS, 
         ethItemObjectId?.toString() ?? "0", 
-        currencyBIsUSD ? amountsMin[Field.CURRENCY_A].toString() : amountsMin[Field.CURRENCY_B].toString(),
+        currencyBIsUSD ? parsedAmountA.raw.toString() : parsedAmountB.raw.toString(),
         ethItemArgs]
       value = null
     }

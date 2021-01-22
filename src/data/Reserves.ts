@@ -62,7 +62,7 @@ export function usePairs(currencies: [Currency | undefined, Currency | undefined
         new Pair(new TokenAmount(token0, reserve0.toString()), new TokenAmount(token1, reserve1.toString()), calculatedSwapFee)
       ]
     })
-  }, [results, tokens])
+  }, [results, tokens, swapFees])
 }
 
 export function usePair(tokenA?: Currency, tokenB?: Currency): [PairState, Pair | null] {

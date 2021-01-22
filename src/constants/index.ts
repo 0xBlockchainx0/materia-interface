@@ -44,8 +44,8 @@ export const WBTC: { [chainId in ChainId]: Token } = {
   [ChainId.MAINNET]: new Token(ChainId.MAINNET, '0x2260fac5e5542a773aa44fbcfedf7c193bc2c599', 8, 'WBTC', 'Wrapped BTC'),
   [ChainId.RINKEBY]: new Token(ChainId.RINKEBY, ZERO_ADDRESS, 8, 'WBTC', 'Wrapped BTC'),
   [ChainId.ROPSTEN]: new Token(ChainId.ROPSTEN, '0x65058d7081fcdc3cd8727dbb7f8f9d52cefdd291', 8, 'WBTC', 'Wrapped BTC'),
-  [ChainId.GÖRLI]: new Token(ChainId.GÖRLI,     ZERO_ADDRESS, 8, 'WBTC', 'Wrapped BTC'),
-  [ChainId.KOVAN]: new Token(ChainId.KOVAN,     ZERO_ADDRESS, 8, 'WBTC', 'Wrapped BTC'),
+  [ChainId.GÖRLI]: new Token(ChainId.GÖRLI, ZERO_ADDRESS, 8, 'WBTC', 'Wrapped BTC'),
+  [ChainId.KOVAN]: new Token(ChainId.KOVAN, ZERO_ADDRESS, 8, 'WBTC', 'Wrapped BTC'),
 }
 
 export const DAI = new Token(ChainId.MAINNET, '0x6B175474E89094C44Da98b954EedeAC495271d0F', 18, 'DAI', 'Dai Stablecoin')
@@ -64,14 +64,6 @@ export const COMMON_CONTRACT_NAMES: { [address: string]: string } = {
 // TODO: specify merkle distributor for mainnet
 export const MERKLE_DISTRIBUTOR_ADDRESS: { [chainId in ChainId]?: string } = {
   [ChainId.MAINNET]: '0x090D4613473dEE047c3f2706764f49E0821D256e'
-}
-
-const IETH_ONLY: ChainTokenList = {
-  [ChainId.MAINNET]: [IETH[ChainId.MAINNET]],
-  [ChainId.ROPSTEN]: [IETH[ChainId.ROPSTEN]],
-  [ChainId.RINKEBY]: [IETH[ChainId.RINKEBY]],
-  [ChainId.GÖRLI]: [IETH[ChainId.GÖRLI]],
-  [ChainId.KOVAN]: [IETH[ChainId.KOVAN]]
 }
 
 const USD_ONLY: ChainTokenList = {

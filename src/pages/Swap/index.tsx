@@ -25,7 +25,7 @@ import { INITIAL_ALLOWED_SLIPPAGE } from '../../constants'
 
 import { useActiveWeb3React } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
-import { ApprovalState, useApproveCallbackFromTrade, useInteroperableApproveCallbackFromTrade } from '../../hooks/useApproveCallback'
+import { ApprovalState, useApproveCallbackFromTrade } from '../../hooks/useApproveCallback'
 import useENSAddress from '../../hooks/useENSAddress'
 import { useSwapCallback } from '../../hooks/useSwapCallback'
 
@@ -67,12 +67,6 @@ export const ButtonBgItem = styled.img`
   margin: 0px 5px;
 `;
 
-const SwapCurrencyContainer = styled.div`
-
-`
-
-
-
 const TradeCard = styled(Card)`
   display: flex;
   justify-content: center
@@ -104,7 +98,8 @@ export const FFCursorImg = styled.img`
   position: absolute;
   margin: 12px 0px 0px -250px;
   z-index: 999;
-  `
+`
+
 export default function Swap() {
   const loadedUrlParams = useDefaultsFromURLSearch()
 
@@ -113,7 +108,8 @@ export default function Swap() {
     useCurrency(loadedUrlParams?.inputCurrencyId),
     useCurrency(loadedUrlParams?.outputCurrencyId)
   ]
-  const [dismissTokenWarning, setDismissTokenWarning] = useState<boolean>(false)
+  // const [dismissTokenWarning, setDismissTokenWarning] = useState<boolean>(false)
+  const [, setDismissTokenWarning] = useState<boolean>(false)
   const urlLoadedTokens: Token[] = useMemo(
     () => [loadedInputCurrency, loadedOutputCurrency]?.filter((c): c is Token => c instanceof Token) ?? [],
     [loadedInputCurrency, loadedOutputCurrency]
@@ -139,7 +135,7 @@ export default function Swap() {
   const { independentField, typedValue, recipient } = useSwapState()
   const {
     v2Trade,
-    currencyBalances,
+    // currencyBalances,
     originalCurrencyBalances,
     parsedAmount,
     currencies,
@@ -213,7 +209,7 @@ export default function Swap() {
   const noRoute = !route
 
   // check whether the user has approved the router on the input token
-  const [approval, approveCallback] = useInteroperableApproveCallbackFromTrade(trade, allowedSlippage)
+  const [approval, approveCallback] = useApproveCallbackFromTrade(trade, allowedSlippage)
 
   // check if user has gone through approval process, used to show two step buttons, reset on token change
   const [approvalSubmitted, setApprovalSubmitted] = useState<boolean>(false)
@@ -277,7 +273,7 @@ export default function Swap() {
           txHash: undefined
         })
       })
-  }, [tradeToConfirm, account, priceImpactWithoutFee, recipient, recipientAddress, showConfirm, swapCallback, trade])
+  }, [tradeToConfirm, account, priceImpactWithoutFee, recipient, recipientAddress, showConfirm, swapCallback, originalCurrencies, v2Trade])
 
   // errors
   const [showInverted, setShowInverted] = useState<boolean>(false)

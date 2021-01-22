@@ -23,7 +23,7 @@ const Aligner = styled.span`
   align-items: center;
   justify-content: space-between;
 `
-const tokenBackground = styled.var`${({ theme }) => theme.tokenBackground}`
+// const tokenBackground = styled.var`${({ theme }) => theme.tokenBackground}`
 
 const TokenImage = styled.div<{ showBackground: boolean }>`
   background: ${props => props.showBackground ? ({ theme }) => theme.tokenBackground : 'unset'}    

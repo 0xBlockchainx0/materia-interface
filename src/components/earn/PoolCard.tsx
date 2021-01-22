@@ -4,8 +4,8 @@ import { RowBetween } from '../Row'
 import styled from 'styled-components'
 import { TYPE, StyledInternalButtonLink } from '../../theme'
 import DoubleCurrencyLogo from '../DoubleLogo'
-import { ETHER, JSBI, TokenAmount } from '@materia-dex/sdk'
-import { ButtonMateriaPrimary, ButtonPrimary } from '../Button'
+import { JSBI, TokenAmount } from '@materia-dex/sdk'
+import { ButtonMateriaPrimary } from '../Button'
 import { StakingInfo } from '../../state/stake/hooks'
 import { useColor } from '../../hooks/useColor'
 import { currencyId } from '../../utils/currencyId'
@@ -13,7 +13,6 @@ import { Break, CardNoise, CardBGImage } from './styled'
 import { unwrappedToken } from '../../utils/wrappedCurrency'
 import { useTotalSupply } from '../../data/TotalSupply'
 import { usePair } from '../../data/Reserves'
-import useUSDCPrice from '../../utils/useUSDCPrice'
 import { useActiveWeb3React } from '../../hooks'
 import { USD } from '../../constants'
 
@@ -68,7 +67,7 @@ const BottomSection = styled.div<{ showBackground: boolean }>`
 `
 
 export default function PoolCard({ stakingInfo }: { stakingInfo: StakingInfo }) {
-  const { account, chainId } = useActiveWeb3React()
+  const { chainId } = useActiveWeb3React()
 
   const token0 = stakingInfo.tokens[0]
   const token1 = stakingInfo.tokens[1]
