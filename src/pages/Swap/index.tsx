@@ -1,7 +1,7 @@
 import { CurrencyAmount, ETHER, JSBI, Token, Trade } from '@materia-dex/sdk'
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { useIsClassicMode } from '../../state/user/hooks'
-import { ArrowDown, ArrowRightCircle } from 'react-feather'
+import { ArrowDown, RefreshCw } from 'react-feather'
 import ReactGA from 'react-ga'
 import { Text } from 'rebass'
 
@@ -48,7 +48,9 @@ import {
   PageItemsContainer,
   TabsBar,
   TabLinkItem,
-  SwapPageContentContainer } from '../../theme'
+  SwapPageContentContainer, 
+  TradePriceContainer, 
+  SwitchButton } from '../../theme'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { computeTradePriceBreakdown, warningSeverity } from '../../utils/prices'
 import { ClickableText } from '../Pool/styleds'
@@ -67,9 +69,7 @@ const SwapCurrencyContainer = styled.div`
 
 `
 
-const TradePriceContainer = styled.div`
-  margin-top: auto;
-`
+
 
 const TradeCard = styled(Card)`
   display: flex;
@@ -398,16 +398,17 @@ export default function Swap() {
                   <TradePriceContainer>
                     <AutoColumn justify="space-between">
                       <AutoRow justify={isExpertMode ? 'space-between' : 'center'} style={{ padding: '0 1rem' }}>
-                        <ArrowWrapper clickable>
-                          <ArrowRightCircle
-                            size="16"
-                            onClick={() => {
+                        <SwitchButton className={ `${theme.name} ${originalCurrencies[Field.INPUT] && originalCurrencies[Field.OUTPUT] ? '' : 'disabled'}` } onClick={() => {
                               setApprovalSubmitted(false) // reset 2 step UI for approvals
                               onSwitchTokens()
-                            }}
+                          }}>
+                          <RefreshCw/>
+                        </SwitchButton>                        
+                        {/* <ArrowWrapper clickable>
+                          <ArrowRightCircle size="16" 
                             color={originalCurrencies[Field.INPUT] && originalCurrencies[Field.OUTPUT] ? theme.primary1 : theme.text2}
                           />
-                        </ArrowWrapper>
+                        </ArrowWrapper> */}
                         {recipient === null && !showWrap && isExpertMode ? (
                           <LinkStyledButton id="add-recipient-button" onClick={() => onChangeRecipient('')}>
                             + Add a send (optional)

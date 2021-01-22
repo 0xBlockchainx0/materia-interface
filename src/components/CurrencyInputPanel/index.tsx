@@ -1,13 +1,12 @@
 import { Currency, Pair } from '@materia-dex/sdk'
 import React, { useState, useContext, useCallback } from 'react'
 import styled, { ThemeContext } from 'styled-components'
-import { darken } from 'polished'
 import { useCurrencyBalance } from '../../state/wallet/hooks'
 import CurrencySearchModal from '../SearchModal/CurrencySearchModal'
 import CurrencyLogo from '../CurrencyLogo'
 import DoubleCurrencyLogo from '../DoubleLogo'
 import { RowBetween } from '../Row'
-import { TYPE, CurrencyFormPanel } from '../../theme'
+import { CurrencyFormPanel, ActionButton, DropDownButton } from '../../theme'
 import { Input as NumericalInput } from '../NumericalInput'
 import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
 
@@ -19,28 +18,6 @@ const InputRow = styled.div<{ selected: boolean }>`
   align-items: center;
   padding: ${({ selected }) => (selected ? '0.75rem 0.5rem 0.75rem 1rem' : '0.75rem 0.75rem 0.75rem 1rem')};
 `
-
-const CurrencySelect = styled.button<{ selected: boolean }>`
-  align-items: center;
-  height: 2.2rem;
-  font-size: 20px;
-  font-weight: 500;
-  background-color: transparent;
-  color: ${({ selected, theme }) => (selected ? theme.text1 : theme.white)};
-  border-radius: 12px;
-  // box-shadow: ${({ selected }) => (selected ? 'none' : '0px 6px 10px rgba(0, 0, 0, 0.075)')};
-  outline: none;
-  cursor: pointer;
-  user-select: none;
-  border: none;
-  padding: 0 0.5rem;
-
-  :focus,
-  :hover {
-    background-color: transparent;
-  }
-`
-
 const Aligner = styled.span`
   display: flex;
   align-items: center;
@@ -57,13 +34,8 @@ const TokenImage = styled.div<{ showBackground: boolean }>`
   display: table-cell;
   vertical-align: middle;
   background-position: center;
-  @media (max-width: 1050px) {
-    padding: 2rem !important;
-  }
-  @media (max-width: 450px) {
-    padding: 1rem !important;
-    margin-top: -2.5rem;
-  }
+  @media (max-width: 1050px) { padding: 2rem !important; }
+  @media (max-width: 450px) { padding: 1rem !important; margin-top: -2.5rem; }
 `
 
 const TokenImageContainer = styled.div`
@@ -87,30 +59,7 @@ const StyledTokenName = styled.span<{ active?: boolean }>`
   color: ${({ theme }) => theme.text1};
 `
 
-const StyledBalanceMax = styled.button`
-  height: 28px;
-  background-color: ${({ theme }) => theme.primary5};
-  border: 1px solid ${({ theme }) => theme.primary5};
-  border-radius: 3px;
-  font-size: 0.875rem
-  font-weight: 500;
-  cursor: pointer;
-  margin-right: 0.5rem;
-  color: ${({ theme }) => theme.cyan1};
-  :hover {
-    text-shadow: 0px 0px 2px 0px #111111; 
-    border-color: ${({ theme }) => theme.cyan2};
-    box-shadow: 0px 0px 6px 0px #b0deff;
-  }
-  :focus {
-    border-color: ${({ theme }) => theme.cyan2};
-    outline: none;
-  }
 
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-    margin-right: 0.5rem;
-  `};
-`
 
 interface CurrencyInputPanelProps {
   value: string
@@ -176,18 +125,10 @@ export default function CurrencyInputPanel({
             {!hideInput && (
               <>
                 <NumericalInput className="token-amount-input" value={value} onUserInput={val => { onUserInput(val) }} />
-                {account && currency && showMaxButton && label !== 'To' && ( <StyledBalanceMax onClick={onMax}>MAX</StyledBalanceMax> )}
+                {account && currency && showMaxButton && label !== 'To' && ( <ActionButton className={theme.name} onClick={onMax}>MAX</ActionButton> )}
               </>
             )}
-            <CurrencySelect
-              selected={!!currency}
-              className="open-currency-select-button"
-              onClick={() => {
-                if (!disableCurrencySelect) {
-                  setModalOpen(true)
-                }
-              }}
-            >
+            <DropDownButton className={ `open-currency-select-button ${theme.name}` } selected={!!currency} onClick={() => { if (!disableCurrencySelect) { setModalOpen(true)  } }} >
               <Aligner>
                 {pair ? (
                   <StyledTokenName className="pair-name-container">
@@ -204,7 +145,7 @@ export default function CurrencyInputPanel({
                   )}
                 {!disableCurrencySelect && <StyledDropDown selected={!!currency} />}
               </Aligner>
-            </CurrencySelect>
+            </DropDownButton>
           </InputRow>
         </div>
         {!disableCurrencySelect && onCurrencySelect && (

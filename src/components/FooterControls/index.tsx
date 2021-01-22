@@ -74,6 +74,7 @@ const FooterControls = styled.div`
   align-items: center;
   justify-self: flex-end;
   max-width: 1200px;
+  z-index:2;
   @media (max-width: 600px) {
      max-width: 90%;
   }

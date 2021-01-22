@@ -53,6 +53,8 @@ export function colors(darkMode: boolean, classicMode: boolean): Colors {
     azure1: classicMode ? '#000000' : darkMode ? '#95e1ff' : '#000000',
     azure2: classicMode ? '#000000' : darkMode ? '#23bee5' : '#000000',
     azure3: classicMode ? '#000000' : darkMode ? '#2d72e9' : '#000000',
+    azure4: classicMode ? '#000000' : darkMode ? '#126699' : '#000000',
+    azure5: classicMode ? '#000000' : darkMode ? '#97c6f7' : '#000000',
     blue1: classicMode ? '#000000' : darkMode ? '#1e98dc' : '#000000',
     blue2: classicMode ? '#000000' : darkMode ? '#022b63' : '#000000',
     blue3: classicMode ? '#000000' : darkMode ? '#082751' : '#000000',
@@ -417,14 +419,37 @@ export const MainContainer = styled.div`
   min-height: 620px;
   width: 100%;
   display: inline-block;
-  z-index: 0;
+  z-index: 2;
 
-  &.dark { border: solid 1px ${({ theme }) => theme.azure1}; }
+  &.dark { border: solid 1px ${({ theme }) => theme.hexToRGB(theme.azure4, 1)}; } 
   &.light {}
   &.classic {}
 
   @media (max-width: 600px) { max-width: 90% !important; }
   @media (max-width: 1200px) { max-width: 90%; }
+
+  &:before, &:after {
+    content: "";
+    position:absolute;
+    width:305px;
+    height:265px;
+    background-position: center center;
+    background-repeat: no-repeat;
+    z-index: -41;
+    opacity: 0.6;
+    background-size: 100% 100%;
+  }
+
+  &.dark:before {    
+    background-image: url(${(images.decorators.grid.dark)});    
+    bottom: -110px;
+    left: -112px;
+  }
+  &.dark:after {
+    background-image: url(${(images.decorators.grid.dark)});
+    bottom: -110px;
+    right: -112px;
+  }
 `
 export const MainContainerExtraDecorator = styled.div`
   position: absolute;
@@ -441,11 +466,13 @@ export const MainContainerExtraDecorator = styled.div`
     display: block;
     width: 52px;
     height: 55px; 
-    background-color: transparent;   
+    background-color: transparent; 
+    background-size: 80% 80%;  
+    opacity: 0.6;
   }
 
-  &:before { top: -37px; left: -36px; }
-  &:after { bottom: -37px; right: -36px; transform: rotate(180deg); }
+  &:before { top: -29px; left: -29px; }
+  &:after { bottom: -29px; right: -29px; transform: rotate(180deg); }
 
   &.dark:before {
     background-image: url(${(images.decorators.largeBoxes.dark)});
@@ -470,11 +497,11 @@ export const MainContainerContentWrapper = styled.div`
   min-height: 620px;
   width: 100%;
   border-radius: 3px;
-  padding: 20px 58px;
+  padding: 5px 40px;
   background-size: cover;
 
   &.dark {
-    background: linear-gradient(-45deg, ${({ theme }) => theme.blue2}00 60%, ${({ theme }) => theme.azure3} 100%);
+    background: linear-gradient(133deg, ${({ theme }) => theme.hexToRGB(theme.blue2, 0.8)} 60%, ${({ theme }) => theme.hexToRGB(theme.azure3, 0.3)} 100%);
   }
   &.light {}
   &.classic {}
@@ -486,7 +513,7 @@ export const FeatureTitle = styled.h2`
   margin:0px;
   position: absolute;
   top: 0px;
-  left: -20px;
+  left: -3px;
   text-transform: capitalize;
   display: inline-block;
   z-index: 10;
@@ -496,31 +523,21 @@ export const FeatureTitle = styled.h2`
   padding-bottom: 170px;
   overflow: hidden;
 
-  &.dark { color: #9ed9ff; text-shadow: 1px 1px 2px #0f3f73;  }
+  &.dark { color: ${({ theme }) => theme.azure5}; text-shadow: 1px 1px 2px ${({ theme }) => theme.blue2};  }
   &.light { color: #000000; }
   &.classic { color: #FFFFFF; }
-  
-  &.dark:before, &.light:before {    
-    content: "";
-    height: 220%;
-    display: block;
-    left: -40px;
-    top: -15px;
-    position: relative;
-    width: 1px;
-    background: linear-gradient(90deg,rgba(129,205,243,0) 0,#81cdf3 25%,#81cdf3 75%,rgba(129,205,243,0));
-  }
 
-  &.dark:after, &.light:after {
-    content: "";
-    height: 370%;
+  &.dark:before { }
+
+  &.dark:after {
+    content: " ";
     display: block;
-    left: 20px;
-    position: relative;
-    width: 20px;
-    bottom: 115%;
-    z-index: -1;
-    background: radial-gradient(ellipse at left,#0d95ff 0,rgba(13,149,255,0) 50%);
+    width: 1px;
+    height: 120%;
+    position: absolute;
+    bottom: 0px;
+    left: 3px;
+    background: linear-gradient(0deg, rgba(15,63,115,0) 0%, ${({ theme }) => theme.hexToRGB(theme.azure1, 1)} 100%);
   }
   
   @media (max-width: 600px) { display: none; }
@@ -529,20 +546,20 @@ export const FeatureChildrenContainer = styled.div`
   border-radius:3px;
   max-width: 1200px;
   min-height: 580px;
-  padding: 20px;
+  padding: 20px 7px;
 
   &.dark {
-    background: linear-gradient(-45deg, ${({ theme }) => theme.blue2}00 40%, ${({ theme }) => theme.azure3} 100%);
+    background: linear-gradient(-60deg, ${({ theme }) => theme.hexToRGB(theme.blue2, 0.24)} 60%, ${({ theme }) => theme.hexToRGB(theme.azure3, 0.59)} 100%);
   }
   &.light {}
   &.classic {}
 `
 export const SectionTitle = styled.h6`
-  font-weight: 200;
-  font-size: 23px;
+  font-weight: 300;
+  font-size: 18px;
   position: relative;
   display: inline-block;
-  margin: 0px 0px 20px 0px;
+  margin: 0px 0px 7px 0px;
   text-transform: capitalize;
   padding:0px;
   width: 80%;
@@ -569,7 +586,7 @@ export const SectionTitle = styled.h6`
     position: absolute;
     bottom: -1px;
     left: 0px;
-    background: linear-gradient(to right, #95e1ff 0%, rgba(15,63,115,0));
+    background: linear-gradient(to right, ${({ theme }) => theme.azure1} 0%, rgba(15,63,115,0));
   }
 `
 export const InventoryColumn = styled.div`
@@ -584,10 +601,9 @@ export const InventoryContainer = styled.div`
   @media (max-width: 1350px) { display: none; }
 `
 export const InventoryItemContainer = styled.div`
-  padding: 20px 15px 20px 15px; 
+  padding: 10px 15px 10px 15px; 
   margin-left: 3px;
   margin-bottom: 1px;
-  width: 100%;
   height: auto;
   background-size: cover;
   position: relative;
@@ -597,7 +613,7 @@ export const InventoryItemContainer = styled.div`
 
   &.dark {
     background: linear-gradient(90deg, ${({ theme }) => theme.hexToRGB(theme.black, 1)} 0%, ${({ theme }) => theme.hexToRGB(theme.black, 0)} 100%);
-    text-shadow: 1px 1px #000;
+    text-shadow: 1px 1px ${({ theme }) => theme.black};
   }
 
   &.dark:after {
@@ -655,7 +671,7 @@ export const SimpleInformationsTextParagraph = styled(SimpleTextParagraph)`
   &.light {}
   &.classic {}
 `
-const BaseButton = styled(Button)<{ width?: string, borderRadius?: string }>`
+const BaseButton = styled(Button)<{ width?: string, borderRadius?: string, selected?: boolean }>`
   padding: 0px !important;
   width: ${({ width }) => (width ? width : 'auto')};
   border-radius: ${({ borderRadius }) => (borderRadius ? borderRadius : '0px')};
@@ -675,7 +691,7 @@ const BaseButton = styled(Button)<{ width?: string, borderRadius?: string }>`
   > * { user-select: none; }
   &.hidden { display: none !important; }
 `
-export const IconButton = styled(BaseButton)<{ width?: string, borderRadius?: string }>`
+export const IconButton = styled(BaseButton)<{ width?: string, borderRadius?: string, selected?: boolean }>`
   cursor: pointer;
   width: fit-content;
   margin-left: 10px !important;
@@ -763,11 +779,9 @@ export const SwapPageContentContainer = styled.div`
   margin-top:40px;
   @media (min-width: 1050px) {
     display: grid;
-    grid-template-columns: 37.5% 25% 37.5%;
+    grid-template-columns: 42.5% 15% 42.5%;
   }
 `
-
-
 export const StyledNavLinkActiveClassName = 'active'
 export const StyledNavLink = styled(NavLink).attrs({ StyledNavLinkActiveClassName })`
   display: flex;
@@ -802,20 +816,13 @@ export const StyledNavLink = styled(NavLink).attrs({ StyledNavLinkActiveClassNam
   &.light.disabled:hover, &.light.disabled:focus,
   &.classic.disabled:hover, &.classic.disabled:focus { opacity: 0.7; }
 `
-
-
 export const CurrencyFormPanel = styled.div<{ hideInput?: boolean }>`
   display: flex;
   flex-flow: column nowrap;
   position: relative;
-  //border-radius: ${({ hideInput }) => (hideInput ? '8px' : '20px')};
   z-index: 1;
 
-  & > .itemsContainer { 
-    border-radius: ${({ hideInput }) => (hideInput ? '8px' : '20px')};
-    // border: 1px solid ${({ theme }) => theme.bg2};
-    // background-color: ${({ theme }) => theme.bg1};
-  }
+  & > .itemsContainer { border-radius: ${({ hideInput }) => (hideInput ? '8px' : '20px')}; }
 
   & > .itemsContainer .labelRow {
     display: flex;
@@ -824,7 +831,7 @@ export const CurrencyFormPanel = styled.div<{ hideInput?: boolean }>`
     color: ${({ theme }) => theme.text1};
     font-size: 0.75rem;
     line-height: 1rem;
-    padding: 0.75rem 1rem 0 1rem;    
+    padding: 0rem 1rem 0 1rem;    
   }
 
   & > .itemsContainer .labelRow span:hover { cursor: pointer; }
@@ -836,6 +843,108 @@ export const CurrencyFormPanel = styled.div<{ hideInput?: boolean }>`
   &.light > .itemsContainer .label { text-shadow: 1px 1px #053472; }
   &.classic > .itemsContainer .label {}
 `
+export const ActionButton = styled(BaseButton)<{ width?: string, borderRadius?: string, selected?: boolean }>`
+  border-radius: 3px !important;
+  font-size: 12px !important;
+  font-weight: 300;
+  text-transform: capitalize;
+  text-align: center;
+  letter-spacing: 0.1em;
+  padding: 3px 7px !important;
+
+  &.dark {
+    color: ${({ theme }) => theme.yellowGreen} !important;
+    border: 1px solid ${({ theme }) => theme.yellowGreen} !important;
+    background-color: ${({ theme }) => theme.blue3};
+    text-shadow: 1px 1px ${({ theme }) => theme.blue3};
+  }
+  &.light {}
+  &.classic {}
+`
+export const DropDownButton = styled(BaseButton)<{ width?: string, borderRadius?: string, selected?: boolean }>`
+  align-items: center;
+  height: 2.2rem;
+  font-size: 20px;
+  font-weight: 400;
+  background-color: transparent;
+  outline: none;
+  cursor: pointer;
+  user-select: none;
+  border: none;
+
+  &.dark {
+    color: ${({ theme }) => theme.azure1 };
+    text-shadow: 1px 2px ${({ theme }) => theme.blue3 }
+  }
+  &.light {}
+  &.classic {}
+
+  &.dark > svg { filter: drop-shadow(1px 2px 3px ${({ theme }) => theme.blue3}); }
+  &.light > svg {}
+  &.light > svg {}
+`
+export const SwitchButton = styled(Button)<{disabled?: boolean}>`
+  padding: 0px !important;
+  border-radius: 0px !important;
+  display: inline-block;
+  text-align: center;
+  border-color: transparent;
+  outline: none;
+  text-decoration: none;
+  display: flex;
+  justify-content: center;
+  flex-wrap: nowrap;
+  align-items: center;
+  position: relative;
+  background: none;
+  transform: rotate(45deg);
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+
+  &:disabled, &.disabled, &.dark.disabled, &.light.disabled, &.classic.disabled,
+  &.dark.disabled:hover, &.dark.disabled:focus,
+  &.light.disabled:hover, &.light.disabled:focus,
+  &.classic.disabled:hover, &.classic.disabled:focus { cursor: auto; opacity: 0.4; box-shadow: none; }
+  > * { user-select: none; }
+  &.hidden { display: none !important; }
+
+  & > svg { width: 15px; height: 15px; transform: rotate(-45deg); margin-left: -1px; margin-bottom: -1px; }
+
+  &:after, &:before {
+    content: "";
+    display:block;
+    position:absolute;
+    width: 46px;
+    height: 1px;
+    transform: rotate(-45deg);
+  }
+
+  &:after { bottom: 44px; right: -39px; }
+  &:before { top: 44px; left: -39px; }
+
+  &.dark { border: solid 1px ${({ theme }) => theme.azure1 }; background-color: ${({ theme }) => theme.black }; }
+  &.light {}
+  &.classic {}
+
+  &.dark:hover, &.dark:focus { box-shadow: 0px 0px 12px ${({ theme }) => theme.azure1 }; }
+  &.light:hover, &.light:focus { }
+  &.classic:hover, &.classic:focus { }
+
+  &.dark:after { background: linear-gradient(to right, ${({ theme }) => theme.azure1} 0%, rgba(15,63,115,0)); }
+  &.dark:before { background: linear-gradient(to right, rgba(15,63,115,0) 0%, ${({ theme }) => theme.azure1} 100%); }
+
+  &.light:after {}
+  &.light:before {}
+
+  &.classic:after {}
+  &.classic:before {}
+`
+export const TradePriceContainer = styled.div`
+  margin-top: 250px;
+  padding-left: 10px;
+`
+
 export const SettingsMenuFlyout = styled.span`
   min-width: 20.125rem;
   display: flex;
