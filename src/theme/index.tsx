@@ -437,6 +437,7 @@ export const MainContainer = styled.div`
   width: 100%;
   display: inline-block;
   z-index: 2;
+  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),0px 24px 32px rgba(0, 0, 0, 0.01);
 
   &.dark { border: solid 1px ${({ theme }) => theme.hexToRGB(theme.azure4, 1)}; } 
   &.light {}
@@ -572,7 +573,7 @@ export const FeatureChildrenContainer = styled.div`
   &.classic {}
 `
 export const SectionTitle = styled.h6`
-  font-weight: 300;
+  font-weight: 500;
   font-size: 18px;
   position: relative;
   display: inline-block;
@@ -782,7 +783,7 @@ export const TabLinkItem = styled(NavLink).attrs({ tabLinkItemActiveClassName })
   font-size: 18px;
   width: fit-content;
   margin: 0 12px;
-  font-weight: 400;
+  font-weight: 500;
   float: right;
   
   &.dark { color: ${({ theme }) => theme.white}; }
@@ -866,7 +867,7 @@ export const CurrencyFormPanel = styled.div<{ hideInput?: boolean }>`
 
   & > .itemsContainer .labelRow span:hover { cursor: pointer; }
 
-  & > .itemsContainer .label { font-weight: 400; font-size: 14px; display: inline; }
+  & > .itemsContainer .label { font-weight: 500; font-size: 14px; display: inline; }
   & > .itemsContainer .label.link { cursor: pointer; }
 
   &.dark > .itemsContainer .label { color: #95e1ff; }
@@ -876,7 +877,7 @@ export const CurrencyFormPanel = styled.div<{ hideInput?: boolean }>`
 export const ActionButton = styled(BaseButton)<{ disabled?: boolean, selected?: boolean, useCustomProperties?: boolean }>`
   border-radius: 3px !important;
   font-size: 12px !important;
-  font-weight: 300;
+  font-weight: 500;
   text-transform: capitalize;
   text-align: center;
   letter-spacing: 0.1em;
@@ -899,7 +900,7 @@ export const DropDownButton = styled(BaseButton)<{ width?: string, borderRadius?
   align-items: center;
   height: 2.2rem;
   font-size: 20px;
-  font-weight: 400;
+  font-weight: 500;
   background-color: transparent;
   outline: none;
   cursor: pointer;
@@ -1032,7 +1033,7 @@ export const OperationButton = styled(Button)<{label?: string, disabled?: boolea
 
   &.dark:before { background: linear-gradient(to right, ${({ theme }) => theme.azure1} 0%, rgba(15,63,115,0) 100%); }
   &.dark:after {
-    font-weight: 200;
+    font-weight: 500;
     font-size:14px;
     color: ${({ theme }) => theme.azure1 };
     text-shadow: 1px 1px 2px ${({ theme }) => theme.blue3 }; 
@@ -1121,7 +1122,7 @@ export const ContainerRow = styled.div<{ error: boolean }>`
   & > div.input-container { flex: 1; padding: 3px; }
   & > div.input-container > label, & > div.input-container > a { 
     font-size: 13px;
-    font-weight: 300;
+    font-weight: 500;
     display: block;
     float: right;
     margin: 0px 0px 10px 10px;
@@ -1140,7 +1141,7 @@ export const Input = styled.input<{ error?: boolean }>`
   background-color: transparent;
   overflow: hidden;
   text-overflow: ellipsis;
-  font-weight: 300;
+  font-weight: 500;
   width: 100%;  
   padding: 0px;
   -webkit-appearance: textfield;  
@@ -1253,8 +1254,8 @@ export const SettingsMenuFlyout = styled.span`
   ${({ theme }) => theme.mediaWidth.upToExtraSmall` min-width: 18.125rem; right: -46px; `};
   ${({ theme }) => theme.mediaWidth.upToMedium` min-width: 18.125rem; top: -22rem; right: 2rem; @media (max-width: 960px) { top: -19.5rem; } `};
 
-  & .sectionHeader { font-weight: 400; font-size: 14px; }
-  & .sectionOption { font-weight: 400; font-size: 14px; }
+  & .sectionHeader { font-weight: 500; font-size: 14px; }
+  & .sectionOption { font-weight: 500; font-size: 14px; }
 
   &.dark .sectionOption { color: #C3C5CB; }
   &.light .sectionOption { color: #565A69; }
@@ -1328,7 +1329,7 @@ export const ToggleButtonElement = styled.span<{ isActive?: boolean; isOnSwitch?
   border-radius: 2rem;
   padding: 0.35rem 0.6rem;
   background: ${({ theme, isActive, isOnSwitch }) => (isActive ? (isOnSwitch ? theme.bg7 : theme.text4) : 'none')};
-  font-weight: 400;
+  font-weight: 500;
   :hover {
     user-select: ${({ isOnSwitch }) => (isOnSwitch ? 'none' : 'initial')};
     
