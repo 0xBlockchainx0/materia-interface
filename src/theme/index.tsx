@@ -6,6 +6,7 @@ import styled, {
   css,
   DefaultTheme
 } from 'styled-components'
+import { animated } from 'react-spring'
 import { useIsClassicMode, useIsDarkMode } from '../state/user/hooks'
 import { Text, TextProps, Button } from 'rebass'
 import { Colors } from './styled'
@@ -719,6 +720,8 @@ export const IconButton = styled(BaseButton)<{ width?: string, borderRadius?: st
   &.dark:hover > svg, &.dark:focus > svg { filter: drop-shadow(0px 0px 3px ${({ theme }) => theme.yellowLight}); }
   &.light:hover > svg, &.light:focus > svg {  }
   &.light:classic > svg, &.light:classic > svg {  }
+
+  &.popup-close-icon { position: absolute; right: 10px; top: 10px; }
 `
 export const GridContainer = styled.div`
   display: grid;
@@ -1055,7 +1058,8 @@ export const MainOperationButton = styled(ActionButton)<{ disabled?: boolean, se
 
   &:disabled { opacity: 0.5; }
 
-  &.dark.use-custom-properties.expert-mode:not([disabled]) { 
+  &.dark.use-custom-properties.expert-mode:not([disabled]),
+  &.dark.popup-button.dismiss { 
     border: 1px solid ${({ theme }) => theme.red1} !important;
     color: ${({ theme }) => theme.red1} !important;
   }
@@ -1175,6 +1179,21 @@ export const SecondaryPanelBoxContainer = styled.div`
 
   &.light > .inner-content {}
   &.classic > .inner-content {}
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`&.popup{ min-width: 290px; } &.popup:not(:last-of-type) { margin-right: 20px; } `}
+  
+  &.popup > .popup-inner-content { padding: 10px 20px; }
+
+  &.popup > .popup-inner-content h6 { font-size: 13px; margin: 0px 0px 15px 0px; }
+  &.popup > .popup-inner-content h6 + ul { font-size: 13px; }
+
+  &.popup > .popup-inner-content .popup-operations-container { overflow: hidden; padding-top: 15px; }
+  &.popup > .popup-inner-content .popup-operations-container button { font-size: 12px !important; }
+  &.popup > .popup-inner-content .popup-operations-container button:last-child { float: right; }
+
+  &.dark.popup > .popup-inner-content h6 { color: ${({ theme }) => theme.azure1 } }
+  &.light.popup > .popup-inner-content h6 { }
+  &.classic.popup > .popup-inner-content h6 { }
 `
 export const SecondaryPanelBoxContainerExtraDecorator = styled.div`
   position: absolute;
@@ -1218,6 +1237,14 @@ export const SecondaryPanelBoxContainerExtraDecorator = styled.div`
   &.classic:before {}
   &.classic:after {}
 `
+const Fader = styled.div`
+  position: absolute;
+  bottom: 0px;
+  left: 0px;
+  width: 100%;
+  height: 2px;
+`
+export const AnimatedFader = animated(Fader)
 
 export const AdvancedDetailsFooter = styled.div<{ show: boolean }>` 
   display: ${({ show }) => (show ? 'block' : 'none')};

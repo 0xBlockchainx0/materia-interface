@@ -1,54 +1,16 @@
 import React, { useCallback, useContext, useEffect } from 'react'
 import { X } from 'react-feather'
 import { useSpring } from 'react-spring/web'
-import styled, { ThemeContext } from 'styled-components'
-import { animated } from 'react-spring'
+import { ThemeContext } from 'styled-components'
 import { PopupContent } from '../../state/application/actions'
 import { useRemovePopup } from '../../state/application/hooks'
 import ListUpdatePopup from './ListUpdatePopup'
 import TransactionPopup from './TransactionPopup'
-
-// export const StyledClose = styled(X)`
-export const StyledClose = styled.div`
-  position: absolute;
-  right: 10px;
-  top: 10px;
-
-  :hover {
-    cursor: pointer;
-  }
-`
-export const Popup = styled.div`
-  display: inline-block;
-  border: 2px solid ${({ theme }) => theme.cyan2};
-  // margin-top: -5rem;
-  // margin-bottom: 5rem !important;
-  width: 100%;
-  padding: 1em;
-  background-color: ${({ theme }) => theme.bg2};
-  position: relative;
-  // border-radius: 10px;
-  padding: 20px;
-  padding-right: 35px;
-  overflow: hidden;
-
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    min-width: 290px;
-    &:not(:last-of-type) {
-      margin-right: 20px;
-    }
-  `}
-`
-const Fader = styled.div`
-  position: absolute;
-  bottom: 0px;
-  left: 0px;
-  width: 100%;
-  height: 2px;
-  background-color: ${({ theme }) => theme.bg3};
-`
-
-const AnimatedFader = animated(Fader)
+import { 
+  SecondaryPanelBoxContainer, 
+  SecondaryPanelBoxContainerExtraDecorator, 
+  IconButton, 
+  AnimatedFader } from '../../theme'
 
 export default function PopupItem({
   removeAfterMs,
@@ -95,11 +57,17 @@ export default function PopupItem({
   })
 
   return (
-    <Popup>
-      {/* <StyledClose color={theme.text2} onClick={removeThisPopup} /> */}
-      <StyledClose color={theme.text2} onClick={removeThisPopup}><X /></StyledClose>
-      {popupContent}
-      {removeAfterMs !== null ? <AnimatedFader style={faderStyle} /> : null}
-    </Popup>
+    <SecondaryPanelBoxContainer className={ `popup ${theme.name}` }>
+      <SecondaryPanelBoxContainerExtraDecorator className={ `top ${theme.name}` }/>
+      <IconButton className={ `popup-close-icon ${theme.name}` } onClick={removeThisPopup}>
+        <X />
+      </IconButton>
+      <div className="inner-content popup-inner-content">
+        {popupContent}
+        {removeAfterMs !== null ? <AnimatedFader style={faderStyle} /> : null}
+      </div>      
+      <SecondaryPanelBoxContainerExtraDecorator className={ `bottom ${theme.name}` }/>
+    </SecondaryPanelBoxContainer>
+    
   )
 }
