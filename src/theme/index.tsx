@@ -64,6 +64,7 @@ export function colors(darkMode: boolean, classicMode: boolean): Colors {
     blue3: classicMode ? '#000000' : darkMode ? '#082751' : '#000000',
     blue4: classicMode ? '#000000' : darkMode ? '#081f3f' : '#000000',
     grey1: classicMode ? '#000000' : darkMode ? '#5e6873' : '#000000',
+    grey2: classicMode ? '#000000' : darkMode ? '#C3C5CB' : '#000000',
     yellowGreen: classicMode ? '#000000' : darkMode ? '#878e13' : '#000000',
     yellowLight: classicMode ? '#000000' : darkMode ? '#ffffbe' : '#000000', 
     red1: '#FF6871',
@@ -691,6 +692,15 @@ export const SimpleInformationsTextParagraph = styled(SimpleTextParagraph)`
   &.light {}
   &.classic {}
 `
+export const EvidencedTextParagraph = styled(SimpleTextParagraph)`
+  font-size: 16px;
+  font-weight: 400;
+  
+  &.dark { color: ${({ theme }) => theme.azure1}; }
+  &.light {}
+  &.classic {}
+`
+
 const BaseButton = styled(Button)<{ width?: string, borderRadius?: string, selected?: boolean }>`
   padding: 0px !important;
   width: ${({ width }) => (width ? width : 'auto')};
@@ -1265,6 +1275,20 @@ export const SecondaryPanelBoxContainer = styled.div`
   &.popup > .popup-inner-content h6 + ul { font-size: 13px; }
 
   &.modal > .modal-inner-content h6 { font-size: 15px; margin: 0px 0px 15px 0px; }
+  &.modal > .modal-inner-content h6.with-content-divisor { position:relative; padding-bottom: 15px; }
+  &.modal > .modal-inner-content h6.with-content-divisor:after {
+    content: "";
+    display:block;
+    position:absolute;
+    bottom: 1px;
+    left: 0px;
+    width: 100%;
+    height: 1px;
+  }
+
+  &.dark.modal > .modal-inner-content h6.with-content-divisor:after { background-color: ${({ theme }) => theme.azure1 } }
+  &.light.modal > .modal-inner-content h6.with-content-divisor:after {}
+  &.classic.modal > .modal-inner-content h6.with-content-divisor:after {}
 
   &.popup > .popup-inner-content .popup-operations-container { overflow: hidden; padding-top: 15px; }
   &.popup > .popup-inner-content .popup-operations-container button { font-size: 12px !important; }
@@ -1294,6 +1318,27 @@ export const SecondaryPanelBoxContainer = styled.div`
 
   &.classic.modal > .modal-inner-content .modal-content-wrapper > .connect-wallet-terms-and-conditions { 
   }
+
+  &.settings-menu-panel {
+    min-width: 20.125rem;
+    display: flex;
+    flex-direction: column;
+    font-size: 1rem;
+    position: absolute;
+    top: -21rem;
+    right: 1rem;
+    z-index: 100;
+
+    ${({ theme }) => theme.mediaWidth.upToExtraSmall` min-width: 18.125rem; right: -46px; `};
+    ${({ theme }) => theme.mediaWidth.upToMedium` min-width: 18.125rem; top: -22rem; right: 2rem; @media (max-width: 960px) { top: -19.5rem; } `};
+  }
+
+  &.settings-menu-panel .sectionHeader { font-weight: 500; font-size: 14px; }
+  &.settings-menu-panel .sectionOption { font-weight: 500; font-size: 14px; }
+
+  &.dark.settings-menu-panel .sectionOption { color: ${({ theme }) => theme.grey2 }; }
+  &.light.settings-menu-panel .sectionOption { }
+  &.classic.settings-menu-panel .sectionOption { }
 `
 export const SecondaryPanelBoxContainerExtraDecorator = styled.div`
   position: absolute;
@@ -1501,44 +1546,10 @@ export const LoadingWrapper = styled.div`
   align-items: center;
   justify-content: center;
 `
-
-export const SettingsMenuFlyout = styled.span`
-  min-width: 20.125rem;
-  display: flex;
-  flex-direction: column;
-  font-size: 1rem;
-  position: absolute;
-  top: -21rem;
-  right: 1rem;
-  z-index: 100;
-  
-  &.dark {
-    background-color: rgba(0, 24, 53, 0.8);
-    box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),0px 24px 32px rgba(0, 0, 0, 0.01);
-    border-radius: 5px;
-    border: solid 1px #2f9ab8;
-  }
-  &.light {
-    background-color: rgba(247, 248, 250, 0.8);
-  }
-  &.classic {
-    background-color: rgba(0,24, 53, 0.8);
-  }
-
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall` min-width: 18.125rem; right: -46px; `};
-  ${({ theme }) => theme.mediaWidth.upToMedium` min-width: 18.125rem; top: -22rem; right: 2rem; @media (max-width: 960px) { top: -19.5rem; } `};
-
-  & .sectionHeader { font-weight: 500; font-size: 14px; }
-  & .sectionOption { font-weight: 500; font-size: 14px; }
-
-  &.dark .sectionOption { color: #C3C5CB; }
-  &.light .sectionOption { color: #565A69; }
-  &.classic .sectionOption { color: #C3C5CB; }
-`
 const SettingsMenuOptionBase = styled.button`
   align-items: center;
   height: 2rem;
-  border-radius: 2rem;
+  border-radius: 3px;
   width: auto;
   min-width: 3.5rem;
   outline: none;
@@ -1583,7 +1594,7 @@ export const SettingsMenuCustomOption = styled(SettingsMenuOptionBase)<{ active?
     text-align: right; 
   }
 
-  &.dark input { color: #ffffff; }
+  &.dark input { color: ${({ theme }) => theme.white }; }
 `
 export const SettingsMenuCustomOptionInput = styled.input`
   color: ${({ theme, color }) => (color === 'red' ? theme.red1 : theme.text1)};
@@ -1600,17 +1611,14 @@ export const ToggleButton = styled(SettingsMenuOptionBase)<{ isActive?: boolean;
   &.classic {}
 `
 export const ToggleButtonElement = styled.span<{ isActive?: boolean; isOnSwitch?: boolean }>`
-  border-radius: 2rem;
+  border-radius: 3px;
   padding: 0.35rem 0.6rem;
   background: ${({ theme, isActive, isOnSwitch }) => (isActive ? (isOnSwitch ? theme.bg7 : theme.text4) : 'none')};
   font-weight: 500;
-  :hover {
-    user-select: ${({ isOnSwitch }) => (isOnSwitch ? 'none' : 'initial')};
-    
-  }
+  :hover { user-select: ${({ isOnSwitch }) => (isOnSwitch ? 'none' : 'initial')}; }
 
   &.dark { 
-    color: #ffffff;
+    color: ${({ theme }) => theme.white };
     background: ${({ theme, isActive, isOnSwitch }) => (isActive ? (isOnSwitch ? '#002852' : '#565A69') : 'none')};
   }
   &.light {
@@ -1665,6 +1673,9 @@ export const SearchTokenListItem = styled(RowBetween)`
 
   &.light {}
   &.classic {}
-
-
+`
+export const ModalContentWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `
