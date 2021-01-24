@@ -388,7 +388,7 @@ export function ButtonMateriaConfirmed({
     if (confirmed) {
       return <ButtonMateriaConfirmedStyle {...rest} />
     } else {
-      return <ButtonMateriaPrimary {...rest} altDisabledStyle={altDisabledStyle} />
+      return <MainOperationButton {...rest} altDisabledStyle={altDisabledStyle} />
     }
   }
   else {
@@ -407,12 +407,6 @@ export function ButtonMateriaError({
   const theme = useContext(ThemeContext)
   if (!hide || showSwap) {
     var className = theme.name + ' ' + (useCustomProperties ? 'use-custom-properties' : '' ) + ' ' + (isExpertModeActive ? 'expert-mode' : ' ')
-    console.log('theme.name => ' + theme.name);
-    console.log('useCustomProperties => ' + useCustomProperties);
-    console.log('isExpertModeActive => ' + isExpertModeActive);
-    console.log('className => ' + className);
-    console.log('showSwap => ' + showSwap);
-    console.log('hide => ' + hide);
     if (error) {      
       return <MainOperationButton {...rest} className={className}/>
     } else {

@@ -19,7 +19,7 @@ import { StyledInternalLink } from '../../theme'
 import { currencyId } from '../../utils/currencyId'
 import { unwrappedToken } from '../../utils/wrappedCurrency'
 import AppBody from '../AppBody'
-import { Dots } from '../Pool/styleds'
+import { Dots } from '../../theme'
 
 enum Fields {
   TOKEN0 = 0,

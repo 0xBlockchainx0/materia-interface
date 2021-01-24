@@ -9,6 +9,7 @@ import styled, {
 import { animated } from 'react-spring'
 import { useIsClassicMode, useIsDarkMode } from '../state/user/hooks'
 import { Text, TextProps, Button } from 'rebass'
+import { Box } from 'rebass/styled-components'
 import { DialogOverlay, DialogContent } from '@reach/dialog'
 import { AutoColumn } from '../components/Column'
 import { RowBetween, RowFixed } from '../components/Row'
@@ -383,6 +384,330 @@ body {
 
 .margin-auto { margin: auto; }
 .clear-fix { clear:both !important; float:none !important; }
+.text-left { text-align: left !important;}
+.text-right { text-align: right !important;}
+.text-center { text-align: center !important;}
+
+/*  --------------------------------------------------------
+ALPHA OPACITY
+-------------------------------------------------------- */
+.alpha2     { opacity: .2 !important; }
+.alpha3     { opacity: .3 !important; }
+.alpha4     { opacity: .4 !important; }
+.alpha5     { opacity: .5 !important; }
+.alpha6     { opacity: .6 !important; }
+.alpha7     { opacity: .7 !important; }
+.alpha8     { opacity: .8 !important; }
+.alpha9     { opacity: .9 !important; }
+.alpha10    { opacity: 1 !important; }
+/*  --------------------------------------------------------
+PADDING STYLE
+-------------------------------------------------------- */
+.p0      { padding: 0 !important; }
+.p5      { padding: 5px !important; }
+.p10     { padding: 10px !important; }
+.p15     { padding: 15px !important; }
+.p20     { padding: 20px !important; }
+.p25     { padding: 25px !important; }
+.p30     { padding: 30px !important; }
+.p35     { padding: 35px !important; }
+.p40     { padding: 40px !important; }
+.p45     { padding: 45px !important; }
+.p50     { padding: 50px !important; }
+.p55     { padding: 55px !important; }
+.p60     { padding: 60px !important; }
+.p65     { padding: 65px !important; }
+.p70     { padding: 70px !important; }
+.p75     { padding: 75px !important; }
+.p80     { padding: 80px !important; }
+.p85     { padding: 85px !important; }
+.p90     { padding: 90px !important; }
+.p95     { padding: 95px !important; }
+.p100    { padding: 100px !important; }
+
+.pt0    { padding-top: 0px !important; }
+.pt5    { padding-top: 5px !important; }
+.pt10   { padding-top: 10px !important; }
+.pt15   { padding-top: 15px !important; }
+.pt20   { padding-top: 20px !important; }
+.pt25   { padding-top: 25px !important; }    
+.pt30   { padding-top: 30px !important; }    
+.pt35   { padding-top: 35px !important; }    
+.pt40   { padding-top: 40px !important; }    
+.pt45   { padding-top: 45px !important; }    
+.pt50   { padding-top: 50px !important; }    
+.pt55   { padding-top: 55px !important; }    
+.pt60   { padding-top: 60px !important; }    
+.pt65   { padding-top: 65px !important; }    
+.pt70   { padding-top: 70px !important; }    
+.pt75   { padding-top: 75px !important; }    
+.pt80   { padding-top: 80px !important; }    
+.pt85   { padding-top: 85px !important; }    
+.pt90   { padding-top: 90px !important; }    
+.pt95   { padding-top: 95px !important; }    
+.pt100  { padding-top: 100px !important; }
+
+.pr0    { padding-right: 0px !important; }
+.pr5    { padding-right: 5px !important; }
+.pr10   { padding-right: 10px !important; }
+.pr15   { padding-right: 15px !important; }
+.pr20   { padding-right: 20px !important; }
+.pr25   { padding-right: 25px !important; }    
+.pr30   { padding-right: 30px !important; }    
+.pr35   { padding-right: 35px !important; }    
+.pr40   { padding-right: 40px !important; }    
+.pr45   { padding-right: 45px !important; }    
+.pr50   { padding-right: 50px !important; }    
+.pr55   { padding-right: 55px !important; }    
+.pr60   { padding-right: 60px !important; }    
+.pr65   { padding-right: 65px !important; }    
+.pr70   { padding-right: 70px !important; }    
+.pr75   { padding-right: 75px !important; }    
+.pr80   { padding-right: 80px !important; }    
+.pr85   { padding-right: 85px !important; }    
+.pr90   { padding-right: 90px !important; }    
+.pr95   { padding-right: 95px !important; }    
+.pr100  { padding-right: 100px !important; }
+
+.pb0    { padding-bottom: 0px !important; }
+.pb5    { padding-bottom: 5px !important; }
+.pb10   { padding-bottom: 10px !important; }
+.pb15   { padding-bottom: 15px !important; }
+.pb20   { padding-bottom: 20px !important; }
+.pb25   { padding-bottom: 25px !important; }    
+.pb30   { padding-bottom: 30px !important; }    
+.pb35   { padding-bottom: 35px !important; }    
+.pb40   { padding-bottom: 40px !important; }    
+.pb45   { padding-bottom: 45px !important; }    
+.pb50   { padding-bottom: 50px !important; }    
+.pb55   { padding-bottom: 55px !important; }    
+.pb60   { padding-bottom: 60px !important; }    
+.pb65   { padding-bottom: 65px !important; }    
+.pb70   { padding-bottom: 70px !important; }    
+.pb75   { padding-bottom: 75px !important; }    
+.pb80   { padding-bottom: 80px !important; }    
+.pb85   { padding-bottom: 85px !important; }    
+.pb90   { padding-bottom: 90px !important; }    
+.pb95   { padding-bottom: 95px !important; }    
+.pb100  { padding-bottom: 100px !important; }
+
+.pl0    { padding-left: 0px !important; }
+.pl5    { padding-left: 5px !important; }
+.pl10   { padding-left: 10px !important; }
+.pl15   { padding-left: 15px !important; }
+.pl20   { padding-left: 20px !important; }
+.pl25   { padding-left: 25px !important; }    
+.pl30   { padding-left: 30px !important; }    
+.pl35   { padding-left: 35px !important; }    
+.pl40   { padding-left: 40px !important; }    
+.pl45   { padding-left: 45px !important; }    
+.pl50   { padding-left: 50px !important; }    
+.pl55   { padding-left: 55px !important; }    
+.pl60   { padding-left: 60px !important; }    
+.pl65   { padding-left: 65px !important; }    
+.pl70   { padding-left: 70px !important; }    
+.pl75   { padding-left: 75px !important; }    
+.pl80   { padding-left: 80px !important; }    
+.pl85   { padding-left: 85px !important; }    
+.pl90   { padding-left: 90px !important; }    
+.pl95   { padding-left: 95px !important; }    
+.pl100  { padding-left: 100px !important; }
+
+/*  --------------------------------------------------------
+MARGIN STYLE
+-------------------------------------------------------- */
+.m0      { margin: 0 !important; }
+.m5      { margin: 5px !important; }
+.m10     { margin: 10px !important; }
+.m15     { margin: 15px !important; }
+.m20     { margin: 20px !important; }
+.m25     { margin: 25px !important; }
+.m30     { margin: 30px !important; }
+.m35     { margin: 35px !important; }
+.m40     { margin: 40px !important; }
+.m45     { margin: 45px !important; }
+.m50     { margin: 50px !important; }
+.m55     { margin: 55px !important; }
+.m60     { margin: 60px !important; }
+.m65     { margin: 65px !important; }
+.m70     { margin: 70px !important; }
+.m75     { margin: 75px !important; }
+.m80     { margin: 80px !important; }
+.m85     { margin: 85px !important; }
+.m90     { margin: 90px !important; }
+.m95     { margin: 95px !important; }
+.m100    { margin: 100px !important; }
+
+.mt0    { margin-top: 0px !important; }
+.mt5    { margin-top: 5px !important; }
+.mt10   { margin-top: 10px !important; }
+.mt15   { margin-top: 15px !important; }
+.mt20   { margin-top: 20px !important; }
+.mt25   { margin-top: 25px !important; }    
+.mt30   { margin-top: 30px !important; }    
+.mt35   { margin-top: 35px !important; }    
+.mt40   { margin-top: 40px !important; }    
+.mt45   { margin-top: 45px !important; }    
+.mt50   { margin-top: 50px !important; }    
+.mt55   { margin-top: 55px !important; }    
+.mt60   { margin-top: 60px !important; }    
+.mt65   { margin-top: 65px !important; }    
+.mt70   { margin-top: 70px !important; }    
+.mt75   { margin-top: 75px !important; }    
+.mt80   { margin-top: 80px !important; }    
+.mt85   { margin-top: 85px !important; }    
+.mt90   { margin-top: 90px !important; }    
+.mt95   { margin-top: 95px !important; }    
+.mt100  { margin-top: 100px !important; }
+.mt110  { margin-top: 110px !important; }
+.mt120  { margin-top: 120px !important; }
+
+.mr0    { margin-right: 0px !important; }
+.mr5    { margin-right: 5px !important; }
+.mr10   { margin-right: 10px !important; }
+.mr15   { margin-right: 15px !important; }
+.mr20   { margin-right: 20px !important; }
+.mr25   { margin-right: 25px !important; }    
+.mr30   { margin-right: 30px !important; }    
+.mr35   { margin-right: 35px !important; }    
+.mr40   { margin-right: 40px !important; }    
+.mr45   { margin-right: 45px !important; }    
+.mr50   { margin-right: 50px !important; }    
+.mr55   { margin-right: 55px !important; }    
+.mr60   { margin-right: 60px !important; }    
+.mr65   { margin-right: 65px !important; }    
+.mr70   { margin-right: 70px !important; }    
+.mr75   { margin-right: 75px !important; }    
+.mr80   { margin-right: 80px !important; }    
+.mr85   { margin-right: 85px !important; }    
+.mr90   { margin-right: 90px !important; }    
+.mr95   { margin-right: 95px !important; }    
+.mr100  { margin-right: 100px !important; }
+
+.mb0    { margin-bottom: 0px !important; }
+.mb5    { margin-bottom: 5px !important; }
+.mb10   { margin-bottom: 10px !important; }
+.mb15   { margin-bottom: 15px !important; }
+.mb20   { margin-bottom: 20px !important; }
+.mb25   { margin-bottom: 25px !important; }    
+.mb30   { margin-bottom: 30px !important; }    
+.mb35   { margin-bottom: 35px !important; }    
+.mb40   { margin-bottom: 40px !important; }    
+.mb45   { margin-bottom: 45px !important; }    
+.mb50   { margin-bottom: 50px !important; }    
+.mb55   { margin-bottom: 55px !important; }    
+.mb60   { margin-bottom: 60px !important; }    
+.mb65   { margin-bottom: 65px !important; }    
+.mb70   { margin-bottom: 70px !important; }    
+.mb75   { margin-bottom: 75px !important; }    
+.mb80   { margin-bottom: 80px !important; }    
+.mb85   { margin-bottom: 85px !important; }    
+.mb90   { margin-bottom: 90px !important; }    
+.mb95   { margin-bottom: 95px !important; }    
+.mb100  { margin-bottom: 100px !important; }
+
+.ml0    { margin-left: 0px !important; }
+.ml5    { margin-left: 5px !important; }
+.ml10   { margin-left: 10px !important; }
+.ml15   { margin-left: 15px !important; }
+.ml20   { margin-left: 20px !important; }
+.ml25   { margin-left: 25px !important; }    
+.ml30   { margin-left: 30px !important; }    
+.ml35   { margin-left: 35px !important; }    
+.ml40   { margin-left: 40px !important; }    
+.ml45   { margin-left: 45px !important; }    
+.ml50   { margin-left: 50px !important; }    
+.ml55   { margin-left: 55px !important; }    
+.ml60   { margin-left: 60px !important; }    
+.ml65   { margin-left: 65px !important; }    
+.ml70   { margin-left: 70px !important; }    
+.ml75   { margin-left: 75px !important; }    
+.ml80   { margin-left: 80px !important; }    
+.ml85   { margin-left: 85px !important; }    
+.ml90   { margin-left: 90px !important; }    
+.ml95   { margin-left: 95px !important; }    
+.ml100  { margin-left: 100px !important; }
+
+/*  --------------------------------------------------------
+MARGIN STYLE MINUS
+-------------------------------------------------------- */
+.mt-5    { margin-top: -5px !important; }
+.mt-10   { margin-top: -10px !important; }
+.mt-15   { margin-top: -15px !important; }
+.mt-20   { margin-top: -20px !important; }
+.mt-25   { margin-top: -25px !important; }    
+.mt-30   { margin-top: -30px !important; }    
+.mt-35   { margin-top: -35px !important; }    
+.mt-40   { margin-top: -40px !important; }    
+.mt-45   { margin-top: -45px !important; }    
+.mt-50   { margin-top: -50px !important; }    
+.mt-55   { margin-top: -55px !important; }    
+.mt-60   { margin-top: -60px !important; }    
+.mt-65   { margin-top: -65px !important; }    
+.mt-70   { margin-top: -70px !important; }    
+.mt-75   { margin-top: -75px !important; }    
+.mt-80   { margin-top: -80px !important; }    
+.mt-85   { margin-top: -85px !important; }    
+.mt-90   { margin-top: -90px !important; }    
+.mt-95   { margin-top: -95px !important; }    
+.mt-100  { margin-top: -100px !important; }
+.mt-110  { margin-top: -110px !important; }
+.mt-120  { margin-top: -120px !important; }
+.mt-130  { margin-top: -130px !important; }
+.mt-140  { margin-top: -140px !important; }
+.mt-150  { margin-top: -150px !important; }
+
+.ml-5    { margin-left: -5px !important; }
+.ml-10   { margin-left: -10px !important; }
+.ml-15   { margin-left: -15px !important; }
+.ml-20   { margin-left: -20px !important; }
+.ml-25   { margin-left: -25px !important; }    
+.ml-30   { margin-left: -30px !important; }    
+.ml-35   { margin-left: -35px !important; }    
+.ml-40   { margin-left: -40px !important; }    
+.ml-45   { margin-left: -45px !important; }    
+.ml-50   { margin-left: -50px !important; }    
+.ml-55   { margin-left: -55px !important; }    
+.ml-60   { margin-left: -60px !important; }    
+.ml-65   { margin-left: -65px !important; }    
+.ml-70   { margin-left: -70px !important; }    
+.ml-75   { margin-left: -75px !important; }    
+.ml-80   { margin-left: -80px !important; }    
+.ml-85   { margin-left: -85px !important; }    
+.ml-90   { margin-left: -90px !important; }    
+.ml-95   { margin-left: -95px !important; }    
+.ml-100  { margin-left: -100px !important; }
+.ml-110  { margin-left: -110px !important; }
+.ml-120  { margin-left: -120px !important; }
+.ml-130  { margin-left: -130px !important; }
+.ml-140  { margin-left: -140px !important; }
+.ml-150  { margin-left: -150px !important; }
+
+.mb-5    { margin-bottom: -5px !important; }
+.mb-10   { margin-bottom: -10px !important; }
+.mb-15   { margin-bottom: -15px !important; }
+.mb-20   { margin-bottom: -20px !important; }
+.mb-25   { margin-bottom: -25px !important; }    
+.mb-30   { margin-bottom: -30px !important; }    
+.mb-35   { margin-bottom: -35px !important; }    
+.mb-40   { margin-bottom: -40px !important; }    
+.mb-45   { margin-bottom: -45px !important; }    
+.mb-50   { margin-bottom: -50px !important; }    
+.mb-55   { margin-bottom: -55px !important; }    
+.mb-60   { margin-bottom: -60px !important; }    
+.mb-65   { margin-bottom: -65px !important; }    
+.mb-70   { margin-bottom: -70px !important; }    
+.mb-75   { margin-bottom: -75px !important; }    
+.mb-80   { margin-bottom: -80px !important; }    
+.mb-85   { margin-bottom: -85px !important; }    
+.mb-90   { margin-bottom: -90px !important; }    
+.mb-95   { margin-bottom: -95px !important; }    
+.mb-100  { margin-bottom: -100px !important; }
+.mb-110  { margin-bottom: -110px !important; }
+.mb-120  { margin-bottom: -120px !important; }
+.mb-130  { margin-bottom: -130px !important; }
+.mb-140  { margin-bottom: -140px !important; }
+.mb-150  { margin-bottom: -150px !important; }
 
 .tokenSymbolImage {
   width: 110px;
@@ -686,6 +1011,10 @@ export const SimpleTextParagraph = styled.p`
   &.dark { font-weight:400; }
   &.light {}
   &.classic {}
+
+  &.dark > a { color: ${({ theme }) => theme.azure1}; }
+  &.light > a {}
+  &.light > a {}
 `
 export const SimpleInformationsTextParagraph = styled(SimpleTextParagraph)`
   &.dark { color: ${({ theme }) => theme.azure1}; }
@@ -726,13 +1055,16 @@ export const IconButton = styled(BaseButton)<{ width?: string, borderRadius?: st
   width: fit-content;
   margin-left: 10px !important;
 
-  & > svg { width: 14px; height: 14px; }
+  & > svg, & > span.icon-symbol { width: 14px; height: 14px; }
+  & > span.icon-symbol { display: inline-block; margin-right: 10px; }
 
-  &.dark > svg { stroke: ${({ theme }) => theme.azure1}; }
-  &.light > svg {}
-  &.classic > svg {}
+  &.dark > svg, &.dark > span.icon-symbol { stroke: ${({ theme }) => theme.azure1}; color: ${({ theme }) => theme.azure1}; }
+  &.light > svg, &.light > span.icon-symbol {}
+  &.classic > svg, &.classic > span.icon-symbol {}
 
   &.dark:hover > svg, &.dark:focus > svg { filter: drop-shadow(0px 0px 3px ${({ theme }) => theme.yellowLight}); }
+  &.dark:hover > span.icon-symbol, &.dark:focus > span.icon-symbol { text-shadow: 0px 0px 3px ${({ theme }) => theme.yellowLight}; }
+
   &.light:hover > svg, &.light:focus > svg {  }
   &.light:classic > svg, &.light:classic > svg {  }
 
@@ -742,11 +1074,16 @@ export const GridContainer = styled.div`
   display: grid;
   grid-template-columns: 80% auto;
 `
-export const SwapPageGridContainer = styled.div`
+export const PageGridContainer = styled.div`
   display: grid;
   grid-template-columns: 30% auto;
   @media (min-width: 601px) and (max-width: 1350px) { grid-template-columns: auto !important; }
   @media (max-width: 600px) { grid-template-columns: auto !important; }
+
+  &.swap {}
+  &.pool {}
+
+  &.pool > .left-column { padding: 0 1rem 1rem 1rem; }
 `
 export const PageItemsContainer = styled.div`
   &.dark {}
@@ -824,7 +1161,7 @@ export const TabLinkItem = styled(NavLink).attrs({ tabLinkItemActiveClassName })
   &.light.disabled:hover, &.light.disabled:focus,
   &.classic.disabled:hover, &.classic.disabled:focus { opacity: 1; }
 `
-export const SwapPageContentContainer = styled.div`
+export const PageContentContainer = styled.div`
   margin-top:40px;
   @media (min-width: 1050px) {
     display: grid;
@@ -900,6 +1237,10 @@ export const ActionButton = styled(BaseButton)<{ disabled?: boolean, selected?: 
   text-align: center;
   letter-spacing: 0.1em;
   padding: 3px 7px !important;
+
+  & > label, & > label + svg { display: block; float: left; }
+  & > label + svg { width: 15px; }
+  & > label { margin-top: 3px; margin-right: 5px; }
 
   &.dark {
     color: ${({ theme }) => theme.yellowGreen} !important;
@@ -1153,7 +1494,6 @@ export const MainOperationButton = styled(ActionButton)<{ disabled?: boolean, se
 
   &.light {}
   &.classic {}
-
   
 `
 export const TradePriceContainer = styled.div`
@@ -1678,4 +2018,43 @@ export const ModalContentWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+`
+export const EmptyProposals = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  &.dark { color: ${({ theme }) => theme.azure1}; }
+  &.light {}
+  &.classic {}
+`
+export const Dots = styled.span`
+  &::after {
+    display: inline-block;
+    animation: ellipsis 1.25s infinite;
+    content: '.';
+    width: 1em;
+    text-align: left;
+  }
+  @keyframes ellipsis {
+    0% {
+      content: '.';
+    }
+    33% {
+      content: '..';
+    }
+    66% {
+      content: '...';
+    }
+  }
+`
+export const StyledPositionCard = styled(Box)<{ bgColor: any }>`
+  border: none;  
+  position: relative;
+  overflow: hidden;
+
+  &.dark { border-top: solid 1px ${({ theme }) => theme.azure1}; border-bottom: solid 1px ${({ theme }) => theme.azure1}; }
+  &.light {}
+  &.classic {}
 `

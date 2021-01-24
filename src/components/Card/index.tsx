@@ -19,8 +19,8 @@ export const LightCard = styled(Card)`
 `
 
 export const GreyCard = styled(Card)`
-  border: 1px solid ${({ theme }) => theme.cyan2};
-  background-color: ${({ theme }) => theme.primary5};
+  /* border: 1px solid ${({ theme }) => theme.cyan2};
+  background-color: ${({ theme }) => theme.primary5}; */
 `
 
 export const SwapGreyCard = styled(Card)`

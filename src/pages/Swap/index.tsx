@@ -41,12 +41,12 @@ import { useExpertModeManager, useUserSlippageTolerance } from '../../state/user
 import AppBody from '../AppBody'
 import { 
   TYPE, 
-  SwapPageGridContainer, 
+  PageGridContainer, 
   InventoryColumn, 
   PageItemsContainer,
   TabsBar,
   TabLinkItem,
-  SwapPageContentContainer, 
+  PageContentContainer, 
   TradePriceContainer, 
   SwitchButton,
   OperationButton,
@@ -344,7 +344,7 @@ export default function Swap() {
             swapErrorMessage={swapErrorMessage}
             onDismiss={handleConfirmDismiss}
           />
-          <SwapPageGridContainer>
+          <PageGridContainer className="swap">
             <InventoryColumn>
               <Inventory onCurrencySelect={handleOutputSelect} />
             </InventoryColumn>
@@ -360,7 +360,7 @@ export default function Swap() {
                   >Classic SWAP</TabLinkItem>
               </TabsBar>
               <div className="clear-fix">
-                <SwapPageContentContainer className={theme.name}>
+                <PageContentContainer className={theme.name}>
                   <div>
                     <AutoColumn gap={'lg'}>
                       <CurrencyInputPanel
@@ -441,7 +441,7 @@ export default function Swap() {
                       />
                     </AutoColumn>
                   </div>
-                </SwapPageContentContainer>
+                </PageContentContainer>
                 <BottomGrouping>
                   <SwapButtonsContainer>
                     {!account ? (
@@ -547,7 +547,7 @@ export default function Swap() {
               </div>
               <AdvancedSwapDetailsDropdown trade={trade} originalCurrencies={originalCurrencies} />
             </PageItemsContainer>
-          </SwapPageGridContainer>
+          </PageGridContainer>
         </Wrapper>
         <FooterInfo className={theme.name}>
           <div></div>

@@ -1,15 +1,18 @@
+import React, { useState, useContext } from 'react'
 import { JSBI, Pair, Percent } from '@materia-dex/sdk'
 import { darken } from 'polished'
-import React, { useState } from 'react'
 import { ChevronDown, ChevronUp } from 'react-feather'
 import { Link } from 'react-router-dom'
 import { Text } from 'rebass'
-import styled from 'styled-components'
+import styled, { ThemeContext } from 'styled-components'
 import { useTotalSupply } from '../../data/TotalSupply'
 
 import { useActiveWeb3React } from '../../hooks'
 import { useTokenBalance } from '../../state/wallet/hooks'
-import { ExternalLink, TYPE } from '../../theme'
+import { ExternalLink, TYPE, 
+  StyledPositionCard, Dots, ActionButton, 
+  SimpleTextParagraph, IconButton,
+  MainOperationButton } from '../../theme'
 import { currencyId } from '../../utils/currencyId'
 import { unwrappedToken } from '../../utils/wrappedCurrency'
 import { ButtonSecondary, ButtonEmpty, ButtonMateriaPrimary } from '../Button'
@@ -22,7 +25,6 @@ import { AutoColumn } from '../Column'
 import CurrencyLogo from '../CurrencyLogo'
 import DoubleCurrencyLogo from '../DoubleLogo'
 import { RowBetween, RowFixed } from '../Row'
-import { Dots } from '../swap/styleds'
 
 export const FixedHeightRow = styled(RowBetween)`
   height: 24px;
@@ -34,12 +36,7 @@ export const HoverCard = styled(Card)`
     border: 1px solid ${({ theme }) => darken(0.06, theme.bg2)};
   }
 `
-const StyledPositionCard = styled(LightCard)<{ bgColor: any }>`
-  border: none;
-  border: 1px solid ${({ theme }) => theme.cyan1};
-  position: relative;
-  overflow: hidden;
-`
+
 
 interface PositionCardProps {
   pair: Pair
@@ -183,9 +180,10 @@ export default function FullPositionCard({ pair, border }: PositionCardProps) {
       : [undefined, undefined]
 
   const backgroundColor = useColor(pair?.token0)
+  const theme = useContext(ThemeContext)
 
   return (
-    <StyledPositionCard border={border} bgColor={backgroundColor}>
+    <StyledPositionCard bgColor={backgroundColor} className={ `pt15 pb15 ${theme.name}` }>
       <CardNoise />
       <AutoColumn gap="12px">
         <FixedHeightRow>
@@ -196,26 +194,10 @@ export default function FullPositionCard({ pair, border }: PositionCardProps) {
             </Text>
           </RowFixed>
 
-          <RowFixed gap="8px">
-            <ButtonEmpty
-              padding="6px 8px"
-              borderRadius="12px"
-              width="fit-content"
-              onClick={() => setShowMore(!showMore)}
-            >
-              {showMore ? (
-                <>
-                  {' '}
-                  Manage
-                  <ChevronUp size="20" style={{ marginLeft: '10px' }} />
-                </>
-              ) : (
-                <>
-                  Manage
-                  <ChevronDown size="20" style={{ marginLeft: '10px' }} />
-                </>
-              )}
-            </ButtonEmpty>
+          <RowFixed>
+            <ActionButton className={theme.name} onClick={() => setShowMore(!showMore)}>
+              <label>Manage</label> {showMore ? ( <ChevronUp/> ) : ( <ChevronDown /> )}
+            </ActionButton>            
           </RowFixed>
         </FixedHeightRow>
 
@@ -246,7 +228,6 @@ export default function FullPositionCard({ pair, border }: PositionCardProps) {
                 '-'
               )}
             </FixedHeightRow>
-
             <FixedHeightRow>
               <RowFixed>
                 <Text fontSize={14} fontWeight={500}>
@@ -264,7 +245,6 @@ export default function FullPositionCard({ pair, border }: PositionCardProps) {
                 '-'
               )}
             </FixedHeightRow>
-
             <FixedHeightRow>
               <Text fontSize={14} fontWeight={500}>
                 Your pool share:
@@ -273,15 +253,14 @@ export default function FullPositionCard({ pair, border }: PositionCardProps) {
                 {poolTokenPercentage ? poolTokenPercentage.toFixed(2) + '%' : '-'}
               </Text>
             </FixedHeightRow>
-
-            <ButtonSecondary padding="8px" borderRadius="8px">
-              <ExternalLink
-                style={{ width: '100%', textAlign: 'center' }}
-                href={`https://info.materiadex.com/account/${account}`}
-              >
-                View accrued fees and analytics<span style={{ fontSize: '11px' }}>↗</span>
+            <SimpleTextParagraph className={ `text-left ${theme.name}` }>
+              <ExternalLink href={`https://info.materiadex.com/account/${account}`}>
+              View accrued fees and analytics
+                <IconButton className={theme.name}>
+                  <span className="icon-symbol">↗</span>
+                </IconButton>
               </ExternalLink>
-            </ButtonSecondary>
+            </SimpleTextParagraph>             
             <RowBetween marginTop="10px">
               <ButtonMateriaPrimary
                 padding="8px"

@@ -1,4 +1,5 @@
-import React, {  useContext } from 'react'
+import React, { useContext } from 'react'
+import { useLocation } from 'react-router-dom'
 import { ThemeContext } from 'styled-components'
 import { MainContainer, 
   MainContainerExtraDecorator, 
@@ -11,8 +12,13 @@ import { MainContainer,
  */
 export default function AppBody({ children }: { children: React.ReactNode }) {
   const theme = useContext(ThemeContext);
+  const location = useLocation();
+  var result = location.pathname.match(/\/(.*?)\//g);
   var featureTitle = '';
-  var value = window.location.href.replace(/(.*)\//, '');
+  var value = (result ? result[0].replace(/\//g, '') : location.pathname.replace(/\//g, ''));
+  console.log(result);
+  console.log('value');
+  console.log(value);
   switch(value){
       case 'swap':
         featureTitle = 'swap';
@@ -21,6 +27,7 @@ export default function AppBody({ children }: { children: React.ReactNode }) {
         featureTitle = 'liquidity mining';
       break;
       case 'add':
+      case 'remove':
       case 'pool':
         featureTitle = 'pool';
       break;
