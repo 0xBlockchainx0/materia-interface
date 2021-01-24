@@ -1,12 +1,12 @@
 import { AbstractConnector } from '@web3-react/abstract-connector'
 import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
 import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import { isMobile } from 'react-device-detect'
 import ReactGA from 'react-ga'
-import styled from 'styled-components'
+import styled, { ThemeContext } from 'styled-components'
 import MetamaskIcon from '../../assets/images/metamask.png'
-import { ReactComponent as Close } from '../../assets/images/x.svg'
+import { X } from 'react-feather'
 import { fortmatic, injected, portis } from '../../connectors'
 import { OVERLAY_READY } from '../../connectors/Fortmatic'
 import { SUPPORTED_WALLETS } from '../../constants'
@@ -14,7 +14,7 @@ import usePrevious from '../../hooks/usePrevious'
 import { useLocalStorage } from '../../hooks/useLocalStorage'
 import { ApplicationModal } from '../../state/application/actions'
 import { useModalOpen, useWalletModalToggle } from '../../state/application/hooks'
-import { ExternalLink } from '../../theme'
+import { IconButton, InfoBox, ModalCaption, WalletConnectorsContainer } from '../../theme'
 import AccountDetails from '../AccountDetails'
 
 import Modal from '../Modal'
@@ -22,114 +22,11 @@ import Option from './Option'
 import PendingView from './PendingView'
 import DocLink from '../../components/DocLink'
 
-const CloseIcon = styled.div`
-  position: absolute;
-  right: 1rem;
-  top: 14px;
-  &:hover {
-    cursor: pointer;
-    opacity: 0.6;
-  }
-`
-
-const CloseColor = styled(Close)`
-  path {
-    stroke: ${({ theme }) => theme.text4};
-  }
-`
-
 const Wrapper = styled.div`
   ${({ theme }) => theme.flexColumnNoWrap}
   margin: 0;
   padding: 0;
   width: 100%;
-`
-
-const HeaderRow = styled.div`
-  ${({ theme }) => theme.flexRowNoWrap};
-  padding: 1rem 1rem;
-  font-weight: 500;
-  color: ${props => (props.color === 'blue' ? ({ theme }) => theme.primary1 : 'inherit')};
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    padding: 1rem;
-  `};
-`
-
-const ContentWrapper = styled.div`
-  background-color: ${({ theme }) => theme.bg2};
-  padding: 2rem;
-  // border-bottom-left-radius: 20px;
-  // border-bottom-right-radius: 20px;
-
-  ${({ theme }) => theme.mediaWidth.upToMedium`padding: 1rem`};
-`
-
-const UpperSection = styled.div`
-  position: relative;
-
-  h5 {
-    margin: 0;
-    margin-bottom: 0.5rem;
-    font-size: 1rem;
-    font-weight: 400;
-  }
-
-  h5:last-child {
-    margin-bottom: 0px;
-  }
-
-  h4 {
-    margin-top: 0;
-    font-weight: 500;
-  }
-`
-
-const Blurb = styled.div`
-  ${({ theme }) => theme.flexRowNoWrap}
-  align-items: center;
-  justify-content: center;
-  flex-wrap: wrap;
-  margin-top: 2rem;
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    margin: 1rem;
-    font-size: 12px;
-  `};
-`
-
-const OptionGrid = styled.div`
-  display: grid;
-  grid-gap: 10px;
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    grid-template-columns: 1fr;
-    grid-gap: 10px;
-  `};
-`
-
-const HoverText = styled.div`
-  :hover {
-    cursor: pointer;
-  }
-`
-
-const TermsRow = styled.div`
-  display: flex;
-  //justify-content: center;
-  margin-bottom: 10px;
-  padding: 1rem;
-  background-color: ${({ theme }) => theme.primary4};
-  border-radius: 5px;
-  border: 1px solid ${({ theme }) => theme.border1};
-`
-
-const TermsText = styled.span`
-  margin-left: 1rem;
-`
-
-const WarningRow = styled.div`
-  margin-bottom: 1rem;
-  color: ${({ theme }) => theme.red1};
-  display: flex;
-  justify-content: center;
 `
 
 const WALLET_VIEWS = {
@@ -225,10 +122,9 @@ export default function WalletModal({
     })
   }, [toggleWalletModal])
 
-  const [termAndConditionsAccepted, setTermAndConditionsAccepted]
-    = useLocalStorage('termAndConditionsAccepted', false)
-
+  const [termAndConditionsAccepted, setTermAndConditionsAccepted] = useLocalStorage('termAndConditionsAccepted', false)
   const [warning, setWarning] = useState(false);
+  const theme = useContext(ThemeContext)
 
   // get wallets user can switch too, depending on device/browser
   function getOptions(isAccepted: boolean) {
@@ -243,6 +139,7 @@ export default function WalletModal({
         }
 
         if (!window.web3 && !window.ethereum && option.mobile) {
+          
           return (
             <Option
               onClick={() => {
@@ -329,19 +226,17 @@ export default function WalletModal({
   function getModalContent() {
     if (error) {
       return (
-        <UpperSection>
-          <CloseIcon onClick={toggleWalletModal}>
-            <CloseColor />
-          </CloseIcon>
-          <HeaderRow>{error instanceof UnsupportedChainIdError ? 'Wrong Network' : 'Error connecting'}</HeaderRow>
-          <ContentWrapper>
+        <>
+          <IconButton className={ `modal-close-icon ${theme.name}` } onClick={toggleWalletModal}>
+            <X />
+          </IconButton>
+          <h6>{error instanceof UnsupportedChainIdError ? 'Wrong Network' : 'Error connecting'}</h6>
+          <div className="modal-content-wrapper">
             {error instanceof UnsupportedChainIdError ? (
-              <h5>Please connect to the appropriate Ethereum network.</h5>
-            ) : (
-                'Error connecting. Try refreshing the page.'
-              )}
-          </ContentWrapper>
-        </UpperSection>
+              <div className="message error">Please connect to the appropriate Ethereum network.</div>
+            ) : ( <div className="message">Error connecting. Try refreshing the page.</div> )}
+          </div>
+        </>
       )
     }
     if (account && walletView === WALLET_VIEWS.ACCOUNT) {
@@ -356,67 +251,54 @@ export default function WalletModal({
       )
     }
     return (
-      <UpperSection>
-        <CloseIcon onClick={toggleWalletModal}>
-          <CloseColor />
-        </CloseIcon>
-        {walletView !== WALLET_VIEWS.ACCOUNT ? (
-          <HeaderRow color="blue">
-            <HoverText
-              onClick={() => {
-                setPendingError(false)
-                setWalletView(WALLET_VIEWS.ACCOUNT)
-              }}
-            >
-              Back
-            </HoverText>
-          </HeaderRow>
-        ) : (
-            <HeaderRow>
-              <HoverText>Connect to a wallet</HoverText>
-            </HeaderRow>
-          )}
-        <ContentWrapper>
-
-          <TermsRow>
-            <label>
-              <input
-                name="isGoing"
-                type="checkbox"
-                checked={termAndConditionsAccepted}
-                onChange={(event) => {
-                  if (event.target.checked) {
-                    setWarning(false)
-                  }
-                  setTermAndConditionsAccepted(event.target.checked)
-                }} />
-              <TermsText>
-                I accept {'  '}
-                <DocLink title="ToS" href={process.env.PUBLIC_URL + '/docs/terms_of_service.pdf'} />
-                {'  '} and {'  '}
-                <DocLink title="Privacy Policy" href={process.env.PUBLIC_URL + '/docs/privacy_policy.pdf'} />
-              </TermsText>
-            </label>
-          </TermsRow>
-          {warning ? <WarningRow>Please accept terms and conditions first</WarningRow> : ''}
+      <>
+        <IconButton className={ `modal-close-icon ${theme.name}` } onClick={toggleWalletModal}>
+          <X />
+        </IconButton>
+        <h6>          
+          {walletView !== WALLET_VIEWS.ACCOUNT ? (
+            <span onClick={() => { setPendingError(false); setWalletView(WALLET_VIEWS.ACCOUNT) }}>Back</span>
+          ) : ( <span>Connect to a wallet</span> )}
+        </h6> 
+        <div className="modal-content-wrapper">
+        <div className="connect-wallet-terms-and-conditions">
+          <label>
+            <input name="isGoing" type="checkbox" checked={termAndConditionsAccepted}
+              onChange={(event) => {
+                if (event.target.checked) {
+                  setWarning(false)
+                }
+                setTermAndConditionsAccepted(event.target.checked)
+              }} />
+            I accept {'  '}
+            <DocLink 
+                title="ToS" 
+                href={process.env.PUBLIC_URL + '/docs/terms_of_service.pdf'} 
+                className={ `connect-wallet-modal ${theme.name}` } />
+            {'  '} and {'  '} 
+            <DocLink 
+              title="Privacy Policy" 
+              href={process.env.PUBLIC_URL + '/docs/privacy_policy.pdf'} 
+              className={ `connect-wallet-modal ${theme.name}` } />
+          </label>
+        </div>
+        {warning ? <InfoBox className={ `error ${theme.name}` }>Please accept terms and conditions first</InfoBox> : ''}
           {walletView === WALLET_VIEWS.PENDING ? (
-            <PendingView
-              connector={pendingWallet}
-              error={pendingError}
-              setPendingError={setPendingError}
-              tryActivation={tryActivation}
-            />
-          ) : (
-              <OptionGrid>{getOptions(termAndConditionsAccepted)}</OptionGrid>
+            <PendingView connector={pendingWallet} error={pendingError} setPendingError={setPendingError} tryActivation={tryActivation} />
+            ) : (
+              <WalletConnectorsContainer>{getOptions(termAndConditionsAccepted)}</WalletConnectorsContainer>
             )}
           {walletView !== WALLET_VIEWS.PENDING && (
-            <Blurb>
+            <ModalCaption>
               <span>New to Ethereum? &nbsp;</span>{' '}
-              <ExternalLink href="https://ethereum.org/wallets/">Learn more about wallets</ExternalLink>
-            </Blurb>
+              <DocLink 
+                title="Learn more about wallets" 
+                href="https://ethereum.org/wallets/" 
+                className={ `connect-wallet-modal ${theme.name}` } />
+            </ModalCaption>
           )}
-        </ContentWrapper>
-      </UpperSection>
+        </div>
+      </>
     )
   }
 

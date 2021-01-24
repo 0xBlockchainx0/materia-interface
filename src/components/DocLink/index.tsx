@@ -1,14 +1,11 @@
-import React from 'react'
-import styled from 'styled-components'
+import React, { useContext } from 'react'
+import styled, { ThemeContext } from 'styled-components'
+import { ExternalLink } from '../../theme'
 
-const StyledLink = styled.a<{ mobile?: boolean }>`
-  color: ${({ theme }) => theme.text1};
-`
-
-export default function DocLink({title, href}: {title: string, href: string }) {
+export default function DocLink({ title, href, target = '_blank', className }: 
+  {title: string, href: string, target?: string, className?: string }) {
+  const theme = useContext(ThemeContext)
   return (
-    <StyledLink href={href} target="_blank" rel="noopener noreferrer">
-      {title}
-    </StyledLink>
+    <ExternalLink href={href} target={target} rel="noopener noreferrer" className={className}>{title}</ExternalLink>
   )
 }

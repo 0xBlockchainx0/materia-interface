@@ -9,9 +9,10 @@ import styled, {
 import { animated } from 'react-spring'
 import { useIsClassicMode, useIsDarkMode } from '../state/user/hooks'
 import { Text, TextProps, Button } from 'rebass'
+import { DialogOverlay, DialogContent } from '@reach/dialog'
+import Loader from '../components/Loader'
 import { Colors } from './styled'
 import { images } from './images'
-
 export * from './components'
 
 const MEDIA_WIDTHS = {
@@ -65,6 +66,10 @@ export function colors(darkMode: boolean, classicMode: boolean): Colors {
     yellowLight: classicMode ? '#000000' : darkMode ? '#ffffbe' : '#000000', 
     red1: '#FF6871',
     red2: '#F82D3A',
+    green1: '#27AE60',
+    yellow1: '#FFE270',
+    yellow2: '#F3841E',
+    grey: '#999999',
 
     placeholderColor: classicMode ? '#000000' : darkMode ? '#FFFFFF' : '#000000',
 
@@ -124,14 +129,12 @@ export function colors(darkMode: boolean, classicMode: boolean): Colors {
 
     // other
     
-    green1: '#27AE60',
-    yellow1: '#FFE270',
-    yellow2: '#F3841E',
+    
     //blue1: '#2172E5',
     //blue2: '#1671BB',
     cyan1: '#2f9ab8',
-    cyan2: '#1992d3',
-    grey: '#999999',
+    cyan2: '#1992d3'
+    
     
     
     // dont wanna forget these blue yet
@@ -721,7 +724,7 @@ export const IconButton = styled(BaseButton)<{ width?: string, borderRadius?: st
   &.light:hover > svg, &.light:focus > svg {  }
   &.light:classic > svg, &.light:classic > svg {  }
 
-  &.popup-close-icon { position: absolute; right: 10px; top: 10px; }
+  &.popup-close-icon, &.modal-close-icon  { position: absolute; right: 10px; top: 10px; }
 `
 export const GridContainer = styled.div`
   display: grid;
@@ -898,6 +901,67 @@ export const ActionButton = styled(BaseButton)<{ disabled?: boolean, selected?: 
   &.dark:hover, &.dark:focus { box-shadow: 0px 0px 4px ${({ theme }) => theme.yellowGreen}; }
   &.light:hover, &.light:focus { }
   &.classic:hover, &.classic:focus { }
+`
+const InfoCard = styled.button<{ active?: boolean }>`
+  border-radius: 3px !important;
+  font-size: 12px !important;
+  font-weight: 500;
+  text-transform: capitalize;
+  text-align: center;
+  letter-spacing: 0.1em;
+  padding: 10px 10px !important;
+
+  &.dark {
+    color: ${({ theme }) => theme.azure1} !important;
+    border: 1px solid ${({ theme }) => theme.azure1} !important;
+    background-color: ${({ theme }) => theme.blue3};
+  }
+
+  &.light {}
+  &.classic {}
+
+  &.dark:hover, &.dark:focus { box-shadow: 0px 0px 4px ${({ theme }) => theme.azure1}; }
+  &.light:hover, &.light:focus { }
+  &.classic:hover, &.classic:focus { }
+`
+const OptionCard = styled(InfoCard as any)`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 2rem;
+  padding: 1rem;
+`
+export const OptionCardClickable = styled(OptionCard as any)<{ clickable?: boolean }>`
+  margin-top: 0;
+  &:hover { cursor: ${({ clickable }) => (clickable ? 'pointer' : '')}; }
+  opacity: ${({ disabled }) => (disabled ? '0.5' : '1')};
+`
+export const OptionCardLeft = styled.div`
+  ${({ theme }) => theme.flexColumnNoWrap};
+  justify-content: center;
+  height: 100%;
+
+  & > .header-text { position: relative; }
+  & > .header-text.active { padding: 12px 0px 12px 25px; }
+  & > .header-text.active:before {
+    content: "";
+    position:absolute;
+    top: 50%;
+    left: 10px;
+    border-radius: 50%;
+    width: 12px;
+    height: 12px;
+    background-color: ${({ theme }) => theme.green1};
+    margin-top: -6px;
+  }
+`
+export const OptionCardIconWrapper = styled.div<{ size?: number | null }>`
+  ${({ theme }) => theme.flexColumnNoWrap};
+  align-items: center;
+  justify-content: center;
+  & > img, span { height: ${({ size }) => (size ? size + 'px' : '24px')}; width: ${({ size }) => (size ? size + 'px' : '24px')}; }
+  ${({ theme }) => theme.mediaWidth.upToMedium` align-items: flex-end; `};
 `
 export const DropDownButton = styled(BaseButton)<{ width?: string, borderRadius?: string, selected?: boolean }>`
   align-items: center;
@@ -1180,20 +1244,44 @@ export const SecondaryPanelBoxContainer = styled.div`
   &.light > .inner-content {}
   &.classic > .inner-content {}
 
+  &.modal > .inner-content { height: 100%; }
+
   ${({ theme }) => theme.mediaWidth.upToSmall`&.popup{ min-width: 290px; } &.popup:not(:last-of-type) { margin-right: 20px; } `}
   
-  &.popup > .popup-inner-content { padding: 10px 20px; }
+  &.popup > .popup-inner-content, &.modal > .modal-inner-content { padding: 10px 20px; }
 
   &.popup > .popup-inner-content h6 { font-size: 13px; margin: 0px 0px 15px 0px; }
   &.popup > .popup-inner-content h6 + ul { font-size: 13px; }
+
+  &.modal > .modal-inner-content h6 { font-size: 15px; margin: 0px 0px 15px 0px; }
 
   &.popup > .popup-inner-content .popup-operations-container { overflow: hidden; padding-top: 15px; }
   &.popup > .popup-inner-content .popup-operations-container button { font-size: 12px !important; }
   &.popup > .popup-inner-content .popup-operations-container button:last-child { float: right; }
 
-  &.dark.popup > .popup-inner-content h6 { color: ${({ theme }) => theme.azure1 } }
-  &.light.popup > .popup-inner-content h6 { }
-  &.classic.popup > .popup-inner-content h6 { }
+  &.dark.popup > .popup-inner-content h6, &.dark.modal > .modal-inner-content h6  { color: ${({ theme }) => theme.azure1 } }
+  &.light.popup > .popup-inner-content h6, &.light.modal > .modal-inner-content h6  { }
+  &.classic.popup > .popup-inner-content h6, &.classic.modal > .modal-inner-content h6 { }
+
+  &.modal > .modal-inner-content .modal-content-wrapper > .connect-wallet-terms-and-conditions { 
+    display: flex;
+    margin-bottom: 15px;
+    padding: 15px 0px 15px 0px;
+  }
+
+  &.modal > .modal-inner-content .modal-content-wrapper > .connect-wallet-terms-and-conditions > label { font-size: 15px; }
+  &.modal > .modal-inner-content .modal-content-wrapper > .connect-wallet-terms-and-conditions > label > input { margin-right: 10px; }
+
+  &.dark.modal > .modal-inner-content .modal-content-wrapper > .connect-wallet-terms-and-conditions { 
+    border-top: solid 1px ${({ theme }) => theme.azure1 };
+    border-bottom: solid 1px ${({ theme }) => theme.azure1 };
+  }
+
+  &.light.modal > .modal-inner-content .modal-content-wrapper > .connect-wallet-terms-and-conditions { 
+  }
+
+  &.classic.modal > .modal-inner-content .modal-content-wrapper > .connect-wallet-terms-and-conditions { 
+  }
 `
 export const SecondaryPanelBoxContainerExtraDecorator = styled.div`
   position: absolute;
@@ -1237,6 +1325,14 @@ export const SecondaryPanelBoxContainerExtraDecorator = styled.div`
   &.classic:before {}
   &.classic:after {}
 `
+export const WalletConnectorsContainer = styled.div`
+  display: grid;
+  grid-gap: 10px;
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    grid-template-columns: 1fr;
+    grid-gap: 10px;
+  `};
+`
 const Fader = styled.div`
   position: absolute;
   bottom: 0px;
@@ -1253,6 +1349,115 @@ export const AdvancedDetailsFooter = styled.div<{ show: boolean }>`
   z-index: -1;
   transition: transform 300ms ease-in-out;
   @media (max-width: 600px) { padding-left: -2rem !important; }
+`
+const AnimatedDialogOverlay = animated(DialogOverlay)
+export const ThemedDialogOverlay = styled(AnimatedDialogOverlay)`
+  &[data-reach-dialog-overlay] {
+    z-index: 2;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &.dark[data-reach-dialog-overlay] { background-color: ${({ theme }) => theme.hexToRGB(theme.black, 0.8)}; }
+  &.light[data-reach-dialog-overlay] {}
+  &.classic[data-reach-dialog-overlay] {}
+`
+const AnimatedDialogContent = animated(DialogContent)
+export const ThemedDialogContent = styled(({ minHeight, maxHeight, mobile, isOpen, ...rest }) => (
+  <AnimatedDialogContent {...rest} />
+)).attrs({ 'aria-label': 'dialog' })`
+  overflow-y: ${({ mobile }) => (mobile ? 'scroll' : 'hidden')};
+
+  &[data-reach-dialog-content] {
+    background-color: transparent;
+    margin: 0 0 2rem 0;
+    padding: 10px;
+    width: 50vw;
+    overflow-y: ${({ mobile }) => (mobile ? 'scroll' : 'hidden')};
+    overflow-x: hidden;
+    align-self: ${({ mobile }) => (mobile ? 'flex-end' : 'center')};
+    max-width: 420px;
+    ${({ maxHeight }) => maxHeight && css` max-height: ${maxHeight}vh; `}
+    ${({ minHeight }) => minHeight && css` min-height: ${minHeight}vh; `}
+    display: flex;
+    ${({ theme }) => theme.mediaWidth.upToMedium` width: 65vw; margin: 0; `}
+    ${({ theme, mobile }) => theme.mediaWidth.upToSmall` width:  85vw; ${mobile && css` width: 100vw; `} `}
+  }
+`
+export const InfoBox = styled.div`
+  padding: 10px;
+  border-radius: 3px;
+  margin: 10px auto;
+
+  &.dark {}
+  &.light {}
+  &.classic {}
+
+  &.dark.info {
+    border: solid 1px ${({ theme }) => theme.azure1 };
+    color: ${({ theme }) => theme.azure1 };
+  }
+  &.light.info {}
+  &.light.info {}
+
+  &.dark.warning {
+    border: solid 1px ${({ theme }) => theme.yellowGreen };
+    color: ${({ theme }) => theme.yellowGreen };
+  }
+  &.light.warning {}
+  &.light.warning {}
+
+  &.dark.error {     
+    border: solid 1px ${({ theme }) => theme.red1 };
+    color: ${({ theme }) => theme.red1 };
+  }
+  &.light.error {}
+  &.light.error {}
+`
+export const ModalCaption = styled.div`
+  ${({ theme }) => theme.flexRowNoWrap}
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: 20px auto;
+  font-size: 15px;
+`
+export const LoaderBoxContainer = styled.div`
+  
+`
+export const StyledLoader = styled(Loader)`
+  margin-right: 10px;
+`
+export const LoadingMessage = styled.div<{ error?: boolean }>`
+  ${({ theme }) => theme.flexRowNoWrap};
+  align-items: center;
+  justify-content: flex-start;
+  color: ${({ theme, error }) => (error ? theme.red1 : theme.azure1)};
+  & > * { padding: 10px; }
+`
+export const LoaderErrorGroup = styled.div`
+  ${({ theme }) => theme.flexRowNoWrap};
+  align-items: center;
+  justify-content: flex-start;
+`
+export const LoaderErrorButton = styled.div`
+  border-radius: 8px;
+  font-size: 12px;
+  color: ${({ theme }) => theme.text1};
+  background-color: ${({ theme }) => theme.bg4};
+  margin-left: 1rem;
+  padding: 0.5rem;
+  font-weight: 600;
+  user-select: none;
+
+  &:hover { cursor: pointer; }
+`
+export const LoadingWrapper = styled.div`
+  ${({ theme }) => theme.flexRowNoWrap};
+  align-items: center;
+  justify-content: center;
 `
 
 export const SettingsMenuFlyout = styled.span`

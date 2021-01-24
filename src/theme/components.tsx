@@ -67,58 +67,26 @@ export const LinkStyledButton = styled.button<{ disabled?: boolean }>`
 export const StyledInternalLink = styled(Link)`
   text-decoration: none;
   cursor: pointer;
-  color: ${({ theme }) => theme.blue2};
-  font-weight: 500;
 
-  :hover {
-    text-decoration: underline;
-  }
-
-  :focus {
-    outline: none;
-    text-decoration: underline;
-  }
-
-  :active {
-    text-decoration: none;
-  }
+  &:hover, &:focus, &:active { outline: none; text-decoration: underline; }
 `
 
 export const StyledInternalButtonLink = styled(Link)`
   text-decoration: none;
-  cursor: pointer;
-  color: ${({ theme }) => theme.blue2};
-  font-weight: 500;
-  :hover {
-    text-decoration: none;
-  }
-  :focus {
-    text-decoration: none;
-  }
-  :active {
-    text-decoration: none;
-  }
+  cursor: pointer;  
+
+  &:hover, &:focus, &:active { text-decoration: none; }
 `
-
-
 const StyledLink = styled.a`
   text-decoration: none;
   cursor: pointer;
-  color: ${({ theme }) => theme.primary1};
-  font-weight: 500;
-
-  :hover {
-    text-decoration: underline;
-  }
-
-  :focus {
-    outline: none;
-    text-decoration: underline;
-  }
-
-  :active {
-    text-decoration: none;
-  }
+  
+  &:hover, &:focus { outline: none; text-decoration: underline; }
+  &:active { text-decoration: none; }
+  
+  &.dark.connect-wallet-modal { color: ${({ theme }) => theme.azure1}; }
+  &.light.connect-wallet-modal {}
+  &.classic.connect-wallet-modal {}
 `
 
 const rotateImg = keyframes`
