@@ -13,7 +13,7 @@ import useToggle from '../../hooks/useToggle'
 import { AppDispatch, AppState } from '../../state'
 import { acceptListUpdate, removeList, selectList } from '../../state/lists/actions'
 import { useSelectedListUrl } from '../../state/lists/hooks'
-import { CloseIcon, ExternalLink, LinkStyledButton, TYPE } from '../../theme'
+import { CloseIcon, ExternalLink, LinkStyledButton, TYPE, PaddedColumn } from '../../theme'
 import listVersionLabel from '../../utils/listVersionLabel'
 import { parseENSAddress } from '../../utils/parseENSAddress'
 import uriToHttp from '../../utils/uriToHttp'
@@ -23,7 +23,7 @@ import Column from '../Column'
 import ListLogo from '../ListLogo'
 import QuestionHelper from '../QuestionHelper'
 import Row, { RowBetween } from '../Row'
-import { PaddedColumn, SearchInput, Separator, SeparatorDark } from './styleds'
+import { SearchInput, Separator, SeparatorDark } from './styleds'
 
 const UnpaddedLinkStyledButton = styled(LinkStyledButton)`
   padding: 0;

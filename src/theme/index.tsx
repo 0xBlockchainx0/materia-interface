@@ -10,6 +10,8 @@ import { animated } from 'react-spring'
 import { useIsClassicMode, useIsDarkMode } from '../state/user/hooks'
 import { Text, TextProps, Button } from 'rebass'
 import { DialogOverlay, DialogContent } from '@reach/dialog'
+import { AutoColumn } from '../components/Column'
+import { RowBetween, RowFixed } from '../components/Row'
 import Loader from '../components/Loader'
 import { Colors } from './styled'
 import { images } from './images'
@@ -1162,7 +1164,7 @@ export const InputPanel = styled.div`
   z-index: 1;
   width: 100%;
 `
-export const ContainerRow = styled.div<{ error: boolean }>`
+export const ContainerRow = styled.div<{ error?: boolean }>`
   border: none;
   background: none;
   position:relative;
@@ -1199,6 +1201,10 @@ export const ContainerRow = styled.div<{ error: boolean }>`
   &.dark > div.input-container > a { color: ${({ theme }) => theme.azure1 }; }
   &.light > div.input-container > a { }
   &.classic > div.input-container > a { }
+
+  &.search-token-container { margin-bottom: 20px; }
+
+  &.dark.search-token-container { border-bottom: solid 1px ${({ theme }) => theme.hexToRGB(theme.white, 0.2) }; }
 `
 export const Input = styled.input<{ error?: boolean }>`
   font-size: 16px;
@@ -1218,6 +1224,11 @@ export const Input = styled.input<{ error?: boolean }>`
   &.light {}
   &.classic {}
 `
+export const SearchTokenInput = styled(Input)`
+  padding-bottom: 10px;
+  font-weight: 300;
+`
+
 export const SwapButtonsContainer = styled.div`
   justify-content: center;
   display: flex;
@@ -1259,7 +1270,8 @@ export const SecondaryPanelBoxContainer = styled.div`
   &.popup > .popup-inner-content .popup-operations-container button { font-size: 12px !important; }
   &.popup > .popup-inner-content .popup-operations-container button:last-child { float: right; }
 
-  &.dark.popup > .popup-inner-content h6, &.dark.modal > .modal-inner-content h6  { color: ${({ theme }) => theme.azure1 } }
+  &.dark.popup > .popup-inner-content h6, &.dark.modal > .modal-inner-content h6 { color: ${({ theme }) => theme.azure1 } }
+  &.dark.popup > .popup-inner-content h6 svg, &.dark.modal > .modal-inner-content h6 svg  { stroke: ${({ theme }) => theme.azure1 } }
   &.light.popup > .popup-inner-content h6, &.light.modal > .modal-inner-content h6  { }
   &.classic.popup > .popup-inner-content h6, &.classic.modal > .modal-inner-content h6 { }
 
@@ -1373,7 +1385,7 @@ export const ThemedDialogContent = styled(({ minHeight, maxHeight, mobile, isOpe
   &[data-reach-dialog-content] {
     background-color: transparent;
     margin: 0 0 2rem 0;
-    padding: 10px;
+    padding: 0px;
     width: 50vw;
     overflow-y: ${({ mobile }) => (mobile ? 'scroll' : 'hidden')};
     overflow-x: hidden;
@@ -1385,7 +1397,37 @@ export const ThemedDialogContent = styled(({ minHeight, maxHeight, mobile, isOpe
     ${({ theme }) => theme.mediaWidth.upToMedium` width: 65vw; margin: 0; `}
     ${({ theme, mobile }) => theme.mediaWidth.upToSmall` width:  85vw; ${mobile && css` width: 100vw; `} `}
   }
+  
+  &[data-reach-dialog-content] > .token-selection-content-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    flex: 1 1 0%;
+  }
+
+  &[data-reach-dialog-content] > .token-selection-content-container .modal-close-icon { right: 0px; top: 0px; }
 `
+export const SearchTokenFormItems = styled(AutoColumn)`
+  display: grid;
+  grid-auto-rows: auto;
+  grid-row-gap: 10px;
+  position: relative;
+  padding: 0px 0px 15px 0px;
+  margin-bottom: 15px;
+
+  &.dark {
+    border-bottom: solid 1px ${({ theme }) => theme.azure1 };
+  }
+  &.light {}
+  &.classic {}
+
+  & + .tokens-list-container { flex: 1 1 0%; }
+  & + .tokens-list-container.dark { border-bottom: solid 1px ${({ theme }) => theme.azure1 };}
+  & + .tokens-list-container.light {}
+  & + .tokens-list-container.classic {}
+`
+
 export const InfoBox = styled.div`
   padding: 10px;
   border-radius: 3px;
@@ -1592,4 +1634,37 @@ export const ToggleButtonElement = styled.span<{ isActive?: boolean; isOnSwitch?
     background: ${({ theme, isActive, isOnSwitch }) => (isActive ? (isOnSwitch ? '#002852' : '#565A69') : 'none')}
     color: ${({ theme, isActive, isOnSwitch }) => (isActive ? (isOnSwitch ? '' : '#C3C5CB') : theme.text3)};
   }
+`
+export const PaddedColumn = styled(AutoColumn)`
+  padding: 20px;
+  padding-bottom: 12px;
+`
+export const SearchTokenListItem = styled(RowBetween)`
+  padding: 4px 20px;
+  height: 56px;
+  display: grid;
+  grid-template-columns: auto minmax(auto, 1fr) auto minmax(0, 72px);
+  grid-gap: 16px;
+  cursor: ${({ disabled }) => !disabled && 'pointer'};
+  pointer-events: ${({ disabled }) => disabled && 'none'};
+  opacity: ${({ disabled, selected }) => (disabled || selected ? 0.5 : 1)};
+  border-radius: 3px;
+  margin-bottom: 15px;
+
+  &.dark {
+    color: ${({ theme }) => theme.azure2} !important;    
+  }
+
+  &.dark:disabled { opacity: 0.5; cursor: pointer; }
+
+  &.dark:hover, &.dark:focus { 
+    border: 1px solid ${({ theme }) => theme.azure2} !important;
+    background-color: ${({ theme }) => theme.blue3};
+    box-shadow: 0px 0px 4px ${({ theme }) => theme.azure2}; 
+  }
+
+  &.light {}
+  &.classic {}
+
+
 `

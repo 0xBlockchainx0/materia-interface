@@ -1,14 +1,17 @@
 import React, { useContext } from 'react'
-import { ThemeContext } from 'styled-components'
-import { useTransition, useSpring } from 'react-spring'
+import styled, { css, ThemeContext } from 'styled-components'
+import { animated, useTransition, useSpring } from 'react-spring'
+import { DialogOverlay, DialogContent } from '@reach/dialog'
 import { isMobile } from 'react-device-detect'
 import '@reach/dialog/styles.css'
+import { transparentize } from 'polished'
 import { useGesture } from 'react-use-gesture'
 import { 
   ThemedDialogOverlay, 
   ThemedDialogContent, 
   SecondaryPanelBoxContainer,
   SecondaryPanelBoxContainerExtraDecorator } from '../../theme'
+  
 interface ModalProps {
   isOpen: boolean
   onDismiss: () => void
@@ -31,7 +34,7 @@ export default function Modal({
     from: { opacity: 0 },
     enter: { opacity: 1 },
     leave: { opacity: 0 }
-  })  
+  })
   const theme = useContext(ThemeContext)
   const [{ y }, set] = useSpring(() => ({ y: 0, config: { mass: 1, tension: 210, friction: 20 } }))
   const bind = useGesture({
@@ -50,30 +53,32 @@ export default function Modal({
       {fadeTransition.map(
         ({ item, key, props }) =>
           item && (
-            <ThemedDialogOverlay key={key} style={props} onDismiss={onDismiss} initialFocusRef={initialFocusRef} className={theme.name}>
-              <ThemedDialogContent
-                {...(isMobile
-                  ? {
-                      ...bind(),
-                      style: { transform: y.interpolate(y => `translateY(${y > 0 ? y : 0}px)`) }
-                    }
-                  : {})}
-                aria-label="dialog content"
-                minHeight={minHeight}
-                maxHeight={maxHeight}
-                mobile={isMobile}
-              >
-                <SecondaryPanelBoxContainer className={ `modal ${theme.name}` }>
+            <>
+            <ThemedDialogOverlay key={key} style={props} onDismiss={onDismiss} initialFocusRef={initialFocusRef} className={theme.name}>              
+              <SecondaryPanelBoxContainer className={ `modal ${theme.name}` }>
                   <SecondaryPanelBoxContainerExtraDecorator className={ `top ${theme.name}` }/> 
                   <div className="inner-content modal-inner-content">
-                    {/* prevents the automatic focusing of inputs on mobile by the reach dialog */}
-                    {!initialFocusRef && isMobile ? <div tabIndex={1} /> : null}
-                    {children}
+                    <ThemedDialogContent
+                      {...(isMobile
+                        ? {
+                            ...bind(),
+                            style: { transform: y.interpolate(y => `translateY(${y > 0 ? y : 0}px)`) }
+                          }
+                        : {})}
+                      aria-label="dialog content"
+                      minHeight={minHeight}
+                      maxHeight={maxHeight}
+                      mobile={isMobile}
+                    >
+                      {/* prevents the automatic focusing of inputs on mobile by the reach dialog */}
+                      {!initialFocusRef && isMobile ? <div tabIndex={1} /> : null}
+                      {children}                  
+                    </ThemedDialogContent>
                   </div>
                   <SecondaryPanelBoxContainerExtraDecorator className={ `bottom ${theme.name}` }/>
-                </SecondaryPanelBoxContainer>                
-              </ThemedDialogContent>
-            </ThemedDialogOverlay>
+                </SecondaryPanelBoxContainer>
+            </ThemedDialogOverlay>            
+            </>
           )
       )}
     </>

@@ -3,15 +3,12 @@ import React, { KeyboardEvent, RefObject, useCallback, useContext, useEffect, us
 import ReactGA from 'react-ga'
 import { useTranslation } from 'react-i18next'
 import { FixedSizeList } from 'react-window'
-import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
 import { useActiveWeb3React } from '../../hooks'
 import { useAllTokens, useToken } from '../../hooks/Tokens'
 import { useSelectedListInfo } from '../../state/lists/hooks'
-import { CloseIcon, LinkStyledButton, TYPE } from '../../theme'
 import { isAddress } from '../../utils'
 import Card from '../Card'
-import Column from '../Column'
 import ListLogo from '../ListLogo'
 import QuestionHelper from '../QuestionHelper'
 import Row, { RowBetween } from '../Row'
@@ -20,8 +17,16 @@ import CurrencyList from './CurrencyList'
 import { filterTokens } from './filtering'
 import SortButton from './SortButton'
 import { useTokenComparator } from './sorting'
-import { PaddedColumn, SearchInput, Separator } from './styleds'
 import AutoSizer from 'react-virtualized-auto-sizer'
+import { 
+  SearchTokenFormItems, 
+  IconButton,
+  ContainerRow, 
+  SearchTokenInput,
+  MainOperationButton, 
+  TYPE
+ } from '../../theme' 
+import { X } from 'react-feather'
 
 interface CurrencySearchProps {
   isOpen: boolean
@@ -138,38 +143,37 @@ export function CurrencySearch({
   const selectedListInfo = useSelectedListInfo()
 
   return (
-    <Column style={{ width: '100%', flex: '1 1' }}>
-      <PaddedColumn gap="14px">
-        <RowBetween>
-          <Text fontWeight={500} fontSize={16}>
-            Select a token
-            <QuestionHelper text="Find a token by searching for its name or symbol or by pasting its address below." />
-          </Text>
-          <CloseIcon onClick={onDismiss} />
-        </RowBetween>
-        <SearchInput
-          type="text"
-          id="token-search-input"
-          placeholder={t('tokenSearchPlaceholder')}
-          value={searchQuery}
-          ref={inputRef as RefObject<HTMLInputElement>}
-          onChange={handleInput}
-          onKeyDown={handleEnter}
-        />
+    <div className="token-selection-content-container">
+      <SearchTokenFormItems className={theme.name}>
+        <h6>
+          Select a token
+          <QuestionHelper text="Find a token by searching for its name or symbol or by pasting its address below." />
+        </h6>
+        <IconButton className={ `modal-close-icon ${theme.name}` } onClick={onDismiss}>
+          <X/>
+        </IconButton>
+        <ContainerRow className={ `search-token-container ${theme.name}` }>
+          <SearchTokenInput
+            type="text"
+            id="token-search-input"
+            placeholder={t('tokenSearchPlaceholder')}
+            value={searchQuery}
+            ref={inputRef as RefObject<HTMLInputElement>}
+            onChange={handleInput}
+            onKeyDown={handleEnter}
+            className={theme.name}
+          />
+        </ContainerRow>
         {showCommonBases && (
           <CommonBases chainId={chainId} onSelect={handleCurrencySelect} selectedCurrency={selectedCurrency} />
         )}
         <RowBetween>
-          <Text fontSize={14} fontWeight={500}>
-            Token Name
-          </Text>
+          <h6>Token Name</h6>          
           <SortButton ascending={invertSearchOrder} toggleSortOrder={() => setInvertSearchOrder(iso => !iso)} />
         </RowBetween>
-      </PaddedColumn>
+      </SearchTokenFormItems>
 
-      <Separator />
-
-      <div style={{ flex: '1' }}>
+      <div className={ `tokens-list-container ${theme.name}` }>
         <AutoSizer disableWidth>
           {({ height }) => (
             <CurrencyList
@@ -184,12 +188,10 @@ export function CurrencySearch({
           )}
         </AutoSizer>
       </div>
-
-      <Separator />
       <Card>
         <RowBetween>
           {selectedListInfo.current ? (
-            <Row>
+            <Row style={{width: '50%'}}>
               {selectedListInfo.current.logoURI ? (
                 <ListLogo
                   style={{ marginRight: 12 }}
@@ -200,15 +202,11 @@ export function CurrencySearch({
               <TYPE.main id="currency-search-selected-list-name">{selectedListInfo.current.name}</TYPE.main>
             </Row>
           ) : null}
-          <LinkStyledButton
-            style={{ fontWeight: 500, color: theme.text2, fontSize: 16 }}
-            onClick={onChangeList}
-            id="currency-search-change-list-button"
-          >
+          <MainOperationButton onClick={onChangeList} id="currency-search-change-list-button" className={theme.name}>
             {selectedListInfo.current ? 'Change' : 'Select a list'}
-          </LinkStyledButton>
+          </MainOperationButton>
         </RowBetween>
       </Card>
-    </Column>
+    </div>
   )
 }
