@@ -26,6 +26,14 @@ export const ERC20WRAPPER: { [chainId in ChainId]: string } = {
   [ChainId.KOVAN]: ZERO_ADDRESS
 }
 
+export const ETHITEM_START_BLOCK: { [chainId in ChainId]: string } = {
+  [ChainId.MAINNET]: '11092976',
+  [ChainId.RINKEBY]: '',
+  [ChainId.ROPSTEN]: '8900000',
+  [ChainId.GÖRLI]: '',
+  [ChainId.KOVAN]: ''
+}
+
 // a list of tokens by chain
 type ChainTokenList = {
   readonly [chainId in ChainId]: Token[]

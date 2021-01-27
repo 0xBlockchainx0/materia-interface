@@ -86,7 +86,6 @@ export default function AddLiquidity({
   // Pool
   // fetch the user's balances of all tracked LP tokens
   const trackedTokenPairs = useTrackedTokenPairs()
-  const wrappedERC20Tokens = useAllWrappedERC20Tokens()
   
   const tokenPairsWithLiquidityTokens = useMemo(
     () => trackedTokenPairs.map(tokens => ({
