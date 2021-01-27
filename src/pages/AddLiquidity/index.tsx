@@ -17,7 +17,7 @@ import { Link } from 'react-feather'
 
 import { ORCHESTRATOR_ADDRESS, USD, ZERO_ADDRESS } from '../../constants'
 import { PairState } from '../../data/Reserves'
-import { useCurrency } from '../../hooks/Tokens'
+import { useAllWrappedERC20Tokens, useCurrency } from '../../hooks/Tokens'
 import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
 import useTransactionDeadline from '../../hooks/useTransactionDeadline'
 import { useWalletModalToggle } from '../../state/application/hooks'
@@ -86,6 +86,8 @@ export default function AddLiquidity({
   // Pool
   // fetch the user's balances of all tracked LP tokens
   const trackedTokenPairs = useTrackedTokenPairs()
+  const wrappedERC20Tokens = useAllWrappedERC20Tokens()
+  
   const tokenPairsWithLiquidityTokens = useMemo(
     () => trackedTokenPairs.map(tokens => ({
       liquidityToken: toLiquidityToken(tokens), tokens

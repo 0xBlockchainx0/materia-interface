@@ -1,16 +1,19 @@
-import { parseBytes32String } from '@ethersproject/strings'
+import { parseBytes32String, toUtf8Bytes } from '@ethersproject/strings'
 import { Currency, ETHER, Token, currencyEquals } from '@materia-dex/sdk'
+import { keccak256, sha256 } from 'ethers/lib/utils'
 import { useMemo } from 'react'
 import { useAllTokenList, useSelectedTokenList } from '../state/lists/hooks'
-import { NEVER_RELOAD, useSingleCallResult } from '../state/multicall/hooks'
+import { CallState, NEVER_RELOAD, Result, toCallState, useSingleCallResult } from '../state/multicall/hooks'
 import { useUserAddedTokens } from '../state/user/hooks'
 import { isAddress } from '../utils'
+import Web3 from 'web3';
 
 import { useActiveWeb3React } from './index'
-import { useBytes32TokenContract, useTokenContract } from './useContract'
+import { useBytes32TokenContract, useEthItemKnowledgeBaseContract, useEthItemOrchestratorContract, useTokenContract, useWERC20TokenContract } from './useContract'
+import { WERC20_ABI } from '../constants/abis/erc20'
 
 export function useAllTokens(): { [address: string]: Token } {
-  const { chainId } = useActiveWeb3React()
+  const { chainId, } = useActiveWeb3React()
   const userAddedTokens = useUserAddedTokens()
   const allTokens = useSelectedTokenList()
 
@@ -30,6 +33,90 @@ export function useAllTokens(): { [address: string]: Token } {
         )
     )
   }, [chainId, userAddedTokens, allTokens])
+}
+
+export function useAllWrappedERC20Tokens(): { [address: string]: Token } {
+  const { chainId } = useActiveWeb3React()
+
+  //Call the Orchestrator and then the KnowledgeBase to retrieve all the ERC20Wrappers
+  const ethItemOrchestrator = useEthItemOrchestratorContract(false)
+  const knowledgeBaseAddress = useSingleCallResult(ethItemOrchestrator, 'knowledgeBase', undefined, NEVER_RELOAD)
+  const knowledgeBase = useEthItemKnowledgeBaseContract(knowledgeBaseAddress.result?.[0], false)
+
+  const ethItemERC20WrapperAddresses = useSingleCallResult(knowledgeBase, 'erc20Wrappers', undefined, NEVER_RELOAD)
+  const factoryAddresses = useSingleCallResult(ethItemOrchestrator, 'factory', undefined, NEVER_RELOAD)
+
+  const collections = ethItemERC20WrapperAddresses.result?.[0]
+
+  const web3 = new Web3(Web3.givenProvider);
+
+  //Prepare a var to collect all the ITEMs
+  var allCollections = [];
+
+  if (collections !== undefined) {
+    for (var collectionAddress of collections) {
+      //Normalize the address for eventual search by address purposes
+      collectionAddress = web3.utils.toChecksumAddress(collectionAddress);
+
+      //Collection category to distinguish all collection types, "W20" means that this Collection is a Wrapper of ERC20 Tokens
+      var collectionCategory = "W20";
+
+      var collectionABI = WERC20_ABI;
+
+      //The needed basic info to operate are of course the Collection address, category and Smart Contract. They can be of course enriched
+      allCollections.push({
+        address: collectionAddress,
+        category: collectionCategory,
+        //contract: new web3.eth.Contract(collectionABI, collectionAddress)
+      });
+    }
+  }
+
+  //Grab the desired Collection addresses. You can choose any single Collection or group of Collections you want. In this case we grab all
+  var collectionAddresses = allCollections.map(it => it.address);
+
+  //The EthItem Token Standard implements the event NewItem(uint256 indexed objectId, address indexed interoperableInterfaceAddress) raised every time a new Item is created/wrapped for the first time
+  var topics = [web3.utils.sha3("NewItem(uint256,address)")];
+
+  var logs = useLogsResult(collectionAddresses, topics)
+
+  //logs.then(function (result) {
+    console.log('***************************************')
+    console.log('logs: ', logs)
+    console.log('collectionAddresses: ', collectionAddresses)
+    console.log('***************************************')
+  //})
+
+  return useMemo(() => {
+    if (!chainId) return undefined
+    if (ethItemERC20WrapperAddresses.loading || knowledgeBaseAddress.loading) return null
+    if (ethItemERC20WrapperAddresses.result) {
+      return collections
+    }
+  }, [
+    chainId,
+    ethItemERC20WrapperAddresses.loading,
+    ethItemERC20WrapperAddresses.result,
+    knowledgeBaseAddress.loading,
+    knowledgeBaseAddress.result,
+    collections
+  ])
+}
+
+export function useLogsResult(
+  addresses: string[] | string | undefined,
+  topics: (string | null)[],
+) {
+  const web3 = new Web3(Web3.givenProvider);
+
+  const result = useMemo(() => web3.eth.getPastLogs({
+    address: addresses,
+    topics
+  }), [addresses, topics])
+
+  return useMemo(() => {
+    return result
+  }, [result])
 }
 
 export function useAllListTokens(): { [address: string]: Token } {
@@ -67,8 +154,8 @@ function parseStringOrBytes32(str: string | undefined, bytes32: string | undefin
   return str && str.length > 0
     ? str
     : bytes32 && BYTES32_REGEX.test(bytes32)
-    ? parseBytes32String(bytes32)
-    : defaultValue
+      ? parseBytes32String(bytes32)
+      : defaultValue
 }
 
 // undefined if invalid or does not exist
