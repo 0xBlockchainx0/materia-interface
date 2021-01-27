@@ -13,12 +13,11 @@ import { MainContainer,
 export default function AppBody({ children }: { children: React.ReactNode }) {
   const theme = useContext(ThemeContext);
   const location = useLocation();
-  var result = location.pathname.match(/\/(.*?)\//g);
-  var featureTitle = '';
-  var value = (result ? result[0].replace(/\//g, '') : location.pathname.replace(/\//g, ''));
-  console.log(result);
-  console.log('value');
-  console.log(value);
+  const result = location.pathname.match(/\/(.*?)\//g);
+  const value = (result ? result[0].replace(/\//g, '') : location.pathname.replace(/\//g, ''));
+  
+  let featureTitle = '';
+
   switch(value){
       case 'swap':
         featureTitle = 'swap';

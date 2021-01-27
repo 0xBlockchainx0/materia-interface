@@ -36,7 +36,7 @@ export function useAllTokens(): { [address: string]: Token } {
 }
 
 export function useAllWrappedERC20Tokens(): { [address: string]: Token } {
-  const { chainId } = useActiveWeb3React()
+  const { chainId, library } = useActiveWeb3React()
 
   //Call the Orchestrator and then the KnowledgeBase to retrieve all the ERC20Wrappers
   const ethItemOrchestrator = useEthItemOrchestratorContract(false)
@@ -51,17 +51,16 @@ export function useAllWrappedERC20Tokens(): { [address: string]: Token } {
   const web3 = new Web3(Web3.givenProvider);
 
   //Prepare a var to collect all the ITEMs
-  var allCollections = [];
+  let allCollections = [];
 
   if (collections !== undefined) {
-    for (var collectionAddress of collections) {
+    for (let collectionAddress of collections) {
       //Normalize the address for eventual search by address purposes
       collectionAddress = web3.utils.toChecksumAddress(collectionAddress);
 
       //Collection category to distinguish all collection types, "W20" means that this Collection is a Wrapper of ERC20 Tokens
-      var collectionCategory = "W20";
-
-      var collectionABI = WERC20_ABI;
+      const collectionCategory = "W20";
+      const collectionABI = WERC20_ABI;
 
       //The needed basic info to operate are of course the Collection address, category and Smart Contract. They can be of course enriched
       allCollections.push({
@@ -73,18 +72,31 @@ export function useAllWrappedERC20Tokens(): { [address: string]: Token } {
   }
 
   //Grab the desired Collection addresses. You can choose any single Collection or group of Collections you want. In this case we grab all
-  var collectionAddresses = allCollections.map(it => it.address);
+  const collectionAddresses = allCollections.map(it => it.address);
 
   //The EthItem Token Standard implements the event NewItem(uint256 indexed objectId, address indexed interoperableInterfaceAddress) raised every time a new Item is created/wrapped for the first time
-  var topics = [web3.utils.sha3("NewItem(uint256,address)")];
+  const topics = [web3.utils.sha3("NewItem(uint256,address)")];
+  const logs = useLogsResult(collectionAddresses, topics)
 
-  var logs = useLogsResult(collectionAddresses, topics)
+  // *** TEST START ***
+  const collectionTest = collectionAddresses[0]
+  const topicsTest: (string | string[])[] = [web3.utils.sha3("NewItem(uint256,address)") ?? ""];
 
+  const logsTest = library?.getLogs({
+    address: collectionTest,
+    topics: topicsTest
+  })
+  // *** TEST END ***
+  
   //logs.then(function (result) {
-    console.log('***************************************')
-    console.log('logs: ', logs)
-    console.log('collectionAddresses: ', collectionAddresses)
-    console.log('***************************************')
+  console.log('***************************************')
+  console.log('collectionAddresses: ', collectionAddresses)
+  console.log('collectionTest: ', collectionTest)
+  console.log('logs: ', logs)
+  console.log('logsTest: ', logsTest)
+  console.log('dirtyLogs:', Promise.all([logs]))
+  console.log('dirtyLogsTest:', Promise.all([logsTest]))
+  console.log('***************************************')
   //})
 
   return useMemo(() => {
