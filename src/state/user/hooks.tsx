@@ -212,10 +212,11 @@ export function toLiquidityToken([tokenA, tokenB]: [Token, Token]): Token {
 export function useTrackedTokenPairs(): [Token, Token][] {
   const { chainId } = useActiveWeb3React()
   const tokens = useAllTokens()
-  const wrappedERC20Tokens = useAllWrappedERC20Tokens()
+  const wrappedTokens = useAllWrappedERC20Tokens()
   
-  // Utilizzato per fare la distinct tra i due array
-  //[...new Set([...tokens, ...newList])];
+  // console.log('***************************************')
+  // console.log('wrappedTokens: ', wrappedTokens)
+  // console.log('***************************************')
 
   // pinned pairs
   const pinnedPairs = useMemo(() => (chainId ? PINNED_PAIRS[chainId] ?? [] : []), [chainId])
