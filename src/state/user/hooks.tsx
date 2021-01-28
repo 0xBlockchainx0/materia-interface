@@ -5,7 +5,7 @@ import { shallowEqual, useDispatch, useSelector } from 'react-redux'
 import { BASES_TO_TRACK_LIQUIDITY_FOR, PINNED_PAIRS } from '../../constants'
 
 import { useActiveWeb3React } from '../../hooks'
-import { useAllTokens } from '../../hooks/Tokens'
+import { useAllTokens, useAllWrappedERC20Tokens } from '../../hooks/Tokens'
 import { AppDispatch, AppState } from '../index'
 import {
   addSerializedPair,
@@ -212,7 +212,10 @@ export function toLiquidityToken([tokenA, tokenB]: [Token, Token]): Token {
 export function useTrackedTokenPairs(): [Token, Token][] {
   const { chainId } = useActiveWeb3React()
   const tokens = useAllTokens()
-  // const tokens = useAllListTokens()
+  const wrappedERC20Tokens = useAllWrappedERC20Tokens()
+  
+  // Utilizzato per fare la distinct tra i due array
+  //[...new Set([...tokens, ...newList])];
 
   // pinned pairs
   const pinnedPairs = useMemo(() => (chainId ? PINNED_PAIRS[chainId] ?? [] : []), [chainId])

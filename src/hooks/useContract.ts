@@ -5,14 +5,14 @@ import { ChainId } from '@materia-dex/sdk'
 import { abi as IMateriaPairABI } from '@materia-dex/materia-contracts-core/build/IMateriaPair.json'
 import { abi as IERC20WrapperV1_ABI } from '@materia-dex/materia-contracts-proxy/build/IERC20WrapperV1.json'
 import { useMemo } from 'react'
-import { MERKLE_DISTRIBUTOR_ADDRESS, ERC20WRAPPER } from '../constants'
+import { MERKLE_DISTRIBUTOR_ADDRESS, ERC20WRAPPER, ETHITEM_ORCHESTRATOR_ADDRESS } from '../constants'
 import {
   ARGENT_WALLET_DETECTOR_ABI,
   ARGENT_WALLET_DETECTOR_MAINNET_ADDRESS
 } from '../constants/abis/argent-wallet-detector'
 import ENS_PUBLIC_RESOLVER_ABI from '../constants/abis/ens-public-resolver.json'
 import ENS_ABI from '../constants/abis/ens-registrar.json'
-import { ERC20_BYTES32_ABI } from '../constants/abis/erc20'
+import { ERC20_BYTES32_ABI, ETHITEM_KNOWLEDGE_BASE_ABI, ETHITEM_ORCHESTRATOR_ABI, WERC20_ABI } from '../constants/abis/erc20'
 import ERC20_ABI from '../constants/abis/erc20.json'
 import { MIGRATOR_ABI, MIGRATOR_ADDRESS } from '../constants/abis/migrator'
 import UNISOCKS_ABI from '../constants/abis/unisocks.json'
@@ -47,26 +47,25 @@ function useUnmemoizedContract(address: string | undefined, ABI: any, withSigner
   }
 }
 
-// function useContracts(addresses: string[] | undefined, ABI: any, withSignerIfPossible = true): Contract[] | null {
-//   const { library, account } = useActiveWeb3React()
-
-//   return useMemo(() => {
-//     if (!addresses || !ABI || !library) return null
-//     try {
-//       return addresses.map((address) => getContract(address, ABI, library, withSignerIfPossible && account ? account : undefined))
-//     } catch (error) {
-//       console.error('Failed to get contract', error)
-//       return null
-//     }
-//   }, [addresses, ABI, library, withSignerIfPossible, account])
-// }
-
 export function useV2MigratorContract(): Contract | null {
   return useContract(MIGRATOR_ADDRESS, MIGRATOR_ABI, true)
 }
 
 export function useTokenContract(tokenAddress?: string, withSignerIfPossible?: boolean): Contract | null {
   return useContract(tokenAddress, ERC20_ABI, withSignerIfPossible)
+}
+
+export function useWERC20TokenContract(tokenAddress?: string, withSignerIfPossible?: boolean): Contract | null {
+  return useContract(tokenAddress, WERC20_ABI, withSignerIfPossible)
+}
+
+export function useEthItemOrchestratorContract(withSignerIfPossible?: boolean): Contract | null {
+  const { chainId } = useActiveWeb3React()
+  return useContract(chainId ? ETHITEM_ORCHESTRATOR_ADDRESS[chainId] : undefined, ETHITEM_ORCHESTRATOR_ABI, withSignerIfPossible)
+}
+
+export function useEthItemKnowledgeBaseContract(ethItemKnowledgeBaseAddress?: string, withSignerIfPossible?: boolean): Contract | null {
+  return useContract(ethItemKnowledgeBaseAddress, ETHITEM_KNOWLEDGE_BASE_ABI, withSignerIfPossible)
 }
 
 export function useIETHContract(withSignerIfPossible?: boolean): Contract | null {

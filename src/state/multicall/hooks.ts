@@ -155,7 +155,7 @@ function useUnmemoizedCallsData(calls: (Call | undefined)[], options?: ListenerO
   })
 }
 
-interface CallState {
+export interface CallState {
   readonly valid: boolean
   // the result, or undefined if loading or errored/no data
   readonly result: Result | undefined
@@ -170,7 +170,7 @@ interface CallState {
 const INVALID_CALL_STATE: CallState = { valid: false, result: undefined, loading: false, syncing: false, error: false }
 const LOADING_CALL_STATE: CallState = { valid: true, result: undefined, loading: true, syncing: true, error: false }
 
-function toCallState(
+export function toCallState(
   callResult: CallResult | undefined,
   contractInterface: Interface | undefined,
   fragment: FunctionFragment | undefined,
