@@ -92,6 +92,11 @@ export interface Grids {
   lg: number
 }
 
+export interface DynamicGridColumnsDefinition {
+  value: number,
+  location: number
+}
+
 declare module 'styled-components' {
   export interface DefaultTheme extends Colors {
 
@@ -113,7 +118,6 @@ declare module 'styled-components' {
     // css snippets
     flexColumnNoWrap: FlattenSimpleInterpolation
     flexRowNoWrap: FlattenSimpleInterpolation
-
     
     styledBoxBorder: FlattenSimpleInterpolation
 
@@ -126,6 +130,9 @@ declare module 'styled-components' {
     swapButtonSrc: string
     advancedDetailsFooter:FlattenSimpleInterpolation
 
-    hexToRGB: ThemedCssFunction<string, number>
+    utils: {
+      hexToRGB: ThemedCssFunction<string, number>,
+      gridColumsWidth: ThemedCssFunction<string, number, DynamicGridColumnsDefinition[]>
+    }
   }
 }

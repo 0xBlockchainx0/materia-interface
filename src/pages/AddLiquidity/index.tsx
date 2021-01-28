@@ -716,9 +716,11 @@ export default function AddLiquidity({
               ) : null
             }
             {!account ? (
-              <OperationButton onClick={toggleWalletModal} className={ `connect-wallet-button ${theme.name}` } label="Connect Wallet">
-                <Link/>
-              </OperationButton>
+              <ColumnCenter>
+                <OperationButton onClick={toggleWalletModal} className={ `connect-wallet-button ${theme.name}` } label="Connect Wallet">
+                  <Link/>
+                </OperationButton>
+              </ColumnCenter>
             ) : (
                 <AutoColumn gap={'md'}>
                   <ColumnCenter>

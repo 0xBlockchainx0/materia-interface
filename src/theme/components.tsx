@@ -49,31 +49,27 @@ export const LinkStyledButton = styled.button<{ disabled?: boolean }>`
   color: ${({ theme, disabled }) => (disabled ? theme.text2 : theme.primary1)};
   font-weight: 500;
 
-  :hover {
-    text-decoration: ${({ disabled }) => (disabled ? null : 'underline')};
-  }
+  :hover { text-decoration: ${({ disabled }) => (disabled ? null : 'underline')}; }
+  :focus { outline: none; text-decoration: ${({ disabled }) => (disabled ? null : 'underline')}; }
 
-  :focus {
-    outline: none;
-    text-decoration: ${({ disabled }) => (disabled ? null : 'underline')};
-  }
-
-  :active {
-    text-decoration: none;
-  }
+  :active { text-decoration: none; }
 `
 
 // An internal link from the react-router-dom library that is correctly styled
 export const StyledInternalLink = styled(Link)`
   text-decoration: none;
   cursor: pointer;
+  font-size: 14px;
   &:hover, &:focus, &:active { outline: none; text-decoration: underline; }
+
+  &.dark { color: ${({ theme }) => theme.azure1}; }
+  &.light {}
+  &.classic {}
 `
 
 export const StyledInternalButtonLink = styled(Link)`
   text-decoration: none;
-  cursor: pointer;  
-
+  cursor: pointer; 
   &:hover, &:focus, &:active { text-decoration: none; }
 `
 const StyledLink = styled.a`

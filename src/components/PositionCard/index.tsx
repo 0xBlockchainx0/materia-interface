@@ -9,10 +9,18 @@ import { useTotalSupply } from '../../data/TotalSupply'
 
 import { useActiveWeb3React } from '../../hooks'
 import { useTokenBalance } from '../../state/wallet/hooks'
-import { ExternalLink, TYPE, 
-  StyledPositionCard, Dots, ActionButton, 
-  SimpleTextParagraph, IconButton,
-  MainOperationButton } from '../../theme'
+import { 
+  ExternalLink, 
+  TYPE, 
+  StyledPositionCard, 
+  Dots, 
+  ActionButton, 
+  SimpleTextParagraph, 
+  IconButton,
+  MainOperationButton, 
+  SectionTitle, 
+  SecondaryPanelBoxContainer, 
+  SecondaryPanelBoxContainerExtraDecorator } from '../../theme'
 import { currencyId } from '../../utils/currencyId'
 import { unwrappedToken } from '../../utils/wrappedCurrency'
 import { ButtonSecondary, ButtonEmpty, ButtonMateriaPrimary } from '../Button'
@@ -20,7 +28,7 @@ import { CardNoise } from '../earn/styled'
 
 import { useColor } from '../../hooks/useColor'
 
-import Card, { GreyCard, LightCard } from '../Card'
+import Card, { LightCard } from '../Card'
 import { AutoColumn } from '../Column'
 import CurrencyLogo from '../CurrencyLogo'
 import DoubleCurrencyLogo from '../DoubleLogo'
@@ -45,6 +53,7 @@ interface PositionCardProps {
 }
 
 export function MinimalPositionCard({ pair, showUnwrapped = false, border }: PositionCardProps) {
+  const theme = useContext(ThemeContext)
   const { account } = useActiveWeb3React()
 
   const currency0 = showUnwrapped ? pair.token0 : unwrappedToken(pair.token0)
@@ -75,77 +84,68 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
   return (
     <>
       {userPoolBalance && JSBI.greaterThan(userPoolBalance.raw, JSBI.BigInt(0)) ? (
-        <GreyCard border={border}>
-          <AutoColumn gap="12px">
-            <FixedHeightRow>
-              <RowFixed>
-                <Text fontWeight={500} fontSize={14}>
-                  Your position
-                </Text>
-              </RowFixed>
-            </FixedHeightRow>
-            <FixedHeightRow onClick={() => setShowMore(!showMore)}>
-              <RowFixed>
-                <DoubleCurrencyLogo currency0={currency0} currency1={currency1} margin={true} size={14} radius={true} />
-                <Text fontWeight={500} fontSize={14}>
-                  {currency0.symbol}/{currency1.symbol}
-                </Text>
-              </RowFixed>
-              <RowFixed>
-                <Text fontWeight={500} fontSize={14}>
-                  {userPoolBalance ? userPoolBalance.toSignificant(4) : '-'}
-                </Text>
-              </RowFixed>
-            </FixedHeightRow>
-            <AutoColumn gap="4px">
-              <FixedHeightRow>
-                <Text fontSize={14} fontWeight={500}>
-                  Your pool share:
-                </Text>
-                <Text fontSize={14} fontWeight={500}>
-                  {poolTokenPercentage ? poolTokenPercentage.toFixed(6) + '%' : '-'}
-                </Text>
-              </FixedHeightRow>
-              <FixedHeightRow>
-                <Text fontSize={14} fontWeight={500}>
-                  {currency0.symbol}:
-                </Text>
-                {token0Deposited ? (
-                  <RowFixed>
-                    <Text fontSize={14} fontWeight={500} marginLeft={'6px'}>
-                      {token0Deposited?.toSignificant(6)}
-                    </Text>
-                  </RowFixed>
-                ) : (
-                  '-'
-                )}
-              </FixedHeightRow>
-              <FixedHeightRow>
-                <Text fontSize={14} fontWeight={500}>
-                  {currency1.symbol}:
-                </Text>
-                {token1Deposited ? (
-                  <RowFixed>
-                    <Text fontSize={14} fontWeight={500} marginLeft={'6px'}>
-                      {token1Deposited?.toSignificant(6)}
-                    </Text>
-                  </RowFixed>
-                ) : (
-                  '-'
-                )}
-              </FixedHeightRow>
-            </AutoColumn>
-          </AutoColumn>
-        </GreyCard>
+        <>
+          <SectionTitle className={ `mt20 mb20 ${theme.name}` }>Your position</SectionTitle>
+          <SecondaryPanelBoxContainer className={ `${theme.name}` }>
+            <SecondaryPanelBoxContainerExtraDecorator className={ `top ${theme.name}` }/>
+              <div className="inner-content">
+                <AutoColumn gap="12px" className="p15">
+                  <FixedHeightRow onClick={() => setShowMore(!showMore)}>
+                    <RowFixed>
+                      <DoubleCurrencyLogo currency0={currency0} currency1={currency1} margin={true} size={14} radius={true} />
+                      <Text className={ `evidence-text ${theme.name}` }>
+                        {currency0.symbol}/{currency1.symbol}
+                      </Text>
+                    </RowFixed>
+                    <RowFixed>
+                      <Text className={ `evidence-text ${theme.name}` }>
+                        {userPoolBalance ? userPoolBalance.toSignificant(4) : '-'}
+                      </Text>
+                    </RowFixed>
+                  </FixedHeightRow>
+                  <AutoColumn gap="4px">
+                    <FixedHeightRow>
+                      <Text className={ `evidence-text ${theme.name}` }>Your pool share:</Text>
+                      <Text className={ `evidence-text ${theme.name}` }>{poolTokenPercentage ? poolTokenPercentage.toFixed(6) + '%' : '-'}</Text>
+                    </FixedHeightRow>
+                    <FixedHeightRow>
+                      <Text className={ `evidence-text ${theme.name}` }>{currency0.symbol}:</Text>
+                      {token0Deposited ? (
+                        <RowFixed>
+                          <Text className={ `evidence-text ml5 ${theme.name}` }>{token0Deposited?.toSignificant(6)}</Text>
+                        </RowFixed>
+                      ) : (
+                        '-'
+                      )}
+                    </FixedHeightRow>
+                    <FixedHeightRow>
+                      <Text className={ `evidence-text ${theme.name}` }>{currency1.symbol}:</Text>
+                      {token1Deposited ? (
+                        <RowFixed>
+                          <Text className={ `evidence-text ml5 ${theme.name}` }>{token1Deposited?.toSignificant(6)}</Text>
+                        </RowFixed>
+                      ) : (
+                        '-'
+                      )}
+                    </FixedHeightRow>
+                  </AutoColumn>
+                </AutoColumn>
+              </div>      
+            <SecondaryPanelBoxContainerExtraDecorator className={ `bottom ${theme.name}` }/>
+          </SecondaryPanelBoxContainer>   
+        </>
       ) : (
-        <LightCard>
-          <TYPE.subHeader style={{ textAlign: 'center' }}>
-            <span role="img" aria-label="wizard-icon">
-            </span>{' '}
-            By adding liquidity you&apos;ll earn 0.3% of all trades on this pair proportional to your share of the pool.
-            Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity.
-          </TYPE.subHeader>
-        </LightCard>
+        <SecondaryPanelBoxContainer className={ `${theme.name}` }>
+          <SecondaryPanelBoxContainerExtraDecorator className={ `top ${theme.name}` }/>
+            <div className="inner-content">
+              <SimpleTextParagraph className="p10">
+                <span role="img" aria-label="wizard-icon"></span>{' '}
+                By adding liquidity you'll earn 0.3% of all trades on this pair proportional to your share of the pool.
+                Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity.
+              </SimpleTextParagraph>
+            </div>
+          <SecondaryPanelBoxContainerExtraDecorator className={ `bottom ${theme.name}` }/>
+        </SecondaryPanelBoxContainer>
       )}
     </>
   )

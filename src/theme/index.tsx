@@ -12,9 +12,9 @@ import { Text, TextProps, Button } from 'rebass'
 import { Box } from 'rebass/styled-components'
 import { DialogOverlay, DialogContent } from '@reach/dialog'
 import { AutoColumn } from '../components/Column'
-import { RowBetween, RowFixed } from '../components/Row'
+import { RowBetween } from '../components/Row'
 import Loader from '../components/Loader'
-import { Colors } from './styled'
+import { Colors, DynamicGridColumnsDefinition } from './styled'
 import { images } from './images'
 export * from './components'
 
@@ -46,6 +46,33 @@ const hexToRGB = (hexColor: string, alpha: number = 1) => {
   } : null;
   
   return (!result ? colors(false, false).black : 'rgba(' + result.r + ', ' + result.g + ', ' + result.b + ', ' +  alpha.toString() + ')');
+}
+
+const gridColumsWidth = (columns: number = 1, columnsDefinitions?: DynamicGridColumnsDefinition[]) => { 
+  var value = (columns > 1 ? Math.round((100 / columns)) : 100);
+  var result = [];
+
+  if(columnsDefinitions) {
+    var definedConstraintValue = 0;
+    columns = (columns > columnsDefinitions.length ? (columns - columnsDefinitions.length) : 0);      
+    columnsDefinitions.map((item) => { definedConstraintValue += item.value });
+    value = (columns > 1 ? Math.round(((100 - definedConstraintValue) / columns)) : (100 - definedConstraintValue));
+    
+    for(var i = 1; i <= columns; i++) {
+      result.push((value.toString() + '%'));
+    }
+
+    for(var i = 0; i < columnsDefinitions.length; i++) {
+      result[(columnsDefinitions[i].location - 1)] = (columnsDefinitions[i].value.toString() + '%');
+    }
+  }
+  else {
+    for(var i = 1; i <= columns; i++) {
+      result.push((value.toString() + '%'));
+    }
+  }
+
+  return result.join(' ')
 }
 
 export function colors(darkMode: boolean, classicMode: boolean): Colors {
@@ -155,11 +182,7 @@ export function theme(darkMode: boolean, classicMode: boolean): DefaultTheme {
 
     name: classicMode ? 'classic' : darkMode ? 'dark' : 'light',
 
-    grids: {
-      sm: 8,
-      md: 12,
-      lg: 24
-    },
+    grids: { sm: 8, md: 12, lg: 24 },
 
     //shadows
     shadow1: darkMode ? '#000' : '#2F80ED',
@@ -257,8 +280,11 @@ export function theme(darkMode: boolean, classicMode: boolean): DefaultTheme {
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden; 
     `,
-    
-    hexToRGB: hexToRGB
+
+    utils: {
+      hexToRGB: hexToRGB,
+      gridColumsWidth: gridColumsWidth
+    }
   }
 }
 
@@ -717,15 +743,25 @@ MARGIN STYLE MINUS
   margin-right: auto;
   border-radius: unset;
   box-shadow: ${({ theme }) => (
-    (theme.name == 'classic' ? 
-      '0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),0px 24px 32px rgba(0, 0, 0, 0.01)' : (
-      theme.name == 'dark' ? 
-      '0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),0px 24px 32px rgba(0, 0, 0, 0.01)' : 
-      'none'
-    ))
-  )};
-}
+      (theme.name == 'classic' ? 
+        '0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),0px 24px 32px rgba(0, 0, 0, 0.01)' : (
+        theme.name == 'dark' ? 
+        '0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),0px 24px 32px rgba(0, 0, 0, 0.01)' : 
+        'none'
+      ))
+    )};
+  }
 
+  .evidence-text { font-weight: 500; font-size: 14px; }
+  .full-width { width: 100% !important; }
+  .width80 { width: 80% !important; }
+  .pull-right { float: right; }
+  .pull-left { float: left; }
+
+  svg.simple-icon { width: 16px;}
+  svg.simple-icon.dark { stroke: ${({ theme }) => theme.azure1}; color: ${({ theme }) => theme.azure1}; }
+  svg.simple-icon.light {}
+  svg.simple-icon.classic {}
 `
 export const AppWrapper = styled.div`
   display: flex;
@@ -771,7 +807,7 @@ export const MainContainer = styled.div`
   z-index: 2;
   box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),0px 24px 32px rgba(0, 0, 0, 0.01);
 
-  &.dark { border: solid 1px ${({ theme }) => theme.hexToRGB(theme.azure4, 1)}; } 
+  &.dark { border: solid 1px ${({ theme }) => theme.utils.hexToRGB(theme.azure4, 1)}; } 
   &.light {}
   &.classic {}
 
@@ -851,7 +887,7 @@ export const MainContainerContentWrapper = styled.div`
   background-size: cover;
 
   &.dark {
-    background: linear-gradient(133deg, ${({ theme }) => theme.hexToRGB(theme.blue2, 0.8)} 60%, ${({ theme }) => theme.hexToRGB(theme.azure3, 0.3)} 100%);
+    background: linear-gradient(133deg, ${({ theme }) => theme.utils.hexToRGB(theme.blue2, 0.8)} 60%, ${({ theme }) => theme.utils.hexToRGB(theme.azure3, 0.3)} 100%);
   }
   &.light {}
   &.classic {}
@@ -887,7 +923,7 @@ export const FeatureTitle = styled.h2`
     position: absolute;
     bottom: 0px;
     left: 3px;
-    background: linear-gradient(0deg, rgba(15,63,115,0) 0%, ${({ theme }) => theme.hexToRGB(theme.azure1, 1)} 100%);
+    background: linear-gradient(0deg, rgba(15,63,115,0) 0%, ${({ theme }) => theme.utils.hexToRGB(theme.azure1, 1)} 100%);
   }
   
   @media (max-width: 600px) { display: none; }
@@ -899,7 +935,7 @@ export const FeatureChildrenContainer = styled.div`
   padding: 20px 7px;
 
   &.dark {
-    background: linear-gradient(-60deg, ${({ theme }) => theme.hexToRGB(theme.blue2, 0.24)} 60%, ${({ theme }) => theme.hexToRGB(theme.azure3, 0.59)} 100%);
+    background: linear-gradient(-60deg, ${({ theme }) => theme.utils.hexToRGB(theme.blue2, 0.24)} 60%, ${({ theme }) => theme.utils.hexToRGB(theme.azure3, 0.59)} 100%);
   }
   &.light {}
   &.classic {}
@@ -959,7 +995,7 @@ export const InventoryItemContainer = styled.div`
   color: ${({ theme }) => theme.text1};
 
   &.dark {
-    background: linear-gradient(90deg, ${({ theme }) => theme.hexToRGB(theme.black, 1)} 0%, ${({ theme }) => theme.hexToRGB(theme.black, 0)} 100%);
+    background: linear-gradient(90deg, ${({ theme }) => theme.utils.hexToRGB(theme.black, 1)} 0%, ${({ theme }) => theme.utils.hexToRGB(theme.black, 0)} 100%);
   }
 
   &.dark:after {
@@ -1126,7 +1162,29 @@ export const TabsBar = styled.div`
   }
 
   &.dark:after, &.light:after { }
+
+  & .navigation-link > svg { width: 18px; }
+  &.dark .navigation-link > svg { stroke: ${({ theme }) => theme.azure1}; color: ${({ theme }) => theme.azure1}; }
+  &.dark .navigation-link:hover, &.dark .navigation-link:focus > svg { filter: drop-shadow(0px 0px 3px ${({ theme }) => theme.yellowLight}); }
+  &.light .navigation-link > svg { }
+  &.light .navigation-link:hover, &.light .navigation-link:focus > svg { }
+  &.classic .navigation-link > svg { }
+  &.classic .navigation-link:hover, &.classic .navigation-link:focus > svg { }
 `
+export const DynamicGrid = styled.div<{ columns: number, columnsDefinitions?: DynamicGridColumnsDefinition[] }>`
+  display: grid;
+  grid-template-columns: ${({ theme, columns, columnsDefinitions }) => theme.utils.gridColumsWidth(columns, columnsDefinitions) };
+
+  & .title {
+    font-size: 18px;
+    font-weight: 500;
+  }
+
+  &.dark .title { color: ${({ theme }) => theme.white}; }
+  &.light .title { color: ${({ theme }) => theme.grey1}; }
+  &.classic .title {}
+`
+
 const tabLinkItemActiveClassName = 'active'
 export const TabLinkItem = styled(NavLink).attrs({ tabLinkItemActiveClassName })`
   display: flex;
@@ -1166,6 +1224,9 @@ export const PageContentContainer = styled.div`
   @media (min-width: 1050px) {
     display: grid;
     grid-template-columns: 42.5% 15% 42.5%;
+
+    &.one { grid-template-columns: 100% }
+    &.two { grid-template-columns: 50% 50% }
   }
 `
 export const StyledNavLinkActiveClassName = 'active'
@@ -1554,7 +1615,7 @@ export const ContainerRow = styled.div<{ error?: boolean }>`
 
   &.search-token-container { margin-bottom: 20px; }
 
-  &.dark.search-token-container { border-bottom: solid 1px ${({ theme }) => theme.hexToRGB(theme.white, 0.2) }; }
+  &.dark.search-token-container { border-bottom: solid 1px ${({ theme }) => theme.utils.hexToRGB(theme.white, 0.2) }; }
 `
 export const Input = styled.input<{ error?: boolean }>`
   font-size: 16px;
@@ -1590,7 +1651,7 @@ export const SecondaryPanelBoxContainer = styled.div`
   position: relative;
   z-index: 2;
 
-  &.dark { border: solid 1px ${({ theme }) => theme.hexToRGB(theme.azure4, 1)}; } 
+  &.dark { border: solid 1px ${({ theme }) => theme.utils.hexToRGB(theme.azure4, 1)}; } 
   &.light {}
   &.classic {}
 
@@ -1599,7 +1660,7 @@ export const SecondaryPanelBoxContainer = styled.div`
     width: 100%;
     padding: 5px 5px 5px 5px;
     background-size: cover;
-    background: linear-gradient(90deg, ${({ theme }) => theme.hexToRGB(theme.blue4, 0.8)} 60%, ${({ theme }) => theme.hexToRGB(theme.blue3, 0.8)} 100%);
+    background: linear-gradient(90deg, ${({ theme }) => theme.utils.hexToRGB(theme.blue4, 0.8)} 60%, ${({ theme }) => theme.utils.hexToRGB(theme.blue3, 0.8)} 100%);
   }
 
   &.light > .inner-content {}
@@ -1757,7 +1818,7 @@ export const ThemedDialogOverlay = styled(AnimatedDialogOverlay)`
     justify-content: center;
   }
 
-  &.dark[data-reach-dialog-overlay] { background-color: ${({ theme }) => theme.hexToRGB(theme.black, 0.8)}; }
+  &.dark[data-reach-dialog-overlay] { background-color: ${({ theme }) => theme.utils.hexToRGB(theme.black, 0.8)}; }
   &.light[data-reach-dialog-overlay] {}
   &.classic[data-reach-dialog-overlay] {}
 `
@@ -2057,4 +2118,126 @@ export const StyledPositionCard = styled(Box)<{ bgColor: any }>`
   &.dark { border-top: solid 1px ${({ theme }) => theme.azure1}; border-bottom: solid 1px ${({ theme }) => theme.azure1}; }
   &.light {}
   &.classic {}
+`
+export const RemoveLiquiditySliderItemContainer = styled.div`
+  & .title { margin: 0px; font-weight: 400; font-size: 16px; }
+  & .slider-percentage { font-size: 72px; font-weight: 500; }
+
+  &.dark {}
+  &.light {}
+  &.classic {}
+`
+export const RemoveLiquidityCustomText = styled.div`
+  font-size: 24px;
+  font-weight: 400;
+`
+export const StyledRangeInput = styled.input`
+  -webkit-appearance: none; /* Hides the slider so that custom slider can be made */
+  width: 100%; /* Specific width is required for Firefox. */
+  background: transparent; /* Otherwise white in Chrome */
+  cursor: pointer;
+
+  &:focus { outline: none; }
+  &::-moz-focus-outer { border: 0; }
+
+  &::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    height: 14px;
+    width: 14px;
+    border-radius: 100%;
+    border: none;
+    transform: translateY(-50%);
+
+    &:hover,
+    &:focus {
+      box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.1), 0px 4px 8px rgba(0, 0, 0, 0.08), 0px 16px 24px rgba(0, 0, 0, 0.06),
+        0px 24px 32px rgba(0, 0, 0, 0.04);
+    }
+  }
+
+  &.dark::-webkit-slider-thumb { background-color: ${({ theme }) => theme.azure1}; color: ${({ theme }) => theme.azure1}; }
+  &.light::-webkit-slider-thumb {}
+  &.classic::-webkit-slider-thumb {}
+
+  &::-moz-range-thumb {
+    height: 14px;
+    width: 14px;
+    border-radius: 100%;
+    border: none;
+    
+    &:hover,
+    &:focus {
+      box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.1), 0px 4px 8px rgba(0, 0, 0, 0.08), 0px 16px 24px rgba(0, 0, 0, 0.06),
+        0px 24px 32px rgba(0, 0, 0, 0.04);
+    }
+  }
+
+  &.dark::-moz-range-thumb { background-color: ${({ theme }) => theme.azure1}; color: ${({ theme }) => theme.azure1}; }
+  &.light::-moz-range-thumb {}
+  &.classic::-moz-range-thumb {}
+
+  &::-ms-thumb {
+    height: 14px;
+    width: 14px;
+    border-radius: 100%;
+
+    &:hover,
+    &:focus {
+      box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.1), 0px 4px 8px rgba(0, 0, 0, 0.08), 0px 16px 24px rgba(0, 0, 0, 0.06),
+        0px 24px 32px rgba(0, 0, 0, 0.04);
+    }
+  }
+
+  &.dark::-ms-thumb { background-color: ${({ theme }) => theme.azure1}; color: ${({ theme }) => theme.azure1}; }
+  &.light::-ms-thumb {}
+  &.classic::-ms-thumb {}
+
+  &.dark::-webkit-slider-runnable-track {
+    background: linear-gradient(90deg, ${({ theme }) => theme.utils.hexToRGB(theme.azure1, 1)}, ${({ theme }) => theme.utils.hexToRGB(theme.azure1, 0.7)});
+    height: 2px;
+  }
+
+  &.light::-webkit-slider-runnable-track {
+    background: linear-gradient(90deg, ${({ theme }) => theme.utils.hexToRGB(theme.azure1, 1)}, ${({ theme }) => theme.utils.hexToRGB(theme.azure1, 0.7)});
+    height: 2px;
+  }
+
+  &.classic::-webkit-slider-runnable-track {
+    background: linear-gradient(90deg, ${({ theme }) => theme.utils.hexToRGB(theme.azure1, 1)}, ${({ theme }) => theme.utils.hexToRGB(theme.azure1, 0.7)});
+    height: 2px;
+  }
+
+  &.dark::-moz-range-track {
+    background: linear-gradient(90deg, ${({ theme }) => theme.utils.hexToRGB(theme.azure1, 1)}, ${({ theme }) => theme.utils.hexToRGB(theme.azure1, 0.7)});
+    height: 2px;
+  }
+
+  &.light::-moz-range-track {
+    background: linear-gradient(90deg, ${({ theme }) => theme.utils.hexToRGB(theme.azure1, 1)}, ${({ theme }) => theme.utils.hexToRGB(theme.azure1, 0.7)});
+    height: 2px;
+  }
+
+  &.classic::-moz-range-track {
+    background: linear-gradient(90deg, ${({ theme }) => theme.utils.hexToRGB(theme.azure1, 1)}, ${({ theme }) => theme.utils.hexToRGB(theme.azure1, 0.7)});
+    height: 2px;
+  }
+
+  &::-ms-track {
+    width: 100%;
+    border-color: transparent;
+    color: transparent;    
+    height: 2px;
+  }
+
+  &.dark::-ms-track { background: ${({ theme }) => theme.azure1}; }
+  &.dark::-ms-fill-lower { background: ${({ theme }) => theme.azure1}; }
+  &.dark::-ms-fill-upper { background: ${({ theme }) => theme.azure1}; }
+
+  &.light::-ms-track { background: ${({ theme }) => theme.azure1}; }
+  &.light::-ms-fill-lower { background: ${({ theme }) => theme.azure1}; }
+  &.light::-ms-fill-upper { background: ${({ theme }) => theme.azure1}; }
+
+  &.classic::-ms-track { background: ${({ theme }) => theme.azure1}; }
+  &.classic::-ms-fill-lower { background: ${({ theme }) => theme.azure1}; }
+  &.classic::-ms-fill-upper { background: ${({ theme }) => theme.azure1}; }
 `

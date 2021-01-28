@@ -1,6 +1,7 @@
-import React from 'react'
-import styled from 'styled-components'
+import React, { useContext } from 'react'
+import styled, { ThemeContext } from 'styled-components'
 import { Link as HistoryLink } from 'react-router-dom'
+import { TabsBar, DynamicGrid } from '../../theme'
 
 import { ArrowLeft } from 'react-feather'
 import { RowBetween } from '../Row'
@@ -23,35 +24,45 @@ const StyledArrowLeft = styled(ArrowLeft)`
 `
 
 export function FindPoolTabs() {
+  const theme = useContext(ThemeContext)
   return (
-    <Tabs>
-      <RowBetween style={{ padding: '1rem' }}>
-        <HistoryLink to="/pool">
-          <StyledArrowLeft />
-        </HistoryLink>
-        <ActiveText>Import Pool</ActiveText>
-        <QuestionHelper text={"Use this tool to find pairs that don't automatically appear in the interface."} />
-      </RowBetween>
-    </Tabs>
+    <TabsBar className={theme.name}>
+      <DynamicGrid className={theme.name} columns={3}>
+        <div className="text-left">
+          <HistoryLink to="/pool" className="navigation-link">
+            <StyledArrowLeft />
+          </HistoryLink>
+        </div>
+        <div className="text-center title">Import Pool</div>
+        <div className="text-right">
+          <QuestionHelper text={"Use this tool to find pairs that don't automatically appear in the interface."} />
+        </div>
+      </DynamicGrid>
+    </TabsBar>
   )
 }
 
 export function AddRemoveTabs({ adding, creating }: { adding: boolean; creating: boolean }) {
+  const theme = useContext(ThemeContext)  
   return (
-    <Tabs>
-      <RowBetween style={{ padding: '1rem' }}>
-        <HistoryLink to="/pool">
-          <StyledArrowLeft />
-        </HistoryLink>
-        <ActiveText>{creating ? 'Create a pair' : adding ? 'Add Liquidity' : 'Remove Liquidity'}</ActiveText>
-        <QuestionHelper
-          text={
-            adding
-              ? 'When you add liquidity, you are given pool tokens representing your position. These tokens automatically earn fees proportional to your share of the pool, and can be redeemed at any time.'
-              : 'Removing pool tokens converts your position back into underlying tokens at the current rate, proportional to your share of the pool. Accrued fees are included in the amounts you receive.'
-          }
-        />
-      </RowBetween>
-    </Tabs>
+    <TabsBar className={theme.name}>
+      <DynamicGrid className={theme.name} columns={3}>
+        <div className="text-left">
+          <HistoryLink to="/pool" className="navigation-link">
+            <StyledArrowLeft />
+          </HistoryLink>
+        </div>
+        <div className="text-center title">{creating ? 'Create a pair' : adding ? 'Add Liquidity' : 'Remove Liquidity'}</div>
+        <div className="text-right">
+          <QuestionHelper
+            text={
+              adding
+                ? 'When you add liquidity, you are given pool tokens representing your position. These tokens automatically earn fees proportional to your share of the pool, and can be redeemed at any time.'
+                : 'Removing pool tokens converts your position back into underlying tokens at the current rate, proportional to your share of the pool. Accrued fees are included in the amounts you receive.'
+            }
+          />
+        </div>
+      </DynamicGrid>
+    </TabsBar>
   )
 }

@@ -386,7 +386,7 @@ export function ButtonMateriaConfirmed({
   const theme = useContext(ThemeContext)
   if (!hide) {
     if (confirmed) {
-      return <ButtonMateriaConfirmedStyle {...rest} />
+      return <MainOperationButton {...rest} />
     } else {
       return <MainOperationButton {...rest} altDisabledStyle={altDisabledStyle} />
     }

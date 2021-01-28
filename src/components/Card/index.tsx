@@ -18,11 +18,6 @@ export const LightCard = styled(Card)`
   background-color: ${({ theme }) => theme.primary5};
 `
 
-export const GreyCard = styled(Card)`
-  /* border: 1px solid ${({ theme }) => theme.cyan2};
-  background-color: ${({ theme }) => theme.primary5}; */
-`
-
 export const SwapGreyCard = styled(Card)`
   width: auto;
   background-color: linear-gradient(90deg, ${({ theme }) => theme.buttonMateriaPrimaryBackgroundFirstColor}, ${({ theme }) => theme.buttonMateriaPrimaryBackgroundSecondColor});

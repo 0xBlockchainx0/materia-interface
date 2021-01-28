@@ -16,9 +16,6 @@ export default function AppBody({ children }: { children: React.ReactNode }) {
   var result = location.pathname.match(/\/(.*?)\//g);
   var featureTitle = '';
   var value = (result ? result[0].replace(/\//g, '') : location.pathname.replace(/\//g, ''));
-  console.log(result);
-  console.log('value');
-  console.log(value);
   switch(value){
       case 'swap':
         featureTitle = 'swap';
