@@ -214,9 +214,9 @@ export function useTrackedTokenPairs(): [Token, Token][] {
   const tokens = useAllTokens()
   const wrappedTokens = useAllWrappedERC20Tokens()
   
-  // console.log('***************************************')
-  // console.log('wrappedTokens: ', wrappedTokens)
-  // console.log('***************************************')
+  console.log('***************************************')
+  console.log('wrappedTokens: ', wrappedTokens)
+  console.log('***************************************')
 
   // pinned pairs
   const pinnedPairs = useMemo(() => (chainId ? PINNED_PAIRS[chainId] ?? [] : []), [chainId])

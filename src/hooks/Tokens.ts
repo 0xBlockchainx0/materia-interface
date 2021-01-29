@@ -36,153 +36,45 @@ export function useAllTokens(): { [address: string]: Token } {
   }, [chainId, userAddedTokens, allTokens])
 }
 
-// // export function useAllWrappedERC20Tokens(): { [address: string]: Token }[] {
-// export function useAllWrappedERC20Tokens(): void {
-//   const { chainId, library } = useActiveWeb3React()
-
-//   //Call the Orchestrator and then the KnowledgeBase to retrieve all the ERC20Wrappers
-//   const ethItemOrchestrator = useEthItemOrchestratorContract(false)
-//   const knowledgeBaseAddress = useSingleCallResult(ethItemOrchestrator, 'knowledgeBase', undefined, NEVER_RELOAD)
-//   const knowledgeBase = useEthItemKnowledgeBaseContract(knowledgeBaseAddress.result?.[0], false)
-
-//   const ethItemERC20WrapperAddresses = useSingleCallResult(knowledgeBase, 'erc20Wrappers', undefined, NEVER_RELOAD)
-//   const factoryAddresses = useSingleCallResult(ethItemOrchestrator, 'factory', undefined, NEVER_RELOAD)
-
-//   const collections = ethItemERC20WrapperAddresses.result?.[0]
-
-//   const web3 = new Web3(Web3.givenProvider);
-
-//   //Prepare a var to collect all the ITEMs
-//   let allCollections: any[] = [];
-
-//   if (collections !== undefined) {
-//     for (let collectionAddress of collections) {
-//       //Normalize the address for eventual search by address purposes
-//       collectionAddress = web3.utils.toChecksumAddress(collectionAddress);
-
-//       //Collection category to distinguish all collection types, "W20" means that this Collection is a Wrapper of ERC20 Tokens
-//       const collectionCategory = "W20";
-//       const collectionABI = WERC20_ABI;
-
-//       //The needed basic info to operate are of course the Collection address, category and Smart Contract. They can be of course enriched
-//       allCollections.push({
-//         address: collectionAddress,
-//         category: collectionCategory,
-//         //contract: new web3.eth.Contract(collectionABI, collectionAddress)
-//       });
-//     }
-//   }
-
-//   //Grab the desired Collection addresses. You can choose any single Collection or group of Collections you want. In this case we grab all
-//   const collectionAddresses = allCollections.map(it => it.address);
-
-//   //The EthItem Token Standard implements the event NewItem(uint256 indexed objectId, address indexed interoperableInterfaceAddress) raised every time a new Item is created/wrapped for the first time
-//   const topics = [web3.utils.sha3("NewItem(uint256,address)")];
-//   const logs = useLogsResult(collectionAddresses, topics, ETHITEM_START_BLOCK[chainId ?? 1], "latest")
-//   let pastLogs: any[] = []
-//   let resultCollection: { [address: string]: Token } = {}
-
-//   useEffect(() => {
-//     logs.then(logs => {
-//       pastLogs = logs
-
-//       //Navigate logs
-//       for(var log of logs) {
-
-//         //Get the Collection that created this item (the original event emitter)
-//         var collectionAddress = web3.utils.toChecksumAddress(log.address);
-//         // resultCollection = allCollections.filter(it => it.address === collectionAddress)[0];
-
-//         //Object Id is the first argument param of the Event
-//         var collectionItemObjectId = web3.eth.abi.decodeParameter("uint256", log.topics[1]);
-
-//         //Object ERC20 Wrapper is the second param of the Event
-//         var interoperableInterfaceAddress = web3.eth.abi.decodeParameter("address", log.topics[2]).toString()
-
-//         console.log('***************************************')
-//         console.log('keys: ', interoperableInterfaceAddress)
-//         console.log('***************************************')
-
-//         //Create the contract
-//         // var collectionItemInteroperableInterfaceContract = new web3.eth.Contract(configuration.IEthItemInteroperableInterfaceABI, interoperableInterfaceAddress);
-
-//         //Assemble the Collection Item, you can add all the additional info you want (e.g. cross-referencing the Collection this Item belongs to)
-//         var collectionItem: Token = new Token(chainId ?? 1, interoperableInterfaceAddress ?? ZERO_ADDRESS, 18)
-
-//         //Add every single Collection Item to the corresponding Collection's array
-//         resultCollection[interoperableInterfaceAddress] = collectionItem
-//       }
-
-//       console.log('***************************************')
-//       console.log('resultCollection: ', resultCollection)
-//       console.log('***************************************')
-//     })
-//   }, [chainId, logs, pastLogs, allCollections, resultCollection])
-
-//   // return useMemo(() => {
-//   //   if (!resultCollection) return []
-//   //   // if (!chainId) return undefined
-//   //   // if (ethItemERC20WrapperAddresses.loading || knowledgeBaseAddress.loading) return null
-//   //   if (ethItemERC20WrapperAddresses.result) {
-//   //     return resultCollection
-//   //   }
-//   // }, [
-//   //   // chainId,
-//   //   // ethItemERC20WrapperAddresses.loading,
-//   //   ethItemERC20WrapperAddresses.result,
-//   //   // knowledgeBaseAddress.loading,
-//   //   // knowledgeBaseAddress.result,
-//   //   resultCollection
-//   // ])
-// }
-
 export function useAllWrappedERC20Tokens(): { [address: string]: Token } | undefined {
   const web3 = new Web3();
-  const { chainId } = useActiveWeb3React()
+  const { chainId, library } = useActiveWeb3React()
 
-  const topics = [web3.utils.sha3("NewItem(uint256,address)")];
-  const logs = useLogsResult([ERC20WRAPPER[chainId ?? 1]], topics, ETHITEM_START_BLOCK[chainId ?? 1], "latest")
+  const topics = [web3.utils.sha3("NewItem(uint256,address)") ?? ""];
+  const logs = useMemo(() =>
+    library?.getLogs({
+      address: ERC20WRAPPER[chainId ?? 1],
+      topics: topics,
+      fromBlock: parseInt(ETHITEM_START_BLOCK[chainId ?? 1]),
+      toBlock: "latest"
+    }), [topics, ERC20WRAPPER, ETHITEM_START_BLOCK])
+
   const [resultWrappedToken, setResultWrappedToken] = useState<{ [address: string]: Token }>({})
 
   return useMemo(() => {
     if (!chainId) return {}
-    
+    if (!logs) return {}
+
     logs.then(pastLogs => {
       let wrappedTokens: { [address: string]: Token } = {}
 
-      pastLogs.forEach((log) => {
-        const interoperableInterfaceAddress = web3.eth.abi.decodeParameter("address", log.topics[2]).toString()
-        const collectionItem: Token = new Token(chainId ?? 1, interoperableInterfaceAddress ?? ZERO_ADDRESS, 18)
-        
-        wrappedTokens[interoperableInterfaceAddress] = collectionItem
-      })
+      pastLogs.reduce<{ [address: string]: Token }>(
+        (previousLog, log) => {
+          const interoperableInterfaceAddress = web3.eth.abi.decodeParameter("address", log.topics[2]).toString()
+          const collectionItem: Token = new Token(chainId ?? 1, interoperableInterfaceAddress ?? ZERO_ADDRESS, 18)
 
-      // console.log('***************************************')
-      // console.log('wrappedTokens: ', wrappedTokens)
-      // console.log('***************************************')
-      
+          wrappedTokens[interoperableInterfaceAddress] = collectionItem
+          
+          return wrappedTokens
+        },
+        { ...wrappedTokens }
+      )
+
       setResultWrappedToken(wrappedTokens)
     })
 
     return resultWrappedToken
   }, [chainId, logs, resultWrappedToken, setResultWrappedToken])
-}
-
-export function useLogsResult(
-  addresses: string[] | string | undefined,
-  topics: (string | null)[],
-  startBlock: string,
-  endBlock: string,
-) {
-  const web3 = new Web3(Web3.givenProvider);
-  const result = useMemo(() => web3.eth.getPastLogs({
-    address: addresses,
-    topics: topics,
-    fromBlock: startBlock,
-    toBlock: endBlock
-  }), [addresses, topics, endBlock, endBlock])
-
-  return useMemo(() => { return result }, [result])
 }
 
 export function useAllListTokens(): { [address: string]: Token } {
