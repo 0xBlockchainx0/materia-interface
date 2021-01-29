@@ -49,11 +49,11 @@ export function useAllWrappedERC20Tokens(): { [address: string]: Token } | undef
       toBlock: "latest"
     }), [topics, ERC20WRAPPER, ETHITEM_START_BLOCK])
 
-  const [resultWrappedToken, setResultWrappedToken] = useState<{ [address: string]: Token }>({})
+  const [resultWrappedToken, setResultWrappedToken] = useState<{ [address: string]: Token } | undefined>(undefined)
 
   return useMemo(() => {
-    if (!chainId) return {}
-    if (!logs) return {}
+    if (!chainId) return undefined
+    if (!logs) return undefined
 
     logs.then(pastLogs => {
       let wrappedTokens: { [address: string]: Token } = {}

@@ -6,6 +6,7 @@ import { BASES_TO_TRACK_LIQUIDITY_FOR, PINNED_PAIRS } from '../../constants'
 
 import { useActiveWeb3React } from '../../hooks'
 import { useAllTokens, useAllWrappedERC20Tokens } from '../../hooks/Tokens'
+import { deepMerge } from '../../utils/deepMerge'
 import { AppDispatch, AppState } from '../index'
 import {
   addSerializedPair,
@@ -211,13 +212,22 @@ export function toLiquidityToken([tokenA, tokenB]: [Token, Token]): Token {
  */
 export function useTrackedTokenPairs(): [Token, Token][] {
   const { chainId } = useActiveWeb3React()
-  const tokens = useAllTokens()
   const wrappedTokens = useAllWrappedERC20Tokens()
   
-  console.log('***************************************')
-  console.log('wrappedTokens: ', wrappedTokens)
-  console.log('***************************************')
-
+  let tokens = useAllTokens()
+  
+  tokens = useMemo(() => {
+    if (wrappedTokens == undefined) return tokens
+    
+    return (Object.keys(wrappedTokens).reduce<{ [address: string]: Token }>(
+      (tokenMap, wrappedTokenAddress) => {
+        if(!tokenMap[wrappedTokenAddress]) tokenMap[wrappedTokenAddress] = wrappedTokens[wrappedTokenAddress]
+        return tokenMap
+      },
+      { ...tokens }
+    ))
+  }, [tokens, wrappedTokens])
+  
   // pinned pairs
   const pinnedPairs = useMemo(() => (chainId ? PINNED_PAIRS[chainId] ?? [] : []), [chainId])
 
