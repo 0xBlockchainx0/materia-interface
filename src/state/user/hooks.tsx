@@ -5,7 +5,7 @@ import { shallowEqual, useDispatch, useSelector } from 'react-redux'
 import { BASES_TO_TRACK_LIQUIDITY_FOR, PINNED_PAIRS } from '../../constants'
 
 import { useActiveWeb3React } from '../../hooks'
-import { useAllTokens, useAllWrappedERC20Tokens } from '../../hooks/Tokens'
+import { managePairInteroperableChecks, useAllTokens, useAllWrappedERC20Tokens } from '../../hooks/Tokens'
 import { deepMerge } from '../../utils/deepMerge'
 import { AppDispatch, AppState } from '../index'
 import {
@@ -19,7 +19,10 @@ import {
   updateUserExpertMode,
   updateUserSlippageTolerance,
   toggleURLWarning,
-  updateUserClassicMode
+  updateUserClassicMode,
+  addSerializedInteroperableCheck,
+  SerializedInteroperableCheck,
+  removeSerializedInteroperableCheck
 } from './actions'
 
 function serializeToken(token: Token): SerializedToken {
@@ -40,6 +43,13 @@ function deserializeToken(serializedToken: SerializedToken): Token {
     serializedToken.symbol,
     serializedToken.name
   )
+}
+
+function deserializeInteroperableCheck(serializedInteroperableCheck: SerializedInteroperableCheck): { token0: string, token1: string } {
+  return {
+    token0: serializedInteroperableCheck.token0,
+    token1: serializedInteroperableCheck.token1,
+  }
 }
 
 export function useIsDarkMode(): boolean {
@@ -171,10 +181,27 @@ export function useUserAddedTokens(): Token[] {
   }, [serializedTokensMap, chainId])
 }
 
+export function useInteroperableChecks(): { token0: string, token1: string }[] {
+  const { chainId } = useActiveWeb3React()
+  const serializedInteroperableChecksMap = useSelector<AppState, AppState['user']['interoperableChecks']>(({ user: { interoperableChecks } }) => interoperableChecks)
+
+  return useMemo(() => {
+    if (!chainId) return []
+    return Object.values(serializedInteroperableChecksMap[chainId as ChainId] ?? {}).map(deserializeInteroperableCheck)
+  }, [serializedInteroperableChecksMap, chainId])
+}
+
 function serializePair(pair: Pair): SerializedPair {
   return {
     token0: serializeToken(pair.token0),
     token1: serializeToken(pair.token1)
+  }
+}
+
+function serializeInteroperableCheck(token0: string, token1: string): SerializedInteroperableCheck {
+  return {
+    token0: token0,
+    token1: token1
   }
 }
 
@@ -198,6 +225,27 @@ export function useURLWarningToggle(): () => void {
   return useCallback(() => dispatch(toggleURLWarning()), [dispatch])
 }
 
+export function useAddInteroperableCheck(): (chainId: number, token0: string, token1: string) => void {
+  const dispatch = useDispatch<AppDispatch>()
+  return useCallback(
+    (chainId: number, token0: string, token1: string) => {
+      dispatch(
+        addSerializedInteroperableCheck({ chainId: chainId, serializedInteroperableCheck: serializeInteroperableCheck(token0, token1) }))
+    },
+    [dispatch]
+  )
+}
+
+export function useRemoveInteroperableCheck(): (chainId: number, token0: string, token1: string) => void {
+  const dispatch = useDispatch<AppDispatch>()
+  return useCallback(
+    (chainId: number, token0: string, token1: string) => {
+      dispatch(removeSerializedInteroperableCheck({ chainId: chainId, tokenAAddress: token0, tokenBAddress: token1 }))
+    },
+    [dispatch]
+  )
+}
+
 /**
  * Given two tokens return the liquidity token that represents its liquidity shares
  * @param tokenA one of the two tokens
@@ -212,22 +260,24 @@ export function toLiquidityToken([tokenA, tokenB]: [Token, Token]): Token {
  */
 export function useTrackedTokenPairs(): [Token, Token][] {
   const { chainId } = useActiveWeb3React()
-  const wrappedTokens = useAllWrappedERC20Tokens()
-  
-  let tokens = useAllTokens()
-  
-  tokens = useMemo(() => {
-    if (wrappedTokens == undefined) return tokens
-    
-    return (Object.keys(wrappedTokens).reduce<{ [address: string]: Token }>(
-      (tokenMap, wrappedTokenAddress) => {
-        if(!tokenMap[wrappedTokenAddress]) tokenMap[wrappedTokenAddress] = wrappedTokens[wrappedTokenAddress]
-        return tokenMap
-      },
-      { ...tokens }
-    ))
-  }, [tokens, wrappedTokens])
-  
+  // const interoperableChecksDone = managePairInteroperableChecks(chainId ?? 1)
+  const tokens = useAllTokens()
+  // const wrappedTokens = useAllWrappedERC20Tokens()
+
+  // let tokens = useAllTokens()
+
+  // tokens = useMemo(() => {
+  //   if (wrappedTokens == undefined) return tokens
+
+  //   return (Object.keys(wrappedTokens).reduce<{ [address: string]: Token }>(
+  //     (tokenMap, wrappedTokenAddress) => {
+  //       if(!tokenMap[wrappedTokenAddress]) tokenMap[wrappedTokenAddress] = wrappedTokens[wrappedTokenAddress]
+  //       return tokenMap
+  //     },
+  //     { ...tokens }
+  //   ))
+  // }, [tokens, wrappedTokens])
+
   // pinned pairs
   const pinnedPairs = useMemo(() => (chainId ? PINNED_PAIRS[chainId] ?? [] : []), [chainId])
 
@@ -236,22 +286,22 @@ export function useTrackedTokenPairs(): [Token, Token][] {
     () =>
       chainId
         ? flatMap(Object.keys(tokens), tokenAddress => {
-            const token = tokens[tokenAddress]
-            // for each token on the current chain,
-            return (
-              // loop though all bases on the current chain
-              (BASES_TO_TRACK_LIQUIDITY_FOR[chainId] ?? [])
-                // to construct pairs of the given token with each base
-                .map(base => {
-                  if (base.address === token.address) {
-                    return null
-                  } else {
-                    return [base, token]
-                  }
-                })
-                .filter((p): p is [Token, Token] => p !== null)
-            )
-          })
+          const token = tokens[tokenAddress]
+          // for each token on the current chain,
+          return (
+            // loop though all bases on the current chain
+            (BASES_TO_TRACK_LIQUIDITY_FOR[chainId] ?? [])
+              // to construct pairs of the given token with each base
+              .map(base => {
+                if (base.address === token.address) {
+                  return null
+                } else {
+                  return [base, token]
+                }
+              })
+              .filter((p): p is [Token, Token] => p !== null)
+          )
+        })
         : [],
     [tokens, chainId]
   )

@@ -1,17 +1,40 @@
 import { parseBytes32String, toUtf8Bytes } from '@ethersproject/strings'
-import { Currency, ETHER, Token, currencyEquals } from '@materia-dex/sdk'
+import { Currency, ETHER, Token, currencyEquals, ChainId } from '@materia-dex/sdk'
 import { keccak256, sha256 } from 'ethers/lib/utils'
 import { useEffect, useMemo, useState } from 'react'
 import { useAllTokenList, useSelectedTokenList } from '../state/lists/hooks'
 import { CallState, NEVER_RELOAD, Result, toCallState, useSingleCallResult } from '../state/multicall/hooks'
-import { useUserAddedTokens } from '../state/user/hooks'
+import { useInteroperableChecks, usePairAdder, useRemoveInteroperableCheck, useUserAddedTokens } from '../state/user/hooks'
 import { isAddress } from '../utils'
 import Web3 from 'web3';
 
 import { useActiveWeb3React } from './index'
-import { useBytes32TokenContract, useEthItemKnowledgeBaseContract, useEthItemOrchestratorContract, useTokenContract, useWERC20TokenContract } from './useContract'
-import { WERC20_ABI } from '../constants/abis/erc20'
-import { ERC20WRAPPER, ETHITEM_START_BLOCK, ZERO_ADDRESS } from '../constants'
+import { useBytes32TokenContract, useTokenContract } from './useContract'
+import { ERC20WRAPPER, ETHITEM_START_BLOCK, USD, ZERO_ADDRESS } from '../constants'
+import { unwrappedToken } from '../utils/wrappedCurrency'
+import useGetEthItemInteroperable from './useGetEthItemInteroperable'
+import { usePair } from '../data/Reserves'
+
+export function managePairInteroperableChecks(chainId: ChainId): void {
+  const tokenAddressUSD = USD[chainId]?.address ?? ""
+  const currencyUSD = unwrappedToken(USD[chainId])
+  // const interoperableChecks = useInteroperableChecks()
+
+  // const addTrackedPair = usePairAdder()
+  // const removeInteroperableCheck = useRemoveInteroperableCheck()
+
+  // interoperableChecks.map((interoperableCheck) => {
+  //   const otherCurrencyAddress = interoperableCheck.token0 == tokenAddressUSD ? interoperableCheck.token1 : interoperableCheck.token0
+  //   const otherCurrencyInteroperableAddress = useGetEthItemInteroperable(otherCurrencyAddress)
+  //   const otherCurrencyInteroperable: Currency | undefined = useCurrency(otherCurrencyInteroperableAddress) ?? undefined
+  //   const [pairState, pair] = usePair(currencyUSD, otherCurrencyInteroperable)
+    
+  //   if (pair && otherCurrencyInteroperable) {
+  //     addTrackedPair(pair)
+  //     removeInteroperableCheck(chainId, interoperableCheck.token0, interoperableCheck.token1)
+  //   }
+  // })
+}
 
 export function useAllTokens(): { [address: string]: Token } {
   const { chainId, } = useActiveWeb3React()
@@ -64,7 +87,7 @@ export function useAllWrappedERC20Tokens(): { [address: string]: Token } | undef
           const collectionItem: Token = new Token(chainId ?? 1, interoperableInterfaceAddress ?? ZERO_ADDRESS, 18)
 
           wrappedTokens[interoperableInterfaceAddress] = collectionItem
-          
+
           return wrappedTokens
         },
         { ...wrappedTokens }

@@ -13,6 +13,11 @@ export interface SerializedPair {
   token1: SerializedToken
 }
 
+export interface SerializedInteroperableCheck {
+  token0: string
+  token1: string
+}
+
 export const updateMatchesDarkMode = createAction<{ matchesDarkMode: boolean }>('user/updateMatchesDarkMode')
 export const updateMatchesClassicMode = createAction<{ matchesClassicMode: boolean }>('user/updateMatchesClassicMode')
 export const updateUserDarkMode = createAction<{ userDarkMode: boolean }>('user/updateUserDarkMode')
@@ -27,5 +32,9 @@ export const removeSerializedToken = createAction<{ chainId: number; address: st
 export const addSerializedPair = createAction<{ serializedPair: SerializedPair }>('user/addSerializedPair')
 export const removeSerializedPair = createAction<{ chainId: number; tokenAAddress: string; tokenBAddress: string }>(
   'user/removeSerializedPair'
+)
+export const addSerializedInteroperableCheck = createAction<{ chainId: number; serializedInteroperableCheck: SerializedInteroperableCheck }>('user/addSerializedInteroperableCheck')
+export const removeSerializedInteroperableCheck = createAction<{ chainId: number; tokenAAddress: string; tokenBAddress: string }>(
+  'user/removeSerializedInteroperableCheck'
 )
 export const toggleURLWarning = createAction<void>('app/toggleURLWarning')

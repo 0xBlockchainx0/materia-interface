@@ -1,7 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { TransactionResponse } from '@ethersproject/providers'
 import { ADD_LIQUIDITY_ACTION_SAFE_TRANSFER_TOKEN, Currency, currencyEquals, ETHER, JSBI, TokenAmount, IETH } from '@materia-dex/sdk'
-import React, { useCallback, useContext, useState, useMemo } from 'react'
+import React, { useCallback, useContext, useState, useMemo, useEffect } from 'react'
 import ReactGA from 'react-ga'
 import { NavLink, RouteComponentProps } from 'react-router-dom'
 import { ButtonMateriaError, ButtonMateriaPrimary } from '../../components/Button'
@@ -16,7 +16,7 @@ import { darken } from 'polished'
 import { Link } from 'react-feather'
 
 import { ORCHESTRATOR_ADDRESS, USD, ZERO_ADDRESS } from '../../constants'
-import { PairState } from '../../data/Reserves'
+import { PairState, usePair } from '../../data/Reserves'
 import { useAllWrappedERC20Tokens, useCurrency } from '../../hooks/Tokens'
 import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
 import useTransactionDeadline from '../../hooks/useTransactionDeadline'
@@ -25,7 +25,7 @@ import { Field } from '../../state/mint/actions'
 import { useDerivedMintInfo, useMintActionHandlers, useMintState } from '../../state/mint/hooks'
 
 import { useTransactionAdder } from '../../state/transactions/hooks'
-import { useIsExpertMode, useUserSlippageTolerance } from '../../state/user/hooks'
+import { useAddInteroperableCheck, useIsExpertMode, usePairAdder, useUserSlippageTolerance } from '../../state/user/hooks'
 import { calculateGasMargin, calculateSlippageAmount, getEthItemCollectionContract, getOrchestratorContract } from '../../utils'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { wrappedCurrency } from '../../utils/wrappedCurrency'
@@ -241,6 +241,7 @@ export default function AddLiquidity({
   const [approvalB, approveBCallback] = useApproveCallback(originalParsedAmounts[Field.CURRENCY_B], ORCHESTRATOR_ADDRESS)
 
   const addTransaction = useTransactionAdder()
+  const addInteroperableCheck = useAddInteroperableCheck()
 
   async function onAdd(checkIsEthItem: Result | undefined) {
     if (!chainId || !library || !account) return
@@ -418,6 +419,12 @@ export default function AddLiquidity({
           })
 
           setTxHash(response.hash)
+          
+          // addInteroperableCheck(
+          //   chainId, 
+          //   wrappedCurrency(currencyA, chainId)?.address ?? "", 
+          //   wrappedCurrency(currencyB, chainId)?.address ?? ""
+          // )
 
           ReactGA.event({
             category: 'Liquidity',
