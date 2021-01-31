@@ -30,10 +30,9 @@ const TokenImage = styled.div<{ showBackground: boolean }>`
   background-size: contain;
   height: 300px;
   width: 300px;
-  background-position: center;
+  background-position: -5px center!important;
   display: table-cell;
   vertical-align: middle;
-  background-position: center;
   @media (max-width: 1050px) { padding: 2rem !important; }
   @media (max-width: 450px) { padding: 1rem !important; margin-top: -2.5rem; }
 `

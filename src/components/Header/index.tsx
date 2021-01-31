@@ -97,9 +97,7 @@ const StyledNavLink = styled(NavLink).attrs({
   }
 
   :hover,
-  :focus {
-    color: ${({ theme }) => darken(0.1, theme.cyan1)};
-  }
+  :focus { color: ${({ theme }) => darken(0.1, theme.cyan1)}; }
 `
 
 const StyledExternalLink = styled(ExternalLink).attrs({

@@ -549,10 +549,10 @@ export default function Swap() {
             </PageItemsContainer>
           </PageGridContainer>
         </Wrapper>
-        <FooterInfo className={theme.name}>
+        {/* <FooterInfo className={theme.name}>
           <div></div>
           <div className="swapCaption">Select two token. Press "Swap" button to swap.</div>
-        </FooterInfo>
+        </FooterInfo> */}
       </AppBody>
     </>
   )

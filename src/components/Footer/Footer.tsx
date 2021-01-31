@@ -9,13 +9,9 @@ const FooterContainer = styled.div`
   font-size: smaller;
   transition: opacity 0.25s ease;
   color: ${({ theme }) => theme.text1};
-  :hover {
-    opacity: 1;
-  }
+  :hover { opacity: 1; }
 
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    display: none;
-  `}
+  ${({ theme }) => theme.mediaWidth.upToMedium` display: none; `}
 `
 
 export default function Footer() {

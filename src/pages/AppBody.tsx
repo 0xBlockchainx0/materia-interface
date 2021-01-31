@@ -5,7 +5,8 @@ import { MainContainer,
   MainContainerExtraDecorator, 
   MainContainerContentWrapper, 
   FeatureTitle, 
-  FeatureChildrenContainer } from '../theme'
+  FeatureChildrenContainer,
+  FooterInfo } from '../theme'
 
 /**
  * The styled container element that wraps the content of most pages and the tabs.
@@ -40,6 +41,10 @@ export default function AppBody({ children }: { children: React.ReactNode }) {
         <FeatureChildrenContainer className={theme.name}>
         {children}
         </FeatureChildrenContainer>
+        <FooterInfo className={theme.name}>
+          <div></div>
+          <div className="swapCaption">Select two token. Press "Swap" button to swap.</div>
+        </FooterInfo>
       </MainContainerContentWrapper>      
       <MainContainerExtraDecorator className={ `bottom ${theme.name}` }/>
     </MainContainer>   

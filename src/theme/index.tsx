@@ -883,7 +883,7 @@ export const MainContainerContentWrapper = styled.div`
   background-size: cover;
 
   &.dark { background: linear-gradient(133deg, ${({ theme }) => theme.utils.hexToRGB(theme.blue2, 0.8)} 60%, ${({ theme }) => theme.utils.hexToRGB(theme.azure3, 0.3)} 100%); }
-  &.light { background: linear-gradient(133deg, ${({ theme }) => theme.utils.hexToRGB(theme.violet2, 0.3)} 60%, ${({ theme }) => theme.utils.hexToRGB(theme.violet3, 0.1)} 100%); }
+  &.light { background: linear-gradient(133deg, ${({ theme }) => theme.utils.hexToRGB(theme.violet2, 0.3)} 60%, ${({ theme }) => theme.utils.hexToRGB(theme.violet3, 0.3)} 100%); }
   &.classic {}
 `
 export const FeatureTitle = styled.h2`
@@ -940,7 +940,7 @@ export const FeatureChildrenContainer = styled.div`
   padding: 20px 7px;
 
   &.dark { background: linear-gradient(-60deg, ${({ theme }) => theme.utils.hexToRGB(theme.blue2, 0.24)} 60%, ${({ theme }) => theme.utils.hexToRGB(theme.azure3, 0.59)} 100%); }
-  &.light { background: linear-gradient(-60deg, ${({ theme }) => theme.utils.hexToRGB(theme.violet3, 0.24)} 60%, ${({ theme }) => theme.utils.hexToRGB(theme.violet2, 0.59)} 100%); }
+  &.light { background: linear-gradient(-60deg, ${({ theme }) => theme.utils.hexToRGB(theme.white, 0.8)} 60%, ${({ theme }) => theme.utils.hexToRGB(theme.white, 0.8)} 100%); }
   &.classic {}
 `
 export const SectionTitle = styled.h6`
@@ -1134,7 +1134,8 @@ export const FooterInfo = styled.div`
   &.light {}
   &.classic {}
 
-  &.dark > div.swapCaption { margin: 0px auto -20px auto; }
+  &.dark > div.swapCaption { margin: 5px auto 5px auto; }
+  &.light > div.swapCaption { margin: 5px auto 5px auto; }
 `
 export const TabsBar = styled.div`
   &.dark { }
@@ -1438,18 +1439,18 @@ export const SwitchButton = styled(Button)<{disabled?: boolean}>`
   &:before { top: 44px; left: -39px; }
 
   &.dark { border: solid 1px ${({ theme }) => theme.azure1 }; background-color: ${({ theme }) => theme.black }; }
-  &.light {}
+  &.light { border: solid 1px ${({ theme }) => theme.violet1 }; background-color: ${({ theme }) => theme.violet4 }; }
   &.classic {}
 
   &.dark:hover, &.dark:focus { box-shadow: 0px 0px 12px ${({ theme }) => theme.azure1 }; }
-  &.light:hover, &.light:focus { }
+  &.light:hover, &.light:focus { box-shadow: 0px 0px 12px ${({ theme }) => theme.violet1 }; }
   &.classic:hover, &.classic:focus { }
 
   &.dark:after { background: linear-gradient(to right, ${({ theme }) => theme.azure1} 0%, rgba(15,63,115,0)); }
   &.dark:before { background: linear-gradient(to right, rgba(15,63,115,0) 0%, ${({ theme }) => theme.azure1} 100%); }
 
-  &.light:after {}
-  &.light:before {}
+  &.light:after { background: linear-gradient(to right, ${({ theme }) => theme.violet1} 0%, rgba(15,63,115,0)); }
+  &.light:before { background: linear-gradient(to right, rgba(15,63,115,0) 0%, ${({ theme }) => theme.violet1} 100%); }
 
   &.classic:after {}
   &.classic:before {}
@@ -1737,7 +1738,8 @@ export const SecondaryPanelBoxContainer = styled.div`
     border-top: solid 1px ${({ theme }) => theme.azure1 };
     border-bottom: solid 1px ${({ theme }) => theme.azure1 };
   }
-
+  
+  &.light.modal > .modal-inner-content { box-shadow: 0px 0px 16px ${({ theme }) => theme.utils.hexToRGB(theme.grey3, 0.4)}; }
   &.light.modal > .modal-inner-content .modal-content-wrapper > .connect-wallet-terms-and-conditions { }
 
   &.classic.modal > .modal-inner-content .modal-content-wrapper > .connect-wallet-terms-and-conditions { }
