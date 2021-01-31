@@ -30,15 +30,13 @@ export default function Logo({ srcs, alt, ...rest }: LogoProps) {
       />
     )
   }
-  switch(theme.name){
-    case 'dark':
-      return <img {...rest} alt="Token Image Not Found" src={images.tokenImageNotFound.dark}/>
-    break;
-    case 'light':
-      return <img {...rest} alt="Token Image Not Found" src={images.tokenImageNotFound.light}/>
-    break;
-    case 'classic':
-      return <img {...rest} alt="Token Image Not Found" src={images.tokenImageNotFound.dark}/>
-    break;
-  }  
+  if(theme.name == 'dark'){
+    return <img {...rest} alt="Token Image Not Found" src={images.tokenImageNotFound.dark}/>
+  }
+  else if(theme.name == 'light'){
+    return <img {...rest} alt="Token Image Not Found" src={images.tokenImageNotFound.light}/>
+  }
+  else {
+    return <img {...rest} alt="Token Image Not Found" src={images.tokenImageNotFound.dark}/>
+  }
 }
