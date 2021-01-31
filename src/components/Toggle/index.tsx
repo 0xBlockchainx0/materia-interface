@@ -12,8 +12,8 @@ export default function Toggle({ id, isActive, toggle }: ToggleProps) {
   const theme = useContext(ThemeContext)
   return (
     <ToggleButton id={id} className={theme.name} isActive={isActive} onClick={toggle}>
-      <ToggleButtonElement isActive={isActive} isOnSwitch={true}>On</ToggleButtonElement>
-      <ToggleButtonElement isActive={!isActive} isOnSwitch={false}>Off</ToggleButtonElement>
+      <ToggleButtonElement className={theme.name} isActive={isActive} isOnSwitch={true}>On</ToggleButtonElement>
+      <ToggleButtonElement className={theme.name} isActive={!isActive} isOnSwitch={false}>Off</ToggleButtonElement>
     </ToggleButton>
   )
 }

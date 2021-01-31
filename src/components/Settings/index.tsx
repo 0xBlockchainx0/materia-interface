@@ -46,15 +46,8 @@ const StyledMenuButton = styled.button`
   padding: 0.15rem 0.5rem;
   border-radius: 0.5rem;
 
-  :hover,
-  :focus {
-    cursor: pointer;
-    outline: none;
-  }
-
-  svg {
-    margin-top: 2px;
-  }
+  :hover, :focus { cursor: pointer; outline: none; }
+  svg { margin-top: 2px; }
 `
 
 const StyledMenu = styled.div`
@@ -118,8 +111,8 @@ export default function SettingsTab() {
           </div>
         </ModalContentWrapper>
       </Modal>
-      <StyledMenuButton onClick={toggle} id="open-settings-dialog-button">
-        <Settings size={15} stroke={theme.text1} />
+      <IconButton className={`${theme.name} mr10`} onClick={toggle} id="open-settings-dialog-button">
+        <Settings className={`footer-icon ${theme.name}`} />
         {/*
         {expertMode ? (
           <EmojiWrapper>
@@ -129,8 +122,8 @@ export default function SettingsTab() {
           </EmojiWrapper>
         ) : null}
         */}
-      </StyledMenuButton>
-      <StyledMenuText onClick={toggle}>Settings</StyledMenuText>
+      </IconButton>
+      <div className={ `custom-label ${theme.name}` } onClick={toggle}>Settings</div>
       {open && (
         <SecondaryPanelBoxContainer className={ `settings-menu-panel ${theme.name}` }>
           <SecondaryPanelBoxContainerExtraDecorator className={ `top ${theme.name}` }/>

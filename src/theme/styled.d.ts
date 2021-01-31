@@ -13,12 +13,20 @@ export interface Colors {
   azure3: Color,
   azure4: Color,
   azure5: Color,
+  azure6: Color,
   blue1: Color,
   blue2: Color,
   grey1: Color,
   grey2: Color,
+  grey3: Color,
+  grey4: Color,
   yellowGreen: Color,
   yellowLight: Color,
+  violet1: Color,
+  violet2: Color,
+  violet3: Color,
+  violet4: Color,
+  violet5: Color,
 
   // text
   text1: Color
@@ -60,6 +68,7 @@ export interface Colors {
   // other
   red1: Color
   red2: Color
+  red3: Color
   green1: Color
   yellow1: Color
   yellow2: Color

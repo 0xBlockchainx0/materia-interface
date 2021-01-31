@@ -47,10 +47,10 @@ const StyledDropDown = styled(DropDown) <{ selected: boolean }>`
   margin: 0 0.25rem 0 0.5rem;
   height: 35%;
 
-  path {
-    stroke: ${({ selected, theme }) => (selected ? theme.text1 : theme.white)};
-    stroke-width: 1.5px;
-  }
+  & path { stroke-width: 1.5px; }
+
+  &.dark path { stroke: ${({ selected, theme }) => (selected ? theme.text1 : theme.white)}; }
+  &.light path { stroke: ${({ selected, theme }) => (selected ? theme.black : theme.black)}; }
 `
 
 const StyledTokenName = styled.span<{ active?: boolean }>`
@@ -143,7 +143,7 @@ export default function CurrencyInputPanel({
                         : currency?.symbol) || t('selectToken')}
                     </StyledTokenName>
                   )}
-                {!disableCurrencySelect && <StyledDropDown selected={!!currency} />}
+                {!disableCurrencySelect && <StyledDropDown className={ `${theme.name}` } selected={!!currency} />}
               </Aligner>
             </DropDownButton>
           </InputRow>

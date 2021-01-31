@@ -87,22 +87,30 @@ export function colors(darkMode: boolean, classicMode: boolean): Colors {
     azure3: classicMode ? '#000000' : darkMode ? '#2d72e9' : '#000000',
     azure4: classicMode ? '#000000' : darkMode ? '#126699' : '#000000',
     azure5: classicMode ? '#000000' : darkMode ? '#97c6f7' : '#000000',
+    azure6: '#a5fcf6',
     blue1: classicMode ? '#000000' : darkMode ? '#1e98dc' : '#000000',
     blue2: classicMode ? '#000000' : darkMode ? '#022b63' : '#000000',
     blue3: classicMode ? '#000000' : darkMode ? '#082751' : '#000000',
     blue4: classicMode ? '#000000' : darkMode ? '#081f3f' : '#000000',
     grey1: classicMode ? '#000000' : darkMode ? '#5e6873' : '#000000',
-    grey2: classicMode ? '#000000' : darkMode ? '#C3C5CB' : '#000000',
+    grey2: classicMode ? '#000000' : darkMode ? '#C3C5CB' : '#C3C5CB',
+    grey3: classicMode ? '#000000' : darkMode ? '#333333' : '#000000',
+    grey4: classicMode ? '#000000' : darkMode ? '#1a1a1a' : '#000000',
     yellowGreen: classicMode ? '#000000' : darkMode ? '#878e13' : '#000000',
     yellowLight: classicMode ? '#000000' : darkMode ? '#ffffbe' : '#000000', 
     red1: '#FF6871',
     red2: '#F82D3A',
+    red3: '#fcdfe1',
     green1: '#27AE60',
     yellow1: '#FFE270',
     yellow2: '#F3841E',
     grey: '#999999',
-
-    placeholderColor: classicMode ? '#000000' : darkMode ? '#FFFFFF' : '#000000',
+    placeholderColor: classicMode ? '#000000' : darkMode ? '#FFFFFF' : '#6C7284',
+    violet1: '#4138bc',
+    violet2: '#a5a5c5',
+    violet3: '#ccccff',
+    violet4: '#80a9f7',
+    violet5: '#e8e8fc',
 
     // text
     text1: classicMode ? '#FFFFFF' : darkMode ? '#FFFFFF' : '#000000',
@@ -387,13 +395,11 @@ body {
   background-size: cover;
   background-repeat: no-repeat;
   background-attachment: fixed;
-  background-position: ${({ theme }) => (
-      (theme.name == 'classic' ? '0% 0%' : 'top center' )
-  )};
+  background-position: ${({ theme }) => ( (theme.name == 'classic' ? '0% 0%' : 'top center' ) )};
   background-image: ${({ theme }) => (
     (theme.name == 'classic' ? 'none' : (
       theme.name == 'dark' ? 'url(' + images.backgrounds.dark + ')' : 
-      'url(../assets/images/sky-white.png)'
+      'url(' + images.backgrounds.light + ')'
     ))
   )};
   background-color: ${({ theme }) => (
@@ -808,7 +814,7 @@ export const MainContainer = styled.div`
   box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),0px 24px 32px rgba(0, 0, 0, 0.01);
 
   &.dark { border: solid 1px ${({ theme }) => theme.utils.hexToRGB(theme.azure4, 1)}; } 
-  &.light {}
+  &.light { border: solid 1px ${({ theme }) => theme.utils.hexToRGB(theme.violet1, 1)}; }
   &.classic {}
 
   @media (max-width: 600px) { max-width: 90% !important; }
@@ -826,16 +832,14 @@ export const MainContainer = styled.div`
     background-size: 100% 100%;
   }
 
-  &.dark:before {    
-    background-image: url(${(images.decorators.grid.dark)});    
-    bottom: -110px;
-    left: -112px;
-  }
-  &.dark:after {
-    background-image: url(${(images.decorators.grid.dark)});
-    bottom: -110px;
-    right: -112px;
-  }
+  &:before { bottom: -110px; left: -112px; }
+  &:after { bottom: -110px; right: -112px; }
+
+  &.dark:before { background-image: url(${(images.decorators.grid.dark)}); }
+  &.dark:after { background-image: url(${(images.decorators.grid.dark)}); }
+
+  &.light:before { background-image: url(${(images.decorators.grid.light)}); }
+  &.light:after { background-image: url(${(images.decorators.grid.light)}); }
 `
 export const MainContainerExtraDecorator = styled.div`
   position: absolute;
@@ -857,22 +861,14 @@ export const MainContainerExtraDecorator = styled.div`
     opacity: 0.6;
   }
 
-  &:before { top: -29px; left: -29px; }
-  &:after { bottom: -29px; right: -29px; transform: rotate(180deg); }
+  &:before { top: -29px; left: -29px; background-position: left top; background-repeat: no-repeat; }
+  &:after { bottom: -29px; right: -29px; transform: rotate(180deg); background-position: left top; background-repeat: no-repeat; }
 
-  &.dark:before {
-    background-image: url(${(images.decorators.largeBoxes.dark)});
-    background-position: left top;
-    background-repeat: no-repeat;
-  }
-  &.dark:after {
-    background-image: url(${(images.decorators.largeBoxes.dark)});
-    background-position: left top;
-    background-repeat: no-repeat;
-  }
+  &.dark:before { background-image: url(${(images.decorators.largeBoxes.dark)}); }
+  &.dark:after { background-image: url(${(images.decorators.largeBoxes.dark)}); }
 
-  &.light:before {}
-  &.light:after {}
+  &.light:before { background-image: url(${(images.decorators.largeBoxes.light)}); }
+  &.light:after { background-image: url(${(images.decorators.largeBoxes.light)}); }
 
   &.classic:before {}
   &.classic:after {}
@@ -886,10 +882,8 @@ export const MainContainerContentWrapper = styled.div`
   padding: 5px 5px 5px 40px;
   background-size: cover;
 
-  &.dark {
-    background: linear-gradient(133deg, ${({ theme }) => theme.utils.hexToRGB(theme.blue2, 0.8)} 60%, ${({ theme }) => theme.utils.hexToRGB(theme.azure3, 0.3)} 100%);
-  }
-  &.light {}
+  &.dark { background: linear-gradient(133deg, ${({ theme }) => theme.utils.hexToRGB(theme.blue2, 0.8)} 60%, ${({ theme }) => theme.utils.hexToRGB(theme.azure3, 0.3)} 100%); }
+  &.light { background: linear-gradient(133deg, ${({ theme }) => theme.utils.hexToRGB(theme.violet2, 0.3)} 60%, ${({ theme }) => theme.utils.hexToRGB(theme.violet3, 0.1)} 100%); }
   &.classic {}
 `
 export const FeatureTitle = styled.h2`
@@ -910,7 +904,7 @@ export const FeatureTitle = styled.h2`
   overflow: hidden;
 
   &.dark { color: ${({ theme }) => theme.azure5}; }
-  &.light { color: #000000; }
+  &.light { color: ${({ theme }) => theme.violet1}; }
   &.classic { color: #FFFFFF; }
 
   &.dark:before { }
@@ -925,6 +919,17 @@ export const FeatureTitle = styled.h2`
     left: 3px;
     background: linear-gradient(0deg, rgba(15,63,115,0) 0%, ${({ theme }) => theme.utils.hexToRGB(theme.azure1, 1)} 100%);
   }
+
+  &.light:after {
+    content: " ";
+    display: block;
+    width: 1px;
+    height: 120%;
+    position: absolute;
+    bottom: 0px;
+    left: 3px;
+    background: linear-gradient(0deg, rgba(15,63,115,0) 0%, ${({ theme }) => theme.utils.hexToRGB(theme.violet1, 1)} 100%);
+  }
   
   @media (max-width: 600px) { display: none; }
 `
@@ -934,10 +939,8 @@ export const FeatureChildrenContainer = styled.div`
   min-height: 580px;
   padding: 20px 7px;
 
-  &.dark {
-    background: linear-gradient(-60deg, ${({ theme }) => theme.utils.hexToRGB(theme.blue2, 0.24)} 60%, ${({ theme }) => theme.utils.hexToRGB(theme.azure3, 0.59)} 100%);
-  }
-  &.light {}
+  &.dark { background: linear-gradient(-60deg, ${({ theme }) => theme.utils.hexToRGB(theme.blue2, 0.24)} 60%, ${({ theme }) => theme.utils.hexToRGB(theme.azure3, 0.59)} 100%); }
+  &.light { background: linear-gradient(-60deg, ${({ theme }) => theme.utils.hexToRGB(theme.violet3, 0.24)} 60%, ${({ theme }) => theme.utils.hexToRGB(theme.violet2, 0.59)} 100%); }
   &.classic {}
 `
 export const SectionTitle = styled.h6`
@@ -951,17 +954,11 @@ export const SectionTitle = styled.h6`
   width: 80%;
 
   &.dark { color: ${({ theme }) => theme.azure1}; }
+  &.light { color: ${({ theme }) => theme.grey3}; }
 
-  &.light {
-    color: #000000;
-    padding: 7px 32% 7px 10px;
-    background: transparent;
-    border-left: none;
-  }
+  &.dark:before, &.light:before { }
 
-  &.dark:before { }
-
-  &.dark:after {
+  &.dark:after, &.light:after {
     content: " ";
     display: block;
     width: 100%;
@@ -969,8 +966,10 @@ export const SectionTitle = styled.h6`
     position: absolute;
     bottom: -1px;
     left: 0px;
-    background: linear-gradient(to right, ${({ theme }) => theme.azure1} 0%, rgba(15,63,115,0));
   }
+
+  &.dark:after { background: linear-gradient(to right, ${({ theme }) => theme.azure1} 0%, rgba(15,63,115,0)); }
+  &.light:after { background: linear-gradient(to right, ${({ theme }) => theme.violet1} 0%, rgba(15,63,115,0)); }
 `
 export const InventoryColumn = styled.div`
   min-height: 580px;
@@ -998,7 +997,7 @@ export const InventoryItemContainer = styled.div`
     background: linear-gradient(90deg, ${({ theme }) => theme.utils.hexToRGB(theme.black, 1)} 0%, ${({ theme }) => theme.utils.hexToRGB(theme.black, 0)} 100%);
   }
 
-  &.dark:after {
+  &.dark:after, &.light:after {
     content: " ";
     display: block;
     position: absolute;
@@ -1006,38 +1005,26 @@ export const InventoryItemContainer = styled.div`
     height: 100%;
     top: 0px;
     left: -3px;
-    background-color: ${({ theme }) => theme.black};
   }
 
-  &.light {
-    background: linear-gradient(180deg, rgba(211,221,250) 0%, rgba(211,221,250) 100%);
-  }
+  &.dark:after { background-color: ${({ theme }) => theme.black}; }
+  &.light:after { background-color: ${({ theme }) => theme.violet1}; }
 
-  &.classic {
-    background: linear-gradient(180deg, rgba(0, 27, 49, 0.5) 0%, rgba(0, 27, 49, 0.5) 100%);
-  }
+  &.light { background: linear-gradient(180deg, rgba(211,221,250) 0%, rgba(211,221,250) 100%); }
 
-  & .balanceRow {
-    display: inline-flex;
-    margin: 5px 0px;
-    font-size: 12px;
-  }
+  &.classic { background: linear-gradient(180deg, rgba(0, 27, 49, 0.5) 0%, rgba(0, 27, 49, 0.5) 100%); }
 
-  & .balanceRow > div:first-child {
-    margin-right: 5px;
-  }
+  & .balanceRow { display: inline-flex; margin: 5px 0px; font-size: 12px; }
+
+  & .balanceRow > div:first-child { margin-right: 5px; }
 
   &.dark .balanceRow > div:first-child { color: ${({ theme }) => theme.azure2}; }
 
-  &.light .balanceRow > div:first-child,
-  &.classic .balanceRow > div:first-child, {
-    color: #1671BB;
-  }
+  &.light .balanceRow > div:first-child { color: ${({ theme }) => theme.violet1}; }
 
-  & .tokenType {
-    margin: 5px 0px 5px 10px;
-    display: inline-block;
-  }
+  &.classic .balanceRow > div:first-child, { color: #1671BB; }
+
+  & .tokenType { margin: 5px 0px 5px 10px; display: inline-block; }
 `
 export const SimpleTextParagraph = styled.p`
   font-size: 13px;
@@ -1049,7 +1036,7 @@ export const SimpleTextParagraph = styled.p`
   &.classic {}
 
   &.dark > a { color: ${({ theme }) => theme.azure1}; }
-  &.light > a {}
+  &.light > a { color: ${({ theme }) => theme.violet1}; }
   &.light > a {}
 `
 export const SimpleInformationsTextParagraph = styled(SimpleTextParagraph)`
@@ -1062,10 +1049,9 @@ export const EvidencedTextParagraph = styled(SimpleTextParagraph)`
   font-weight: 400;
   
   &.dark { color: ${({ theme }) => theme.azure1}; }
-  &.light {}
+  &.light { color: ${({ theme }) => theme.violet1}; }
   &.classic {}
 `
-
 const BaseButton = styled(Button)<{ width?: string, borderRadius?: string, selected?: boolean }>`
   padding: 0px !important;
   width: ${({ width }) => (width ? width : 'auto')};
@@ -1095,16 +1081,24 @@ export const IconButton = styled(BaseButton)<{ width?: string, borderRadius?: st
   & > span.icon-symbol { display: inline-block; margin-right: 10px; }
 
   &.dark > svg, &.dark > span.icon-symbol { stroke: ${({ theme }) => theme.azure1}; color: ${({ theme }) => theme.azure1}; }
-  &.light > svg, &.light > span.icon-symbol {}
+  &.light > svg, &.light > span.icon-symbol { stroke: ${({ theme }) => theme.violet2}; color: ${({ theme }) => theme.violet2}; }
+  &.light > svg.footer-icon { stroke: ${({ theme }) => theme.violet1}; color: ${({ theme }) => theme.violet1}; }
   &.classic > svg, &.classic > span.icon-symbol {}
 
   &.dark:hover > svg, &.dark:focus > svg { filter: drop-shadow(0px 0px 3px ${({ theme }) => theme.yellowLight}); }
   &.dark:hover > span.icon-symbol, &.dark:focus > span.icon-symbol { text-shadow: 0px 0px 3px ${({ theme }) => theme.yellowLight}; }
 
-  &.light:hover > svg, &.light:focus > svg {  }
+  &.light:hover > svg, &.light:focus > svg { stroke: ${({ theme }) => theme.azure6}; color: ${({ theme }) => theme.azure6}; filter: drop-shadow(0px 0px 3px ${({ theme }) => theme.utils.hexToRGB(theme.violet1, 0.9)}); }
+  &.light:hover > span.icon-symbol, &.light:focus > span.icon-symbol { color: ${({ theme }) => theme.azure6}; text-shadow: 0px 0px 3px ${({ theme }) => theme.utils.hexToRGB(theme.violet1, 0.9)}; }
+
   &.light:classic > svg, &.light:classic > svg {  }
 
   &.popup-close-icon, &.modal-close-icon  { position: absolute; right: 10px; top: 10px; }
+
+  & + .custom-label { cursor: pointer; margin-top: -0.3rem; font-weight: 600; }
+  & + .custom-label.dark {}
+  & + .custom-label.light {}
+  & + .custom-label.classic {}
 `
 export const GridContainer = styled.div`
   display: grid;
@@ -1140,10 +1134,7 @@ export const FooterInfo = styled.div`
   &.light {}
   &.classic {}
 
-  &.dark > div.swapCaption {     
-    margin: 0px auto -20px auto;
-  }
-
+  &.dark > div.swapCaption { margin: 0px auto -20px auto; }
 `
 export const TabsBar = styled.div`
   &.dark { }
@@ -1158,16 +1149,18 @@ export const TabsBar = styled.div`
     position: relative;
     height: 1px;
     bottom: -29px;
-    background: linear-gradient(90deg,rgba(129,205,243,0) 0,#81cdf3 5%, #81cdf3 95%, rgba(129,205,243,0));
   }
+
+  &.dark:before { background: linear-gradient(90deg,rgba(129,205,243,0) 0,#81cdf3 5%, #81cdf3 95%, rgba(129,205,243,0)); }
+  &.light:before { background: linear-gradient(90deg,rgba(129,205,243,0) 0, ${({ theme }) => theme.utils.hexToRGB(theme.violet1, 1)} 5%, ${({ theme }) => theme.utils.hexToRGB(theme.violet1, 1)} 95%, rgba(129,205,243,0)); }
 
   &.dark:after, &.light:after { }
 
   & .navigation-link > svg { width: 18px; }
   &.dark .navigation-link > svg { stroke: ${({ theme }) => theme.azure1}; color: ${({ theme }) => theme.azure1}; }
   &.dark .navigation-link:hover, &.dark .navigation-link:focus > svg { filter: drop-shadow(0px 0px 3px ${({ theme }) => theme.yellowLight}); }
-  &.light .navigation-link > svg { }
-  &.light .navigation-link:hover, &.light .navigation-link:focus > svg { }
+  &.light .navigation-link > svg { stroke: ${({ theme }) => theme.violet1}; color: ${({ theme }) => theme.violet1} }
+  &.light .navigation-link:hover, &.light .navigation-link:focus > svg { filter: drop-shadow(0px 0px 3px ${({ theme }) => theme.yellowLight}); }
   &.classic .navigation-link > svg { }
   &.classic .navigation-link:hover, &.classic .navigation-link:focus > svg { }
 `
@@ -1206,11 +1199,11 @@ export const TabLinkItem = styled(NavLink).attrs({ tabLinkItemActiveClassName })
   &.${tabLinkItemActiveClassName} { }
 
   &.dark.${tabLinkItemActiveClassName} { color: ${({ theme }) => theme.azure1}; }
-  &.light.${tabLinkItemActiveClassName} { color: #2f9ab8; }
+  &.light.${tabLinkItemActiveClassName} { color: ${({ theme }) => theme.violet1}; }
   &.classic.${tabLinkItemActiveClassName} { color: #2f9ab8; }
 
   &.dark:hover, &.dark:focus { color: ${({ theme }) => theme.azure1}; }
-  &.light:hover, &.light:focus { }
+  &.light:hover, &.light:focus { color: ${({ theme }) => theme.violet4}; }
   &.classic:hover, &.classic:focus { }
 
   &.dark.disabled, &.light.disabled, &.classic.disabled { opacity: 0.7; color: ${({ theme }) => theme.grey1}; }
@@ -1243,13 +1236,13 @@ export const StyledNavLink = styled(NavLink).attrs({ StyledNavLinkActiveClassNam
   margin: 0 12px;
   font-weight: 500;
 
-  &.dark { color: #95e1ff; }
+  &.dark { color: ${({ theme }) => theme.azure1}; }
   &.light { color: #565A69 }
   &.classic { color: #C3C5CB; }
 
   &.${StyledNavLinkActiveClassName} { font-weight: 600; }
 
-  &.dark.${StyledNavLinkActiveClassName} { color: #95e1ff; }
+  &.dark.${StyledNavLinkActiveClassName} { color: ${({ theme }) => theme.azure1}; }
   &.light.${StyledNavLinkActiveClassName} { color: #2f9ab8; }
   &.classic.${StyledNavLinkActiveClassName} { color: #2f9ab8; }
 
@@ -1286,8 +1279,8 @@ export const CurrencyFormPanel = styled.div<{ hideInput?: boolean }>`
   & > .itemsContainer .label { font-weight: 500; font-size: 14px; display: inline; }
   & > .itemsContainer .label.link { cursor: pointer; }
 
-  &.dark > .itemsContainer .label { color: #95e1ff; }
-  &.light > .itemsContainer .label { }
+  &.dark > .itemsContainer .label { color: ${({ theme }) => theme.azure1}; }
+  &.light > .itemsContainer .label { color: ${({ theme }) => theme.violet1}; }
   &.classic > .itemsContainer .label {}
 `
 export const ActionButton = styled(BaseButton)<{ disabled?: boolean, selected?: boolean, useCustomProperties?: boolean }>`
@@ -1309,11 +1302,15 @@ export const ActionButton = styled(BaseButton)<{ disabled?: boolean, selected?: 
     background-color: ${({ theme }) => theme.blue3};
   }
 
-  &.light {}
+  &.light {
+    color: ${({ theme }) => theme.violet1} !important;
+    border: 1px solid ${({ theme }) => theme.violet1} !important;
+    background-color: ${({ theme }) => theme.violet3};
+  }
   &.classic {}
 
   &.dark:hover, &.dark:focus { box-shadow: 0px 0px 4px ${({ theme }) => theme.yellowGreen}; }
-  &.light:hover, &.light:focus { }
+  &.light:hover, &.light:focus { box-shadow: 0px 0px 4px ${({ theme }) => theme.utils.hexToRGB(theme.black, 0.4)}; }
   &.classic:hover, &.classic:focus { }
 `
 const InfoCard = styled.button<{ active?: boolean }>`
@@ -1331,11 +1328,15 @@ const InfoCard = styled.button<{ active?: boolean }>`
     background-color: ${({ theme }) => theme.blue3};
   }
 
-  &.light {}
+  &.light {
+    color: ${({ theme }) => theme.violet1} !important;
+    border: 1px solid ${({ theme }) => theme.violet1} !important;
+    background-color: ${({ theme }) => theme.violet3};
+  }
   &.classic {}
 
   &.dark:hover, &.dark:focus { box-shadow: 0px 0px 4px ${({ theme }) => theme.azure1}; }
-  &.light:hover, &.light:focus { }
+  &.light:hover, &.light:focus { box-shadow: 0px 0px 4px ${({ theme }) => theme.utils.hexToRGB(theme.grey3, 0.5)}; }
   &.classic:hover, &.classic:focus { }
 `
 const OptionCard = styled(InfoCard as any)`
@@ -1502,13 +1503,13 @@ export const OperationButton = styled(Button)<{label?: string, disabled?: boolea
   &:before { bottom: 103px; right: -183px;  }
 
   &.dark { border: solid 1px ${({ theme }) => theme.azure1 }; background-color: ${({ theme }) => theme.black }; }
-  &.light {}
+  &.light { border: solid 1px ${({ theme }) => theme.violet1 }; background-color: ${({ theme }) => theme.violet4 }; }
   &.classic {}
 
   &.dark:hover, &.dark:focus { box-shadow: 0px 0px 12px ${({ theme }) => theme.azure1 }; }
   &.dark:hover::after { text-shadow: 0px 0px 12px ${({ theme }) => theme.azure1 }; }
-  &.light:hover, &.light:focus { }
-  &.light:hover::after { }
+  &.light:hover, &.light:focus { box-shadow: 0px 0px 12px ${({ theme }) => theme.violet1 }; }
+  &.light:hover::after { text-shadow: 0px 0px 12px ${({ theme }) => theme.violet1 }; }
   &.classic:hover, &.classic:focus { }
   &.classic:hover::after { }
 
@@ -1520,8 +1521,12 @@ export const OperationButton = styled(Button)<{label?: string, disabled?: boolea
     text-shadow: 1px 1px 2px ${({ theme }) => theme.blue3 }; 
   }
 
-  &.light:after {}
-  &.light:before {}
+  &.light:before { background: linear-gradient(to right, ${({ theme }) => theme.violet1} 0%, rgba(15,63,115,0) 100%); }
+  &.light:after {
+    font-weight: 500;
+    font-size:14px;
+    color: ${({ theme }) => theme.violet1 };
+  }  
 
   &.classic:after {}
   &.classic:before {}
@@ -1537,7 +1542,9 @@ export const MainOperationButton = styled(ActionButton)<{ disabled?: boolean, se
   &:disabled { opacity: 0.5; }
 
   &.dark.use-custom-properties.expert-mode:not([disabled]),
-  &.dark.popup-button.dismiss { 
+  &.dark.popup-button.dismiss,
+  &.light.use-custom-properties.expert-mode:not([disabled]),
+  &.light.popup-button.dismiss { 
     border: 1px solid ${({ theme }) => theme.red1} !important;
     color: ${({ theme }) => theme.red1} !important;
   }
@@ -1548,10 +1555,22 @@ export const MainOperationButton = styled(ActionButton)<{ disabled?: boolean, se
     background-color: ${({ theme }) => theme.blue3};
   }
 
+  &.light, &.light:disabled {
+    color: ${({ theme }) => theme.violet1} !important;
+    border: 1px solid ${({ theme }) => theme.violet1} !important;
+    background-color: ${({ theme }) => theme.violet3};
+  }
+
+  &.light:disabled, &.light.popup-button.dismiss { background-color: ${({ theme }) => theme.red3}; }
+
   &.dark:hover, &.dark:focus { box-shadow: 0px 0px 4px ${({ theme }) => theme.azure2}; }
+  &.light:hover, &.light:focus { box-shadow: 0px 0px 4px ${({ theme }) => theme.utils.hexToRGB(theme.grey3, 0.4)}; }
   &.dark.use-custom-properties.expert-mode:hover, 
-  &.dark.use-custom-properties.expert-mode:focus { box-shadow: 0px 0px 4px ${({ theme }) => theme.red2}; }
-  &:disabled.dark:hover, &:disabled.dark:focus { box-shadow: none; } 
+  &.dark.use-custom-properties.expert-mode:focus, 
+  &.light.use-custom-properties.expert-mode:hover, 
+  &.light.use-custom-properties.expert-mode:focus { box-shadow: 0px 0px 4px ${({ theme }) => theme.red2}; }
+  &:disabled.dark:hover, &:disabled.dark:focus,
+  &:disabled.light:hover, &:disabled.light:focus, { box-shadow: none; } 
 
   &.light {}
   &.classic {}
@@ -1595,7 +1614,7 @@ export const ContainerRow = styled.div<{ error?: boolean }>`
   }
 
   &.dark:after { background-color: ${({ theme, error }) => error ? theme.red2 : theme.azure1 }; }
-  &.light:after {}
+  &.light:after { background-color: ${({ theme, error }) => error ? theme.red2 : theme.violet1 }; }
   &.classic:after {}
 
   &:hover::after { width: 100%; }
@@ -1610,12 +1629,13 @@ export const ContainerRow = styled.div<{ error?: boolean }>`
   }
 
   &.dark > div.input-container > a { color: ${({ theme }) => theme.azure1 }; }
-  &.light > div.input-container > a { }
+  &.light > div.input-container > a { color: ${({ theme }) => theme.violet1 }; }
   &.classic > div.input-container > a { }
 
   &.search-token-container { margin-bottom: 20px; }
 
   &.dark.search-token-container { border-bottom: solid 1px ${({ theme }) => theme.utils.hexToRGB(theme.white, 0.2) }; }
+  &.light.search-token-container { border-bottom: solid 1px ${({ theme }) => theme.utils.hexToRGB(theme.white, 0.2) }; }
 `
 export const Input = styled.input<{ error?: boolean }>`
   font-size: 16px;
@@ -1652,18 +1672,22 @@ export const SecondaryPanelBoxContainer = styled.div`
   z-index: 2;
 
   &.dark { border: solid 1px ${({ theme }) => theme.utils.hexToRGB(theme.azure4, 1)}; } 
-  &.light {}
+  &.light {  }
   &.classic {}
 
-  &.dark > .inner-content {
+  &.dark > .inner-content, &.light > .inner-content {
     border-radius: 3px;
     width: 100%;
     padding: 5px 5px 5px 5px;
     background-size: cover;
-    background: linear-gradient(90deg, ${({ theme }) => theme.utils.hexToRGB(theme.blue4, 0.8)} 60%, ${({ theme }) => theme.utils.hexToRGB(theme.blue3, 0.8)} 100%);
   }
 
-  &.light > .inner-content {}
+  &.dark > .inner-content { background: linear-gradient(90deg, ${({ theme }) => theme.utils.hexToRGB(theme.blue4, 0.8)} 60%, ${({ theme }) => theme.utils.hexToRGB(theme.blue3, 0.8)} 100%); }
+  &.light > .inner-content { 
+    background: linear-gradient(90deg, ${({ theme }) => theme.utils.hexToRGB(theme.violet5, 1)} 60%, ${({ theme }) => theme.utils.hexToRGB(theme.violet5, 1)} 100%); 
+    border: solid 1px ${({ theme }) => theme.utils.hexToRGB(theme.violet3, 1)};
+  }
+  
   &.classic > .inner-content {}
 
   &.modal > .inner-content { height: 100%; }
@@ -1688,10 +1712,10 @@ export const SecondaryPanelBoxContainer = styled.div`
   }
 
   &.dark.modal > .modal-inner-content h6.with-content-divisor:after { background-color: ${({ theme }) => theme.azure1 } }
-  &.light.modal > .modal-inner-content h6.with-content-divisor:after {}
+  &.light.modal > .modal-inner-content h6.with-content-divisor:after { background-color: ${({ theme }) => theme.violet3 } }
   &.classic.modal > .modal-inner-content h6.with-content-divisor:after {}
 
-  &.popup > .popup-inner-content .popup-operations-container { overflow: hidden; padding-top: 15px; }
+  &.popup > .popup-inner-content .popup-operations-container { /*overflow: hidden;*/ padding-top: 15px; }
   &.popup > .popup-inner-content .popup-operations-container button { font-size: 12px !important; }
   &.popup > .popup-inner-content .popup-operations-container button:last-child { float: right; }
 
@@ -1714,11 +1738,9 @@ export const SecondaryPanelBoxContainer = styled.div`
     border-bottom: solid 1px ${({ theme }) => theme.azure1 };
   }
 
-  &.light.modal > .modal-inner-content .modal-content-wrapper > .connect-wallet-terms-and-conditions { 
-  }
+  &.light.modal > .modal-inner-content .modal-content-wrapper > .connect-wallet-terms-and-conditions { }
 
-  &.classic.modal > .modal-inner-content .modal-content-wrapper > .connect-wallet-terms-and-conditions { 
-  }
+  &.classic.modal > .modal-inner-content .modal-content-wrapper > .connect-wallet-terms-and-conditions { }
 
   &.settings-menu-panel {
     min-width: 20.125rem;
@@ -1738,8 +1760,11 @@ export const SecondaryPanelBoxContainer = styled.div`
   &.settings-menu-panel .sectionOption { font-weight: 500; font-size: 14px; }
 
   &.dark.settings-menu-panel .sectionOption { color: ${({ theme }) => theme.grey2 }; }
-  &.light.settings-menu-panel .sectionOption { }
+  &.light.settings-menu-panel .sectionOption { color: ${({ theme }) => theme.violet1 }; }
   &.classic.settings-menu-panel .sectionOption { }
+
+  &.light.popup > .popup-inner-content,
+  &.light.settings-menu-panel > .inner-content { box-shadow: 0px 0px 16px ${({ theme }) => theme.utils.hexToRGB(theme.grey3, 0.4)}; }
 `
 export const SecondaryPanelBoxContainerExtraDecorator = styled.div`
   position: absolute;
@@ -1862,15 +1887,13 @@ export const SearchTokenFormItems = styled(AutoColumn)`
   padding: 0px 0px 15px 0px;
   margin-bottom: 15px;
 
-  &.dark {
-    border-bottom: solid 1px ${({ theme }) => theme.azure1 };
-  }
-  &.light {}
+  &.dark { border-bottom: solid 1px ${({ theme }) => theme.azure1 }; }
+  &.light { border-bottom: solid 1px ${({ theme }) => theme.violet3 }; }
   &.classic {}
 
   & + .tokens-list-container { flex: 1 1 0%; }
   & + .tokens-list-container.dark { border-bottom: solid 1px ${({ theme }) => theme.azure1 };}
-  & + .tokens-list-container.light {}
+  & + .tokens-list-container.light { border-bottom: solid 1px ${({ theme }) => theme.violet3 }; }
   & + .tokens-list-container.classic {}
 `
 
@@ -1959,21 +1982,19 @@ const SettingsMenuOptionBase = styled.button`
 
   &:hover, &:focus {}
 
-  &.dark { border-color: #2f9ab8; color: #ffffff; }
-  &.light {}
+  &.dark { border-color: #2f9ab8; color: ${({ theme }) => theme.white}; }
+  &.light { border-color: ${({ theme }) => theme.violet1}; color: ${({ theme }) => theme.violet1}; }
   &.classic {}
 
-  &.dark:hover, &.dark:focus { border-color: #95e1ff; background-color: #1a1a1a; }
-
-  &.light:hover, &.light:focus { background-color: #1a1a1a; }
-  &.classic:hover, &.classic:focus { background-color: #1a1a1a; }
+  &.dark:hover, &.dark:focus { border-color: ${({ theme }) => theme.azure1}; background-color: ${({ theme }) => theme.grey4}; }
+  &.light:hover, &.light:focus { background-color: ${({ theme }) => theme.white}; color: ${({ theme }) => theme.violet1}; }
+  &.classic:hover, &.classic:focus { background-color: ${({ theme }) => theme.grey4}; }
 `
 export const SettingsMenuOption = styled(SettingsMenuOptionBase)<{ active: boolean }>`
   margin-right: 8px;
 
-  &.dark { background-color: ${({ active, theme }) => active && theme.bg6}; }
-
-  &.light {}
+  &.dark { background-color: ${({ active, theme }) => active && theme.grey4}; }
+  &.light { background-color: ${({ active, theme }) => active && theme.white}; }
   &.classic {}
 `
 export const SettingsMenuCustomOption = styled(SettingsMenuOptionBase)<{ active?: boolean; warning?: boolean }>`
@@ -1982,9 +2003,8 @@ export const SettingsMenuCustomOption = styled(SettingsMenuOptionBase)<{ active?
   padding: 0 0.75rem;
   flex: 1;
   border: ${({ theme, active, warning }) => active && `1px solid ${warning ? theme.red1 : theme.primary1}`};  
-  :hover {
-    border: ${({ theme, active, warning }) => active && `1px solid ${warning ? theme.red1 : theme.primary1 }`};
-  }
+  
+  &:hover { border: ${({ theme, active, warning }) => active && `1px solid ${warning ? theme.red1 : theme.primary1 }`}; }
 
   & input { 
     width: 80%; 
@@ -1996,6 +2016,7 @@ export const SettingsMenuCustomOption = styled(SettingsMenuOptionBase)<{ active?
   }
 
   &.dark input { color: ${({ theme }) => theme.white }; }
+  &.light input { color: ${({ theme }) => theme.violet1 }; }
 `
 export const SettingsMenuCustomOptionInput = styled.input`
   color: ${({ theme, color }) => (color === 'red' ? theme.red1 : theme.text1)};
@@ -2007,8 +2028,8 @@ export const ToggleButton = styled(SettingsMenuOptionBase)<{ isActive?: boolean;
   padding: 0;  
 
   &.dark { background: ${({ theme }) => theme.bg6}; }
+  &.light { background: ${({ theme }) => theme.utils.hexToRGB(theme.grey2, 0.3)}; }
 
-  &.light {}
   &.classic {}
 `
 export const ToggleButtonElement = styled.span<{ isActive?: boolean; isOnSwitch?: boolean }>`
@@ -2023,7 +2044,8 @@ export const ToggleButtonElement = styled.span<{ isActive?: boolean; isOnSwitch?
     background: ${({ theme, isActive, isOnSwitch }) => (isActive ? (isOnSwitch ? '#002852' : '#565A69') : 'none')};
   }
   &.light {
-    background: ${({ theme, isActive, isOnSwitch }) => (isActive ? (isOnSwitch ? '#002852' : '#C3C5CB') : 'none')};
+    color: ${({ theme }) => theme.white };
+    background: ${({ theme, isActive, isOnSwitch }) => (isActive ? (isOnSwitch ? theme.violet1 : '#C3C5CB') : 'none')};
   }
   &.classic {
     background: ${({ theme, isActive, isOnSwitch }) => (isActive ? (isOnSwitch ? '#002852' : '#565A69') : 'none')};
@@ -2060,11 +2082,8 @@ export const SearchTokenListItem = styled(RowBetween)`
   border-radius: 3px;
   margin-bottom: 15px;
 
-  &.dark {
-    color: ${({ theme }) => theme.azure2} !important;    
-  }
-
-  &.dark:disabled { opacity: 0.5; cursor: pointer; }
+  &.dark { color: ${({ theme }) => theme.azure2} !important; }
+  &.dark:disabled, &.light:disabled { opacity: 0.5; cursor: pointer; }
 
   &.dark:hover, &.dark:focus { 
     border: 1px solid ${({ theme }) => theme.azure2} !important;
@@ -2072,7 +2091,14 @@ export const SearchTokenListItem = styled(RowBetween)`
     box-shadow: 0px 0px 4px ${({ theme }) => theme.azure2}; 
   }
 
-  &.light {}
+  &.light { color: ${({ theme }) => theme.violet1} !important; }
+
+  &.light:hover, &.light:focus { 
+    border: 1px solid ${({ theme }) => theme.violet1} !important;
+    background-color: ${({ theme }) => theme.violet3};
+    box-shadow: 0px 0px 4px ${({ theme }) => theme.utils.hexToRGB(theme.black, 0.4)}; 
+  }
+
   &.classic {}
 `
 export const ModalContentWrapper = styled.div`
@@ -2156,7 +2182,7 @@ export const StyledRangeInput = styled.input`
   }
 
   &.dark::-webkit-slider-thumb { background-color: ${({ theme }) => theme.azure1}; color: ${({ theme }) => theme.azure1}; }
-  &.light::-webkit-slider-thumb {}
+  &.light::-webkit-slider-thumb { background-color: ${({ theme }) => theme.black}; color: ${({ theme }) => theme.black}; }
   &.classic::-webkit-slider-thumb {}
 
   &::-moz-range-thumb {
@@ -2240,4 +2266,81 @@ export const StyledRangeInput = styled.input`
   &.classic::-ms-track { background: ${({ theme }) => theme.azure1}; }
   &.classic::-ms-fill-lower { background: ${({ theme }) => theme.azure1}; }
   &.classic::-ms-fill-upper { background: ${({ theme }) => theme.azure1}; }
+`
+export const FooterControls = styled.div`
+  font-size: small;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-self: flex-end;
+  max-width: 1200px;
+  z-index:2;
+  width: 100%;
+
+  @media (max-width: 600px) { max-width: 90%; }
+  @media (max-width: 1200px) { max-width: 90%; }
+
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    flex-direction: row;
+    justify-content: space-between;
+    justify-self: center;
+    width: 100%;
+    max-width: 960px;
+    padding: 0rem 0.5rem;
+    position: fixed;
+    bottom: 0px;
+    left: 0px;
+    width: 100%;
+    z-index: 99;
+    height: 72px;
+    // border-radius: 12px 12px 0 0;
+    ${({ theme }) => theme.backgroundContainer2}
+  `};
+`
+export const FooterElement = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  ${({ theme }) => theme.mediaWidth.upToMedium` flex-direction: row-reverse; align-items: center; `};
+`
+export const FooterElementClock = styled.div`
+  display: flex;
+  width: 10%;
+  align-items: center;
+  gap: 8px;
+
+  ${({ theme }) => theme.mediaWidth.upToMedium` flex-direction: row-reverse; align-items: center; `};
+
+  @media (max-width: 960px) { display: none !important; }
+
+  & svg.footer-icon { 
+    width: 15px;
+    height: 15px;
+    margin-top: -1px;
+    vertical-align: middle;
+    margin-right: 3px;
+  }
+
+  & svg.footer-icon.dark { stroke: ${({ theme }) => theme.azure1}; color: ${({ theme }) => theme.azure1}; }
+  & svg.footer-icon.light { stroke: ${({ theme }) => theme.violet1}; color: ${({ theme }) => theme.violet1}; }
+  & svg.footer-icon.classic {}
+`
+export const HideSmall = styled.span`
+  ${({ theme }) => theme.mediaWidth.upToSmall` display: none; `};
+`
+export const HideExtraSmall = styled(Text)`
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall` display: none; `};
+`
+export const FooterElementWrap = styled.div`
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+`
+export const AccountElement = styled.div<{ active: boolean }>`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  white-space: nowrap;
+  width: 100%;
 `
