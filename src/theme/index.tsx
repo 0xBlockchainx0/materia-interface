@@ -1580,7 +1580,7 @@ export const MainOperationButton = styled(ActionButton)<{ disabled?: boolean, se
 export const TradePriceContainer = styled.div`
   margin-top: 250px;
   @media (max-width: 960px) { padding-left: 30px; }
-  @media (max-width: 1920px) { padding-left: 30px; }
+  // @media (max-width: 1920px) { padding-left: 30px; }
 `
 export const AddRecipientPanel = styled.div`
   position: absolute;

@@ -2,11 +2,12 @@ import { ChainId, Pair, Token } from '@materia-dex/sdk'
 import flatMap from 'lodash.flatmap'
 import { useCallback, useMemo } from 'react'
 import { shallowEqual, useDispatch, useSelector } from 'react-redux'
-import { BASES_TO_TRACK_LIQUIDITY_FOR, PINNED_PAIRS } from '../../constants'
+import { BASES_TO_TRACK_LIQUIDITY_FOR, PINNED_PAIRS, USD } from '../../constants'
 
 import { useActiveWeb3React } from '../../hooks'
-import { managePairInteroperableChecks, useAllTokens, useAllWrappedERC20Tokens } from '../../hooks/Tokens'
+import { useManagePairInteroperableChecks, useAllTokens, useAllWrappedERC20Tokens } from '../../hooks/Tokens'
 import { deepMerge } from '../../utils/deepMerge'
+import { unwrappedToken } from '../../utils/wrappedCurrency'
 import { AppDispatch, AppState } from '../index'
 import {
   addSerializedPair,
@@ -260,7 +261,7 @@ export function toLiquidityToken([tokenA, tokenB]: [Token, Token]): Token {
  */
 export function useTrackedTokenPairs(): [Token, Token][] {
   const { chainId } = useActiveWeb3React()
-  // const interoperableChecksDone = managePairInteroperableChecks(chainId ?? 1)
+  // const interoperableChecksDone = useManagePairInteroperableChecks(chainId ?? 1)
   const tokens = useAllTokens()
   // const wrappedTokens = useAllWrappedERC20Tokens()
 
