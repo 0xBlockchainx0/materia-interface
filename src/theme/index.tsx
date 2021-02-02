@@ -16,6 +16,9 @@ import { RowBetween } from '../components/Row'
 import Loader from '../components/Loader'
 import { Colors, DynamicGridColumnsDefinition } from './styled'
 import { images } from './images'
+import DavidFensTff from './fonts/DavidFens/DavidFens.ttf'
+import DavidFensWoff from './fonts/DavidFens/DavidFens.woff'
+import DavidFensWoff2 from './fonts/DavidFens/DavidFens.woff2'
 export * from './components'
 
 const MEDIA_WIDTHS = {
@@ -81,36 +84,40 @@ export function colors(darkMode: boolean, classicMode: boolean): Colors {
     white: '#FFFFFF',
     black: '#000000',
     transparent: 'transparent',
+    placeholderColor: classicMode ? '#FFFFFF' : darkMode ? '#FFFFFF' : '#6C7284',
 
-    azure1: classicMode ? '#000000' : darkMode ? '#95e1ff' : '#000000',
-    azure2: classicMode ? '#000000' : darkMode ? '#23bee5' : '#000000',
-    azure3: classicMode ? '#000000' : darkMode ? '#2d72e9' : '#000000',
-    azure4: classicMode ? '#000000' : darkMode ? '#126699' : '#000000',
-    azure5: classicMode ? '#000000' : darkMode ? '#97c6f7' : '#000000',
+    azure1: '#95e1ff',
+    azure2: '#23bee5',
+    azure3: '#2d72e9',
+    azure4: '#126699',
+    azure5: '#97c6f7',
     azure6: '#a5fcf6',
-    blue1: classicMode ? '#000000' : darkMode ? '#1e98dc' : '#000000',
-    blue2: classicMode ? '#000000' : darkMode ? '#022b63' : '#000000',
-    blue3: classicMode ? '#000000' : darkMode ? '#082751' : '#000000',
-    blue4: classicMode ? '#000000' : darkMode ? '#081f3f' : '#000000',
-    grey1: classicMode ? '#000000' : darkMode ? '#5e6873' : '#000000',
-    grey2: classicMode ? '#000000' : darkMode ? '#C3C5CB' : '#C3C5CB',
-    grey3: classicMode ? '#000000' : darkMode ? '#333333' : '#000000',
-    grey4: classicMode ? '#000000' : darkMode ? '#1a1a1a' : '#000000',
-    yellowGreen: classicMode ? '#000000' : darkMode ? '#878e13' : '#000000',
-    yellowLight: classicMode ? '#000000' : darkMode ? '#ffffbe' : '#000000', 
+    blue1: '#1e98dc',
+    blue2: '#022b63',
+    blue3: '#082751',
+    blue4: '#081f3f',
+    blue5: '#00029a',
+    blue6: '#00013a',
+    grey1: '#5e6873',
+    grey2: '#C3C5CB',
+    grey3: '#333333',
+    grey4: '#1a1a1a',
+    yellowGreen: '#878e13',
+    yellowLight: '#ffffbe', 
     red1: '#FF6871',
     red2: '#F82D3A',
     red3: '#fcdfe1',
     green1: '#27AE60',
     yellow1: '#FFE270',
     yellow2: '#F3841E',
-    grey: '#999999',
-    placeholderColor: classicMode ? '#000000' : darkMode ? '#FFFFFF' : '#6C7284',
+    grey: '#999999',    
     violet1: '#4138bc',
     violet2: '#a5a5c5',
     violet3: '#ccccff',
     violet4: '#80a9f7',
     violet5: '#e8e8fc',
+    violet6: '#700040',
+    violet7: '#660884',
 
     // text
     text1: classicMode ? '#FFFFFF' : darkMode ? '#FFFFFF' : '#000000',
@@ -358,13 +365,12 @@ export const TYPE = {
 
 export const FixedGlobalStyle = createGlobalStyle`
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
-html, input, textarea, button { font-family: 'Inter', sans-serif; font-display: fallback; }
-@supports (font-variation-settings: normal) {
-  html, input, textarea, button { font-family: 'Inter', sans-serif; }
-}
+@font-face { font-family: 'DavidFens'; src: url(${DavidFensWoff2}) format('woff2'), url(${DavidFensWoff}) format('woff'), url(${DavidFensTff}) format('truetype'); }
+@import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 html, body { margin: 0; padding: 0; }
 a { color: ${colors(false, false).blue1}; }
-* { box-sizing: border-box; }
+* { box-sizing: border-box; } 
 button { user-select: none; }
 
 html {
@@ -388,6 +394,10 @@ html {
   background-color: ${({ theme }) => theme.bg2};
 }
 
+${({ theme }) => ( (theme.name == 'classic' ? 'html, input, textarea, button { font-family: \'Press Start 2P\', cursive; font-size: 11px; /*font-family: \'VT323\', monospace;*/ /*font-family: \'DavidFens\', sans-serif;*/ }' : 
+  'html, input, textarea, button { font-family: \'Inter\', sans-serif; font-display: fallback; }' + 
+  '@supports (font-variation-settings: normal) { html, input, textarea, button { font-family: \'Inter\', sans-serif; } }' ) )}
+
 body {
   min-height: 100vh;
   background-position: 0 -30vh;
@@ -403,7 +413,7 @@ body {
     ))
   )};
   background-color: ${({ theme }) => (
-    (theme.name == 'classic' ? 'linear-gradient(rgba(0,0,0,.9), rgba(0,0,0,.9))' : (
+    (theme.name == 'classic' ? theme.black: (
       theme.name == 'dark' ? 'transparent' : 
       'linear-gradient(rgba(255,255,255,.1), rgba(255,255,255,.1))'
     ))
@@ -768,6 +778,9 @@ MARGIN STYLE MINUS
   svg.simple-icon.dark { stroke: ${({ theme }) => theme.azure1}; color: ${({ theme }) => theme.azure1}; }
   svg.simple-icon.light {}
   svg.simple-icon.classic {}
+
+  .token-address { font-size: 10px; font-weight: 500; margin-bottom: 10px; }
+  .token-address.classic { font-size: 7px; font-weight: 500; margin-bottom: 10px; margin-top: 10px; }
 `
 export const AppWrapper = styled.div`
   display: flex;
@@ -815,7 +828,11 @@ export const MainContainer = styled.div`
 
   &.dark { border: solid 1px ${({ theme }) => theme.utils.hexToRGB(theme.azure4, 1)}; } 
   &.light { border: solid 1px ${({ theme }) => theme.utils.hexToRGB(theme.violet1, 1)}; }
-  &.classic {}
+  &.classic { 
+    border: outset 3px ${({ theme }) => theme.utils.hexToRGB(theme.grey2, 1)}; 
+    padding: 0px;
+    border-radius: 3px;
+  }
 
   @media (max-width: 600px) { max-width: 90% !important; }
   @media (max-width: 1200px) { max-width: 90%; }
@@ -884,7 +901,10 @@ export const MainContainerContentWrapper = styled.div`
 
   &.dark { background: linear-gradient(133deg, ${({ theme }) => theme.utils.hexToRGB(theme.blue2, 0.8)} 60%, ${({ theme }) => theme.utils.hexToRGB(theme.azure3, 0.3)} 100%); }
   &.light { background: linear-gradient(133deg, ${({ theme }) => theme.utils.hexToRGB(theme.violet2, 0.3)} 60%, ${({ theme }) => theme.utils.hexToRGB(theme.violet3, 0.3)} 100%); }
-  &.classic {}
+  &.classic { 
+    padding: 5px 5px 5px 35px;
+    background: linear-gradient(0deg, ${({ theme }) => theme.utils.hexToRGB(theme.blue6, 1)} 0%, ${({ theme }) => theme.utils.hexToRGB(theme.blue5, 1)} 100%); 
+  }
 `
 export const FeatureTitle = styled.h2`
   writing-mode: vertical-rl;
@@ -905,7 +925,13 @@ export const FeatureTitle = styled.h2`
 
   &.dark { color: ${({ theme }) => theme.azure5}; }
   &.light { color: ${({ theme }) => theme.violet1}; }
-  &.classic { color: #FFFFFF; }
+  &.classic { 
+    color: #FFFFFF; 
+    left: 0px;
+    font-size: 24px;
+    font-weight: normal;
+    text-shadow: 1px 1px 1px ${({ theme }) => theme.black}
+  }
 
   &.dark:before { }
 
@@ -950,11 +976,16 @@ export const SectionTitle = styled.h6`
   display: inline-block;
   margin: 0px 0px 7px 0px;
   text-transform: capitalize;
-  padding:0px;
+  padding: 0px;
   width: 80%;
 
   &.dark { color: ${({ theme }) => theme.azure1}; }
   &.light { color: ${({ theme }) => theme.grey3}; }
+  &.classic { 
+    color: ${({ theme }) => theme.azure1}; 
+    font-size: 14px; 
+    text-shadow: 1px 1px 1px ${({ theme }) => theme.black}
+  }
 
   &.dark:before, &.light:before { }
 
@@ -1012,9 +1043,13 @@ export const InventoryItemContainer = styled.div`
 
   &.light { background: linear-gradient(180deg, rgba(211,221,250) 0%, rgba(211,221,250) 100%); }
 
-  &.classic { background: linear-gradient(180deg, rgba(0, 27, 49, 0.5) 0%, rgba(0, 27, 49, 0.5) 100%); }
+  &.classic { 
+    background: linear-gradient(180deg, rgba(0, 27, 49, 0.5) 0%, rgba(0, 27, 49, 0.5) 100%); 
+    font-size: 9px;
+  }
 
   & .balanceRow { display: inline-flex; margin: 5px 0px; font-size: 12px; }
+  &.classic .balanceRow { font-size: 7px; margin-top: 10px; }
 
   & .balanceRow > div:first-child { margin-right: 5px; }
 
@@ -1022,7 +1057,7 @@ export const InventoryItemContainer = styled.div`
 
   &.light .balanceRow > div:first-child { color: ${({ theme }) => theme.violet1}; }
 
-  &.classic .balanceRow > div:first-child, { color: #1671BB; }
+  &.classic .balanceRow > div:first-child { color: ${({ theme }) => theme.blue1}; }
 
   & .tokenType { margin: 5px 0px 5px 10px; display: inline-block; }
 `
@@ -1136,6 +1171,7 @@ export const FooterInfo = styled.div`
 
   &.dark > div.swapCaption { margin: 5px auto 5px auto; }
   &.light > div.swapCaption { margin: 5px auto 5px auto; }
+  &.classic > div.swapCaption { margin: 15px auto 15px auto; font-size: 9px; }
 `
 export const TabsBar = styled.div`
   &.dark { }
@@ -1152,6 +1188,19 @@ export const TabsBar = styled.div`
     bottom: -29px;
   }
 
+  &.classic:after, &.classic:before {
+    content: "";
+    width: 100%;
+    height: 1px;
+    display: block;
+    left: 0px;
+    bottom: -29px;
+    position: relative;
+  }
+
+  &.classic:after { background: #c8c8d2; }
+  &.classic:before { background: #9899ae; }
+
   &.dark:before { background: linear-gradient(90deg,rgba(129,205,243,0) 0,#81cdf3 5%, #81cdf3 95%, rgba(129,205,243,0)); }
   &.light:before { background: linear-gradient(90deg,rgba(129,205,243,0) 0, ${({ theme }) => theme.utils.hexToRGB(theme.violet1, 1)} 5%, ${({ theme }) => theme.utils.hexToRGB(theme.violet1, 1)} 95%, rgba(129,205,243,0)); }
 
@@ -1162,8 +1211,8 @@ export const TabsBar = styled.div`
   &.dark .navigation-link:hover, &.dark .navigation-link:focus > svg { filter: drop-shadow(0px 0px 3px ${({ theme }) => theme.yellowLight}); }
   &.light .navigation-link > svg { stroke: ${({ theme }) => theme.violet1}; color: ${({ theme }) => theme.violet1} }
   &.light .navigation-link:hover, &.light .navigation-link:focus > svg { filter: drop-shadow(0px 0px 3px ${({ theme }) => theme.yellowLight}); }
-  &.classic .navigation-link > svg { }
-  &.classic .navigation-link:hover, &.classic .navigation-link:focus > svg { }
+  &.classic .navigation-link > svg { stroke: ${({ theme }) => theme.azure1}; color: ${({ theme }) => theme.azure1}; }
+  &.classic .navigation-link:hover, &.classic .navigation-link:focus > svg { filter: drop-shadow(0px 0px 3px ${({ theme }) => theme.yellowLight}); }
 `
 export const DynamicGrid = styled.div<{ columns: number, columnsDefinitions?: DynamicGridColumnsDefinition[] }>`
   display: grid;
@@ -1178,7 +1227,6 @@ export const DynamicGrid = styled.div<{ columns: number, columnsDefinitions?: Dy
   &.light .title { color: ${({ theme }) => theme.grey1}; }
   &.classic .title {}
 `
-
 const tabLinkItemActiveClassName = 'active'
 export const TabLinkItem = styled(NavLink).attrs({ tabLinkItemActiveClassName })`
   display: flex;
@@ -1195,17 +1243,21 @@ export const TabLinkItem = styled(NavLink).attrs({ tabLinkItemActiveClassName })
   
   &.dark { color: ${({ theme }) => theme.white}; }
   &.light { color: ${({ theme }) => theme.grey1}; }
-  &.classic { color: #C3C5CB; }
+  &.classic { 
+    color: ${({ theme }) => theme.white}; 
+    font-size: 14px; 
+    text-shadow: 1px 1px 1px ${({ theme }) => theme.black}; 
+  }
 
   &.${tabLinkItemActiveClassName} { }
 
   &.dark.${tabLinkItemActiveClassName} { color: ${({ theme }) => theme.azure1}; }
   &.light.${tabLinkItemActiveClassName} { color: ${({ theme }) => theme.violet1}; }
-  &.classic.${tabLinkItemActiveClassName} { color: #2f9ab8; }
+  &.classic.${tabLinkItemActiveClassName} { color: ${({ theme }) => theme.azure1}; }
 
   &.dark:hover, &.dark:focus { color: ${({ theme }) => theme.azure1}; }
   &.light:hover, &.light:focus { color: ${({ theme }) => theme.violet4}; }
-  &.classic:hover, &.classic:focus { }
+  &.classic:hover, &.classic:focus { color: ${({ theme }) => theme.azure1}; }
 
   &.dark.disabled, &.light.disabled, &.classic.disabled { opacity: 0.7; color: ${({ theme }) => theme.grey1}; }
 
@@ -1282,7 +1334,7 @@ export const CurrencyFormPanel = styled.div<{ hideInput?: boolean }>`
 
   &.dark > .itemsContainer .label { color: ${({ theme }) => theme.azure1}; }
   &.light > .itemsContainer .label { color: ${({ theme }) => theme.violet1}; }
-  &.classic > .itemsContainer .label {}
+  &.classic > .itemsContainer .label { color: ${({ theme }) => theme.azure1}; font-size: 9px; }
 `
 export const ActionButton = styled(BaseButton)<{ disabled?: boolean, selected?: boolean, useCustomProperties?: boolean }>`
   border-radius: 3px !important;
@@ -1352,6 +1404,18 @@ export const OptionCardClickable = styled(OptionCard as any)<{ clickable?: boole
   margin-top: 0;
   &:hover { cursor: ${({ clickable }) => (clickable ? 'pointer' : '')}; }
   opacity: ${({ disabled }) => (disabled ? '0.5' : '1')};
+  &.classic { position: relative; }
+  &.classic:before { 
+    position: absolute;
+    content: " ";
+    display: block; 
+    width: 57px;
+    height: 35px;
+    background-image: url(${images.icons.FF7Cursor});
+    background-repeat: no-repeat;
+    background-position: center center;
+  }
+  &.classic:hover { color: yellow }
 `
 export const OptionCardLeft = styled.div`
   ${({ theme }) => theme.flexColumnNoWrap};
@@ -1392,11 +1456,11 @@ export const DropDownButton = styled(BaseButton)<{ width?: string, borderRadius?
 
   &.dark { color: ${({ theme }) => theme.azure1 }; }
   &.light {}
-  &.classic {}
+  &.classic { color: ${({ theme }) => theme.azure1 }; }
 
   &.dark > svg { filter: drop-shadow(1px 2px 3px ${({ theme }) => theme.blue3}); }
   &.light > svg {}
-  &.light > svg {}
+  &.classic > svg { filter: drop-shadow(1px 2px 3px ${({ theme }) => theme.blue3}); }
 `
 export const SwitchButton = styled(Button)<{disabled?: boolean}>`
   padding: 0px !important;
@@ -1440,7 +1504,9 @@ export const SwitchButton = styled(Button)<{disabled?: boolean}>`
 
   &.dark { border: solid 1px ${({ theme }) => theme.azure1 }; background-color: ${({ theme }) => theme.black }; }
   &.light { border: solid 1px ${({ theme }) => theme.violet1 }; background-color: ${({ theme }) => theme.violet4 }; }
-  &.classic {}
+  &.classic, &.classic:after, &.classic:before, &.classic > svg { transform: rotate(0deg); }  
+  &.classic:after { bottom: 0px; right: 0px; }
+  &.classic:before { top: 0px; left: 0px; }
 
   &.dark:hover, &.dark:focus { box-shadow: 0px 0px 12px ${({ theme }) => theme.azure1 }; }
   &.light:hover, &.light:focus { box-shadow: 0px 0px 12px ${({ theme }) => theme.violet1 }; }
@@ -1482,6 +1548,7 @@ export const OperationButton = styled(Button)<{label?: string, disabled?: boolea
   &.hidden { display: none !important; }
 
   & > svg { width: 15px; height: 15px; transform: rotate(-45deg); margin-left: -1px; margin-bottom: -1px; }
+  &.classic > svg { transform: rotate(0deg); }
 
   &:after, &:before {
     content: "";
@@ -1491,6 +1558,8 @@ export const OperationButton = styled(Button)<{label?: string, disabled?: boolea
     height: 1px;
     transform: rotate(-45deg);    
   }
+
+  &.classic:after, &.classic:before { transform: rotate(0deg); }
 
   &:after { 
     content: ${({ label }) => (label ? "\"" + label + "\"" : "\"" + + "\"")}; 
@@ -1616,7 +1685,7 @@ export const ContainerRow = styled.div<{ error?: boolean }>`
 
   &.dark:after { background-color: ${({ theme, error }) => error ? theme.red2 : theme.azure1 }; }
   &.light:after { background-color: ${({ theme, error }) => error ? theme.red2 : theme.violet1 }; }
-  &.classic:after {}
+  &.classic:after { background-color: ${({ theme, error }) => error ? theme.red2 : theme.grey2 }; }
 
   &:hover::after { width: 100%; }
 
@@ -1631,12 +1700,14 @@ export const ContainerRow = styled.div<{ error?: boolean }>`
 
   &.dark > div.input-container > a { color: ${({ theme }) => theme.azure1 }; }
   &.light > div.input-container > a { color: ${({ theme }) => theme.violet1 }; }
-  &.classic > div.input-container > a { }
+  &.classic > div.input-container > a { color: ${({ theme }) => theme.azure1 }; }
 
   &.search-token-container { margin-bottom: 20px; }
 
   &.dark.search-token-container { border-bottom: solid 1px ${({ theme }) => theme.utils.hexToRGB(theme.white, 0.2) }; }
   &.light.search-token-container { border-bottom: solid 1px ${({ theme }) => theme.utils.hexToRGB(theme.white, 0.2) }; }
+  &.classic.search-token-container { border-bottom: solid 1px ${({ theme }) => theme.utils.hexToRGB(theme.white, 0.2) }; }
+  &.classic.search-token-container input { font-size: 9px !important; }
 `
 export const Input = styled.input<{ error?: boolean }>`
   font-size: 16px;
@@ -1673,10 +1744,10 @@ export const SecondaryPanelBoxContainer = styled.div`
   z-index: 2;
 
   &.dark { border: solid 1px ${({ theme }) => theme.utils.hexToRGB(theme.azure4, 1)}; } 
-  &.light {  }
+  &.light { }
   &.classic {}
 
-  &.dark > .inner-content, &.light > .inner-content {
+  &.dark > .inner-content, &.light > .inner-content, &.classic > .inner-content {
     border-radius: 3px;
     width: 100%;
     padding: 5px 5px 5px 5px;
@@ -1687,9 +1758,11 @@ export const SecondaryPanelBoxContainer = styled.div`
   &.light > .inner-content { 
     background: linear-gradient(90deg, ${({ theme }) => theme.utils.hexToRGB(theme.violet5, 1)} 60%, ${({ theme }) => theme.utils.hexToRGB(theme.violet5, 1)} 100%); 
     border: solid 1px ${({ theme }) => theme.utils.hexToRGB(theme.violet3, 1)};
+  }  
+  &.classic > .inner-content {
+    background: linear-gradient(0deg, ${({ theme }) => theme.utils.hexToRGB(theme.violet6, 1)} 60%, ${({ theme }) => theme.utils.hexToRGB(theme.violet7, 1)} 100%); 
+    border: outset 3px ${({ theme }) => theme.utils.hexToRGB(theme.grey2, 1)}; 
   }
-  
-  &.classic > .inner-content {}
 
   &.modal > .inner-content { height: 100%; }
 
@@ -1701,6 +1774,7 @@ export const SecondaryPanelBoxContainer = styled.div`
   &.popup > .popup-inner-content h6 + ul { font-size: 13px; }
 
   &.modal > .modal-inner-content h6 { font-size: 15px; margin: 0px 0px 15px 0px; }
+  &.classic.modal > .modal-inner-content h6 { font-size: 11px; text-shadow: 1px 1px 1px ${({ theme }) => theme.black} }
   &.modal > .modal-inner-content h6.with-content-divisor { position:relative; padding-bottom: 15px; }
   &.modal > .modal-inner-content h6.with-content-divisor:after {
     content: "";
@@ -1714,7 +1788,7 @@ export const SecondaryPanelBoxContainer = styled.div`
 
   &.dark.modal > .modal-inner-content h6.with-content-divisor:after { background-color: ${({ theme }) => theme.azure1 } }
   &.light.modal > .modal-inner-content h6.with-content-divisor:after { background-color: ${({ theme }) => theme.violet3 } }
-  &.classic.modal > .modal-inner-content h6.with-content-divisor:after {}
+  &.classic.modal > .modal-inner-content h6.with-content-divisor:after { background-color: ${({ theme }) => theme.grey2 } }
 
   &.popup > .popup-inner-content .popup-operations-container { /*overflow: hidden;*/ padding-top: 15px; }
   &.popup > .popup-inner-content .popup-operations-container button { font-size: 12px !important; }
@@ -1723,7 +1797,8 @@ export const SecondaryPanelBoxContainer = styled.div`
   &.dark.popup > .popup-inner-content h6, &.dark.modal > .modal-inner-content h6 { color: ${({ theme }) => theme.azure1 } }
   &.dark.popup > .popup-inner-content h6 svg, &.dark.modal > .modal-inner-content h6 svg  { stroke: ${({ theme }) => theme.azure1 } }
   &.light.popup > .popup-inner-content h6, &.light.modal > .modal-inner-content h6  { }
-  &.classic.popup > .popup-inner-content h6, &.classic.modal > .modal-inner-content h6 { }
+  &.classic.popup > .popup-inner-content h6, &.classic.modal > .modal-inner-content h6 { color: ${({ theme }) => theme.azure1 }; letter-spacing: 0.15em; }
+  &.classic.popup > .popup-inner-content h6 svg, &.classic.modal > .modal-inner-content h6 svg  { stroke: ${({ theme }) => theme.azure1 } }
 
   &.modal > .modal-inner-content .modal-content-wrapper > .connect-wallet-terms-and-conditions { 
     display: flex;
@@ -1847,7 +1922,7 @@ export const ThemedDialogOverlay = styled(AnimatedDialogOverlay)`
 
   &.dark[data-reach-dialog-overlay] { background-color: ${({ theme }) => theme.utils.hexToRGB(theme.black, 0.8)}; }
   &.light[data-reach-dialog-overlay] {}
-  &.classic[data-reach-dialog-overlay] {}
+  &.classic[data-reach-dialog-overlay] { background-color: ${({ theme }) => theme.utils.hexToRGB(theme.black, 0.8)}; }
 `
 const AnimatedDialogContent = animated(DialogContent)
 export const ThemedDialogContent = styled(({ minHeight, maxHeight, mobile, isOpen, ...rest }) => (
@@ -1891,12 +1966,12 @@ export const SearchTokenFormItems = styled(AutoColumn)`
 
   &.dark { border-bottom: solid 1px ${({ theme }) => theme.azure1 }; }
   &.light { border-bottom: solid 1px ${({ theme }) => theme.violet3 }; }
-  &.classic {}
+  &.classic { border-bottom: solid 1px ${({ theme }) => theme.grey2 }; }
 
   & + .tokens-list-container { flex: 1 1 0%; }
   & + .tokens-list-container.dark { border-bottom: solid 1px ${({ theme }) => theme.azure1 };}
   & + .tokens-list-container.light { border-bottom: solid 1px ${({ theme }) => theme.violet3 }; }
-  & + .tokens-list-container.classic {}
+  & + .tokens-list-container.classic { border-bottom: solid 1px ${({ theme }) => theme.grey2 };}
 `
 
 export const InfoBox = styled.div`
@@ -1913,21 +1988,21 @@ export const InfoBox = styled.div`
     color: ${({ theme }) => theme.azure1 };
   }
   &.light.info {}
-  &.light.info {}
+  &.classic.info {}
 
   &.dark.warning {
     border: solid 1px ${({ theme }) => theme.yellowGreen };
     color: ${({ theme }) => theme.yellowGreen };
   }
   &.light.warning {}
-  &.light.warning {}
+  &.classic.warning {}
 
   &.dark.error {     
     border: solid 1px ${({ theme }) => theme.red1 };
     color: ${({ theme }) => theme.red1 };
   }
   &.light.error {}
-  &.light.error {}
+  &.classic.error {}
 `
 export const ModalCaption = styled.div`
   ${({ theme }) => theme.flexRowNoWrap}
@@ -2031,6 +2106,7 @@ export const ToggleButton = styled(SettingsMenuOptionBase)<{ isActive?: boolean;
 
   &.dark { background: ${({ theme }) => theme.bg6}; }
   &.light { background: ${({ theme }) => theme.utils.hexToRGB(theme.grey2, 0.3)}; }
+  &.light:hover span:not(.active) { color: ${({ theme }) => theme.violet1}; }
 
   &.classic {}
 `
@@ -2059,8 +2135,8 @@ export const ToggleButtonElement = styled.span<{ isActive?: boolean; isOnSwitch?
   }
 
   &.light:hover {
-    background: ${({ theme, isActive, isOnSwitch }) => (isActive ? (isOnSwitch ? '#002852' : '#565A69') : 'none')}
-    color: ${({ theme, isActive, isOnSwitch }) => (isActive ? (isOnSwitch ? '' : '#565A69') : theme.text3)};
+    background: ${({ theme, isActive, isOnSwitch }) => (isActive ? (isOnSwitch ? '#002852' : '#002852') : 'none')}
+    color: ${({ theme, isActive, isOnSwitch }) => (isActive ? (isOnSwitch ? '#565A69' : '#565A69') : theme.text3)};
   }
 
   &.classic:hover {
@@ -2101,7 +2177,21 @@ export const SearchTokenListItem = styled(RowBetween)`
     box-shadow: 0px 0px 4px ${({ theme }) => theme.utils.hexToRGB(theme.black, 0.4)}; 
   }
 
-  &.classic {}
+  &.classic { position: relative; }
+  &.classic:before { 
+    position: absolute;
+    content: " ";
+    display: none; 
+    width: 57px;
+    height: 35px;
+    background-image: url(${images.icons.FF7Cursor});
+    background-repeat: no-repeat;
+    background-position: center center;
+    left:0px;
+    top: 25%;
+  }
+  &.classic:hover, &.classic:focus { color: ${({ theme }) => theme.azure2}; }
+  &.classic:hover:before, &.classic:focus:before { display: block; }
 `
 export const ModalContentWrapper = styled.div`
   display: flex;
@@ -2298,6 +2388,8 @@ export const FooterControls = styled.div`
     // border-radius: 12px 12px 0 0;
     ${({ theme }) => theme.backgroundContainer2}
   `};
+
+  &.classic { font-size: 9px; }
 `
 export const FooterElement = styled.div`
   display: flex;
@@ -2345,4 +2437,28 @@ export const AccountElement = styled.div<{ active: boolean }>`
   align-items: center;
   white-space: nowrap;
   width: 100%;
+`
+export const StyledInput = styled.input<{ error?: boolean; fontSize?: string; align?: string }>`
+  color: ${({ error, theme }) => (error ? theme.red1 : theme.text1)};
+  width: 0;
+  position: relative;
+  font-weight: 500;
+  outline: none;
+  border: none;
+  flex: 1 1 auto;
+  background-color: transparent;
+  font-size: ${({ fontSize }) => fontSize ?? '24px'};
+  text-align: ${({ align }) => align && align};
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 0px;
+  -webkit-appearance: textfield;
+  [type='number'] { -moz-appearance: textfield; }
+
+  // @media (max-width: 450px) {
+  //   margin-left: -4rem;
+  // }
+
+  &.classic { font-size: 16px; text-shadow: 1px 1px 1px ${({ theme }) => theme.black}; }
 `

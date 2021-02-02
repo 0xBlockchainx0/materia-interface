@@ -1,29 +1,7 @@
-import React from 'react'
-import styled from 'styled-components'
+import React, { useContext } from 'react'
+import styled, { ThemeContext } from 'styled-components'
 import { escapeRegExp } from '../../utils'
-
-const StyledInput = styled.input<{ error?: boolean; fontSize?: string; align?: string }>`
-  color: ${({ error, theme }) => (error ? theme.red1 : theme.text1)};
-  width: 0;
-  position: relative;
-  font-weight: 500;
-  outline: none;
-  border: none;
-  flex: 1 1 auto;
-  background-color: transparent;
-  font-size: ${({ fontSize }) => fontSize ?? '24px'};
-  text-align: ${({ align }) => align && align};
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  padding: 0px;
-  -webkit-appearance: textfield;
-  [type='number'] { -moz-appearance: textfield; }
-
-  // @media (max-width: 450px) {
-  //   margin-left: -4rem;
-  // }
-`
+import { StyledInput } from '../../theme'
 
 const inputRegex = RegExp(`^\\d*(?:\\\\[.])?\\d*$`) // match escaped "." characters via in a non-capturing group
 
@@ -44,10 +22,12 @@ export const Input = React.memo(function InnerInput({
       onUserInput(nextUserInput)
     }
   }
+  const theme = useContext(ThemeContext)
 
   return (
     <StyledInput
       {...rest}
+      className={theme.name}
       value={value}
       onChange={event => {
         // replace commas with periods, because it uses period as the decimal separator

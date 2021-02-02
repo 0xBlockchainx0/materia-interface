@@ -48,7 +48,7 @@ const StyledDropDown = styled(DropDown) <{ selected: boolean }>`
 
   & path { stroke-width: 1.5px; }
 
-  &.dark path { stroke: ${({ selected, theme }) => (selected ? theme.text1 : theme.white)}; }
+  &.dark path, &.classic path { stroke: ${({ selected, theme }) => (selected ? theme.text1 : theme.white)}; }
   &.light path { stroke: ${({ selected, theme }) => (selected ? theme.black : theme.black)}; }
 `
 
@@ -56,6 +56,11 @@ const StyledTokenName = styled.span<{ active?: boolean }>`
   ${({ active }) => (active ? '  margin: 0 0.25rem 0 0.75rem;' : '  margin: 0 0.25rem 0 0.25rem;')}
   font-size:  ${({ active }) => (active ? '20px' : '16px')};
   color: ${({ theme }) => theme.text1};
+
+  &.classic { 
+    font-size:  ${({ active }) => (active ? '16px' : '12px')};
+    text-shadow: 1px 1px 1px ${({ theme }) => theme.black};
+  }
 `
 
 
@@ -130,11 +135,11 @@ export default function CurrencyInputPanel({
             <DropDownButton className={ `open-currency-select-button ${theme.name}` } selected={!!currency} onClick={() => { if (!disableCurrencySelect) { setModalOpen(true)  } }} >
               <Aligner>
                 {pair ? (
-                  <StyledTokenName className="pair-name-container">
+                  <StyledTokenName className={`pair-name-container ${theme.name}`}>
                     {pair?.token0.symbol}:{pair?.token1.symbol}
                   </StyledTokenName>
                 ) : (
-                    <StyledTokenName className="token-symbol-container" active={Boolean(currency && currency.symbol)}>
+                    <StyledTokenName className={`token-symbol-container ${theme.name}`} active={Boolean(currency && currency.symbol)}>
                       {(currency && currency.symbol && currency.symbol.length > 20
                         ? currency.symbol.slice(0, 4) +
                         '...' +

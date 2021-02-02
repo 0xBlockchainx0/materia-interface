@@ -17,6 +17,8 @@ import swapButtonBgLight from '../assets/images/button-background-light.png'
 import tokenImageNotFoundDark from '../assets/images/token-backgrounds/default-token-image-dark.png'
 import tokenImageNotFoundLight from '../assets/images/token-backgrounds/default-token-image-light.png'
 
+import FF7Cursor from '../assets/images/FF7Cursor.png'
+
 export const images = {
     backgrounds: {
       dark: darkBackground,
@@ -54,5 +56,8 @@ export const images = {
       dark: tokenImageNotFoundDark,
       light: tokenImageNotFoundLight,
       classic: null
+    },
+    icons: {
+      FF7Cursor: FF7Cursor
     }
 }

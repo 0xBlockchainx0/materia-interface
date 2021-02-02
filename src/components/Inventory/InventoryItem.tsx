@@ -144,7 +144,7 @@ export default function InventoryItem({
 
       {showMore && (
         <AutoColumn>
-          <Text fontSize={10} fontWeight={500} style={{ marginBottom: '10px' }}>{tokenAddress}</Text>
+          <Text className={` token-address ${theme.name}`} fontSize={10} fontWeight={500} style={{ marginBottom: '10px' }}>{tokenAddress}</Text>
           {/* <FixedHeightRow>
             <>
               <NumericalInput

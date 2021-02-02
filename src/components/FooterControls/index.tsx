@@ -73,7 +73,7 @@ export default function Footer() {
   const theme = useContext(ThemeContext)
 
   return (
-    <FooterControls>
+    <FooterControls className={theme.name}>
       <FooterElementClock>
         <div className="ml20">
           <TimeIcon className={`footer-icon ${theme.name}`}/> <Clock format={'HH:mm:ss'} ticking={true} />

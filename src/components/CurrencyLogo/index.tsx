@@ -1,7 +1,6 @@
-import { Currency, ETHER, Token } from '@materia-dex/sdk'
 import React, { useMemo } from 'react'
 import styled from 'styled-components'
-
+import { Currency, ETHER, Token } from '@materia-dex/sdk'
 import EthereumLogo from '../../assets/images/ethereum-logo.png'
 import useHttpLocations from '../../hooks/useHttpLocations'
 import { WrappedTokenInfo } from '../../state/lists/hooks'
@@ -13,12 +12,10 @@ const getTokenLogoURL = (address: string) =>
 const StyledEthereumLogo = styled.img<{ size: string }>`
   width: ${({ size }) => size};
   height: auto;
-
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 `
-
 const StyledLogo = styled(Logo)<{ size: string, radius: boolean }>`
   width: ${({ size }) => size};
   height: auto;
@@ -27,7 +24,6 @@ const StyledLogo = styled(Logo)<{ size: string, radius: boolean }>`
   margin-right: auto;
   border-radius: ${({ radius }) => radius ? '15px' : 'unset'};
 `
-
 export default function CurrencyLogo({
   currency,
   size = '24px',

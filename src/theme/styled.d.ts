@@ -27,6 +27,8 @@ export interface Colors {
   violet3: Color,
   violet4: Color,
   violet5: Color,
+  violet6: Color,
+  violet7: Color,
 
   // text
   text1: Color
@@ -76,6 +78,8 @@ export interface Colors {
   blue2: Color
   blue3: Color
   blue4: Color
+  blue5: Color
+  blue6: Color
   cyan1: Color
   cyan2: Color
   grey: Color
