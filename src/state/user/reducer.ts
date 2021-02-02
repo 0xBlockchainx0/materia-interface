@@ -4,10 +4,8 @@ import { updateVersion } from '../global/actions'
 import {
   addSerializedPair,
   addSerializedToken,
-  addSerializedInteroperableCheck,
   removeSerializedPair,
   removeSerializedToken,
-  removeSerializedInteroperableCheck,
   SerializedPair,
   SerializedToken,
   updateMatchesDarkMode,
@@ -18,7 +16,8 @@ import {
   updateUserDeadline,
   toggleURLWarning,
   updateMatchesClassicMode,
-  SerializedInteroperableCheck
+  addInteroperableTokens,
+  removeInteroperableTokens
 } from './actions'
 
 const currentTimestamp = () => new Date().getTime()
@@ -53,11 +52,8 @@ export interface UserState {
     }
   }
 
-  interoperableChecks: {
-    [chainId: number]: {
-      // keyed by token0Address:token1Address
-      [key: string]: SerializedInteroperableCheck
-    }
+  interoperableTokens: {
+    [chainId: number]: string[]
   }
 
   timestamp: number
@@ -78,7 +74,7 @@ export const initialState: UserState = {
   userDeadline: DEFAULT_DEADLINE_FROM_NOW,
   tokens: {},
   pairs: {},
-  interoperableChecks: {},
+  interoperableTokens: {},
   timestamp: currentTimestamp(),
   URLWarningVisible: true
 }
@@ -157,18 +153,16 @@ export default createReducer(initialState, builder =>
       }
       state.timestamp = currentTimestamp()
     })
-    .addCase(addSerializedInteroperableCheck, (state, { payload: { chainId, serializedInteroperableCheck } }) => {
-      if (serializedInteroperableCheck.token0 !== serializedInteroperableCheck.token1) {
-        state.interoperableChecks[chainId] = state.interoperableChecks[chainId] || {}
-        state.interoperableChecks[chainId][pairKey(serializedInteroperableCheck.token0, serializedInteroperableCheck.token1)] = serializedInteroperableCheck
-      }
+    .addCase(addInteroperableTokens, (state, { payload: { chainId, interoperableTokens } }) => {
+      state.interoperableTokens = state.interoperableTokens ?? {}
+      state.interoperableTokens[chainId] = state.interoperableTokens[chainId] || {}
+      state.interoperableTokens[chainId] = interoperableTokens ?? []
       state.timestamp = currentTimestamp()
     })
-    .addCase(removeSerializedInteroperableCheck, (state, { payload: { chainId, tokenAAddress, tokenBAddress } }) => {
-      if (state.interoperableChecks[chainId]) {
-        // just delete both keys if either exists
-        delete state.interoperableChecks[chainId][pairKey(tokenAAddress, tokenBAddress)]
-        delete state.interoperableChecks[chainId][pairKey(tokenBAddress, tokenAAddress)]
+    .addCase(removeInteroperableTokens, (state, { payload: { chainId } }) => {
+      state.interoperableTokens = state.interoperableTokens ?? {}
+      if (state.interoperableTokens[chainId]) {
+        delete state.interoperableTokens[chainId]
       }
       state.timestamp = currentTimestamp()
     })
