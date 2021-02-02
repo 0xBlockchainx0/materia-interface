@@ -220,7 +220,7 @@ export default function AddLiquidity({
 
   const addTransaction = useTransactionAdder()
   const addInteroperableTokens = useAddInteroperableTokens()
-  
+
   const { execute: onLiquidityPoolsUpdate } = useUpdateWrappedERC20TokensCallback(chainId, library, addInteroperableTokens)
 
   async function onAdd(checkIsEthItem: Result | undefined) {
@@ -594,7 +594,7 @@ export default function AddLiquidity({
                     </EmptyProposals>
                   )}
             <SimpleTextParagraph className={`text-left ${theme.name}`}>
-              Don't see a pool you joined? <StyledInternalLink id="refresh-pool-link" to={'#'} onClick={onLiquidityPoolsUpdate}>Refresh</StyledInternalLink> you pools or <StyledInternalLink id="import-pool-link" to={'/find'}>import</StyledInternalLink> it.
+              Don't see a pool you joined? <StyledInternalLink id="refresh-pool-link" to={'#'} onClick={onLiquidityPoolsUpdate}>Refresh</StyledInternalLink> you pools or <StyledInternalLink id="import-pool-link" to={'/find'}>import it</StyledInternalLink>.
             </SimpleTextParagraph>
           </div>
 
