@@ -14,50 +14,48 @@ import { MinimalPositionCard } from '../../components/PositionCard'
 import Row, { AutoRow, RowBetween, RowFlat } from '../../components/Row'
 import { darken } from 'polished'
 import { Link } from 'react-feather'
-
 import { ORCHESTRATOR_ADDRESS, USD, ZERO_ADDRESS } from '../../constants'
 import { PairState, usePair } from '../../data/Reserves'
-import { useAllWrappedERC20Tokens, useCurrency } from '../../hooks/Tokens'
+import { useCurrency } from '../../hooks/Tokens'
 import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
 import useTransactionDeadline from '../../hooks/useTransactionDeadline'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import { Field } from '../../state/mint/actions'
 import { useDerivedMintInfo, useMintActionHandlers, useMintState } from '../../state/mint/hooks'
-
 import { useTransactionAdder } from '../../state/transactions/hooks'
-import { useAddInteroperableCheck, useIsExpertMode, usePairAdder, useUserSlippageTolerance } from '../../state/user/hooks'
+import { useAddInteroperableTokens, useIsExpertMode, useUserSlippageTolerance } from '../../state/user/hooks'
 import { calculateGasMargin, calculateSlippageAmount, getEthItemCollectionContract, getOrchestratorContract } from '../../utils'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { wrappedCurrency } from '../../utils/wrappedCurrency'
 import { ConfirmAddModalBottom } from './ConfirmAddModalBottom'
 import { currencyId } from '../../utils/currencyId'
 import { PoolPriceBar } from './PoolPriceBar'
-
 import styled, { ThemeContext } from 'styled-components'
 import { Pair } from '@materia-dex/sdk'
 import FullPositionCard from '../../components/PositionCard'
 import { useTokenBalancesWithLoadingIndicator } from '../../state/wallet/hooks'
-import { 
+import {
   PageGridContainer,
   PageItemsContainer,
   TabsBar,
-  TabLinkItem, 
+  TabLinkItem,
   PageContentContainer,
-  TradePriceContainer, 
+  TradePriceContainer,
   SecondaryPanelBoxContainer,
   SecondaryPanelBoxContainerExtraDecorator,
   SimpleTextParagraph,
-  SectionTitle, 
-  StyledInternalLink, 
-  ExternalLink, 
-  TYPE, 
+  SectionTitle,
+  StyledInternalLink,
+  ExternalLink,
+  TYPE,
   HideSmall,
   EmptyProposals,
   Dots,
-  OperationButton, 
-  IconButton } from '../../theme'
+  OperationButton,
+  IconButton,
+  ActionButton
+} from '../../theme'
 import { Text } from 'rebass'
-
 import { useActiveWeb3React } from '../../hooks'
 import { usePairs } from '../../data/Reserves'
 import { toLiquidityToken, useTrackedTokenPairs } from '../../state/user/hooks'
@@ -69,6 +67,7 @@ import { Contract } from 'ethers'
 import Web3 from 'web3'
 import useCheckIsEthItem from '../../hooks/useCheckIsEthItem'
 import { decodeInteroperableValueToERC20TokenAmount } from '../../state/swap/hooks'
+import useUpdateWrappedERC20TokensCallback from '../../hooks/useUpdateWrappedERC20TokensCallback'
 
 export default function AddLiquidity({
   match: {
@@ -86,7 +85,7 @@ export default function AddLiquidity({
   // Pool
   // fetch the user's balances of all tracked LP tokens
   const trackedTokenPairs = useTrackedTokenPairs()
-  
+
   const tokenPairsWithLiquidityTokens = useMemo(
     () => trackedTokenPairs.map(tokens => ({
       liquidityToken: toLiquidityToken(tokens), tokens
@@ -205,17 +204,6 @@ export default function AddLiquidity({
     {}
   )
 
-  // // get the max amounts user can add
-  // const maxAmounts: { [field in Field]?: TokenAmount } = [Field.CURRENCY_A, Field.CURRENCY_B].reduce(
-  //   (accumulator, field) => {
-  //     return {
-  //       ...accumulator,
-  //       [field]: maxAmountSpend(currencyBalances[field])
-  //     }
-  //   },
-  //   {}
-  // )
-
   const atMaxAmounts: { [field in Field]?: TokenAmount } = [Field.CURRENCY_A, Field.CURRENCY_B].reduce(
     (accumulator, field) => {
       return {
@@ -226,22 +214,14 @@ export default function AddLiquidity({
     {}
   )
 
-  // const atMaxAmounts: { [field in Field]?: TokenAmount } = [Field.CURRENCY_A, Field.CURRENCY_B].reduce(
-  //   (accumulator, field) => {
-  //     return {
-  //       ...accumulator,
-  //       [field]: maxAmounts[field]?.equalTo(parsedAmounts[field] ?? '0')
-  //     }
-  //   },
-  //   {}
-  // )
-
   // check whether the user has approved the router on the tokens
   const [approvalA, approveACallback] = useApproveCallback(originalParsedAmounts[Field.CURRENCY_A], ORCHESTRATOR_ADDRESS)
   const [approvalB, approveBCallback] = useApproveCallback(originalParsedAmounts[Field.CURRENCY_B], ORCHESTRATOR_ADDRESS)
 
   const addTransaction = useTransactionAdder()
-  const addInteroperableCheck = useAddInteroperableCheck()
+  const addInteroperableTokens = useAddInteroperableTokens()
+
+  const { execute: onLiquidityPoolsUpdate } = useUpdateWrappedERC20TokensCallback(chainId, library, addInteroperableTokens)
 
   async function onAdd(checkIsEthItem: Result | undefined) {
     if (!chainId || !library || !account) return
@@ -259,7 +239,7 @@ export default function AddLiquidity({
     }
 
     const currencyUSD = USD[chainId ?? 1]
-    const currencyBIsUSD =  wrappedCurrency(currencyB, chainId)?.address == currencyUSD.address
+    const currencyBIsUSD = wrappedCurrency(currencyB, chainId)?.address == currencyUSD.address
 
     // console.log('***************************************')
     // console.log('currencyBIsUSD: ', currencyBIsUSD)
@@ -271,14 +251,14 @@ export default function AddLiquidity({
 
     // const { [Field.CURRENCY_A]: parsedAmountA, [Field.CURRENCY_B]: parsedAmountB } = parsedAmounts
     // const modifiedParsedAmountA = currencyBIsUSD 
-    const parsedAmountA = currencyBIsUSD 
-      ? decodeInteroperableValueToERC20TokenAmount(parsedAmounts[Field.CURRENCY_A], originalParsedAmounts[Field.CURRENCY_A]) 
-      : parsedAmounts[Field.CURRENCY_A] 
+    const parsedAmountA = currencyBIsUSD
+      ? decodeInteroperableValueToERC20TokenAmount(parsedAmounts[Field.CURRENCY_A], originalParsedAmounts[Field.CURRENCY_A])
+      : parsedAmounts[Field.CURRENCY_A]
     // const modifiedParsedAmountB = currencyBIsUSD 
-    const parsedAmountB = currencyBIsUSD 
-      ? parsedAmounts[Field.CURRENCY_B] 
+    const parsedAmountB = currencyBIsUSD
+      ? parsedAmounts[Field.CURRENCY_B]
       : decodeInteroperableValueToERC20TokenAmount(parsedAmounts[Field.CURRENCY_B], originalParsedAmounts[Field.CURRENCY_B])
-    
+
     if (!parsedAmountA || !parsedAmountB || !deadline) {
       return
     }
@@ -289,13 +269,13 @@ export default function AddLiquidity({
       [Field.CURRENCY_A]: calculateSlippageAmount(parsedAmountA, noLiquidity ? 0 : allowedSlippage)[0],
       [Field.CURRENCY_B]: calculateSlippageAmount(parsedAmountB, noLiquidity ? 0 : allowedSlippage)[0]
     }
-    
+
     let estimate
     let method: (...args: any) => Promise<TransactionResponse>
     let methodName: string
     let args: Array<string | string[] | number | boolean>
     let value: BigNumber | null
-    
+
     if (isEthItem && !isETH) {
       if (!collectionContract) return
 
@@ -322,9 +302,9 @@ export default function AddLiquidity({
         )]
       )
       args = [
-        account, 
-        ORCHESTRATOR_ADDRESS, 
-        ethItemObjectId?.toString() ?? "0", 
+        account,
+        ORCHESTRATOR_ADDRESS,
+        ethItemObjectId?.toString() ?? "0",
         currencyBIsUSD ? parsedAmountA.raw.toString() : parsedAmountB.raw.toString(),
         ethItemArgs]
       value = null
@@ -345,7 +325,7 @@ export default function AddLiquidity({
         ]
         value = BigNumber.from((tokenBIsETH ? parsedAmountB : parsedAmountA).raw.toString())
       } else {
-        
+
         estimate = router.estimateGas.addLiquidity
         method = router.addLiquidity
         methodName = "addLiquidity"
@@ -419,12 +399,6 @@ export default function AddLiquidity({
           })
 
           setTxHash(response.hash)
-          
-          // addInteroperableCheck(
-          //   chainId, 
-          //   wrappedCurrency(currencyA, chainId)?.address ?? "", 
-          //   wrappedCurrency(currencyB, chainId)?.address ?? ""
-          // )
 
           ReactGA.event({
             category: 'Liquidity',
@@ -567,74 +541,73 @@ export default function AddLiquidity({
     }
   `
 
-
   return (
     <>
       <AppBody>
         <PageGridContainer className="pool">
           <div className="left-column">
-            <SecondaryPanelBoxContainer className={ `${theme.name}` }>
-              <SecondaryPanelBoxContainerExtraDecorator className={ `top ${theme.name}` }/>
+            <SecondaryPanelBoxContainer className={`${theme.name}`}>
+              <SecondaryPanelBoxContainerExtraDecorator className={`top ${theme.name}`} />
               <div className="inner-content">
                 <SimpleTextParagraph className="p15 mt0 mb0">
                   <strong>Liquidity provider rewards</strong>
-                  <br/><br/>
+                  <br /><br />
                   Liquidity providers earn a 0.3% fee on all trades proportional to their share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity.
                 </SimpleTextParagraph>
                 {/* <CardBGImage />
                 <CardNoise /> */}
-              </div>      
-              <SecondaryPanelBoxContainerExtraDecorator className={ `bottom ${theme.name}` }/>
+              </div>
+              <SecondaryPanelBoxContainerExtraDecorator className={`bottom ${theme.name}`} />
             </SecondaryPanelBoxContainer>
             <HideSmall>
-              <SectionTitle className={ `mt20 ${theme.name}` }>Your liquidity</SectionTitle>
+              <SectionTitle className={`mt20 ${theme.name}`}>Your liquidity</SectionTitle>
             </HideSmall>
             {!account ? (
-                <SimpleTextParagraph className="p20 text-center">
-                  Connect to a wallet to view your liquidity.
+              <SimpleTextParagraph className="p20 text-center">
+                Connect to a wallet to view your liquidity.
+              </SimpleTextParagraph>
+            ) : isLoading ? (
+              <EmptyProposals className={theme.name}>
+                <SimpleTextParagraph className={`p20 text-center ${theme.name}`}>
+                  <Dots>Loading</Dots>
                 </SimpleTextParagraph>
-              ) : isLoading ? (
-                <EmptyProposals className={theme.name}>
-                  <SimpleTextParagraph className={ `p20 text-center ${theme.name}` }>
-                    <Dots>Loading</Dots>
-                  </SimpleTextParagraph>
-                </EmptyProposals>
-              ) : allPairsWithLiquidity?.length > 0 ? (
-                <>
-                  <SimpleTextParagraph className={ `text-left ${theme.name}` }>
-                    <ExternalLink href={'https://info.materiadex.com/account/' + account}>
-                      Account analytics and accrued fees
+              </EmptyProposals>
+            ) : allPairsWithLiquidity?.length > 0 ? (
+              <>
+                <SimpleTextParagraph className={`text-left ${theme.name}`}>
+                  <ExternalLink href={'https://info.materiadex.com/account/' + account}>
+                    Account analytics and accrued fees
                       <IconButton className={theme.name}>
-                        <span className="icon-symbol">↗</span>
-                      </IconButton>
-                    </ExternalLink>
-                  </SimpleTextParagraph>                    
-                  {allPairsWithLiquidity.map(pair => (
-                    <FullPositionCard key={pair.liquidityToken.address} pair={pair} />
-                  ))}
-                </>
-              ) : (
-                <EmptyProposals className={theme.name}>
-                  <SimpleTextParagraph className={ `p20 text-center ${theme.name}` }>
-                    No liquidity found.
+                      <span className="icon-symbol">↗</span>
+                    </IconButton>
+                  </ExternalLink>
+                </SimpleTextParagraph>
+                {allPairsWithLiquidity.map(pair => (
+                  <FullPositionCard key={pair.liquidityToken.address} pair={pair} />
+                ))}
+              </>
+            ) : (
+                    <EmptyProposals className={theme.name}>
+                      <SimpleTextParagraph className={`p20 text-center ${theme.name}`}>
+                        No liquidity found.
                   </SimpleTextParagraph>
-                </EmptyProposals>
-                    )}
-            <SimpleTextParagraph className={ `text-left ${theme.name}` }>
-              Don't see a pool you joined? <StyledInternalLink id="import-pool-link" to={'/find'}>Import it.</StyledInternalLink>
-            </SimpleTextParagraph>            
+                    </EmptyProposals>
+                  )}
+            <SimpleTextParagraph className={`text-left ${theme.name}`}>
+              Don't see a pool you joined? <StyledInternalLink id="refresh-pool-link" to={'#'} onClick={onLiquidityPoolsUpdate}>Refresh</StyledInternalLink> you pools or <StyledInternalLink id="import-pool-link" to={'/find'}>import it</StyledInternalLink>.
+            </SimpleTextParagraph>
           </div>
-          
+
           <PageItemsContainer className={theme.name}>
             <TabsBar className={theme.name}>
               <TabLinkItem id={`Add-Liquidity`} to={'/add/uSD'}
-                className={ `${theme.name}` }
-                isActive={(match, { pathname }) => Boolean(match) || pathname.startsWith('/add') }
-                >Add Liquidity</TabLinkItem>
-              <TabLinkItem id={`Create-a-pair`} to={'/create/uSD'} 
-                  className={ `${theme.name}` }
-                  isActive={(match, { pathname }) => Boolean(match) || pathname.startsWith('/create') }
-                >Create a pair</TabLinkItem>
+                className={`${theme.name}`}
+                isActive={(match, { pathname }) => Boolean(match) || pathname.startsWith('/add')}
+              >Add Liquidity</TabLinkItem>
+              <TabLinkItem id={`Create-a-pair`} to={'/create/uSD'}
+                className={`${theme.name}`}
+                isActive={(match, { pathname }) => Boolean(match) || pathname.startsWith('/create')}
+              >Create a pair</TabLinkItem>
             </TabsBar>
             <div className="clear-fix">
               <PageContentContainer className={theme.name}>
@@ -654,79 +627,79 @@ export default function AddLiquidity({
                   pendingText={pendingText}
                 />
                 <div>
-                <AutoColumn gap={'lg'}>
-                  <CurrencyInputPanel
-                    value={formattedAmounts[Field.CURRENCY_A]}
-                    onUserInput={onFieldAInput}
-                    onMax={() => {
-                      onFieldAInput(maxAmounts[Field.CURRENCY_A]?.toExact() ?? '')
-                    }}
-                    onCurrencySelect={handleCurrencyASelect}
-                    showMaxButton={!atMaxAmounts[Field.CURRENCY_A]}
-                    currency={currencies[Field.CURRENCY_A]}
-                    disableCurrencySelect={true}
-                    id="add-liquidity-input-tokena"
-                    showCommonBases
-                  />
-                </AutoColumn>
+                  <AutoColumn gap={'lg'}>
+                    <CurrencyInputPanel
+                      value={formattedAmounts[Field.CURRENCY_A]}
+                      onUserInput={onFieldAInput}
+                      onMax={() => {
+                        onFieldAInput(maxAmounts[Field.CURRENCY_A]?.toExact() ?? '')
+                      }}
+                      onCurrencySelect={handleCurrencyASelect}
+                      showMaxButton={!atMaxAmounts[Field.CURRENCY_A]}
+                      currency={currencies[Field.CURRENCY_A]}
+                      disableCurrencySelect={true}
+                      id="add-liquidity-input-tokena"
+                      showCommonBases
+                    />
+                  </AutoColumn>
                 </div>
                 <TradePriceContainer></TradePriceContainer>
-              <div>
-              <AutoColumn gap={'lg'}>
-                <CurrencyInputPanel
-                  value={formattedAmounts[Field.CURRENCY_B]}
-                  onUserInput={onFieldBInput}
-                  onCurrencySelect={handleCurrencyBSelect}
-                  onMax={() => {
-                    onFieldBInput(maxAmounts[Field.CURRENCY_B]?.toExact() ?? '')
-                  }}
-                  showMaxButton={!atMaxAmounts[Field.CURRENCY_B]}
-                  currency={currencies[Field.CURRENCY_B]}
-                  id="add-liquidity-input-tokenb"
-                  showCommonBases
-                />
-              </AutoColumn>
-              </div>
+                <div>
+                  <AutoColumn gap={'lg'}>
+                    <CurrencyInputPanel
+                      value={formattedAmounts[Field.CURRENCY_B]}
+                      onUserInput={onFieldBInput}
+                      onCurrencySelect={handleCurrencyBSelect}
+                      onMax={() => {
+                        onFieldBInput(maxAmounts[Field.CURRENCY_B]?.toExact() ?? '')
+                      }}
+                      showMaxButton={!atMaxAmounts[Field.CURRENCY_B]}
+                      currency={currencies[Field.CURRENCY_B]}
+                      id="add-liquidity-input-tokenb"
+                      showCommonBases
+                    />
+                  </AutoColumn>
+                </div>
               </PageContentContainer>
-                {noLiquidity ||
-                  (isCreate && (
-                    <ColumnCenter>
-                      <SimpleTextParagraph className={ `text-center pb20 ${theme.name}` }>
-                      You are the first liquidity provider.<br/>
-                      The ratio of tokens you add will set the price of this pool.<br/>
+              {noLiquidity ||
+                (isCreate && (
+                  <ColumnCenter>
+                    <SimpleTextParagraph className={`text-center pb20 ${theme.name}`}>
+                      You are the first liquidity provider.<br />
+                      The ratio of tokens you add will set the price of this pool.<br />
                       Once you are happy with the rate click supply to review.
                       </SimpleTextParagraph>
-                    </ColumnCenter>
-                  ))}
-                {currencies[Field.CURRENCY_A] && currencies[Field.CURRENCY_B] && pairState !== PairState.INVALID && (
-                  <>
-                    <SectionTitle className={ `mt20 mb20 ${theme.name}` }>{noLiquidity ? 'Initial prices' : 'Prices'} and pool share</SectionTitle>
-                    <ColumnCenter className="mb20">
-                      <PoolPriceBar
-                        currencies={currencies}
-                        poolTokenPercentage={poolTokenPercentage}
-                        noLiquidity={noLiquidity}
-                        price={price}
-                      />
-                    </ColumnCenter>
-                  </>
-                )}
+                  </ColumnCenter>
+                ))}
+              {currencies[Field.CURRENCY_A] && currencies[Field.CURRENCY_B] && pairState !== PairState.INVALID && (
+                <>
+                  <SectionTitle className={`mt20 mb20 ${theme.name}`}>{noLiquidity ? 'Initial prices' : 'Prices'} and pool share</SectionTitle>
+                  <ColumnCenter className="mb20">
+                    <PoolPriceBar
+                      currencies={currencies}
+                      poolTokenPercentage={poolTokenPercentage}
+                      noLiquidity={noLiquidity}
+                      price={price}
+                    />
+                  </ColumnCenter>
+                </>
+              )}
             </div>
             {
               pair && !noLiquidity && pairState !== PairState.INVALID ? (
-                <SecondaryPanelBoxContainer className={ `mb20 ${theme.name}` }>
-                  <SecondaryPanelBoxContainerExtraDecorator className={ `top ${theme.name}` }/>
+                <SecondaryPanelBoxContainer className={`mb20 ${theme.name}`}>
+                  <SecondaryPanelBoxContainerExtraDecorator className={`top ${theme.name}`} />
                   <div className="inner-content">
                     <MinimalPositionCard showUnwrapped={oneCurrencyIsIETH} pair={pair} />
-                  </div>      
-                  <SecondaryPanelBoxContainerExtraDecorator className={ `bottom ${theme.name}` }/>
+                  </div>
+                  <SecondaryPanelBoxContainerExtraDecorator className={`bottom ${theme.name}`} />
                 </SecondaryPanelBoxContainer>
               ) : null
             }
             {!account ? (
               <ColumnCenter>
-                <OperationButton onClick={toggleWalletModal} className={ `connect-wallet-button ${theme.name}` } label="Connect Wallet">
-                  <Link/>
+                <OperationButton onClick={toggleWalletModal} className={`connect-wallet-button ${theme.name}`} label="Connect Wallet">
+                  <Link />
                 </OperationButton>
               </ColumnCenter>
             ) : (

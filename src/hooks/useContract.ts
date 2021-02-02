@@ -20,6 +20,9 @@ import { MULTICALL_ABI, MULTICALL_NETWORKS } from '../constants/multicall'
 
 import { getContract } from '../utils'
 import { useActiveWeb3React } from './index'
+import { Interface } from 'ethers/lib/utils'
+
+const ERC20_INTERFACE = new Interface(ERC20_ABI)
 
 // returns null on errors
 function useContract(address: string | undefined, ABI: any, withSignerIfPossible = true): Contract | null {

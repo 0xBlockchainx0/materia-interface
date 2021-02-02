@@ -1,40 +1,13 @@
-import { parseBytes32String, toUtf8Bytes } from '@ethersproject/strings'
-import { Currency, ETHER, Token, currencyEquals, ChainId } from '@materia-dex/sdk'
-import { keccak256, sha256 } from 'ethers/lib/utils'
-import { useEffect, useMemo, useState } from 'react'
+import { parseBytes32String } from '@ethersproject/strings'
+import { Currency, ETHER, Token, currencyEquals } from '@materia-dex/sdk'
+import { useMemo } from 'react'
 import { useAllTokenList, useSelectedTokenList } from '../state/lists/hooks'
-import { CallState, NEVER_RELOAD, Result, toCallState, useSingleCallResult } from '../state/multicall/hooks'
-import { useInteroperableChecks, usePairAdder, useRemoveInteroperableCheck, useUserAddedTokens } from '../state/user/hooks'
+import { NEVER_RELOAD, useMultipleContractSingleData, useSingleCallResult } from '../state/multicall/hooks'
+import { useUserAddedTokens } from '../state/user/hooks'
 import { isAddress } from '../utils'
-import Web3 from 'web3';
-
 import { useActiveWeb3React } from './index'
 import { useBytes32TokenContract, useTokenContract } from './useContract'
-import { ERC20WRAPPER, ETHITEM_START_BLOCK, USD, ZERO_ADDRESS } from '../constants'
-import { unwrappedToken } from '../utils/wrappedCurrency'
-import useGetEthItemInteroperable from './useGetEthItemInteroperable'
-import { usePair } from '../data/Reserves'
-
-export function managePairInteroperableChecks(chainId: ChainId): void {
-  const tokenAddressUSD = USD[chainId]?.address ?? ""
-  const currencyUSD = unwrappedToken(USD[chainId])
-  // const interoperableChecks = useInteroperableChecks()
-
-  // const addTrackedPair = usePairAdder()
-  // const removeInteroperableCheck = useRemoveInteroperableCheck()
-
-  // interoperableChecks.map((interoperableCheck) => {
-  //   const otherCurrencyAddress = interoperableCheck.token0 == tokenAddressUSD ? interoperableCheck.token1 : interoperableCheck.token0
-  //   const otherCurrencyInteroperableAddress = useGetEthItemInteroperable(otherCurrencyAddress)
-  //   const otherCurrencyInteroperable: Currency | undefined = useCurrency(otherCurrencyInteroperableAddress) ?? undefined
-  //   const [pairState, pair] = usePair(currencyUSD, otherCurrencyInteroperable)
-    
-  //   if (pair && otherCurrencyInteroperable) {
-  //     addTrackedPair(pair)
-  //     removeInteroperableCheck(chainId, interoperableCheck.token0, interoperableCheck.token1)
-  //   }
-  // })
-}
+import ERC20_INTERFACE from '../constants/abis/erc20'
 
 export function useAllTokens(): { [address: string]: Token } {
   const { chainId, } = useActiveWeb3React()
@@ -57,47 +30,6 @@ export function useAllTokens(): { [address: string]: Token } {
         )
     )
   }, [chainId, userAddedTokens, allTokens])
-}
-
-export function useAllWrappedERC20Tokens(): { [address: string]: Token } | undefined {
-  const web3 = new Web3();
-  const { chainId, library } = useActiveWeb3React()
-
-  const topics = [web3.utils.sha3("NewItem(uint256,address)") ?? ""];
-  const logs = useMemo(() =>
-    library?.getLogs({
-      address: ERC20WRAPPER[chainId ?? 1],
-      topics: topics,
-      fromBlock: parseInt(ETHITEM_START_BLOCK[chainId ?? 1]),
-      toBlock: "latest"
-    }), [topics, ERC20WRAPPER, ETHITEM_START_BLOCK])
-
-  const [resultWrappedToken, setResultWrappedToken] = useState<{ [address: string]: Token } | undefined>(undefined)
-
-  return useMemo(() => {
-    if (!chainId) return undefined
-    if (!logs) return undefined
-
-    logs.then(pastLogs => {
-      let wrappedTokens: { [address: string]: Token } = {}
-
-      pastLogs.reduce<{ [address: string]: Token }>(
-        (previousLog, log) => {
-          const interoperableInterfaceAddress = web3.eth.abi.decodeParameter("address", log.topics[2]).toString()
-          const collectionItem: Token = new Token(chainId ?? 1, interoperableInterfaceAddress ?? ZERO_ADDRESS, 18)
-
-          wrappedTokens[interoperableInterfaceAddress] = collectionItem
-
-          return wrappedTokens
-        },
-        { ...wrappedTokens }
-      )
-
-      setResultWrappedToken(wrappedTokens)
-    })
-
-    return resultWrappedToken
-  }, [chainId, logs, resultWrappedToken, setResultWrappedToken])
 }
 
 export function useAllListTokens(): { [address: string]: Token } {
@@ -192,8 +124,55 @@ export function useToken(tokenAddress?: string): Token | undefined | null {
   ])
 }
 
+// undefined if invalid or does not exist
+// null if loading
+// otherwise returns the token
+export function useTokens(tokenAddresses?: string[]): Token[] | undefined {
+  const { chainId } = useActiveWeb3React()
+  const tokenNames = useMultipleContractSingleData(tokenAddresses ?? [], ERC20_INTERFACE, 'name', undefined, NEVER_RELOAD)
+  const tokenSymbols = useMultipleContractSingleData(tokenAddresses ?? [], ERC20_INTERFACE, 'symbol', undefined, NEVER_RELOAD)
+  const tokenDecimals = useMultipleContractSingleData(tokenAddresses ?? [], ERC20_INTERFACE, 'decimals', undefined, NEVER_RELOAD)
+
+  return useMemo(() => {
+    if (!chainId || !tokenAddresses || tokenAddresses.length <= 0) return undefined
+
+    const tokens = tokenAddresses.map((tokenAddress, index) => {
+      const tokenName = tokenNames[index]
+      const symbol = tokenSymbols[index]
+      const decimals = tokenDecimals[index]
+
+      if (decimals.loading || symbol.loading || tokenName.loading) return null
+      if (decimals.result) {
+        return new Token(
+          chainId,
+          tokenAddress,
+          decimals.result[0],
+          symbol.result?.[0] ?? 'UNKNOWN',
+          tokenName.result?.[0] ?? 'Unknown Token'
+        )
+      }
+      return undefined
+    }).filter((item: Token | null | undefined): item is Token => {
+      return !!item
+    })
+
+    return tokens
+  }, [
+    chainId,
+    tokenAddresses,
+    tokenNames,
+    tokenSymbols,
+    tokenDecimals
+  ])
+}
+
 export function useCurrency(currencyId: string | undefined): Currency | null | undefined {
   const isETH = currencyId?.toUpperCase() === 'ETH'
   const token = useToken(isETH ? undefined : currencyId)
   return isETH ? ETHER : token
+}
+
+export function useCurrencies(currenciesIds: string[] | undefined): Currency[] | null | undefined {
+  const tokens = useTokens(currenciesIds)
+  return tokens
 }

@@ -5,8 +5,7 @@ import { shallowEqual, useDispatch, useSelector } from 'react-redux'
 import { BASES_TO_TRACK_LIQUIDITY_FOR, PINNED_PAIRS } from '../../constants'
 
 import { useActiveWeb3React } from '../../hooks'
-import { managePairInteroperableChecks, useAllTokens, useAllWrappedERC20Tokens } from '../../hooks/Tokens'
-import { deepMerge } from '../../utils/deepMerge'
+import { useAllTokens, useTokens } from '../../hooks/Tokens'
 import { AppDispatch, AppState } from '../index'
 import {
   addSerializedPair,
@@ -20,9 +19,8 @@ import {
   updateUserSlippageTolerance,
   toggleURLWarning,
   updateUserClassicMode,
-  addSerializedInteroperableCheck,
-  SerializedInteroperableCheck,
-  removeSerializedInteroperableCheck
+  addInteroperableTokens,
+  removeInteroperableTokens
 } from './actions'
 
 function serializeToken(token: Token): SerializedToken {
@@ -43,13 +41,6 @@ function deserializeToken(serializedToken: SerializedToken): Token {
     serializedToken.symbol,
     serializedToken.name
   )
-}
-
-function deserializeInteroperableCheck(serializedInteroperableCheck: SerializedInteroperableCheck): { token0: string, token1: string } {
-  return {
-    token0: serializedInteroperableCheck.token0,
-    token1: serializedInteroperableCheck.token1,
-  }
 }
 
 export function useIsDarkMode(): boolean {
@@ -181,27 +172,20 @@ export function useUserAddedTokens(): Token[] {
   }, [serializedTokensMap, chainId])
 }
 
-export function useInteroperableChecks(): { token0: string, token1: string }[] {
+export function useInteroperableTokens(): string[] {
   const { chainId } = useActiveWeb3React()
-  const serializedInteroperableChecksMap = useSelector<AppState, AppState['user']['interoperableChecks']>(({ user: { interoperableChecks } }) => interoperableChecks)
+  const interoperableTokensMap = useSelector<AppState, AppState['user']['interoperableTokens']>(({ user: { interoperableTokens } }) => interoperableTokens)
 
   return useMemo(() => {
     if (!chainId) return []
-    return Object.values(serializedInteroperableChecksMap[chainId as ChainId] ?? {}).map(deserializeInteroperableCheck)
-  }, [serializedInteroperableChecksMap, chainId])
+    return Object.values(interoperableTokensMap[chainId as ChainId] ?? {})
+  }, [interoperableTokensMap, chainId])
 }
 
 function serializePair(pair: Pair): SerializedPair {
   return {
     token0: serializeToken(pair.token0),
     token1: serializeToken(pair.token1)
-  }
-}
-
-function serializeInteroperableCheck(token0: string, token1: string): SerializedInteroperableCheck {
-  return {
-    token0: token0,
-    token1: token1
   }
 }
 
@@ -225,22 +209,22 @@ export function useURLWarningToggle(): () => void {
   return useCallback(() => dispatch(toggleURLWarning()), [dispatch])
 }
 
-export function useAddInteroperableCheck(): (chainId: number, token0: string, token1: string) => void {
+export function useAddInteroperableTokens(): (chainId: number, interoperableTokens: string[]) => void {
   const dispatch = useDispatch<AppDispatch>()
   return useCallback(
-    (chainId: number, token0: string, token1: string) => {
+    (chainId: number, interoperableTokens: string[]) => {
       dispatch(
-        addSerializedInteroperableCheck({ chainId: chainId, serializedInteroperableCheck: serializeInteroperableCheck(token0, token1) }))
+        addInteroperableTokens({ chainId: chainId, interoperableTokens: interoperableTokens }))
     },
     [dispatch]
   )
 }
 
-export function useRemoveInteroperableCheck(): (chainId: number, token0: string, token1: string) => void {
+export function useRemoveInteroperableTokens(): (chainId: number) => void {
   const dispatch = useDispatch<AppDispatch>()
   return useCallback(
-    (chainId: number, token0: string, token1: string) => {
-      dispatch(removeSerializedInteroperableCheck({ chainId: chainId, tokenAAddress: token0, tokenBAddress: token1 }))
+    (chainId: number) => {
+      dispatch(removeInteroperableTokens({ chainId: chainId }))
     },
     [dispatch]
   )
@@ -260,23 +244,24 @@ export function toLiquidityToken([tokenA, tokenB]: [Token, Token]): Token {
  */
 export function useTrackedTokenPairs(): [Token, Token][] {
   const { chainId } = useActiveWeb3React()
-  // const interoperableChecksDone = managePairInteroperableChecks(chainId ?? 1)
-  const tokens = useAllTokens()
-  // const wrappedTokens = useAllWrappedERC20Tokens()
+  const interoperableTokens = useInteroperableTokens() ?? []
+  
+  let tokens = useAllTokens()
+  let newInteroperableTokens = interoperableTokens.filter(x => !tokens[x])
 
-  // let tokens = useAllTokens()
+  const wrappedTokens = useTokens(newInteroperableTokens)
 
-  // tokens = useMemo(() => {
-  //   if (wrappedTokens == undefined) return tokens
+  tokens = useMemo(() => {
+    if (wrappedTokens == undefined) return tokens
 
-  //   return (Object.keys(wrappedTokens).reduce<{ [address: string]: Token }>(
-  //     (tokenMap, wrappedTokenAddress) => {
-  //       if(!tokenMap[wrappedTokenAddress]) tokenMap[wrappedTokenAddress] = wrappedTokens[wrappedTokenAddress]
-  //       return tokenMap
-  //     },
-  //     { ...tokens }
-  //   ))
-  // }, [tokens, wrappedTokens])
+    return (Object.keys(wrappedTokens).reduce<{ [address: string]: Token }>(
+      (tokenMap, wrappedTokenAddress, index) => {
+        if(!tokenMap[wrappedTokenAddress]) tokenMap[wrappedTokenAddress] = wrappedTokens[index]
+        return tokenMap
+      },
+      { ...tokens }
+    ))
+  }, [tokens, wrappedTokens])
 
   // pinned pairs
   const pinnedPairs = useMemo(() => (chainId ? PINNED_PAIRS[chainId] ?? [] : []), [chainId])
