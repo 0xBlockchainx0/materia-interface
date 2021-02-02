@@ -37,6 +37,6 @@ export default function Logo({ srcs, alt, ...rest }: LogoProps) {
     return <img {...rest} alt="Token Image Not Found" src={images.tokenImageNotFound.light}/>
   }
   else {
-    return <img {...rest} alt="Token Image Not Found" src={images.tokenImageNotFound.dark}/>
+    return <img {...rest} alt="Token Image Not Found" src={images.tokenImageNotFound.classic}/>
   }
 }

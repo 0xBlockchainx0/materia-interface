@@ -129,12 +129,12 @@ export default function SettingsTab() {
           <SecondaryPanelBoxContainerExtraDecorator className={ `top ${theme.name}` }/>
           <div className="inner-content">
             <AutoColumn gap="md" style={{ padding: '1rem' }}>
-              <div className="sectionHeader">Transaction Settings</div>
+              <div className={ `sectionHeader ${theme.name}` }>Transaction Settings</div>
               <TransactionSettings rawSlippage={userSlippageTolerance} setRawSlippage={setUserslippageTolerance} deadline={ttl} setDeadline={setTtl} />
-              <div className="sectionHeader">Interface Settings</div>
+              <div className={ `sectionHeader ${theme.name}` }>Interface Settings</div>
               <RowBetween>
                 <RowFixed>
-                  <div className="sectionOption">Toggle Expert Mode</div>
+                  <div className={ `sectionOption ${theme.name}` }>Toggle Expert Mode</div>
                   <QuestionHelper text="Bypasses confirmation modals and allows high slippage trades. Use at your own risk." />
                 </RowFixed>
                 <Toggle
@@ -144,7 +144,7 @@ export default function SettingsTab() {
               </RowBetween>
               <RowBetween>
                 <RowFixed>
-                  <div className="sectionOption">Toggle Classic Mode</div>
+                  <div className={ `sectionOption ${theme.name}` }>Toggle Classic Mode</div>
                 </RowFixed>
                 <Toggle isActive={classicMode} toggle={toggleClassicMode} />
               </RowBetween> 

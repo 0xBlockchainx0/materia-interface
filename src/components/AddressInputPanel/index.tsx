@@ -38,7 +38,7 @@ export default function AddressInputPanel({
   return (
     <InputPanel id={id}>
       <ContainerRow error={error} className={theme.name}>
-        <div className="input-container">
+        <div className={ `input-container ${theme.name}` }>
           {address && chainId && (
             <ExternalLink href={getEtherscanLink(chainId, name ?? address, 'address')}>(View on Etherscan)</ExternalLink>
           )}

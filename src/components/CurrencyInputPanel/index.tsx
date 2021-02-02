@@ -30,7 +30,7 @@ const TokenImage = styled.div<{ showBackground: boolean }>`
   background-size: contain;
   height: 300px;
   width: 300px;
-  background-position: -5px center!important;
+  background-position: ${({ theme }) => (theme.name == 'classic' ? '' : '-5px')} center!important;
   display: table-cell;
   vertical-align: middle;
   @media (max-width: 1050px) { padding: 2rem !important; }

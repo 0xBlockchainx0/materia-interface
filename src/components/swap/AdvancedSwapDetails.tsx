@@ -32,43 +32,38 @@ function TradeSummary({ trade, originalCurrencies, allowedSlippage }: {
     <>
       
       <AutoColumn style={{ padding: '0 20px' }}>       
-        <RowBetween>
+        <RowBetween className="pt10">
           <RowFixed>
-            <TYPE.black fontSize={14} fontWeight={400} color={theme.cyan1}>
+            <div className="advaced-swap-details label">
               {isExactIn ? 'Minimum received' : 'Maximum sold'}
-            </TYPE.black>
+            </div>
             <QuestionHelper text="Your transaction will revert if there is a large, unfavorable price movement before it is confirmed." />
           </RowFixed>
           <RowFixed>
-            <TYPE.black color={theme.text1} fontSize={14}>
+            <div className="advaced-swap-details value">
               {isExactIn
                 ? `${slippageAdjustedAmounts[Field.OUTPUT]?.toSignificant(4)} ${originalCurrencies[Field.OUTPUT]?.symbol}` ??
                   '-'
                 : `${slippageAdjustedAmounts[Field.INPUT]?.toSignificant(4)} ${originalCurrencies[Field.INPUT]?.symbol}` ??
                   '-'}
-            </TYPE.black>
+            </div>
           </RowFixed>
         </RowBetween>
-        <RowBetween>
+        <RowBetween className="pt10">
           <RowFixed>
-            <TYPE.black fontSize={14} fontWeight={400} color={theme.cyan1}>
-              Price Impact
-            </TYPE.black>
+            <div className="advaced-swap-details label">Price Impact</div>
             <QuestionHelper text="The difference between the market price and estimated price due to trade size." />
           </RowFixed>
           <FormattedPriceImpact priceImpact={priceImpactWithoutFee} />
         </RowBetween>
-
-        <RowBetween>
+        <RowBetween className="pt10 pb10">
           <RowFixed>
-            <TYPE.black fontSize={14} fontWeight={400} color={theme.cyan1}>
-              Liquidity Provider Fee
-            </TYPE.black>
+            <div className="advaced-swap-details label">Liquidity Provider Fee</div>
             <QuestionHelper text="A portion of each trade (0.30%) goes to liquidity providers as a protocol incentive." />
           </RowFixed>
-          <TYPE.black fontSize={14} color={theme.text1}>
+          <div className="advaced-swap-details value">
             {realizedLPFee ? `${realizedLPFee.toSignificant(4)} ${originalCurrencies[Field.INPUT]?.symbol}` : '-'}
-          </TYPE.black>
+          </div>
         </RowBetween>
       </AutoColumn>
     </>

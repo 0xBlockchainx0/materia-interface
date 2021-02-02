@@ -16,9 +16,11 @@ import { RowBetween } from '../components/Row'
 import Loader from '../components/Loader'
 import { Colors, DynamicGridColumnsDefinition } from './styled'
 import { images } from './images'
+import { ReactComponent as MenuIcon } from '../assets/images/menu.svg'
 import DavidFensTff from './fonts/DavidFens/DavidFens.ttf'
 import DavidFensWoff from './fonts/DavidFens/DavidFens.woff'
 import DavidFensWoff2 from './fonts/DavidFens/DavidFens.woff2'
+import { ExternalLink } from './components'
 export * from './components'
 
 const MEDIA_WIDTHS = {
@@ -1172,6 +1174,15 @@ export const FooterInfo = styled.div`
   &.dark > div.swapCaption { margin: 5px auto 5px auto; }
   &.light > div.swapCaption { margin: 5px auto 5px auto; }
   &.classic > div.swapCaption { margin: 15px auto 15px auto; font-size: 9px; }
+
+  .advanced-swap-details-container.classic { margin-top: 30px; }
+  .advanced-swap-details-container.dark .advaced-swap-details.label,
+  .advanced-swap-details-container.light .advaced-swap-details.label { 
+    color: ${({ theme }) => theme.cyan1};
+    font-size: 13px;
+  }
+  .advanced-swap-details-container.classic .advaced-swap-details.label,
+  .advanced-swap-details-container.classic .advaced-swap-details.value { font-size: 9px; }
 `
 export const TabsBar = styled.div`
   &.dark { }
@@ -1360,11 +1371,31 @@ export const ActionButton = styled(BaseButton)<{ disabled?: boolean, selected?: 
     border: 1px solid ${({ theme }) => theme.violet1} !important;
     background-color: ${({ theme }) => theme.violet3};
   }
-  &.classic {}
+
+  &.classic {
+    text-shadow: 1px 1px 1px ${({ theme }) => theme.black};
+    font-size: 9px !important;
+    padding: 0px 10px 0px 10px !important;
+    color: ${({ theme }) => theme.yellowGreen};
+    position: relative;
+  }
+  &.classic:before { 
+    position: absolute;
+    content: " ";
+    display: none; 
+    width: 57px;
+    height: 35px;
+    background-image: url(${images.icons.FF7Cursor});
+    background-repeat: no-repeat;
+    background-position: center center;
+    left: -57px;
+    top: -4px;
+  }
 
   &.dark:hover, &.dark:focus { box-shadow: 0px 0px 4px ${({ theme }) => theme.yellowGreen}; }
   &.light:hover, &.light:focus { box-shadow: 0px 0px 4px ${({ theme }) => theme.utils.hexToRGB(theme.black, 0.4)}; }
-  &.classic:hover, &.classic:focus { }
+  &.classic:hover, &.classic:focus { color: ${({ theme }) => theme.azure2}; }
+  &.classic:hover:before, &.classic:focus:before { display: block; }
 `
 const InfoCard = styled.button<{ active?: boolean }>`
   border-radius: 3px !important;
@@ -1489,6 +1520,7 @@ export const SwitchButton = styled(Button)<{disabled?: boolean}>`
   &.hidden { display: none !important; }
 
   & > svg { width: 15px; height: 15px; transform: rotate(-45deg); margin-left: -1px; margin-bottom: -1px; }
+  & > label { display: none; }
 
   &:after, &:before {
     content: "";
@@ -1504,13 +1536,36 @@ export const SwitchButton = styled(Button)<{disabled?: boolean}>`
 
   &.dark { border: solid 1px ${({ theme }) => theme.azure1 }; background-color: ${({ theme }) => theme.black }; }
   &.light { border: solid 1px ${({ theme }) => theme.violet1 }; background-color: ${({ theme }) => theme.violet4 }; }
-  &.classic, &.classic:after, &.classic:before, &.classic > svg { transform: rotate(0deg); }  
-  &.classic:after { bottom: 0px; right: 0px; }
-  &.classic:before { top: 0px; left: 0px; }
+  &.classic { 
+    transform: none; 
+    text-shadow: 1px 1px 1px ${({ theme }) => theme.black }; 
+    color: ${({ theme }) => theme.yellowGreen };
+    font-size: 9px !important;
+    width: auto;
+    height: auto;
+    text-align: center;
+    margin: 0px auto;
+    position: relative;
+  }
+  &.classic:after, &.classic:before, &.classic > svg { transform: none; display: none; }  
+  &.classic > label { display: block; }
+  &.classic:before { 
+    position: absolute;
+    content: " ";
+    display: none; 
+    width: 57px;
+    height: 35px;
+    background-image: url(${images.icons.FF7Cursor});
+    background-repeat: no-repeat;
+    background-position: center center;
+    left: -63px;
+    top: -3px;
+  }
 
   &.dark:hover, &.dark:focus { box-shadow: 0px 0px 12px ${({ theme }) => theme.azure1 }; }
   &.light:hover, &.light:focus { box-shadow: 0px 0px 12px ${({ theme }) => theme.violet1 }; }
-  &.classic:hover, &.classic:focus { }
+  &.classic:hover, &.classic:focus { color: ${({ theme }) => theme.azure2 }; }
+  &.classic:hover:before, &.classic:focus:before { display: block; }
 
   &.dark:after { background: linear-gradient(to right, ${({ theme }) => theme.azure1} 0%, rgba(15,63,115,0)); }
   &.dark:before { background: linear-gradient(to right, rgba(15,63,115,0) 0%, ${({ theme }) => theme.azure1} 100%); }
@@ -1548,8 +1603,7 @@ export const OperationButton = styled(Button)<{label?: string, disabled?: boolea
   &.hidden { display: none !important; }
 
   & > svg { width: 15px; height: 15px; transform: rotate(-45deg); margin-left: -1px; margin-bottom: -1px; }
-  &.classic > svg { transform: rotate(0deg); }
-
+  
   &:after, &:before {
     content: "";
     display:block;
@@ -1559,7 +1613,8 @@ export const OperationButton = styled(Button)<{label?: string, disabled?: boolea
     transform: rotate(-45deg);    
   }
 
-  &.classic:after, &.classic:before { transform: rotate(0deg); }
+  &.classic, &.classic:after, &.classic:before, &.classic > svg { transform: none; }
+  &.classic > svg { display: none; }
 
   &:after { 
     content: ${({ label }) => (label ? "\"" + label + "\"" : "\"" + + "\"")}; 
@@ -1598,8 +1653,30 @@ export const OperationButton = styled(Button)<{label?: string, disabled?: boolea
     color: ${({ theme }) => theme.violet1 };
   }  
 
-  &.classic:after {}
-  &.classic:before {}
+  &.classic:after {
+    top: 0px;
+    left: 0px;
+    padding: 0px;
+    width: 200px;
+    height: auto;
+    font-size: 9px !important;
+    color: ${({ theme }) => theme.yellowGreen }
+    text-shadow: 1px 1px 1px ${({ theme }) => theme.black };
+  }
+  &.classic:before {
+    position: absolute;
+    content: " ";
+    display: none; 
+    width: 57px;
+    height: 35px;
+    background-image: url(${images.icons.FF7Cursor});
+    background-repeat: no-repeat;
+    background-position: center center;
+    left: -65px;
+    top: -3px;
+  }
+  &.classic:hover:after { color: ${({ theme }) => theme.azure2}; }
+  &.classic:hover:before, &.classic:focus:before { display: block; }
 
   &.add-a-send-button { position: absolute; top: 120px; left: 70px; }  
   &.connect-wallet-button { margin-left: -170px; }
@@ -1643,7 +1720,27 @@ export const MainOperationButton = styled(ActionButton)<{ disabled?: boolean, se
   &:disabled.light:hover, &:disabled.light:focus, { box-shadow: none; } 
 
   &.light {}
-  &.classic {}
+  &.classic { 
+    position: relative; 
+    font-size: 11px !important;
+    font-weight: 300 !important;
+    text-shadow: 1px 1px 1px ${({ theme }) => theme.black};
+  }
+  &.classic:before { 
+    position: absolute;
+    content: " ";
+    display: none; 
+    width: 57px;
+    height: 35px;
+    background-image: url(${images.icons.FF7Cursor});
+    background-repeat: no-repeat;
+    background-position: center center;
+    left: -57px;
+    top: 0px;
+  }
+  &.classic:hover, &.classic:focus { color: ${({ theme }) => theme.azure2}; }
+  &.classic:disabled, &.classic.popup-button.dismiss:hover, &.classic.popup-button.dismiss:focus { color: ${({ theme }) => theme.red1}; }
+  &.classic:hover:before, &.classic:focus:before { display: block; }
   
 `
 export const TradePriceContainer = styled.div`
@@ -1698,6 +1795,13 @@ export const ContainerRow = styled.div<{ error?: boolean }>`
     margin: 0px 0px 10px 10px;
   }
 
+  & > div.input-container.classic > label, & > div.input-container.classic > a {
+    font-size: 9px;
+    font-weight: 300;
+    float: left;
+    margin-left: 0px;
+  }
+
   &.dark > div.input-container > a { color: ${({ theme }) => theme.azure1 }; }
   &.light > div.input-container > a { color: ${({ theme }) => theme.violet1 }; }
   &.classic > div.input-container > a { color: ${({ theme }) => theme.azure1 }; }
@@ -1708,6 +1812,8 @@ export const ContainerRow = styled.div<{ error?: boolean }>`
   &.light.search-token-container { border-bottom: solid 1px ${({ theme }) => theme.utils.hexToRGB(theme.white, 0.2) }; }
   &.classic.search-token-container { border-bottom: solid 1px ${({ theme }) => theme.utils.hexToRGB(theme.white, 0.2) }; }
   &.classic.search-token-container input { font-size: 9px !important; }
+
+  .recipient-address-input.classic { font-size: 8px; margin-top: 10px; }
 `
 export const Input = styled.input<{ error?: boolean }>`
   font-size: 16px;
@@ -1772,9 +1878,19 @@ export const SecondaryPanelBoxContainer = styled.div`
 
   &.popup > .popup-inner-content h6 { font-size: 13px; margin: 0px 0px 15px 0px; }
   &.popup > .popup-inner-content h6 + ul { font-size: 13px; }
+  &.classic.popup > .popup-inner-content h6 + ul { 
+    line-height: 1.5em; 
+    font-weight: 300; 
+    font-size: 11px; 
+    text-shadow: 1px 1px 1px ${({ theme }) => theme.black} 
+  }
+  &.classic.popup > .popup-inner-content h6 + ul strong { font-weight: 300; }
 
   &.modal > .modal-inner-content h6 { font-size: 15px; margin: 0px 0px 15px 0px; }
-  &.classic.modal > .modal-inner-content h6 { font-size: 11px; text-shadow: 1px 1px 1px ${({ theme }) => theme.black} }
+  &.classic.modal > .modal-inner-content h6, &.classic.popup > .popup-inner-content h6 { 
+    font-size: 11px; 
+    text-shadow: 1px 1px 1px ${({ theme }) => theme.black} 
+  }
   &.modal > .modal-inner-content h6.with-content-divisor { position:relative; padding-bottom: 15px; }
   &.modal > .modal-inner-content h6.with-content-divisor:after {
     content: "";
@@ -1793,11 +1909,17 @@ export const SecondaryPanelBoxContainer = styled.div`
   &.popup > .popup-inner-content .popup-operations-container { /*overflow: hidden;*/ padding-top: 15px; }
   &.popup > .popup-inner-content .popup-operations-container button { font-size: 12px !important; }
   &.popup > .popup-inner-content .popup-operations-container button:last-child { float: right; }
+  &.classic.popup > .popup-inner-content .popup-operations-container button { font-size: 10px !important; }
 
   &.dark.popup > .popup-inner-content h6, &.dark.modal > .modal-inner-content h6 { color: ${({ theme }) => theme.azure1 } }
   &.dark.popup > .popup-inner-content h6 svg, &.dark.modal > .modal-inner-content h6 svg  { stroke: ${({ theme }) => theme.azure1 } }
   &.light.popup > .popup-inner-content h6, &.light.modal > .modal-inner-content h6  { }
-  &.classic.popup > .popup-inner-content h6, &.classic.modal > .modal-inner-content h6 { color: ${({ theme }) => theme.azure1 }; letter-spacing: 0.15em; }
+  &.classic.popup > .popup-inner-content h6, &.classic.modal > .modal-inner-content h6 { 
+    color: ${({ theme }) => theme.azure1 }; 
+    letter-spacing: 0.15em; 
+    line-height: 1.4em;
+    font-weight: 300;
+  }
   &.classic.popup > .popup-inner-content h6 svg, &.classic.modal > .modal-inner-content h6 svg  { stroke: ${({ theme }) => theme.azure1 } }
 
   &.modal > .modal-inner-content .modal-content-wrapper > .connect-wallet-terms-and-conditions { 
@@ -1833,12 +1955,25 @@ export const SecondaryPanelBoxContainer = styled.div`
     ${({ theme }) => theme.mediaWidth.upToMedium` min-width: 18.125rem; top: -22rem; right: 2rem; @media (max-width: 960px) { top: -19.5rem; } `};
   }
 
+  &.settings-menu-panel.classic { min-width: 30rem; top: -26rem; }
+
   &.settings-menu-panel .sectionHeader { font-weight: 500; font-size: 14px; }
   &.settings-menu-panel .sectionOption { font-weight: 500; font-size: 14px; }
 
+  &.settings-menu-panel.classic .sectionHeader.classic { 
+    font-weight: 300; 
+    font-size: 9px; 
+    color: ${({ theme }) => theme.azure1 }; 
+    text-shadow: 1px 1px 1px ${({ theme }) => theme.black };
+  }
+
   &.dark.settings-menu-panel .sectionOption { color: ${({ theme }) => theme.grey2 }; }
   &.light.settings-menu-panel .sectionOption { color: ${({ theme }) => theme.violet1 }; }
-  &.classic.settings-menu-panel .sectionOption { }
+  &.classic.settings-menu-panel .sectionOption { 
+    font-weight: 300; 
+    font-size: 9px; 
+    text-shadow: 1px 1px 1px ${({ theme }) => theme.black };
+  }
 
   &.light.popup > .popup-inner-content,
   &.light.settings-menu-panel > .inner-content { box-shadow: 0px 0px 16px ${({ theme }) => theme.utils.hexToRGB(theme.grey3, 0.4)}; }
@@ -2187,11 +2322,13 @@ export const SearchTokenListItem = styled(RowBetween)`
     background-image: url(${images.icons.FF7Cursor});
     background-repeat: no-repeat;
     background-position: center center;
-    left:0px;
+    left: 0px;
     top: 25%;
   }
   &.classic:hover, &.classic:focus { color: ${({ theme }) => theme.azure2}; }
   &.classic:hover:before, &.classic:focus:before { display: block; }
+  &.classic > img { transition: margin-left 1s; }
+  &.classic:hover > img, &.classic:focus > img { margin-left: 52px; }
 `
 export const ModalContentWrapper = styled.div`
   display: flex;
@@ -2461,4 +2598,81 @@ export const StyledInput = styled.input<{ error?: boolean; fontSize?: string; al
   // }
 
   &.classic { font-size: 16px; text-shadow: 1px 1px 1px ${({ theme }) => theme.black}; }
+`
+export const StyledMenuIcon = styled(MenuIcon)`
+  path { stroke: ${({ theme }) => theme.text1}; }
+`
+export const StyledMenuText = styled.b`
+  :hover { cursor: pointer; }
+  margin-top: -0.3rem;
+`
+export const StyledMenuButton = styled.button`
+  width: 100%;
+  height: 100%;
+  border: none;
+  background-color: transparent;
+  margin: 0;
+  padding: 0;
+  height: 35px;
+
+  padding: 0.15rem 0.5rem;
+  border-radius: 0.5rem;
+
+  :hover,
+  :focus {
+    cursor: pointer;
+    outline: none;
+  }
+
+  svg {
+    margin-top: 2px;
+  }
+`
+export const StyledMenu = styled.div`
+  margin-left: 0.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  border: none;
+  text-align: left;
+`
+export const MenuFlyout = styled.span`
+  min-width: 8.125rem;
+  background-color: ${({ theme }) => theme.bg2};
+  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),0px 24px 32px rgba(0, 0, 0, 0.01);
+  border-radius: 5px;
+  padding: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  font-size: 1rem;
+  position: absolute;
+  top: -13rem;
+  right: 0rem;
+  z-index: 100;
+
+  ${({ theme }) => theme.mediaWidth.upToMedium` top: -17.25rem; `};
+
+  &.classic { 
+    box-shadow: none; 
+    border-radius: 3px; 
+    min-width: 12rem; 
+    background: linear-gradient(0deg, ${({ theme }) => theme.utils.hexToRGB(theme.blue6, 1)} 0%, ${({ theme }) => theme.utils.hexToRGB(theme.blue5, 1)} 100%); 
+    border: outset 3px ${({ theme }) => theme.utils.hexToRGB(theme.grey2, 1)};
+  }
+`
+export const MenuItem = styled(ExternalLink)`
+  flex: 1;
+  padding: 0.5rem 0.5rem;
+  color: ${({ theme }) => theme.text2};
+  :hover {
+    color: ${({ theme }) => theme.text1};
+    cursor: pointer;
+    text-decoration: none;
+  }
+  > svg { margin-right: 8px; width: 14px; height: 14px; }
+
+  &.classic { font-size: 9px; color: ${({ theme }) => theme.white}; }
+  &.classic:hover { color: ${({ theme }) => theme.yellowGreen}; }
+  &.classic:hover > svg { stroke: ${({ theme }) => theme.yellowGreen}; }
 `

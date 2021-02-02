@@ -384,6 +384,7 @@ export default function Swap() {
                               onSwitchTokens()
                           }}>
                           <RefreshCw/>
+                          <label>Switch</label>
                         </SwitchButton>                        
                       </AutoRow>
                     </AutoColumn>
@@ -545,7 +546,9 @@ export default function Swap() {
                   </SwapButtonsContainer>
                 </BottomGrouping>
               </div>
-              <AdvancedSwapDetailsDropdown trade={trade} originalCurrencies={originalCurrencies} />
+              <div className={`advanced-swap-details-container ${theme.name}`}>
+                <AdvancedSwapDetailsDropdown trade={trade} originalCurrencies={originalCurrencies} />
+              </div>
             </PageItemsContainer>
           </PageGridContainer>
         </Wrapper>
