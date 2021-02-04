@@ -64,7 +64,7 @@ export const StyledInternalLink = styled(Link)`
 
   &.dark { color: ${({ theme }) => theme.azure1}; }
   &.light {}
-  &.classic {}
+  &.classic { font-size: 9px; }
 `
 
 export const StyledInternalButtonLink = styled(Link)`

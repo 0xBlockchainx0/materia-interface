@@ -148,7 +148,7 @@ export default function SlippageTabs({ rawSlippage, setRawSlippage, deadline, se
               onChange={e => parseCustomDeadline(e.target.value)}
             />
           </SettingsMenuCustomOption>
-          <TYPE.body style={{ paddingLeft: '8px' }} fontSize={14}>minutes</TYPE.body>
+          <div className="minutes">minutes</div>
         </RowFixed>
       </AutoColumn>
     </AutoColumn>

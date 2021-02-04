@@ -403,12 +403,12 @@ export default function Swap() {
                           )}
                           {allowedSlippage !== INITIAL_ALLOWED_SLIPPAGE && (
                             <RowBetween align="center">
-                              <ClickableText fontWeight={500} fontSize={14} color={theme.text2} onClick={toggleSettings}>
-                                Slippage Tolerance
+                              <ClickableText className={theme.name} onClick={toggleSettings}>
+                                Slippage Tolerance {allowedSlippage / 100}%
                               </ClickableText>
-                              <ClickableText fontWeight={500} fontSize={14} color={theme.text2} onClick={toggleSettings}>
+                              {/* <ClickableText className={theme.name} onClick={toggleSettings}>
                                 {allowedSlippage / 100}%
-                              </ClickableText>
+                              </ClickableText> */}
                             </RowBetween>
                           )}
                         </AutoColumn>
@@ -443,7 +443,7 @@ export default function Swap() {
                     </AutoColumn>
                   </div>
                 </PageContentContainer>
-                <BottomGrouping>
+                <BottomGrouping>                
                   <SwapButtonsContainer>
                     {!account ? (
                       <OperationButton onClick={toggleWalletModal} className={ `connect-wallet-button ${theme.name}` } label="Connect Wallet">
@@ -456,8 +456,8 @@ export default function Swap() {
                         {wrapInputError ?? (wrapType === WrapType.WRAP ? 'Wrap' : wrapType === WrapType.UNWRAP ? 'Unwrap' : null)}
                       </MainOperationButton>
                     ) : noRoute && userHasSpecifiedInputOutput ? (
-                      <SwapGreyCard style={{ textAlign: 'center' }}>
-                        <TYPE.body color={theme.text1} fontSize={20} fontWeight={500}>Insufficient liquidity for this trade</TYPE.body>
+                      <SwapGreyCard className={theme.name}>
+                        <div>Insufficient liquidity for this trade</div>
                       </SwapGreyCard>
                     ) : showApproveFlow ? (
                       <RowCenter>

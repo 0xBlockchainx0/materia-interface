@@ -22,11 +22,23 @@ export const SwapGreyCard = styled(Card)`
   width: auto;
   background-color: linear-gradient(90deg, ${({ theme }) => theme.buttonMateriaPrimaryBackgroundFirstColor}, ${({ theme }) => theme.buttonMateriaPrimaryBackgroundSecondColor});
   border: 1px solid ${({ theme }) => theme.buttonMateriaPrimaryBorderColor};
-  color: ${({ theme }) => theme.buttonMateriaPrimaryTextColor};
+  color: ${({ theme }) => theme.text1};
   padding: 0.2rem 1.5rem;
   border-radius: 3px;
   transition: all 0.3s ease;
   opacity: 0.7;
+  text-align: center;
+  font-size: 20px;
+  font-weight: 500;
+
+  &.classic {
+    background: none;
+    color: ${({ theme }) => theme.red1};
+    font-size: 13px;
+    margin: 20px auto;
+    text-shadow: 1px 1px 1px ${({ theme }) => theme.black};
+    border: none;
+  }
 `
 
 export const OutlineCard = styled(Card)`

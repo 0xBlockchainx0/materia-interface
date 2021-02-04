@@ -499,17 +499,16 @@ export default function RemoveLiquidity({
     <>
       <AppBody>
         <PageGridContainer className="pool">
-          <div className="left-column">
+          <div className={`left-column ${theme.name}`}>
             <SecondaryPanelBoxContainer className={ `${theme.name}` }>
               <SecondaryPanelBoxContainerExtraDecorator className={ `top ${theme.name}` }/>
               <div className="inner-content">
-                <SimpleTextParagraph className="p15 mt0 mb0">
+                <SimpleTextParagraph className={`p15 mt0 mb0 ${theme.name}`}>
                   <strong>Liquidity provider rewards</strong>
                   <br/><br/>
                   Liquidity providers earn a 0.3% fee on all trades proportional to their share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity.
                 </SimpleTextParagraph>
-                {/* <CardBGImage />
-                <CardNoise /> */}
+                {/* <CardBGImage /> <CardNoise /> */}
               </div>      
               <SecondaryPanelBoxContainerExtraDecorator className={ `bottom ${theme.name}` }/>
             </SecondaryPanelBoxContainer>
@@ -547,11 +546,11 @@ export default function RemoveLiquidity({
                       <RemoveLiquiditySliderItemContainer className={ `${theme.name}` }>
                         <DynamicGrid columns={2}>
                           <div className="text-left">
-                            <h4 className="title">Amount</h4>
+                            <h4 className={ ` title ${theme.name}` }>Amount</h4>
                           </div>
                           <div className="text-right">
                             <ActionButton className={theme.name} onClick={() => setShowDetailed(!showDetailed) }>
-                              {showDetailed ? (<><label>Detailed</label> <ChevronDown/></>) : (<><label>Simple</label> <ChevronUp/></>)}
+                              {showDetailed ? (<><label className={theme.name}>Detailed</label> <ChevronDown/></>) : (<><label className={theme.name}>Simple</label> <ChevronUp/></>)}
                             </ActionButton> 
                           </div>
                         </DynamicGrid>
@@ -573,7 +572,7 @@ export default function RemoveLiquidity({
                   </SecondaryPanelBoxContainer>                  
                   {!showDetailed && (
                     <>
-                      <div className="text-center mb20">
+                      <div className="text-center mt20 mb20">
                         <ArrowDown className={ `simple-icon ${theme.name}` } />
                       </div>
                       <SecondaryPanelBoxContainer className={ ` mb20 ${theme.name}` }>
@@ -637,8 +636,9 @@ export default function RemoveLiquidity({
                         currency={pair?.liquidityToken}
                         pair={pair}
                         id="liquidity-amount"
+                        fatherPage="remove-liquidity"
                       />
-                      <div className="text-center mb20">
+                      <div className="text-center mt20 mb20">
                         <ArrowDown className={ `simple-icon ${theme.name}` } />
                       </div>
                       <CurrencyInputPanel
@@ -651,8 +651,9 @@ export default function RemoveLiquidity({
                         label={'Output'}
                         onCurrencySelect={handleSelectCurrencyA}
                         id="remove-liquidity-tokena"
-                      />
-                      <div className="text-center mb20">
+                        fatherPage="remove-liquidity"
+                      />                      
+                      <div className="text-center mt20 mb20">
                         <Plus className={ `simple-icon ${theme.name}` } />
                       </div>
                       <CurrencyInputPanel
@@ -665,6 +666,7 @@ export default function RemoveLiquidity({
                         label={'Output'}
                         onCurrencySelect={handleSelectCurrencyB}
                         id="remove-liquidity-tokenb"
+                        fatherPage="remove-liquidity"
                       />
                     </>
                   )}

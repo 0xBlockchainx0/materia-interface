@@ -545,17 +545,16 @@ export default function AddLiquidity({
     <>
       <AppBody>
         <PageGridContainer className="pool">
-          <div className="left-column">
+          <div className={`left-column ${theme.name}`}>
             <SecondaryPanelBoxContainer className={`${theme.name}`}>
               <SecondaryPanelBoxContainerExtraDecorator className={`top ${theme.name}`} />
               <div className="inner-content">
-                <SimpleTextParagraph className="p15 mt0 mb0">
+                <SimpleTextParagraph className={`p15 mt0 mb0 ${theme.name}`}>
                   <strong>Liquidity provider rewards</strong>
                   <br /><br />
                   Liquidity providers earn a 0.3% fee on all trades proportional to their share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity.
                 </SimpleTextParagraph>
-                {/* <CardBGImage />
-                <CardNoise /> */}
+                {/* <CardBGImage /> <CardNoise /> */}
               </div>
               <SecondaryPanelBoxContainerExtraDecorator className={`bottom ${theme.name}`} />
             </SecondaryPanelBoxContainer>
@@ -563,7 +562,7 @@ export default function AddLiquidity({
               <SectionTitle className={`mt20 ${theme.name}`}>Your liquidity</SectionTitle>
             </HideSmall>
             {!account ? (
-              <SimpleTextParagraph className="p20 text-center">
+              <SimpleTextParagraph className={`p20 text-center ${theme.name}`}>
                 Connect to a wallet to view your liquidity.
               </SimpleTextParagraph>
             ) : isLoading ? (
@@ -577,7 +576,7 @@ export default function AddLiquidity({
                 <SimpleTextParagraph className={`text-left ${theme.name}`}>
                   <ExternalLink href={'https://info.materiadex.com/account/' + account}>
                     Account analytics and accrued fees
-                      <IconButton className={theme.name}>
+                      <IconButton className={`hide-classic ${theme.name}`}>
                       <span className="icon-symbol">↗</span>
                     </IconButton>
                   </ExternalLink>
@@ -594,7 +593,7 @@ export default function AddLiquidity({
                     </EmptyProposals>
                   )}
             <SimpleTextParagraph className={`text-left ${theme.name}`}>
-              Don't see a pool you joined? <StyledInternalLink id="refresh-pool-link" to={'#'} onClick={onLiquidityPoolsUpdate}>Refresh</StyledInternalLink> you pools or <StyledInternalLink id="import-pool-link" to={'/find'}>import it</StyledInternalLink>.
+              Don't see a pool you joined? <StyledInternalLink className={`${theme.name}`} id="refresh-pool-link" to={'#'} onClick={onLiquidityPoolsUpdate}>Refresh</StyledInternalLink> you pools or <StyledInternalLink className={`${theme.name}`} id="import-pool-link" to={'/find'}>import it</StyledInternalLink>.
             </SimpleTextParagraph>
           </div>
 
@@ -673,7 +672,7 @@ export default function AddLiquidity({
                 ))}
               {currencies[Field.CURRENCY_A] && currencies[Field.CURRENCY_B] && pairState !== PairState.INVALID && (
                 <>
-                  <SectionTitle className={`mt20 mb20 ${theme.name}`}>{noLiquidity ? 'Initial prices' : 'Prices'} and pool share</SectionTitle>
+                  <SectionTitle className={`mt20 mb20 add-liquidity-section-title ${theme.name}`}>{noLiquidity ? 'Initial prices' : 'Prices'} and pool share</SectionTitle>
                   <ColumnCenter className="mb20">
                     <PoolPriceBar
                       currencies={currencies}

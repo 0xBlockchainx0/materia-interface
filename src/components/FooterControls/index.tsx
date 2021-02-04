@@ -94,8 +94,8 @@ export default function Footer() {
           )}
         </HideSmall>
       </FooterElement>
-      <FooterElementWrap className={`mr20`}>
-        <IconButton className={`${theme.name}`} onClick={toggleDarkMode}>
+      <FooterElementWrap className={`mr20 ${theme.name}`}>
+        <IconButton className={`theme-icon ${theme.name}`} onClick={toggleDarkMode}>
             {darkMode ? <Sun className={`footer-icon ${theme.name}`}/> : <Moon className={`footer-icon ${theme.name}`}/>}
         </IconButton>
         <Menu />

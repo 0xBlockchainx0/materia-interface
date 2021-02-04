@@ -92,7 +92,7 @@ export default function SettingsTab() {
               <X/>
             </IconButton>
             <AutoColumn gap="lg" style={{ padding: '0 2rem' }}>
-              <EvidencedTextParagraph>
+              <EvidencedTextParagraph className={theme.name}>
                 Expert mode turns off the confirm transaction prompt and allows high slippage trades that often result
                 in bad rates and lost funds.
                 <br/><br/>

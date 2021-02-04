@@ -775,6 +775,7 @@ MARGIN STYLE MINUS
   .width80 { width: 80% !important; }
   .pull-right { float: right; }
   .pull-left { float: left; }
+  .center-block { margin: 0px auto !important; }
 
   svg.simple-icon { width: 16px;}
   svg.simple-icon.dark { stroke: ${({ theme }) => theme.azure1}; color: ${({ theme }) => theme.azure1}; }
@@ -783,6 +784,11 @@ MARGIN STYLE MINUS
 
   .token-address { font-size: 10px; font-weight: 500; margin-bottom: 10px; }
   .token-address.classic { font-size: 7px; font-weight: 500; margin-bottom: 10px; margin-top: 10px; }
+  .hide-dark { ${({ theme }) => (theme.name == 'dark' ? 'display: none !important;' : '')} }
+  .hide-light { ${({ theme }) => (theme.name == 'light' ? 'display: none !important;' : '')} }
+  .hide-classic { ${({ theme }) => (theme.name == 'classic' ? 'display: none !important;' : '')} }
+
+  #remove-liquidity-tokena-symbol + img, #remove-liquidity-tokenb-symbol + img { margin-top: 3px; }
 `
 export const AppWrapper = styled.div`
   display: flex;
@@ -831,9 +837,9 @@ export const MainContainer = styled.div`
   &.dark { border: solid 1px ${({ theme }) => theme.utils.hexToRGB(theme.azure4, 1)}; } 
   &.light { border: solid 1px ${({ theme }) => theme.utils.hexToRGB(theme.violet1, 1)}; }
   &.classic { 
-    border: outset 3px ${({ theme }) => theme.utils.hexToRGB(theme.grey2, 1)}; 
+    border: outset 5px ${({ theme }) => theme.utils.hexToRGB(theme.grey2, 1)}; 
     padding: 0px;
-    border-radius: 3px;
+    border-radius: 5px;
   }
 
   @media (max-width: 600px) { max-width: 90% !important; }
@@ -1003,6 +1009,12 @@ export const SectionTitle = styled.h6`
 
   &.dark:after { background: linear-gradient(to right, ${({ theme }) => theme.azure1} 0%, rgba(15,63,115,0)); }
   &.light:after { background: linear-gradient(to right, ${({ theme }) => theme.violet1} 0%, rgba(15,63,115,0)); }
+
+  &.classic.add-liquidity-section-title { 
+    width: 100%;
+    text-align:center;
+    text-shadow: 1px 1px 1px ${({ theme }) => theme.black};
+  }
 `
 export const InventoryColumn = styled.div`
   min-height: 580px;
@@ -1068,18 +1080,28 @@ export const SimpleTextParagraph = styled.p`
   margin: 20px 0px;
   text-align: left;
 
-  &.dark { font-weight:400; }
+  &.dark { font-weight: 400; }
   &.light {}
-  &.classic {}
+  &.classic { 
+    font-size: 9px;
+    text-shadow: 1px 1px 1px ${({ theme }) => theme.black}; 
+    line-height: 2em;
+  }
+  &.classic strong { font-weight: normal; }
 
   &.dark > a { color: ${({ theme }) => theme.azure1}; }
   &.light > a { color: ${({ theme }) => theme.violet1}; }
   &.light > a {}
+
+  & span.row { display: inline-block; width: 100%; margin-bottom: 10px; }
+  & span.row span.column { display: inline-block; float: left; }
+  & span.row span.column:last-child { float: right; }
+  & span.row span.column img { display: inline-block !important; vertical-align: middle; }
 `
 export const SimpleInformationsTextParagraph = styled(SimpleTextParagraph)`
   &.dark { color: ${({ theme }) => theme.azure1}; }
   &.light {}
-  &.classic {}
+  &.classic { font-size: 9px; }
 `
 export const EvidencedTextParagraph = styled(SimpleTextParagraph)`
   font-size: 16px;
@@ -1087,7 +1109,11 @@ export const EvidencedTextParagraph = styled(SimpleTextParagraph)`
   
   &.dark { color: ${({ theme }) => theme.azure1}; }
   &.light { color: ${({ theme }) => theme.violet1}; }
-  &.classic {}
+  &.classic { 
+    text-shadow: 1px 1px 1px ${({ theme }) => theme.black}; 
+    font-size: 11px; 
+    line-height: 2em;
+  }
 `
 const BaseButton = styled(Button)<{ width?: string, borderRadius?: string, selected?: boolean }>`
   padding: 0px !important;
@@ -1151,6 +1177,7 @@ export const PageGridContainer = styled.div`
   &.pool {}
 
   &.pool > .left-column { padding: 0 1rem 1rem 1rem; }
+  &.pool > .left-column.classic { padding: 0 1rem 1rem 0; }
 `
 export const PageItemsContainer = styled.div`
   &.dark {}
@@ -1229,14 +1256,11 @@ export const DynamicGrid = styled.div<{ columns: number, columnsDefinitions?: Dy
   display: grid;
   grid-template-columns: ${({ theme, columns, columnsDefinitions }) => theme.utils.gridColumsWidth(columns, columnsDefinitions) };
 
-  & .title {
-    font-size: 18px;
-    font-weight: 500;
-  }
+  & .title { font-size: 18px; font-weight: 500; }
 
   &.dark .title { color: ${({ theme }) => theme.white}; }
   &.light .title { color: ${({ theme }) => theme.grey1}; }
-  &.classic .title {}
+  &.classic .title { font-size: 13px; text-shadow: 1px 1px 1px ${({ theme }) => theme.black}; line-height: 1.5em; }
 `
 const tabLinkItemActiveClassName = 'active'
 export const TabLinkItem = styled(NavLink).attrs({ tabLinkItemActiveClassName })`
@@ -1359,6 +1383,7 @@ export const ActionButton = styled(BaseButton)<{ disabled?: boolean, selected?: 
   & > label, & > label + svg { display: block; float: left; }
   & > label + svg { width: 15px; }
   & > label { margin-top: 3px; margin-right: 5px; }
+  & > label.classic { margin-top: 7px; }
 
   &.dark {
     color: ${({ theme }) => theme.yellowGreen} !important;
@@ -1390,6 +1415,7 @@ export const ActionButton = styled(BaseButton)<{ disabled?: boolean, selected?: 
     background-position: center center;
     left: -57px;
     top: -4px;
+    z-index: 1;
   }
 
   &.dark:hover, &.dark:focus { box-shadow: 0px 0px 4px ${({ theme }) => theme.yellowGreen}; }
@@ -1435,18 +1461,32 @@ export const OptionCardClickable = styled(OptionCard as any)<{ clickable?: boole
   margin-top: 0;
   &:hover { cursor: ${({ clickable }) => (clickable ? 'pointer' : '')}; }
   opacity: ${({ disabled }) => (disabled ? '0.5' : '1')};
-  &.classic { position: relative; }
+  &.classic { 
+    position: relative; 
+    color: ${({ theme }) => theme.yellowGreen};
+    border: none;
+    background: transparent; 
+    text-shadow: 1px 1px 1px ${({ theme }) => theme.black};
+  }
   &.classic:before { 
     position: absolute;
     content: " ";
-    display: block; 
+    display: none; 
     width: 57px;
     height: 35px;
     background-image: url(${images.icons.FF7Cursor});
     background-repeat: no-repeat;
     background-position: center center;
+    left: 0px;
+    top: 25%;
+    z-index: 1;
   }
-  &.classic:hover { color: yellow }
+  &.classic:hover, &.classic:focus { 
+    color: ${({ theme }) => theme.azure2}; 
+    outline: none; 
+  }
+  &.classic:hover .header-text, &.classic:focus .header-text { padding-left: 57px; } 
+  &.classic:hover:before, &.classic:focus:before { display: ${({ clickable }) => (clickable ? 'block' : 'none')}; }
 `
 export const OptionCardLeft = styled.div`
   ${({ theme }) => theme.flexColumnNoWrap};
@@ -1560,6 +1600,7 @@ export const SwitchButton = styled(Button)<{disabled?: boolean}>`
     background-position: center center;
     left: -63px;
     top: -3px;
+    z-index: 1;
   }
 
   &.dark:hover, &.dark:focus { box-shadow: 0px 0px 12px ${({ theme }) => theme.azure1 }; }
@@ -1674,6 +1715,7 @@ export const OperationButton = styled(Button)<{label?: string, disabled?: boolea
     background-position: center center;
     left: -65px;
     top: -3px;
+    z-index: 1;
   }
   &.classic:hover:after { color: ${({ theme }) => theme.azure2}; }
   &.classic:hover:before, &.classic:focus:before { display: block; }
@@ -1737,11 +1779,14 @@ export const MainOperationButton = styled(ActionButton)<{ disabled?: boolean, se
     background-position: center center;
     left: -57px;
     top: 0px;
+    z-index: 1;
   }
+  &.classic.width80:before { left: -15px; }
   &.classic:hover, &.classic:focus { color: ${({ theme }) => theme.azure2}; }
   &.classic:disabled, &.classic.popup-button.dismiss:hover, &.classic.popup-button.dismiss:focus { color: ${({ theme }) => theme.red1}; }
   &.classic:hover:before, &.classic:focus:before { display: block; }
-  
+  &#confirm-expert-mode.classic { padding: 20px !important; }
+  &#confirm-expert-mode.classic:before { left: 10px; top: 15px; }
 `
 export const TradePriceContainer = styled.div`
   margin-top: 250px;
@@ -1867,7 +1912,7 @@ export const SecondaryPanelBoxContainer = styled.div`
   }  
   &.classic > .inner-content {
     background: linear-gradient(0deg, ${({ theme }) => theme.utils.hexToRGB(theme.violet6, 1)} 60%, ${({ theme }) => theme.utils.hexToRGB(theme.violet7, 1)} 100%); 
-    border: outset 3px ${({ theme }) => theme.utils.hexToRGB(theme.grey2, 1)}; 
+    border: outset 5px ${({ theme }) => theme.utils.hexToRGB(theme.grey2, 1)}; 
   }
 
   &.modal > .inner-content { height: 100%; }
@@ -1930,6 +1975,10 @@ export const SecondaryPanelBoxContainer = styled.div`
 
   &.modal > .modal-inner-content .modal-content-wrapper > .connect-wallet-terms-and-conditions > label { font-size: 15px; }
   &.modal > .modal-inner-content .modal-content-wrapper > .connect-wallet-terms-and-conditions > label > input { margin-right: 10px; }
+  &.modal > .modal-inner-content .modal-content-wrapper > .connect-wallet-terms-and-conditions.classic > label {
+    font-size: 9px;
+    text-shadow: 1px 1px 1px ${({ theme }) => theme.black };
+  }
 
   &.dark.modal > .modal-inner-content .modal-content-wrapper > .connect-wallet-terms-and-conditions { 
     border-top: solid 1px ${({ theme }) => theme.azure1 };
@@ -1955,7 +2004,7 @@ export const SecondaryPanelBoxContainer = styled.div`
     ${({ theme }) => theme.mediaWidth.upToMedium` min-width: 18.125rem; top: -22rem; right: 2rem; @media (max-width: 960px) { top: -19.5rem; } `};
   }
 
-  &.settings-menu-panel.classic { min-width: 30rem; top: -26rem; }
+  &.settings-menu-panel.classic { min-width: 30rem; top: -25.35rem; }
 
   &.settings-menu-panel .sectionHeader { font-weight: 500; font-size: 14px; }
   &.settings-menu-panel .sectionOption { font-weight: 500; font-size: 14px; }
@@ -2023,10 +2072,7 @@ export const SecondaryPanelBoxContainerExtraDecorator = styled.div`
 export const WalletConnectorsContainer = styled.div`
   display: grid;
   grid-gap: 10px;
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    grid-template-columns: 1fr;
-    grid-gap: 10px;
-  `};
+  ${({ theme }) => theme.mediaWidth.upToMedium` grid-template-columns: 1fr; grid-gap: 10px; `};
 `
 const Fader = styled.div`
   position: absolute;
@@ -2146,6 +2192,11 @@ export const ModalCaption = styled.div`
   flex-wrap: wrap;
   margin: 20px auto;
   font-size: 15px;
+
+  &.classic {
+    font-size: 9px;
+    text-shadow: 1px 1px 1px ${({ theme }) => theme.black };
+  }
 `
 export const LoaderBoxContainer = styled.div`
   
@@ -2200,14 +2251,18 @@ const SettingsMenuOptionBase = styled.button`
 
   &.dark:hover, &.dark:focus { border-color: ${({ theme }) => theme.azure1}; background-color: ${({ theme }) => theme.grey4}; }
   &.light:hover, &.light:focus { background-color: ${({ theme }) => theme.white}; color: ${({ theme }) => theme.violet1}; }
-  &.classic:hover, &.classic:focus { background-color: ${({ theme }) => theme.grey4}; }
+  &.classic:hover, &.classic:focus { 
+    background-color: ${({ theme }) => theme.white}; 
+    border-color: ${({ theme }) => theme.yellowGreen}; 
+    color: ${({ theme }) => theme.blue4}; 
+  }
 `
 export const SettingsMenuOption = styled(SettingsMenuOptionBase)<{ active: boolean }>`
   margin-right: 8px;
 
   &.dark { background-color: ${({ active, theme }) => active && theme.grey4}; }
   &.light { background-color: ${({ active, theme }) => active && theme.white}; }
-  &.classic {}
+  &.classic { background-color: ${({ active, theme }) => (active ? theme.utils.hexToRGB(theme.white, 1) : theme.utils.hexToRGB(theme.white, 0.8))}; }
 `
 export const SettingsMenuCustomOption = styled(SettingsMenuOptionBase)<{ active?: boolean; warning?: boolean }>`
   height: 2rem;
@@ -2229,6 +2284,17 @@ export const SettingsMenuCustomOption = styled(SettingsMenuOptionBase)<{ active?
 
   &.dark input { color: ${({ theme }) => theme.white }; }
   &.light input { color: ${({ theme }) => theme.violet1 }; }
+  &.classic input { color: ${({ theme }) => theme.blue4}; }
+  &.classic { 
+    color: ${({ theme }) => theme.blue4};
+    background-color: ${({ active, theme }) => (active ? theme.utils.hexToRGB(theme.white, 1) : theme.utils.hexToRGB(theme.white, 0.8))}; 
+  }
+
+  & + .minutes { padding-left: 8px; font-size: 14px; }
+  &.classic + .minutes { 
+    font-size: 9px;
+    text-shadow: 1px 1px 1px ${({ theme }) => theme.black }; 
+  }
 `
 export const SettingsMenuCustomOptionInput = styled.input`
   color: ${({ theme, color }) => (color === 'red' ? theme.red1 : theme.text1)};
@@ -2324,6 +2390,7 @@ export const SearchTokenListItem = styled(RowBetween)`
     background-position: center center;
     left: 0px;
     top: 25%;
+    z-index: 1;
   }
   &.classic:hover, &.classic:focus { color: ${({ theme }) => theme.azure2}; }
   &.classic:hover:before, &.classic:focus:before { display: block; }
@@ -2381,6 +2448,8 @@ export const RemoveLiquiditySliderItemContainer = styled.div`
   &.dark {}
   &.light {}
   &.classic {}
+  &.classic .title { font-size: 13px; text-shadow: 1px 1px 1px ${({ theme }) => theme.black}; line-height: 1.5em; }
+  &.classic .slider-percentage { font-size: 50px; font-weight: normal; margin-top: 15px; text-shadow: 1px 1px 1px ${({ theme }) => theme.black};  }
 `
 export const RemoveLiquidityCustomText = styled.div`
   font-size: 24px;
@@ -2412,7 +2481,7 @@ export const StyledRangeInput = styled.input`
 
   &.dark::-webkit-slider-thumb { background-color: ${({ theme }) => theme.azure1}; color: ${({ theme }) => theme.azure1}; }
   &.light::-webkit-slider-thumb { background-color: ${({ theme }) => theme.black}; color: ${({ theme }) => theme.black}; }
-  &.classic::-webkit-slider-thumb {}
+  &.classic::-webkit-slider-thumb { background-color: ${({ theme }) => theme.azure1}; color: ${({ theme }) => theme.azure1}; }
 
   &::-moz-range-thumb {
     height: 14px;
@@ -2567,6 +2636,8 @@ export const FooterElementWrap = styled.div`
   display: flex;
   align-items: center;
   margin-left: auto;
+
+  &.classic > .theme-icon { display: none; }
 `
 export const AccountElement = styled.div<{ active: boolean }>`
   display: flex;
@@ -2655,10 +2726,10 @@ export const MenuFlyout = styled.span`
 
   &.classic { 
     box-shadow: none; 
-    border-radius: 3px; 
+    border-radius: 5px; 
     min-width: 12rem; 
     background: linear-gradient(0deg, ${({ theme }) => theme.utils.hexToRGB(theme.blue6, 1)} 0%, ${({ theme }) => theme.utils.hexToRGB(theme.blue5, 1)} 100%); 
-    border: outset 3px ${({ theme }) => theme.utils.hexToRGB(theme.grey2, 1)};
+    border: outset 5px ${({ theme }) => theme.utils.hexToRGB(theme.grey2, 1)};
   }
 `
 export const MenuItem = styled(ExternalLink)`
@@ -2675,4 +2746,54 @@ export const MenuItem = styled(ExternalLink)`
   &.classic { font-size: 9px; color: ${({ theme }) => theme.white}; }
   &.classic:hover { color: ${({ theme }) => theme.yellowGreen}; }
   &.classic:hover > svg { stroke: ${({ theme }) => theme.yellowGreen}; }
+`
+export const InfoLink = styled(ExternalLink)`
+  width: 100%;
+  text-align: center;
+  font-size: 14px;
+  color: ${({ theme }) => theme.text1};
+
+  &.classic { font-size: 11px; margin: 10px auto; }
+  &.classic:hover, &.classic:focus { color: ${({ theme }) => theme.yellowGreen}; }
+`
+export const QuestionWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.2rem;
+  border: none;
+  background: none;
+  outline: none;
+  cursor: default;
+  border-radius: 36px;
+  background-color: ${({ theme }) => theme.transparent};
+  color: ${({ theme }) => theme.text2};
+
+  :hover, :focus { opacity: 0.7; }
+`
+export const LightQuestionWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.2rem;
+  border: none;
+  background: none;
+  outline: none;
+  cursor: default;
+  border-radius: 36px;
+  width: 24px;
+  height: 24px;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: ${({ theme }) => theme.white};
+
+  :hover, :focus { opacity: 0.7; }
+`
+export const QuestionMark = styled.span`
+  font-size: 1rem;
+`
+export const TooltipContainer = styled.div`
+  width: 228px;
+  padding: 0.6rem 1rem;
+  line-height: 150%;
+  font-weight: 400;
 `

@@ -31,10 +31,16 @@ const TokenImage = styled.div<{ showBackground: boolean }>`
   height: 300px;
   width: 300px;
   background-position: ${({ theme }) => (theme.name == 'classic' ? '' : '-5px')} center!important;
-  display: table-cell;
+  /*display: table-cell;*/
+  margin: 0 auto;
   vertical-align: middle;
   @media (max-width: 1050px) { padding: 2rem !important; }
   @media (max-width: 450px) { padding: 1rem !important; margin-top: -2.5rem; }
+
+  &.single { padding-top: 12.5%; }
+  &.single.default { padding-top: 30%; }
+  &.single.default > img { margin-top: 0; }
+  &.single.remove-liquidity > img { margin-top: 0px; }
 `
 
 const TokenImageContainer = styled.div`
@@ -80,7 +86,8 @@ interface CurrencyInputPanelProps {
   otherCurrency?: Currency | null
   id: string
   showCommonBases?: boolean
-  customBalanceText?: string
+  customBalanceText?: string,
+  fatherPage?: string
 }
 
 export default function CurrencyInputPanel({
@@ -98,7 +105,8 @@ export default function CurrencyInputPanel({
   otherCurrency,
   id,
   showCommonBases,
-  customBalanceText
+  customBalanceText,
+  fatherPage
 }: CurrencyInputPanelProps) {
   const { t } = useTranslation()
 
@@ -108,6 +116,7 @@ export default function CurrencyInputPanel({
   const theme = useContext(ThemeContext)
 
   const handleDismissSearch = useCallback(() => { setModalOpen(false) }, [setModalOpen])
+  const customFatherPageCssClass = (fatherPage ? fatherPage : 'default')
 
   return (
     <>
@@ -164,7 +173,7 @@ export default function CurrencyInputPanel({
         )}
       </CurrencyFormPanel>
       <TokenImageContainer>
-        <TokenImage showBackground={true}>
+        <TokenImage showBackground={true} className={(!pair ? 'single' : '') + ' ' + customFatherPageCssClass}>
           {pair ? (
             <DoubleCurrencyLogo currency0={pair.token0} currency1={pair.token1} size={110} margin={false} radius={true} />
           ) : currency ? (

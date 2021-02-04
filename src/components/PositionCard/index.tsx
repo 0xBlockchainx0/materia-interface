@@ -104,30 +104,23 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
                     </RowFixed>
                   </FixedHeightRow>
                   <AutoColumn gap="4px">
-                    <FixedHeightRow>
-                      <Text className={ `evidence-text ${theme.name}` }>Your pool share:</Text>
-                      <Text className={ `evidence-text ${theme.name}` }>{poolTokenPercentage ? poolTokenPercentage.toFixed(6) + '%' : '-'}</Text>
-                    </FixedHeightRow>
-                    <FixedHeightRow>
-                      <Text className={ `evidence-text ${theme.name}` }>{currency0.symbol}:</Text>
-                      {token0Deposited ? (
-                        <RowFixed>
-                          <Text className={ `evidence-text ml5 ${theme.name}` }>{token0Deposited?.toSignificant(6)}</Text>
-                        </RowFixed>
-                      ) : (
-                        '-'
-                      )}
-                    </FixedHeightRow>
-                    <FixedHeightRow>
-                      <Text className={ `evidence-text ${theme.name}` }>{currency1.symbol}:</Text>
-                      {token1Deposited ? (
-                        <RowFixed>
-                          <Text className={ `evidence-text ml5 ${theme.name}` }>{token1Deposited?.toSignificant(6)}</Text>
-                        </RowFixed>
-                      ) : (
-                        '-'
-                      )}
-                    </FixedHeightRow>
+                    <SimpleTextParagraph className={ `${theme.name}` }>
+                      <span className="row">
+                        <span className="column">Your pool share:</span>
+                        <span className="column">{poolTokenPercentage ? poolTokenPercentage.toFixed(6) + '%' : '-'}</span>
+                      </span>
+                      <span className="clear-fix"></span>
+                      <span className="row">
+                        <span className="column">{currency0.symbol}:</span>
+                        <span className="column">{token0Deposited ? ( <span className={ `evidence-text ml5 ${theme.name}` }>{token0Deposited?.toSignificant(6)}</span> ) : ( '-' )}</span>
+                      </span>
+                      <span className="clear-fix"></span>
+                      <span className="row">
+                        <span className="column">{currency1.symbol}:</span>
+                        <span className="column">{token1Deposited ? ( <span className={ `evidence-text ml5 ${theme.name}` }>{token1Deposited?.toSignificant(6)}</span> ) : ( '-' )}</span>
+                      </span>
+                      <span className="clear-fix"></span>
+                    </SimpleTextParagraph>
                   </AutoColumn>
                 </AutoColumn>
               </div>      
@@ -138,7 +131,7 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
         <SecondaryPanelBoxContainer className={ `${theme.name}` }>
           <SecondaryPanelBoxContainerExtraDecorator className={ `top ${theme.name}` }/>
             <div className="inner-content">
-              <SimpleTextParagraph className="p10">
+              <SimpleTextParagraph className={ `p10 ${theme.name}` }>
                 <span role="img" aria-label="wizard-icon"></span>{' '}
                 By adding liquidity you'll earn 0.3% of all trades on this pair proportional to your share of the pool.
                 Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity.
@@ -196,67 +189,40 @@ export default function FullPositionCard({ pair, border }: PositionCardProps) {
 
           <RowFixed>
             <ActionButton className={theme.name} onClick={() => setShowMore(!showMore)}>
-              <label>Manage</label> {showMore ? ( <ChevronUp/> ) : ( <ChevronDown /> )}
+              <label className={theme.name}>Manage</label> {showMore ? ( <ChevronUp/> ) : ( <ChevronDown /> )}
             </ActionButton>            
           </RowFixed>
         </FixedHeightRow>
 
         {showMore && (
           <AutoColumn gap="8px">
-            <FixedHeightRow>
-              <Text fontSize={14} fontWeight={500}>
-                Your pool tokens:
-              </Text>
-              <Text fontSize={14} fontWeight={500}>
-                {userPoolBalance ? userPoolBalance.toSignificant(4) : '-'}
-              </Text>
-            </FixedHeightRow>
-            <FixedHeightRow>
-              <RowFixed>
-                <Text fontSize={14} fontWeight={500}>
-                  Pooled {currency0.symbol}:
-                </Text>
-              </RowFixed>
-              {token0Deposited ? (
-                <RowFixed>
-                  <Text fontSize={14} fontWeight={500} marginLeft={'6px'}>
-                    {token0Deposited?.toSignificant(6)}
-                  </Text>
-                  <CurrencyLogo size="20px" style={{ marginLeft: '8px' }} currency={currency0} />
-                </RowFixed>
-              ) : (
-                '-'
-              )}
-            </FixedHeightRow>
-            <FixedHeightRow>
-              <RowFixed>
-                <Text fontSize={14} fontWeight={500}>
-                  Pooled {currency1.symbol}:
-                </Text>
-              </RowFixed>
-              {token1Deposited ? (
-                <RowFixed>
-                  <Text fontSize={14} fontWeight={500} marginLeft={'6px'}>
-                    {token1Deposited?.toSignificant(6)}
-                  </Text>
-                  <CurrencyLogo size="20px" style={{ marginLeft: '8px' }} currency={currency1} />
-                </RowFixed>
-              ) : (
-                '-'
-              )}
-            </FixedHeightRow>
-            <FixedHeightRow>
-              <Text fontSize={14} fontWeight={500}>
-                Your pool share:
-              </Text>
-              <Text fontSize={14} fontWeight={500}>
-                {poolTokenPercentage ? poolTokenPercentage.toFixed(2) + '%' : '-'}
-              </Text>
-            </FixedHeightRow>
+            <SimpleTextParagraph className={theme.name}>
+              <span className="row">
+                <span className="column">Your pool tokens:</span>
+                <span className="column">{userPoolBalance ? userPoolBalance.toSignificant(4) : '-'}</span>
+              </span>
+              <span className="clear-fix"></span>
+              <span className="row">
+                <span className="column">Pooled {currency0.symbol}:</span>
+                <span className="column">
+                  {token0Deposited ? (<> {token0Deposited?.toSignificant(6)} <CurrencyLogo size="20px" currency={currency0} /> </>) : ( '-' )}
+                </span>
+              </span>
+              <span className="clear-fix"></span>
+              <span className="row">
+                <span className="column">Pooled {currency1.symbol}:</span>
+                <span className="column">{token1Deposited ? (<>{token1Deposited?.toSignificant(6)} <CurrencyLogo size="20px" currency={currency1} /></>) : ( '-' )}  </span>
+              </span>
+              <span className="clear-fix"></span>
+              <span className="row">
+                <span className="column">Your pool share:</span>
+                <span className="column">{poolTokenPercentage ? poolTokenPercentage.toFixed(2) + '%' : '-'}</span>
+              </span>
+            </SimpleTextParagraph>     
             <SimpleTextParagraph className={ `text-left ${theme.name}` }>
               <ExternalLink href={`https://info.materiadex.com/account/${account}`}>
               View accrued fees and analytics
-                <IconButton className={theme.name}>
+                <IconButton className={ `hide-classic ${theme.name}` }>
                   <span className="icon-symbol">↗</span>
                 </IconButton>
               </ExternalLink>

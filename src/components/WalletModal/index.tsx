@@ -261,7 +261,7 @@ export default function WalletModal({
           ) : ( <span>Connect to a wallet</span> )}
         </h6> 
         <div className="modal-content-wrapper">
-        <div className="connect-wallet-terms-and-conditions">
+        <div className={ `connect-wallet-terms-and-conditions ${theme.name}` }>
           <label>
             <input name="isGoing" type="checkbox" checked={termAndConditionsAccepted}
               onChange={(event) => {
@@ -289,7 +289,7 @@ export default function WalletModal({
               <WalletConnectorsContainer>{getOptions(termAndConditionsAccepted)}</WalletConnectorsContainer>
             )}
           {walletView !== WALLET_VIEWS.PENDING && (
-            <ModalCaption>
+            <ModalCaption className={theme.name}>
               <span>New to Ethereum? &nbsp;</span>{' '}
               <DocLink 
                 title="Learn more about wallets" 

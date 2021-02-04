@@ -3,20 +3,14 @@ import React, { useContext } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 import { Field } from '../../state/swap/actions'
 import { useUserSlippageTolerance } from '../../state/user/hooks'
-import { TYPE, ExternalLink } from '../../theme'
+import { InfoLink } from '../../theme'
 import { computeSlippageAdjustedAmounts, computeTradePriceBreakdown } from '../../utils/prices'
 import { AutoColumn } from '../Column'
 import QuestionHelper from '../QuestionHelper'
 import { RowBetween, RowFixed } from '../Row'
 import FormattedPriceImpact from './FormattedPriceImpact'
 
-const InfoLink = styled(ExternalLink)`
-  width: 100%;
-  text-align: center;
-  font-size: 14px;
-  // padding-left: 1.5rem;
-  color: ${({ theme }) => theme.text1};
-`
+
 
 function TradeSummary({ trade, originalCurrencies, allowedSlippage }: { 
   trade: Trade;
@@ -77,7 +71,7 @@ export interface AdvancedSwapDetailsProps {
 
 export function AdvancedSwapDetails({ trade, originalCurrencies }: AdvancedSwapDetailsProps) {
   const [allowedSlippage] = useUserSlippageTolerance()
-  // const theme = useContext(ThemeContext)
+  const theme = useContext(ThemeContext)
   // const showRoute = Boolean(trade && trade.route.path.length > 2)
 
   return (
@@ -100,7 +94,10 @@ export function AdvancedSwapDetails({ trade, originalCurrencies }: AdvancedSwapD
             </>
           )} */}
           <AutoColumn style={{ padding: '0 24px' }}>
-            <InfoLink href={'https://info.materiadex.com/pair/' + trade.route.pairs[0].liquidityToken.address} target="_blank">
+            <InfoLink 
+                className={theme.name}
+                href={'https://info.materiadex.com/pair/' + trade.route.pairs[0].liquidityToken.address} 
+                target="_blank">
               View pair analytics
             </InfoLink>
           </AutoColumn>
