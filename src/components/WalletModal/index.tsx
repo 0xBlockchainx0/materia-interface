@@ -122,7 +122,8 @@ export default function WalletModal({
     })
   }, [toggleWalletModal])
 
-  const [termAndConditionsAccepted, setTermAndConditionsAccepted] = useLocalStorage('termAndConditionsAccepted', false)
+  // const [termAndConditionsAccepted, setTermAndConditionsAccepted] = useLocalStorage('termAndConditionsAccepted', false)
+  const [termAndConditionsAccepted, setTermAndConditionsAccepted] = useLocalStorage('termAndConditionsAccepted', true)
   const [warning, setWarning] = useState(false);
   const theme = useContext(ThemeContext)
 
@@ -143,10 +144,10 @@ export default function WalletModal({
           return (
             <Option
               onClick={() => {
-                if (isAccepted !== true) {
-                  setWarning(true)
-                  return
-                }
+                // if (isAccepted !== true) {
+                //   setWarning(true)
+                //   return
+                // }
                 option.connector !== connector && !option.href && tryActivation(option.connector)
               }}
               id={`connect-${key}`}
@@ -200,12 +201,10 @@ export default function WalletModal({
           <Option
             id={`connect-${key}`}
             onClick={() => {
-
-              if (termAndConditionsAccepted !== true) {
-                setWarning(true)
-                return
-              }
-
+              // if (termAndConditionsAccepted !== true) {
+              //   setWarning(true)
+              //   return
+              // }
               option.connector === connector
                 ? setWalletView(WALLET_VIEWS.ACCOUNT)
                 : !option.href && tryActivation(option.connector)
@@ -261,7 +260,7 @@ export default function WalletModal({
           ) : ( <span>Connect to a wallet</span> )}
         </h6> 
         <div className="modal-content-wrapper">
-        <div className={ `connect-wallet-terms-and-conditions ${theme.name}` }>
+        {/* <div className={ `connect-wallet-terms-and-conditions ${theme.name}` }>
           <label>
             <input name="isGoing" type="checkbox" checked={termAndConditionsAccepted}
               onChange={(event) => {
@@ -281,8 +280,8 @@ export default function WalletModal({
               href={process.env.PUBLIC_URL + '/docs/privacy_policy.pdf'} 
               className={ `connect-wallet-modal ${theme.name}` } />
           </label>
-        </div>
-        {warning ? <InfoBox className={ `error ${theme.name}` }>Please accept terms and conditions first</InfoBox> : ''}
+        </div> */}
+          {/* {warning ? <InfoBox className={ `error ${theme.name}` }>Please accept terms and conditions first</InfoBox> : ''} */}
           {walletView === WALLET_VIEWS.PENDING ? (
             <PendingView connector={pendingWallet} error={pendingError} setPendingError={setPendingError} tryActivation={tryActivation} />
             ) : (
