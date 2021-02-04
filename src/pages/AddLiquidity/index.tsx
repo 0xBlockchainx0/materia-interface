@@ -593,7 +593,7 @@ export default function AddLiquidity({
                     </EmptyProposals>
                   )}
             <SimpleTextParagraph className={`text-left ${theme.name}`}>
-              Don't see a pool you joined? <StyledInternalLink className={`${theme.name}`} id="refresh-pool-link" to={'#'} onClick={onLiquidityPoolsUpdate}>Refresh</StyledInternalLink> you pools or <StyledInternalLink className={`${theme.name}`} id="import-pool-link" to={'/find'}>import it</StyledInternalLink>.
+              Don't see a pool you joined? <StyledInternalLink className={`${theme.name}`} id="refresh-pool-link" to={'#'} onClick={onLiquidityPoolsUpdate}>Refresh</StyledInternalLink> your pools or <StyledInternalLink className={`${theme.name}`} id="import-pool-link" to={'/find'}>import it</StyledInternalLink>.
             </SimpleTextParagraph>
           </div>
 
