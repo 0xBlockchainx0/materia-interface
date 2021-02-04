@@ -24,6 +24,15 @@ import Swap from './Swap'
 import { OpenClaimAddressModalAndRedirectToSwap, RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects'
 
 import { AppWrapper, HeaderWrapper, BodyWrapper, Marginer } from '../theme'
+import { useModalOpen, useToggleModal } from '../state/application/hooks'
+import { ApplicationModal } from '../state/application/actions'
+import AddressClaimModal from '../components/claim/AddressClaimModal'
+
+function TopLevelModals() {
+  const open = useModalOpen(ApplicationModal.ADDRESS_CLAIM)
+  const toggle = useToggleModal(ApplicationModal.ADDRESS_CLAIM)
+  return <AddressClaimModal isOpen={open} onDismiss={toggle} />
+}
 
 export default function App() {
   return (
@@ -38,6 +47,7 @@ export default function App() {
         <BodyWrapper>
           <Popups />
           {/* <Polling /> */}
+          <TopLevelModals />
           <Web3ReactManager>
             <Switch>
               <Route exact strict path="/swap" component={Swap} />

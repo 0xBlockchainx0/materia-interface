@@ -789,6 +789,8 @@ MARGIN STYLE MINUS
   .hide-classic { ${({ theme }) => (theme.name == 'classic' ? 'display: none !important;' : '')} }
 
   #remove-liquidity-tokena-symbol + img, #remove-liquidity-tokenb-symbol + img { margin-top: 3px; }
+  
+  .claim-footer { min-width: 85px !important; }
 `
 export const AppWrapper = styled.div`
   display: flex;
