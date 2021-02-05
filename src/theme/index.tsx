@@ -839,9 +839,11 @@ export const MainContainer = styled.div`
   &.dark { border: solid 1px ${({ theme }) => theme.utils.hexToRGB(theme.azure4, 1)}; } 
   &.light { border: solid 1px ${({ theme }) => theme.utils.hexToRGB(theme.violet1, 1)}; }
   &.classic { 
-    border: outset 5px ${({ theme }) => theme.utils.hexToRGB(theme.grey2, 1)}; 
     padding: 0px;
-    border-radius: 5px;
+    border-radius: 7px;
+    border: solid 2px #424542;
+    box-shadow: 1px 1px #e7dfe7, -1px -1px #e7dfe7, 1px -1px #e7dfe7, -1px 1px #e7dfe7, 0 -2px #9c9a9c, -2px 0 #7b757b,
+      0 2px #424542;
   }
 
   @media (max-width: 600px) { max-width: 90% !important; }
@@ -1914,7 +1916,10 @@ export const SecondaryPanelBoxContainer = styled.div`
   }  
   &.classic > .inner-content {
     background: linear-gradient(0deg, ${({ theme }) => theme.utils.hexToRGB(theme.violet6, 1)} 60%, ${({ theme }) => theme.utils.hexToRGB(theme.violet7, 1)} 100%); 
-    border: outset 5px ${({ theme }) => theme.utils.hexToRGB(theme.grey2, 1)}; 
+    border-radius: 7px;
+    border: solid 2px #424542;
+    box-shadow: 1px 1px #e7dfe7, -1px -1px #e7dfe7, 1px -1px #e7dfe7, -1px 1px #e7dfe7, 0 -2px #9c9a9c, -2px 0 #7b757b,
+      0 2px #424542;
   }
 
   &.modal > .inner-content { height: 100%; }
@@ -2728,11 +2733,12 @@ export const MenuFlyout = styled.span`
 
   &.classic { 
     box-shadow: none; 
-    border-radius: 5px; 
     min-width: 12rem; 
     background: linear-gradient(0deg, ${({ theme }) => theme.utils.hexToRGB(theme.blue6, 1)} 0%, ${({ theme }) => theme.utils.hexToRGB(theme.blue5, 1)} 100%); 
-    border: outset 5px ${({ theme }) => theme.utils.hexToRGB(theme.grey2, 1)};
-  }
+    border-radius: 7px;
+    border: solid 2px #424542;
+    box-shadow: 1px 1px #e7dfe7, -1px -1px #e7dfe7, 1px -1px #e7dfe7, -1px 1px #e7dfe7, 0 -2px #9c9a9c, -2px 0 #7b757b,
+      0 2px #424542;  }
 `
 export const MenuItem = styled(ExternalLink)`
   flex: 1;
