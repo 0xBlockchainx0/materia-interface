@@ -77,9 +77,9 @@ export const COMMON_CONTRACT_NAMES: { [address: string]: string } = {
   [GIL[ChainId.ROPSTEN].address]: 'GIL'
 }
 
-// TODO: specify merkle distributor for mainnet
 export const MERKLE_DISTRIBUTOR_ADDRESS: { [chainId in ChainId]?: string } = {
-  [ChainId.MAINNET]: '0x090D4613473dEE047c3f2706764f49E0821D256e'
+  [ChainId.MAINNET]: '0xBfF29843804BCF5B13e3039c71FF6DBa63d7FD7A',
+  [ChainId.ROPSTEN]: '0xBfF29843804BCF5B13e3039c71FF6DBa63d7FD7A',
 }
 
 const USD_ONLY: ChainTokenList = {
