@@ -121,7 +121,7 @@ export default function CurrencyInputPanel({
   const customFatherPageCssClass = (fatherPage ? fatherPage : 'default')
 
   const ethItem = useCheckIsEthItem((currency instanceof Token ? currency?.address : undefined) ?? ZERO_ADDRESS)?.ethItem ?? undefined
-  const showErc20Badge = currency !== ETHER && (ethItem !== undefined && ethItem === false)
+  const showErc20Badge = currency !== ETHER && (ethItem !== undefined && ethItem === false) && pair === null
 
   return (
     <>
