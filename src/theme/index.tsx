@@ -1202,9 +1202,9 @@ export const FooterInfo = styled.div`
   &.light {}
   &.classic {}
 
-  &.dark > div.swapCaption { margin: 5px auto 5px auto; }
-  &.light > div.swapCaption { margin: 5px auto 5px auto; }
-  &.classic > div.swapCaption { margin: 15px auto 15px auto; font-size: 9px; }
+  &.dark > div.boxFooterCaption { margin: 5px auto 5px auto; }
+  &.light > div.boxFooterCaption { margin: 5px auto 5px auto; }
+  &.classic > div.boxFooterCaption { margin: 15px auto 15px auto; font-size: 9px; }
 
   .advanced-swap-details-container.classic { margin-top: 30px; }
   .advanced-swap-details-container.dark .advaced-swap-details.label,
@@ -1426,6 +1426,28 @@ export const ActionButton = styled(BaseButton)<{ disabled?: boolean, selected?: 
   &.light:hover, &.light:focus { box-shadow: 0px 0px 4px ${({ theme }) => theme.utils.hexToRGB(theme.black, 0.4)}; }
   &.classic:hover, &.classic:focus { color: ${({ theme }) => theme.azure2}; }
   &.classic:hover:before, &.classic:focus:before { display: block; }
+`
+export const Erc20Badge = styled(ActionButton)<{ disabled?: boolean, selected?: boolean, useCustomProperties?: boolean }>`
+  &.dark {
+    color: ${({ theme }) => theme.yellow2} !important;
+    border: 1px solid ${({ theme }) => theme.yellow2} !important;
+    background-color: ${({ theme }) => theme.utils.hexToRGB(theme.yellow2, 0.05)};
+  }
+
+  &.light {
+    color: ${({ theme }) => theme.yellow2} !important;
+    border: 1px solid ${({ theme }) => theme.yellow2} !important;
+    background-color: ${({ theme }) => theme.utils.hexToRGB(theme.yellow2, 0.05)};
+  }
+
+  &.classic {
+    color: ${({ theme }) => theme.yellow2};
+    pointer-events: none;
+  }
+  
+  &.dark:hover, &.dark:focus { box-shadow: 0px 0px 4px ${({ theme }) => theme.yellow2}; }
+  &.light:hover, &.light:focus { box-shadow: 0px 0px 4px ${({ theme }) => theme.utils.hexToRGB(theme.black, 0.4)}; }
+  &.classic:hover, &.classic:focus { color: ${({ theme }) => theme.yellow2}; }
 `
 const InfoCard = styled.button<{ active?: boolean }>`
   border-radius: 3px !important;

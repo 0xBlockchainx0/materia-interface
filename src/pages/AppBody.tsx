@@ -43,7 +43,9 @@ export default function AppBody({ children }: { children: React.ReactNode }) {
         </FeatureChildrenContainer>
         <FooterInfo className={theme.name}>
           <div></div>
-          <div className="swapCaption">Select two token. Press "Swap" button to swap.</div>
+          <div className="boxFooterCaption">
+            Materia is an EthItem first DEX. Please note that if you use ERC20 tokens you will pay for EthItem wrap/unwrap operations.
+          </div>
         </FooterInfo>
       </MainContainerContentWrapper>      
       <MainContainerExtraDecorator className={ `bottom ${theme.name}` }/>
