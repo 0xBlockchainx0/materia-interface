@@ -6,7 +6,7 @@ import CurrencySearchModal from '../SearchModal/CurrencySearchModal'
 import CurrencyLogo from '../CurrencyLogo'
 import DoubleCurrencyLogo from '../DoubleLogo'
 import { RowBetween } from '../Row'
-import { CurrencyFormPanel, ActionButton, DropDownButton, Erc20Badge } from '../../theme'
+import { CurrencyFormPanel, ActionButton, DropDownButton, Erc20Badge, EthItemBadge } from '../../theme'
 import { Input as NumericalInput } from '../NumericalInput'
 import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
 
@@ -122,6 +122,7 @@ export default function CurrencyInputPanel({
 
   const ethItem = useCheckIsEthItem((currency instanceof Token ? currency?.address : undefined) ?? ZERO_ADDRESS)?.ethItem ?? undefined
   const showErc20Badge = currency !== ETHER && (ethItem !== undefined && ethItem === false) && pair === null
+  const showEthItemBadge = currency !== ETHER && (ethItem !== undefined && ethItem === true) && pair === null
 
   return (
     <>
@@ -145,6 +146,7 @@ export default function CurrencyInputPanel({
                 <NumericalInput className="token-amount-input" value={value} onUserInput={val => { onUserInput(val) }} />
                 {account && currency && showMaxButton && label !== 'To' && ( <ActionButton className={theme.name} onClick={onMax}>MAX</ActionButton> )}
                 {currency && showErc20Badge && ( <Erc20Badge className={`${theme.name} ml5`}>ERC20</Erc20Badge> )}
+                {currency && showEthItemBadge && ( <EthItemBadge className={`${theme.name} ml5`}>ITEM</EthItemBadge> )}
               </>
             )}
             <DropDownButton className={ `open-currency-select-button ${theme.name}` } selected={!!currency} onClick={() => { if (!disableCurrencySelect) { setModalOpen(true)  } }} >

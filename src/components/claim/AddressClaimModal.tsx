@@ -165,19 +165,6 @@ export default function AddressClaimModal({ isOpen, onDismiss }: { isOpen: boole
                 </TYPE.largeHeader>
               )}
             </AutoColumn>
-            {claimConfirmed && (
-              <>
-                <TYPE.subHeader fontWeight={500} color="black">
-                  <span role="img" aria-label="party-hat">
-                    🎉{' '}
-                  </span>
-                  Welcome to team Unicorn :){' '}
-                  <span role="img" aria-label="party-hat">
-                    🎉
-                  </span>
-                </TYPE.subHeader>
-              </>
-            )}
             {attempting && !hash && (
               <TYPE.subHeader color="black">Confirm this transaction in your wallet</TYPE.subHeader>
             )}

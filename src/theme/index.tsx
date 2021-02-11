@@ -110,6 +110,7 @@ export function colors(darkMode: boolean, classicMode: boolean): Colors {
     red2: '#F82D3A',
     red3: '#fcdfe1',
     green1: '#27AE60',
+    greenEthItem: '#3cfdb3',
     yellow1: '#FFE270',
     yellow2: '#F3841E',
     grey: '#999999',    
@@ -1448,6 +1449,28 @@ export const Erc20Badge = styled(ActionButton)<{ disabled?: boolean, selected?: 
   &.dark:hover, &.dark:focus { box-shadow: 0px 0px 4px ${({ theme }) => theme.yellow2}; }
   &.light:hover, &.light:focus { box-shadow: 0px 0px 4px ${({ theme }) => theme.utils.hexToRGB(theme.black, 0.4)}; }
   &.classic:hover, &.classic:focus { color: ${({ theme }) => theme.yellow2}; }
+`
+export const EthItemBadge = styled(ActionButton)<{ disabled?: boolean, selected?: boolean, useCustomProperties?: boolean }>`
+  &.dark {
+    color: ${({ theme }) => theme.greenEthItem} !important;
+    border: 1px solid ${({ theme }) => theme.greenEthItem} !important;
+    background-color: ${({ theme }) => theme.utils.hexToRGB(theme.greenEthItem, 0.05)};
+  }
+
+  &.light {
+    color: ${({ theme }) => theme.greenEthItem} !important;
+    border: 1px solid ${({ theme }) => theme.greenEthItem} !important;
+    background-color: ${({ theme }) => theme.utils.hexToRGB(theme.greenEthItem, 0.05)};
+  }
+
+  &.classic {
+    color: ${({ theme }) => theme.greenEthItem};
+    pointer-events: none;
+  }
+  
+  &.dark:hover, &.dark:focus { box-shadow: 0px 0px 4px ${({ theme }) => theme.greenEthItem}; }
+  &.light:hover, &.light:focus { box-shadow: 0px 0px 4px ${({ theme }) => theme.utils.hexToRGB(theme.black, 0.4)}; }
+  &.classic:hover, &.classic:focus { color: ${({ theme }) => theme.greenEthItem}; }
 `
 const InfoCard = styled.button<{ active?: boolean }>`
   border-radius: 3px !important;

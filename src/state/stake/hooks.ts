@@ -1,7 +1,7 @@
 import { ChainId, CurrencyAmount, JSBI, Token, TokenAmount, Pair, IETH } from '@materia-dex/sdk'
 // import { IETH } from '@materia-dex/sdk'
 import { useMemo } from 'react'
-import { GIL, USD } from '../../constants'
+import { GIL, IGIL, USD } from '../../constants'
 // import { USD } from '../../constants'
 import { STAKING_REWARDS_INTERFACE } from '../../constants/abis/staking-rewards'
 import { useActiveWeb3React } from '../../hooks'
@@ -21,17 +21,13 @@ export const STAKING_REWARDS_INFO: {
 } = {
   [ChainId.MAINNET]: [
     // {
-    //   tokens: [USD[ChainId.ROPSTEN], IETH[ChainId.ROPSTEN]],
+    //   tokens: [USD[ChainId.MAINNET], IETH[ChainId.MAINNET]],
     //   stakingRewardAddress: '0xa1484C3aa22a66C62b77E0AE78E15258bd0cB711'
     // },
   ],
   [ChainId.ROPSTEN]: [
     {
-      tokens: [USD[ChainId.ROPSTEN], IETH[ChainId.ROPSTEN]],
-      stakingRewardAddress: '0xa70E41B89B4742578C530711AFab6ec14AC18955'
-    },
-    {
-      tokens: [USD[ChainId.ROPSTEN], GIL[ChainId.ROPSTEN]],
+      tokens: [USD[ChainId.ROPSTEN], IGIL[ChainId.ROPSTEN]],
       stakingRewardAddress: '0xed84c148470Eb71f194f9aeCA68b073849320837'
     }
   ]
