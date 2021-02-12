@@ -259,7 +259,7 @@ export default function WalletModal({
             <span onClick={() => { setPendingError(false); setWalletView(WALLET_VIEWS.ACCOUNT) }}>Back</span>
           ) : ( <span>Connect to a wallet</span> )}
         </h6> 
-        <div className="modal-content-wrapper">
+        <div className="modal-content-wrapper connecting-wallet-modal">
         {/* <div className={ `connect-wallet-terms-and-conditions ${theme.name}` }>
           <label>
             <input name="isGoing" type="checkbox" checked={termAndConditionsAccepted}

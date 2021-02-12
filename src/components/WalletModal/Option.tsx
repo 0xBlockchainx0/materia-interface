@@ -31,7 +31,7 @@ export default function Option({
 }) {
   const theme = useContext(ThemeContext)
   const content = (
-    <OptionCardClickable id={id} onClick={onClick} clickable={clickable && !active} active={active} className={theme.name}>
+    <OptionCardClickable id={id} onClick={onClick} clickable={clickable && !active} active={active} className={`option-card-clickable ${theme.name}`}>
       <OptionCardLeft>
         <div className={"header-text " + (active ? 'active' : '')}>
           {header}

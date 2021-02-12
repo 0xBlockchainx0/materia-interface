@@ -1931,7 +1931,10 @@ export const SearchTokenInput = styled(Input)`
   padding-bottom: 10px;
   font-weight: 300;
 `
-
+export const SearchInput = styled(SearchTokenInput)`
+  padding-bottom: 10px;
+  font-weight: 300;
+`
 export const SwapButtonsContainer = styled.div`
   justify-content: center;
   display: flex;
@@ -2031,6 +2034,8 @@ export const SecondaryPanelBoxContainer = styled.div`
     font-size: 9px;
     text-shadow: 1px 1px 1px ${({ theme }) => theme.black };
   }
+
+  &.modal > .modal-inner-content .modal-content-wrapper.connecting-wallet-modal .option-card-clickable { width: 100%; }
 
   &.dark.modal > .modal-inner-content .modal-content-wrapper > .connect-wallet-terms-and-conditions { 
     border-top: solid 1px ${({ theme }) => theme.azure1 };
@@ -2205,6 +2210,8 @@ export const SearchTokenFormItems = styled(AutoColumn)`
   & + .tokens-list-container.dark { border-bottom: solid 1px ${({ theme }) => theme.azure1 };}
   & + .tokens-list-container.light { border-bottom: solid 1px ${({ theme }) => theme.violet3 }; }
   & + .tokens-list-container.classic { border-bottom: solid 1px ${({ theme }) => theme.grey2 };}
+
+  & + .tokens-list-container img.ethereumLogo, & + .tokens-list-container img.logo { margin-top: 0px; }
 `
 
 export const InfoBox = styled.div`
