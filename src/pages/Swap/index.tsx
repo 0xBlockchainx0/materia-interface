@@ -39,21 +39,22 @@ import {
 } from '../../state/swap/hooks'
 import { useExpertModeManager, useUserSlippageTolerance } from '../../state/user/hooks'
 import AppBody from '../AppBody'
-import { 
-  TYPE, 
-  PageGridContainer, 
-  InventoryColumn, 
+import {
+  TYPE,
+  PageGridContainer,
+  InventoryColumn,
   PageItemsContainer,
   TabsBar,
   TabLinkItem,
-  PageContentContainer, 
-  TradePriceContainer, 
+  PageContentContainer,
+  TradePriceContainer,
   SwitchButton,
   OperationButton,
   MainOperationButton,
   AddRecipientPanel,
   FooterInfo,
-  SwapButtonsContainer } from '../../theme'
+  SwapButtonsContainer
+} from '../../theme'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { computeTradePriceBreakdown, warningSeverity } from '../../utils/prices'
 import { ClickableText } from '../Pool/styleds'
@@ -192,7 +193,7 @@ export default function Swap() {
   const noRoute = !route
 
   // check whether the user has approved the router on the input token
-  const [approval, approveCallback] = useApproveCallbackFromTrade(trade, allowedSlippage)
+  const [approval, approveCallback] = useApproveCallbackFromTrade(trade, wrappedCurrency(originalCurrencies[Field.INPUT], chainId) ?? undefined, allowedSlippage)
 
   // check if user has gone through approval process, used to show two step buttons, reset on token change
   const [approvalSubmitted, setApprovalSubmitted] = useState<boolean>(false)
@@ -209,10 +210,10 @@ export default function Swap() {
 
   // the callback to execute the swap
   const { callback: swapCallback, error: swapCallbackError } = useSwapCallback(
-    trade, 
-    allowedSlippage, 
-    recipient, 
-    wrappedCurrency(originalCurrencies[Field.INPUT], chainId), 
+    trade,
+    allowedSlippage,
+    recipient,
+    wrappedCurrency(originalCurrencies[Field.INPUT], chainId),
     wrappedCurrency(originalCurrencies[Field.OUTPUT], chainId),
     originalCurrencies[Field.INPUT] == ETHER,
     originalCurrencies[Field.OUTPUT] == ETHER
@@ -350,14 +351,14 @@ export default function Swap() {
             </InventoryColumn>
             <PageItemsContainer className={theme.name}>
               <TabsBar className={theme.name}>
-                <TabLinkItem id={`batch-swap`} to={'/batch-swap'} 
-                  className={ `disabled ${theme.name}` }
-                  //isActive={(match, { pathname }) => Boolean(match) || pathname.startsWith('/batchswap') }
-                  >Batch SWAP (coming soon)</TabLinkItem>
-                <TabLinkItem id={`classic-swap`} to={'/swap'} 
-                    className={ `${theme.name}` }
-                    isActive={(match, { pathname }) => Boolean(match) || pathname.startsWith('/swap') }
-                  >Classic SWAP</TabLinkItem>
+                <TabLinkItem id={`batch-swap`} to={'/batch-swap'}
+                  className={`disabled ${theme.name}`}
+                //isActive={(match, { pathname }) => Boolean(match) || pathname.startsWith('/batchswap') }
+                >Batch SWAP (coming soon)</TabLinkItem>
+                <TabLinkItem id={`classic-swap`} to={'/swap'}
+                  className={`${theme.name}`}
+                  isActive={(match, { pathname }) => Boolean(match) || pathname.startsWith('/swap')}
+                >Classic SWAP</TabLinkItem>
               </TabsBar>
               <div className="clear-fix">
                 <PageContentContainer className={theme.name}>
@@ -379,13 +380,13 @@ export default function Swap() {
                   <TradePriceContainer>
                     <AutoColumn justify="space-between">
                       <AutoRow justify={isExpertMode ? 'space-between' : 'center'} style={{ padding: '0 1rem' }}>
-                        <SwitchButton className={ `${theme.name} ${originalCurrencies[Field.INPUT] && originalCurrencies[Field.OUTPUT] ? '' : 'disabled'}` } onClick={() => {
-                              setApprovalSubmitted(false) // reset 2 step UI for approvals
-                              onSwitchTokens()
-                          }}>
-                          <RefreshCw/>
+                        <SwitchButton className={`${theme.name} ${originalCurrencies[Field.INPUT] && originalCurrencies[Field.OUTPUT] ? '' : 'disabled'}`} onClick={() => {
+                          setApprovalSubmitted(false) // reset 2 step UI for approvals
+                          onSwitchTokens()
+                        }}>
+                          <RefreshCw />
                           <label>Switch</label>
-                        </SwitchButton>                        
+                        </SwitchButton>
                       </AutoRow>
                     </AutoColumn>
                     {showWrap ? null : (
@@ -418,14 +419,14 @@ export default function Swap() {
                   <div>
                     <AutoColumn gap={'lg'}>
                       {recipient === null && !showWrap && isExpertMode ? (
-                          <OperationButton id="add-recipient-button" onClick={() => onChangeRecipient('')} className={ `add-a-send-button ${theme.name}` } label="Add a send (optional)">
-                            <Plus/>
-                          </OperationButton>
+                        <OperationButton id="add-recipient-button" onClick={() => onChangeRecipient('')} className={`add-a-send-button ${theme.name}`} label="Add a send (optional)">
+                          <Plus />
+                        </OperationButton>
                       ) : null}
                       {recipient !== null && !showWrap ? (
                         <AddRecipientPanel>
-                          <OperationButton id="remove-recipient-button" onClick={() => onChangeRecipient(null)} className={ `remove-send-button ${theme.name}` } label="Remove send">
-                             <Minus/>
+                          <OperationButton id="remove-recipient-button" onClick={() => onChangeRecipient(null)} className={`remove-send-button ${theme.name}`} label="Remove send">
+                            <Minus />
                           </OperationButton>
                           <AddressInputPanel id="recipient" value={recipient} onChange={onChangeRecipient} />
                         </AddRecipientPanel>
@@ -443,15 +444,15 @@ export default function Swap() {
                     </AutoColumn>
                   </div>
                 </PageContentContainer>
-                <BottomGrouping>                
+                <BottomGrouping>
                   <SwapButtonsContainer>
                     {!account ? (
-                      <OperationButton onClick={toggleWalletModal} className={ `connect-wallet-button ${theme.name}` } label="Connect Wallet">
-                        <Link/>
+                      <OperationButton onClick={toggleWalletModal} className={`connect-wallet-button ${theme.name}`} label="Connect Wallet">
+                        <Link />
                       </OperationButton>
                     ) : showWrap ? (
-                      <MainOperationButton onClick={onWrap} 
-                        className={ `wrap-button ${theme.name}` } 
+                      <MainOperationButton onClick={onWrap}
+                        className={`wrap-button ${theme.name}`}
                         disabled={Boolean(wrapInputError)}>
                         {wrapInputError ?? (wrapType === WrapType.WRAP ? 'Wrap' : wrapType === WrapType.UNWRAP ? 'Unwrap' : null)}
                       </MainOperationButton>
@@ -501,7 +502,7 @@ export default function Swap() {
                           useCustomProperties={priceImpactSeverity > 3 ? true : false}
                           isExpertModeActive={isExpertMode}
                           onMouseEnter={() => { setIsShown(true); if (classicMode) { play() } }}
-                          onMouseLeave={() => { setIsShown(false); if (classicMode) { stop() } }}                          
+                          onMouseLeave={() => { setIsShown(false); if (classicMode) { stop() } }}
                         >
                           {priceImpactSeverity > 3 && !isExpertMode ? `Price Impact High` : `Swap ${priceImpactSeverity > 2 ? 'Anyway' : ''}`}
                         </ButtonMateriaError>
@@ -531,10 +532,10 @@ export default function Swap() {
                                 onMouseLeave={() => { setIsShown(false); if (classicMode) { stop() } }}
                               >
                                 {swapInputError
-                                    ? swapInputError
-                                    : priceImpactSeverity > 3 && !isExpertMode
-                                      ? `Price Impact Too High`
-                                      : `Swap ${priceImpactSeverity > 2 ? 'Anyway' : ''}`}
+                                  ? swapInputError
+                                  : priceImpactSeverity > 3 && !isExpertMode
+                                    ? `Price Impact Too High`
+                                    : `Swap ${priceImpactSeverity > 2 ? 'Anyway' : ''}`}
                               </ButtonMateriaError>
                             )}
                     {showApproveFlow && (
@@ -552,10 +553,6 @@ export default function Swap() {
             </PageItemsContainer>
           </PageGridContainer>
         </Wrapper>
-        {/* <FooterInfo className={theme.name}>
-          <div></div>
-          <div className="swapCaption">Select two token. Press "Swap" button to swap.</div>
-        </FooterInfo> */}
       </AppBody>
     </>
   )

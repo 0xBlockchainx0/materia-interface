@@ -1,4 +1,4 @@
-import { Currency, Pair } from '@materia-dex/sdk'
+import { Currency, ETHER, Pair, Token } from '@materia-dex/sdk'
 import React, { useState, useContext, useCallback } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 import { useCurrencyBalance } from '../../state/wallet/hooks'
@@ -6,12 +6,14 @@ import CurrencySearchModal from '../SearchModal/CurrencySearchModal'
 import CurrencyLogo from '../CurrencyLogo'
 import DoubleCurrencyLogo from '../DoubleLogo'
 import { RowBetween } from '../Row'
-import { CurrencyFormPanel, ActionButton, DropDownButton } from '../../theme'
+import { CurrencyFormPanel, ActionButton, DropDownButton, Erc20Badge, EthItemBadge } from '../../theme'
 import { Input as NumericalInput } from '../NumericalInput'
 import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
 
 import { useActiveWeb3React } from '../../hooks'
 import { useTranslation } from 'react-i18next'
+import useCheckIsEthItem from '../../hooks/useCheckIsEthItem'
+import { ZERO_ADDRESS } from '../../constants'
 
 const InputRow = styled.div<{ selected: boolean }>`
   ${({ theme }) => theme.flexRowNoWrap}
@@ -118,6 +120,10 @@ export default function CurrencyInputPanel({
   const handleDismissSearch = useCallback(() => { setModalOpen(false) }, [setModalOpen])
   const customFatherPageCssClass = (fatherPage ? fatherPage : 'default')
 
+  const ethItem = useCheckIsEthItem((currency instanceof Token ? currency?.address : undefined) ?? ZERO_ADDRESS)?.ethItem ?? undefined
+  const showErc20Badge = currency !== ETHER && (ethItem !== undefined && ethItem === false) && pair === null
+  const showEthItemBadge = currency !== ETHER && (ethItem !== undefined && ethItem === true) && pair === null
+
   return (
     <>
       <CurrencyFormPanel id={id} className={theme.name}>
@@ -139,6 +145,8 @@ export default function CurrencyInputPanel({
               <>
                 <NumericalInput className="token-amount-input" value={value} onUserInput={val => { onUserInput(val) }} />
                 {account && currency && showMaxButton && label !== 'To' && ( <ActionButton className={theme.name} onClick={onMax}>MAX</ActionButton> )}
+                {currency && showErc20Badge && ( <Erc20Badge className={`${theme.name} ml5`}>ERC20</Erc20Badge> )}
+                {currency && showEthItemBadge && ( <EthItemBadge className={`${theme.name} ml5`}>ITEM</EthItemBadge> )}
               </>
             )}
             <DropDownButton className={ `open-currency-select-button ${theme.name}` } selected={!!currency} onClick={() => { if (!disableCurrencySelect) { setModalOpen(true)  } }} >

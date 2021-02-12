@@ -68,6 +68,7 @@ import Web3 from 'web3'
 import useCheckIsEthItem from '../../hooks/useCheckIsEthItem'
 import { decodeInteroperableValueToERC20TokenAmount } from '../../state/swap/hooks'
 import useUpdateWrappedERC20TokensCallback from '../../hooks/useUpdateWrappedERC20TokensCallback'
+import { Scrollbars } from 'react-custom-scrollbars'
 
 export default function AddLiquidity({
   match: {
@@ -552,7 +553,7 @@ export default function AddLiquidity({
                 <SimpleTextParagraph className={`p15 mt0 mb0 ${theme.name}`}>
                   <strong>Liquidity provider rewards</strong>
                   <br /><br />
-                  Liquidity providers earn a 0.3% fee on all trades proportional to their share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity.
+                  Liquidity providers earn a dynamic fee (default 0.30%) on all trades proportional to their share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity.
                 </SimpleTextParagraph>
                 {/* <CardBGImage /> <CardNoise /> */}
               </div>
@@ -561,37 +562,39 @@ export default function AddLiquidity({
             <HideSmall>
               <SectionTitle className={`mt20 ${theme.name}`}>Your liquidity</SectionTitle>
             </HideSmall>
-            {!account ? (
-              <SimpleTextParagraph className={`p20 text-center ${theme.name}`}>
-                Connect to a wallet to view your liquidity.
-              </SimpleTextParagraph>
-            ) : isLoading ? (
-              <EmptyProposals className={theme.name}>
+            <Scrollbars autoHeight autoHeightMin={280} autoHide>
+              {!account ? (
                 <SimpleTextParagraph className={`p20 text-center ${theme.name}`}>
-                  <Dots>Loading</Dots>
+                  Connect to a wallet to view your liquidity.
                 </SimpleTextParagraph>
-              </EmptyProposals>
-            ) : allPairsWithLiquidity?.length > 0 ? (
-              <>
-                <SimpleTextParagraph className={`text-left ${theme.name}`}>
-                  <ExternalLink href={'https://info.materiadex.com/account/' + account}>
-                    Account analytics and accrued fees
-                      <IconButton className={`hide-classic ${theme.name}`}>
-                      <span className="icon-symbol">↗</span>
-                    </IconButton>
-                  </ExternalLink>
-                </SimpleTextParagraph>
-                {allPairsWithLiquidity.map(pair => (
-                  <FullPositionCard key={pair.liquidityToken.address} pair={pair} />
-                ))}
-              </>
-            ) : (
-                    <EmptyProposals className={theme.name}>
-                      <SimpleTextParagraph className={`p20 text-center ${theme.name}`}>
-                        No liquidity found.
+              ) : isLoading ? (
+                <EmptyProposals className={theme.name}>
+                  <SimpleTextParagraph className={`p20 text-center ${theme.name}`}>
+                    <Dots>Loading</Dots>
                   </SimpleTextParagraph>
-                    </EmptyProposals>
-                  )}
+                </EmptyProposals>
+              ) : allPairsWithLiquidity?.length > 0 ? (
+                <>
+                  <SimpleTextParagraph className={`text-left ${theme.name}`}>
+                    <ExternalLink href={'https://info.materiadex.com/account/' + account}>
+                      Account analytics and accrued fees
+                      <IconButton className={`hide-classic ${theme.name}`}>
+                        <span className="icon-symbol">↗</span>
+                      </IconButton>
+                    </ExternalLink>
+                  </SimpleTextParagraph>
+                  {allPairsWithLiquidity.map(pair => (
+                    <FullPositionCard key={pair.liquidityToken.address} pair={pair} />
+                  ))}
+                </>
+              ) : (
+                      <EmptyProposals className={theme.name}>
+                        <SimpleTextParagraph className={`p20 text-center ${theme.name}`}>
+                          No liquidity found.
+                  </SimpleTextParagraph>
+                      </EmptyProposals>
+                    )}
+            </Scrollbars>
             <SimpleTextParagraph className={`text-left ${theme.name}`}>
               Don't see a pool you joined? <StyledInternalLink className={`${theme.name}`} id="refresh-pool-link" to={'#'} onClick={onLiquidityPoolsUpdate}>Refresh</StyledInternalLink> your pools or <StyledInternalLink className={`${theme.name}`} id="import-pool-link" to={'/find'}>import it</StyledInternalLink>.
             </SimpleTextParagraph>

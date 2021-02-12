@@ -11,15 +11,19 @@ import Menu from '../Menu'
 import Web3Status from '../Web3Status'
 import Clock from 'react-live-clock';
 import { Moon, Sun, Clock as TimeIcon } from 'react-feather'
-import { 
+import {
   FooterControls,
   FooterElement,
   FooterElementClock,
-  FooterElementWrap, 
-  AccountElement, 
+  FooterElementWrap,
+  AccountElement,
   HideSmall,
   HideExtraSmall,
-  IconButton } from '../../theme' 
+  IconButton,
+  ActionButton
+} from '../../theme'
+import { ApplicationModal } from '../../state/application/actions'
+import { useToggleModal } from '../../state/application/hooks'
 
 const StyledButton = styled.button`
   border: none;
@@ -35,16 +39,6 @@ const StyledButton = styled.button`
     cursor: pointer;
   }
 `
-
-
-
-
-
-
-
-
-
-
 
 const NetworkCard = styled(TransparentCard)`
   border-radius: 12px;
@@ -67,16 +61,17 @@ const NETWORK_LABELS: { [chainId in ChainId]?: string } = {
 }
 
 export default function Footer() {
-  const { account, chainId } = useActiveWeb3React()  
+  const { account, chainId } = useActiveWeb3React()
   const userEthBalance = useETHBalances(account ? [account] : [])?.[account ?? '']
   const [darkMode, toggleDarkMode] = useDarkModeManager()
   const theme = useContext(ThemeContext)
+  const openClaimModal = useToggleModal(ApplicationModal.ADDRESS_CLAIM)
 
   return (
     <FooterControls className={theme.name}>
       <FooterElementClock>
         <div className="ml20">
-          <TimeIcon className={`footer-icon ${theme.name}`}/> <Clock format={'HH:mm:ss'} ticking={true} />
+          <TimeIcon className={`footer-icon ${theme.name}`} /> <Clock format={'HH:mm:ss'} ticking={true} />
         </div>
       </FooterElementClock>
       <FooterElement>
@@ -93,10 +88,15 @@ export default function Footer() {
             <NetworkCard title={NETWORK_LABELS[chainId]}>{NETWORK_LABELS[chainId]}</NetworkCard>
           )}
         </HideSmall>
+        {account && (
+          <HideSmall>
+            <ActionButton className={`claim-footer full-width ${theme.name}`} onClick={openClaimModal}>Claim GIL</ActionButton>
+          </HideSmall>
+        )}
       </FooterElement>
       <FooterElementWrap className={`mr20 ${theme.name}`}>
         <IconButton className={`theme-icon ${theme.name}`} onClick={toggleDarkMode}>
-            {darkMode ? <Sun className={`footer-icon ${theme.name}`}/> : <Moon className={`footer-icon ${theme.name}`}/>}
+          {darkMode ? <Sun className={`footer-icon ${theme.name}`} /> : <Moon className={`footer-icon ${theme.name}`} />}
         </IconButton>
         <Menu />
         <Settings />

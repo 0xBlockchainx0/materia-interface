@@ -1,6 +1,6 @@
 import { Contract } from '@ethersproject/contracts'
-import { abi as STAKING_REWARDS_ABI } from '@uniswap/liquidity-staker/build/StakingRewards.json'
-import { abi as MERKLE_DISTRIBUTOR_ABI } from '@uniswap/merkle-distributor/build/MerkleDistributor.json'
+import { abi as STAKING_REWARDS_ABI } from '@materia-dex/materia-contracts-liquidity-mining/build/StakingRewards.json'
+import { abi as MERKLE_DISTRIBUTOR_ABI } from '@materia-dex/materia-contracts-distributor/build/MerkleDistributor.json'
 import { ChainId } from '@materia-dex/sdk'
 import { abi as IMateriaPairABI } from '@materia-dex/materia-contracts-core/build/IMateriaPair.json'
 import { abi as IERC20WrapperV1_ABI } from '@materia-dex/materia-contracts-proxy/build/IERC20WrapperV1.json'

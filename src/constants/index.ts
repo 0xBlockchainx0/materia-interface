@@ -4,7 +4,8 @@ import { AbstractConnector } from '@web3-react/abstract-connector'
 import { fortmatic, injected, portis, walletconnect, walletlink } from '../connectors'
 
 export const FACTORY_ADDRESS = '0xeF663993b89aD5eDFdF77E2f7b97CD18d2A497e4'
-export const ORCHESTRATOR_ADDRESS = '0x0bae0744F6D7C8137fB4D727fdfeE91c1B4eed44'
+export const ORCHESTRATOR_ADDRESS = '0x304fe8c33D057581d1ff550c2E7b79Dc697eD286'
+// export const ORCHESTRATOR_ADDRESS = '0x0bae0744F6D7C8137fB4D727fdfeE91c1B4eed44'
 export const MATERIA_DFO_ADDRESS = '0xf056aE03Cf991e4587Da458B2c85e9a353684B3a'
 export const TIMELOCK_ADDRESS = '0x1a9C8182C09F50C8318d769245beA52c32BE35BC'
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
@@ -42,8 +43,7 @@ type ChainTokenList = {
 export const GIL: { [chainId in ChainId]: Token } = {
   [ChainId.MAINNET]: new Token(ChainId.MAINNET, '0x020810D775fC019480CD56ECb960389d3477039D', 18, 'GIL', 'Materia'),
   [ChainId.RINKEBY]: new Token(ChainId.RINKEBY, ZERO_ADDRESS, 18, 'GIL', 'Materia'),
-  [ChainId.ROPSTEN]: new Token(ChainId.ROPSTEN, '0x1D4f770032A551D70c240D937a8e8cf19Ee37E7d', 18, 'GIL', 'Materia'),
-  // [ChainId.ROPSTEN]: new Token(ChainId.ROPSTEN, '0xa5a5f4ECD079e8C92d4D8Ec3AC7bFcD37B5e4ab2', 18, 'LIG', 'Materia'),
+  [ChainId.ROPSTEN]: new Token(ChainId.ROPSTEN, '0xa5a5f4ECD079e8C92d4D8Ec3AC7bFcD37B5e4ab2', 18, 'LIG', 'LIG'),
   [ChainId.GÖRLI]: new Token(ChainId.GÖRLI, ZERO_ADDRESS, 18, 'GIL', 'Materia'),
   [ChainId.KOVAN]: new Token(ChainId.KOVAN, ZERO_ADDRESS, 18, 'GIL', 'Materia')
 }
@@ -71,15 +71,24 @@ export const COMP = new Token(ChainId.MAINNET, '0xc00e94Cb662C3520282E6f57172140
 export const MKR = new Token(ChainId.MAINNET, '0x9f8F72aA9304c8B593d555F12eF6589cC3A579A2', 18, 'MKR', 'Maker')
 export const AMPL = new Token(ChainId.MAINNET, '0xD46bA6D942050d489DBd938a2C909A5d5039A161', 9, 'AMPL', 'Ampleforth')
 
+// EthItems
+export const IGIL: { [chainId in ChainId]: Token } = {
+  [ChainId.MAINNET]: new Token(ChainId.MAINNET, ZERO_ADDRESS, 18, 'IGIL', 'MateriaItem'),
+  [ChainId.RINKEBY]: new Token(ChainId.RINKEBY, ZERO_ADDRESS, 18, 'IGIL', 'MateriaItem'),
+  [ChainId.ROPSTEN]: new Token(ChainId.ROPSTEN, '0xf2a16989b81898e5952a13714ae0d3dd81b346bd', 18, 'ILIG', 'LIGItem'),
+  [ChainId.GÖRLI]: new Token(ChainId.GÖRLI, ZERO_ADDRESS, 18, 'IGIL', 'MateriaItem'),
+  [ChainId.KOVAN]: new Token(ChainId.KOVAN, ZERO_ADDRESS, 18, 'IGIL', 'MateriaItem')
+}
+
 export const COMMON_CONTRACT_NAMES: { [address: string]: string } = {
   [TIMELOCK_ADDRESS]: 'Timelock',
   [GIL[ChainId.MAINNET].address]: 'GIL',
   [GIL[ChainId.ROPSTEN].address]: 'GIL'
 }
 
-// TODO: specify merkle distributor for mainnet
 export const MERKLE_DISTRIBUTOR_ADDRESS: { [chainId in ChainId]?: string } = {
-  [ChainId.MAINNET]: '0x090D4613473dEE047c3f2706764f49E0821D256e'
+  [ChainId.MAINNET]: ZERO_ADDRESS,
+  [ChainId.ROPSTEN]: '0xCd7fe0b517B4Ce78453357cFA1606F13DeFBa364',
 }
 
 const USD_ONLY: ChainTokenList = {

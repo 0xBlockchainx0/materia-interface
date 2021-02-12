@@ -110,6 +110,7 @@ export function colors(darkMode: boolean, classicMode: boolean): Colors {
     red2: '#F82D3A',
     red3: '#fcdfe1',
     green1: '#27AE60',
+    greenEthItem: '#3cfdb3',
     yellow1: '#FFE270',
     yellow2: '#F3841E',
     grey: '#999999',    
@@ -789,6 +790,8 @@ MARGIN STYLE MINUS
   .hide-classic { ${({ theme }) => (theme.name == 'classic' ? 'display: none !important;' : '')} }
 
   #remove-liquidity-tokena-symbol + img, #remove-liquidity-tokenb-symbol + img { margin-top: 3px; }
+  
+  .claim-footer { min-width: 85px !important; }
 `
 export const AppWrapper = styled.div`
   display: flex;
@@ -837,9 +840,11 @@ export const MainContainer = styled.div`
   &.dark { border: solid 1px ${({ theme }) => theme.utils.hexToRGB(theme.azure4, 1)}; } 
   &.light { border: solid 1px ${({ theme }) => theme.utils.hexToRGB(theme.violet1, 1)}; }
   &.classic { 
-    border: outset 5px ${({ theme }) => theme.utils.hexToRGB(theme.grey2, 1)}; 
     padding: 0px;
-    border-radius: 5px;
+    border-radius: 7px;
+    border: solid 2px #424542;
+    box-shadow: 1px 1px #e7dfe7, -1px -1px #e7dfe7, 1px -1px #e7dfe7, -1px 1px #e7dfe7, 0 -2px #9c9a9c, -2px 0 #7b757b,
+      0 2px #424542;
   }
 
   @media (max-width: 600px) { max-width: 90% !important; }
@@ -1198,9 +1203,9 @@ export const FooterInfo = styled.div`
   &.light {}
   &.classic {}
 
-  &.dark > div.swapCaption { margin: 5px auto 5px auto; }
-  &.light > div.swapCaption { margin: 5px auto 5px auto; }
-  &.classic > div.swapCaption { margin: 15px auto 15px auto; font-size: 9px; }
+  &.dark > div.boxFooterCaption { margin: 5px auto 5px auto; }
+  &.light > div.boxFooterCaption { margin: 5px auto 5px auto; }
+  &.classic > div.boxFooterCaption { margin: 15px auto 15px auto; font-size: 9px; }
 
   .advanced-swap-details-container.classic { margin-top: 30px; }
   .advanced-swap-details-container.dark .advaced-swap-details.label,
@@ -1422,6 +1427,50 @@ export const ActionButton = styled(BaseButton)<{ disabled?: boolean, selected?: 
   &.light:hover, &.light:focus { box-shadow: 0px 0px 4px ${({ theme }) => theme.utils.hexToRGB(theme.black, 0.4)}; }
   &.classic:hover, &.classic:focus { color: ${({ theme }) => theme.azure2}; }
   &.classic:hover:before, &.classic:focus:before { display: block; }
+`
+export const Erc20Badge = styled(ActionButton)<{ disabled?: boolean, selected?: boolean, useCustomProperties?: boolean }>`
+  &.dark {
+    color: ${({ theme }) => theme.yellow2} !important;
+    border: 1px solid ${({ theme }) => theme.yellow2} !important;
+    background-color: ${({ theme }) => theme.utils.hexToRGB(theme.yellow2, 0.05)};
+  }
+
+  &.light {
+    color: ${({ theme }) => theme.yellow2} !important;
+    border: 1px solid ${({ theme }) => theme.yellow2} !important;
+    background-color: ${({ theme }) => theme.utils.hexToRGB(theme.yellow2, 0.05)};
+  }
+
+  &.classic {
+    color: ${({ theme }) => theme.yellow2};
+    pointer-events: none;
+  }
+  
+  &.dark:hover, &.dark:focus { box-shadow: 0px 0px 4px ${({ theme }) => theme.yellow2}; }
+  &.light:hover, &.light:focus { box-shadow: 0px 0px 4px ${({ theme }) => theme.utils.hexToRGB(theme.black, 0.4)}; }
+  &.classic:hover, &.classic:focus { color: ${({ theme }) => theme.yellow2}; }
+`
+export const EthItemBadge = styled(ActionButton)<{ disabled?: boolean, selected?: boolean, useCustomProperties?: boolean }>`
+  &.dark {
+    color: ${({ theme }) => theme.greenEthItem} !important;
+    border: 1px solid ${({ theme }) => theme.greenEthItem} !important;
+    background-color: ${({ theme }) => theme.utils.hexToRGB(theme.greenEthItem, 0.05)};
+  }
+
+  &.light {
+    color: ${({ theme }) => theme.greenEthItem} !important;
+    border: 1px solid ${({ theme }) => theme.greenEthItem} !important;
+    background-color: ${({ theme }) => theme.utils.hexToRGB(theme.greenEthItem, 0.05)};
+  }
+
+  &.classic {
+    color: ${({ theme }) => theme.greenEthItem};
+    pointer-events: none;
+  }
+  
+  &.dark:hover, &.dark:focus { box-shadow: 0px 0px 4px ${({ theme }) => theme.greenEthItem}; }
+  &.light:hover, &.light:focus { box-shadow: 0px 0px 4px ${({ theme }) => theme.utils.hexToRGB(theme.black, 0.4)}; }
+  &.classic:hover, &.classic:focus { color: ${({ theme }) => theme.greenEthItem}; }
 `
 const InfoCard = styled.button<{ active?: boolean }>`
   border-radius: 3px !important;
@@ -1912,7 +1961,10 @@ export const SecondaryPanelBoxContainer = styled.div`
   }  
   &.classic > .inner-content {
     background: linear-gradient(0deg, ${({ theme }) => theme.utils.hexToRGB(theme.violet6, 1)} 60%, ${({ theme }) => theme.utils.hexToRGB(theme.violet7, 1)} 100%); 
-    border: outset 5px ${({ theme }) => theme.utils.hexToRGB(theme.grey2, 1)}; 
+    border-radius: 7px;
+    border: solid 2px #424542;
+    box-shadow: 1px 1px #e7dfe7, -1px -1px #e7dfe7, 1px -1px #e7dfe7, -1px 1px #e7dfe7, 0 -2px #9c9a9c, -2px 0 #7b757b,
+      0 2px #424542;
   }
 
   &.modal > .inner-content { height: 100%; }
@@ -2726,11 +2778,12 @@ export const MenuFlyout = styled.span`
 
   &.classic { 
     box-shadow: none; 
-    border-radius: 5px; 
     min-width: 12rem; 
     background: linear-gradient(0deg, ${({ theme }) => theme.utils.hexToRGB(theme.blue6, 1)} 0%, ${({ theme }) => theme.utils.hexToRGB(theme.blue5, 1)} 100%); 
-    border: outset 5px ${({ theme }) => theme.utils.hexToRGB(theme.grey2, 1)};
-  }
+    border-radius: 7px;
+    border: solid 2px #424542;
+    box-shadow: 1px 1px #e7dfe7, -1px -1px #e7dfe7, 1px -1px #e7dfe7, -1px 1px #e7dfe7, 0 -2px #9c9a9c, -2px 0 #7b757b,
+      0 2px #424542;  }
 `
 export const MenuItem = styled(ExternalLink)`
   flex: 1;

@@ -8,6 +8,12 @@ import { useSingleCallResult } from '../multicall/hooks'
 import { calculateGasMargin, isAddress } from '../../utils'
 import { useTransactionAdder } from '../transactions/hooks'
 
+interface UserClaimDataResponse {
+  data: UserClaimData
+  message: string
+  status: number
+}
+
 interface UserClaimData {
   index: number
   amount: string
@@ -19,17 +25,17 @@ interface UserClaimData {
   }
 }
 
-const CLAIM_PROMISES: { [key: string]: Promise<UserClaimData | null> } = {}
+const CLAIM_PROMISES: { [key: string]: Promise<UserClaimDataResponse | null> } = {}
 
 // returns the claim for the given address, or null if not valid
-function fetchClaim(account: string, chainId: ChainId): Promise<UserClaimData | null> {
+function fetchClaim(account: string, chainId: ChainId): Promise<UserClaimDataResponse | null> {
   const formatted = isAddress(account)
   if (!formatted) return Promise.reject(new Error('Invalid address'))
   const key = `${chainId}:${account}`
 
   return (CLAIM_PROMISES[key] =
     CLAIM_PROMISES[key] ??
-    fetch(`https://gentle-frost-9e74.uniswap.workers.dev/${chainId}/${formatted}`)
+    fetch(`https://materia-claim-api.vercel.app/api/claim/data/${chainId}/${formatted}`)
       .then(res => {
         if (res.status === 200) {
           return res.json()
@@ -57,7 +63,7 @@ export function useUserClaimData(account: string | null | undefined): UserClaimD
       setClaimInfo(claimInfo => {
         return {
           ...claimInfo,
-          [key]: accountClaimInfo
+          [key]: accountClaimInfo ? accountClaimInfo["data"] ?? null : null
         }
       })
     )
@@ -105,7 +111,7 @@ export function useClaimCallback(
   const claimCallback = async function() {
     if (!claimData || !account || !library || !chainId || !distributorContract) return
 
-    const args = [claimData.index, account, claimData.amount, claimData.proof]
+    const args = [claimData.index, account, claimData.amount, claimData.proof]  
 
     return distributorContract.estimateGas['claim'](...args, {}).then(estimatedGasLimit => {
       return distributorContract
