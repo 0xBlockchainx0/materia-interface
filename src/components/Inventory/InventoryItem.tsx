@@ -133,18 +133,18 @@ export default function InventoryItem({
           </div>
         </div>
         <div className="margin-auto">
-          {/* <IconButton className={ `${theme.name}` } onClick={() => { setShowMore(!showMore) }}>              
+          <IconButton className={ `${theme.name}` } onClick={() => { setShowMore(!showMore) }}>              
               {showMore ? ( <ChevronUp/> ) : ( <ChevronDown/> )}
-          </IconButton> */}
+          </IconButton>
           <IconButton className={theme.name} onClick={() => { onTokenSelection(token) }}>              
               <ExternalLink/>
           </IconButton>           
         </div>
       </GridContainer>
 
-      {/* {showMore && (
+      {showMore && (
         <AutoColumn>
-          <Text className={` token-address ${theme.name}`} fontSize={10} fontWeight={500} style={{ marginBottom: '10px' }}>{tokenAddress}</Text> */}
+          <Text className={` token-address ${theme.name}`} fontSize={10} fontWeight={500} style={{ marginBottom: '10px' }}>{tokenAddress}</Text>
           {/* <FixedHeightRow>
             <>
               <NumericalInput
@@ -173,8 +173,8 @@ export default function InventoryItem({
             )}
             <ButtonMateriaPrimary style={{ width: 'inherit' }}>Wrap</ButtonMateriaPrimary>
           </RowBetween> */}
-        {/* </AutoColumn>
-      )} */}
+        </AutoColumn>
+      )}
     </InventoryItemContainer>
   )
 }
