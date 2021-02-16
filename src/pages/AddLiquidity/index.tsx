@@ -17,7 +17,7 @@ import { Link } from 'react-feather'
 import { ORCHESTRATOR_ADDRESS, USD, ZERO_ADDRESS } from '../../constants'
 import { PairState, usePair } from '../../data/Reserves'
 import { useCurrency } from '../../hooks/Tokens'
-import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
+import { ApprovalState, useApproveCallback, useTokenApproveCallback } from '../../hooks/useApproveCallback'
 import useTransactionDeadline from '../../hooks/useTransactionDeadline'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import { Field } from '../../state/mint/actions'
@@ -216,8 +216,23 @@ export default function AddLiquidity({
   )
 
   // check whether the user has approved the router on the tokens
-  const [approvalA, approveACallback] = useApproveCallback(originalParsedAmounts[Field.CURRENCY_A], ORCHESTRATOR_ADDRESS)
-  const [approvalB, approveBCallback] = useApproveCallback(originalParsedAmounts[Field.CURRENCY_B], ORCHESTRATOR_ADDRESS)
+  const [approvalA, approveACallback] = useTokenApproveCallback(
+    parsedAmounts[Field.CURRENCY_A], 
+    wrappedCurrency(currencies[Field.CURRENCY_A], chainId) ?? undefined,
+    ORCHESTRATOR_ADDRESS
+  )
+  const [approvalB, approveBCallback] = useTokenApproveCallback(
+    parsedAmounts[Field.CURRENCY_B], 
+    wrappedCurrency(currencies[Field.CURRENCY_B], chainId) ?? undefined,
+    ORCHESTRATOR_ADDRESS
+  )
+
+  // console.log('*********************************')
+  // console.log('approvalA: ', approvalA)
+  // console.log('approvalB: ', approvalB)
+  // console.log('tokenA: ', wrappedCurrency(currencies[Field.CURRENCY_B], chainId))
+  // console.log('tokenB: ', wrappedCurrency(currencies[Field.CURRENCY_B], chainId))
+  // console.log('*********************************')
 
   const addTransaction = useTransactionAdder()
   const addInteroperableTokens = useAddInteroperableTokens()
@@ -344,7 +359,7 @@ export default function AddLiquidity({
       }
     }
 
-    // console.log('*********************************')
+    console.log('*********************************')
     // console.log('isETH: ', isETH)
     // console.log('approvalA: ', approvalA)
     // console.log('approvalB: ', approvalB)
@@ -373,10 +388,10 @@ export default function AddLiquidity({
     // console.log('isEthItem: ', isEthItem)
     // console.log('ethItemCollection: ', ethItemCollection)
     // console.log('ethItemObjectId: ', ethItemObjectId?.toString() ?? "0")
-    // console.log('methodName: ', methodName)
-    // console.log('args: ', args)
-    // console.log('value: ', value)
-    // console.log('*********************************')
+    console.log('methodName: ', methodName)
+    console.log('args: ', args)
+    console.log('value: ', value)
+    console.log('*********************************')
 
     setAttemptingTxn(true)
     await estimate(...args, value ? { value } : {})

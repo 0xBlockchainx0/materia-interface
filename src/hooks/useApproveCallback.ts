@@ -40,14 +40,6 @@ export function useApproveCallback(
     // we might not have enough data to know whether or not we need to approve
     if (!currentAllowance) return ApprovalState.UNKNOWN
 
-    // console.log('*********************************')
-    // console.log('amountToApprove.currency: ', amountToApprove.currency)
-    // console.log('amountToApprove.token: ', token)
-    // console.log('amountToApprove: ', amountToApprove?.toSignificant(6))
-    // console.log('currentAllowance: ', currentAllowance?.toSignificant(6))
-    // console.log('currentAllowance.lessThan(amountToApprove): ', currentAllowance.lessThan(amountToApprove))
-    // console.log('*********************************')
-
     // amountToApprove will be defined if currentAllowance is
     return currentAllowance.lessThan(amountToApprove)
       ? pendingApproval
@@ -107,20 +99,10 @@ export function useApproveCallback(
       })
   }, [approvalState, token, tokenContract, amountToApprove, spender, addTransaction])
 
-
-  // console.log('*********************************')
-  // console.log('ethItem: ', ethItem)
-  // console.log('isUSD: ', isUSD)
-  // console.log('token: ', token?.address)
-  // console.log('approvalState: ', approvalState)
-  // console.log('spender: ', spender)
-  // console.log('account: ', account)
-  // console.log('*********************************')
-
   return [approvalState, approve]
 }
 
-export function useSwapApproveCallback(
+export function useTokenApproveCallback(
   amountToApprove?: CurrencyAmount,
   token?: Token,
   spender?: string
@@ -140,8 +122,9 @@ export function useSwapApproveCallback(
     if (!currentAllowance) return ApprovalState.UNKNOWN
 
     // console.log('*********************************')
-    // console.log('amountToApprove.currency: ', amountToApprove.currency)
-    // console.log('amountToApprove.token: ', token)
+    // console.log('currency: ', amountToApprove.currency)
+    // console.log('token: ', token)
+    // console.log('symbol: ', token?.symbol)
     // console.log('amountToApprove: ', amountToApprove?.toSignificant(6))
     // console.log('currentAllowance: ', currentAllowance?.toSignificant(6))
     // console.log('currentAllowance.lessThan(amountToApprove): ', currentAllowance.lessThan(amountToApprove))
@@ -225,5 +208,5 @@ export function useApproveCallbackFromTrade(trade?: Trade, token?: Token, allowe
     () => (trade ? computeSlippageAdjustedAmounts(trade, allowedSlippage)[Field.INPUT] : undefined),
     [trade, allowedSlippage]
   )
-  return useSwapApproveCallback(amountToApprove, token, ORCHESTRATOR_ADDRESS)
+  return useTokenApproveCallback(amountToApprove, token, ORCHESTRATOR_ADDRESS)
 }
