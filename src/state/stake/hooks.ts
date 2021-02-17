@@ -1,7 +1,7 @@
 import { ChainId, CurrencyAmount, JSBI, Token, TokenAmount, Pair, IETH } from '@materia-dex/sdk'
 // import { IETH } from '@materia-dex/sdk'
 import { useMemo } from 'react'
-import { GIL, IGIL, WUSD } from '../../constants'
+import { GIL, IDAI, IGIL, IUSDC, IWBTC, WUSD, ZERO_ADDRESS } from '../../constants'
 // import { WUSD } from '../../constants'
 import { STAKING_REWARDS_INTERFACE } from '../../constants/abis/staking-rewards'
 import { useActiveWeb3React } from '../../hooks'
@@ -22,7 +22,23 @@ export const STAKING_REWARDS_INFO: {
   [ChainId.MAINNET]: [
     // {
     //   tokens: [WUSD[ChainId.MAINNET], IETH[ChainId.MAINNET]],
-    //   stakingRewardAddress: '0xa1484C3aa22a66C62b77E0AE78E15258bd0cB711'
+    //   stakingRewardAddress: ZERO_ADDRESS
+    // },
+    // {
+    //   tokens: [WUSD[ChainId.MAINNET], IGIL[ChainId.MAINNET]],
+    //   stakingRewardAddress: ZERO_ADDRESS
+    // },
+    // {
+    //   tokens: [WUSD[ChainId.MAINNET], IUSDC[ChainId.MAINNET]],
+    //   stakingRewardAddress: ZERO_ADDRESS
+    // },
+    // {
+    //   tokens: [WUSD[ChainId.MAINNET], IWBTC[ChainId.MAINNET]],
+    //   stakingRewardAddress: ZERO_ADDRESS
+    // },
+    // {
+    //   tokens: [WUSD[ChainId.MAINNET], IDAI[ChainId.MAINNET]],
+    //   stakingRewardAddress: ZERO_ADDRESS
     // },
   ],
   [ChainId.ROPSTEN]: [
