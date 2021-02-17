@@ -14,7 +14,7 @@ import { MinimalPositionCard } from '../../components/PositionCard'
 import Row, { AutoRow, RowBetween, RowFlat } from '../../components/Row'
 import { darken } from 'polished'
 import { Link } from 'react-feather'
-import { ORCHESTRATOR_ADDRESS, USD, ZERO_ADDRESS } from '../../constants'
+import { ORCHESTRATOR_ADDRESS, WUSD, ZERO_ADDRESS } from '../../constants'
 import { PairState, usePair } from '../../data/Reserves'
 import { useCurrency } from '../../hooks/Tokens'
 import { ApprovalState, useApproveCallback, useTokenApproveCallback } from '../../hooks/useApproveCallback'
@@ -254,11 +254,11 @@ export default function AddLiquidity({
       return
     }
 
-    const currencyUSD = USD[chainId ?? 1]
-    const currencyBIsUSD = wrappedCurrency(currencyB, chainId)?.address == currencyUSD.address
+    const currencyWUSD = WUSD[chainId ?? 1]
+    const currencyBIsWUSD = wrappedCurrency(currencyB, chainId)?.address == currencyWUSD.address
 
     // console.log('***************************************')
-    // console.log('currencyBIsUSD: ', currencyBIsUSD)
+    // console.log('currencyBIsWUSD: ', currencyBIsWUSD)
     // console.log('parsedAmounts[Field.CURRENCY_A]: ', parsedAmounts[Field.CURRENCY_A])
     // console.log('originalParsedAmounts[Field.CURRENCY_A]: ', originalParsedAmounts[Field.CURRENCY_A])
     // console.log('parsedAmounts[Field.CURRENCY_B]: ', parsedAmounts[Field.CURRENCY_B])
@@ -266,12 +266,12 @@ export default function AddLiquidity({
     // console.log('***************************************')
 
     // const { [Field.CURRENCY_A]: parsedAmountA, [Field.CURRENCY_B]: parsedAmountB } = parsedAmounts
-    // const modifiedParsedAmountA = currencyBIsUSD 
-    const parsedAmountA = currencyBIsUSD
+    // const modifiedParsedAmountA = currencyBIsWUSD 
+    const parsedAmountA = currencyBIsWUSD
       ? decodeInteroperableValueToERC20TokenAmount(parsedAmounts[Field.CURRENCY_A], originalParsedAmounts[Field.CURRENCY_A])
       : parsedAmounts[Field.CURRENCY_A]
-    // const modifiedParsedAmountB = currencyBIsUSD 
-    const parsedAmountB = currencyBIsUSD
+    // const modifiedParsedAmountB = currencyBIsWUSD 
+    const parsedAmountB = currencyBIsWUSD
       ? parsedAmounts[Field.CURRENCY_B]
       : decodeInteroperableValueToERC20TokenAmount(parsedAmounts[Field.CURRENCY_B], originalParsedAmounts[Field.CURRENCY_B])
 
@@ -309,9 +309,9 @@ export default function AddLiquidity({
           // (uint bridgeAmountDesired, uint tokenAmountMin, uint bridgeAmountMin, address to, uint deadline)
           ["uint", "uint", "uint", "address", "uint"],
           [
-            currencyBIsUSD ? parsedAmountB.raw.toString() : parsedAmountA.raw.toString(),
-            currencyBIsUSD ? amountsMin[Field.CURRENCY_A].toString() : amountsMin[Field.CURRENCY_B].toString(),
-            currencyBIsUSD ? amountsMin[Field.CURRENCY_B].toString() : amountsMin[Field.CURRENCY_A].toString(),
+            currencyBIsWUSD ? parsedAmountB.raw.toString() : parsedAmountA.raw.toString(),
+            currencyBIsWUSD ? amountsMin[Field.CURRENCY_A].toString() : amountsMin[Field.CURRENCY_B].toString(),
+            currencyBIsWUSD ? amountsMin[Field.CURRENCY_B].toString() : amountsMin[Field.CURRENCY_A].toString(),
             account,
             deadline.toHexString()
           ]
@@ -321,7 +321,7 @@ export default function AddLiquidity({
         account,
         ORCHESTRATOR_ADDRESS,
         ethItemObjectId?.toString() ?? "0",
-        currencyBIsUSD ? parsedAmountA.raw.toString() : parsedAmountB.raw.toString(),
+        currencyBIsWUSD ? parsedAmountA.raw.toString() : parsedAmountB.raw.toString(),
         ethItemArgs]
       value = null
     }
@@ -347,11 +347,11 @@ export default function AddLiquidity({
         methodName = "addLiquidity"
         // (address token, uint tokenAmountDesired, uint bridgeAmountDesired, uint tokenAmountMin, uint bridgeAmountMin, address to, uint deadline)
         args = [
-          wrappedCurrency(currencyBIsUSD ? currencyA : currencyB, chainId)?.address ?? '',
-          currencyBIsUSD ? parsedAmountA.raw.toString() : parsedAmountB.raw.toString(),
-          currencyBIsUSD ? parsedAmountB.raw.toString() : parsedAmountA.raw.toString(),
-          currencyBIsUSD ? amountsMin[Field.CURRENCY_A].toString() : amountsMin[Field.CURRENCY_B].toString(),
-          currencyBIsUSD ? amountsMin[Field.CURRENCY_B].toString() : amountsMin[Field.CURRENCY_A].toString(),
+          wrappedCurrency(currencyBIsWUSD ? currencyA : currencyB, chainId)?.address ?? '',
+          currencyBIsWUSD ? parsedAmountA.raw.toString() : parsedAmountB.raw.toString(),
+          currencyBIsWUSD ? parsedAmountB.raw.toString() : parsedAmountA.raw.toString(),
+          currencyBIsWUSD ? amountsMin[Field.CURRENCY_A].toString() : amountsMin[Field.CURRENCY_B].toString(),
+          currencyBIsWUSD ? amountsMin[Field.CURRENCY_B].toString() : amountsMin[Field.CURRENCY_A].toString(),
           account,
           deadline.toHexString(),
         ]
@@ -617,11 +617,11 @@ export default function AddLiquidity({
 
           <PageItemsContainer className={theme.name}>
             <TabsBar className={theme.name}>
-              <TabLinkItem id={`Add-Liquidity`} to={'/add/uSD'}
+              <TabLinkItem id={`Add-Liquidity`} to={'/add/WUSD'}
                 className={`${theme.name}`}
                 isActive={(match, { pathname }) => Boolean(match) || pathname.startsWith('/add')}
               >Add Liquidity</TabLinkItem>
-              <TabLinkItem id={`Create-a-pair`} to={'/create/uSD'}
+              <TabLinkItem id={`Create-a-pair`} to={'/create/WUSD'}
                 className={`${theme.name}`}
                 isActive={(match, { pathname }) => Boolean(match) || pathname.startsWith('/create')}
               >Create a pair</TabLinkItem>

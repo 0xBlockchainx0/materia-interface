@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import useUSD from './useUSD'
+import useWUSD from './useWUSD'
 
 /**
  * Return the pool pair after validating currencies
@@ -8,7 +8,7 @@ export default function usePoolCurrencies(
   currencyIdA: string | undefined,
   currencyIdB: string | undefined
 ): { poolCurrencyIdA: string | undefined; poolCurrencyIdB: string | undefined; } {
-  const usdAddress = useUSD()?.address ?? undefined
+  const usdAddress = useWUSD()?.address ?? undefined
 
   return useMemo(() => {
     if (!usdAddress) return { poolCurrencyIdA: 'ETH', poolCurrencyIdB: undefined }

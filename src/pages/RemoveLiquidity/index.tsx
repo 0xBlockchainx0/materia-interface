@@ -19,7 +19,7 @@ import Row, { RowBetween, RowFixed } from '../../components/Row'
 
 import Slider from '../../components/Slider'
 import CurrencyLogo from '../../components/CurrencyLogo'
-import { ORCHESTRATOR_ADDRESS, USD } from '../../constants'
+import { ORCHESTRATOR_ADDRESS, WUSD } from '../../constants'
 import { useActiveWeb3React } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
 import { usePairContract } from '../../hooks/useContract'
@@ -222,8 +222,8 @@ export default function RemoveLiquidity({
     const liquidityAmount = parsedAmounts[Field.LIQUIDITY]
     if (!liquidityAmount) throw new Error('missing liquidity amount')
 
-    const currencyUSD = USD[chainId ?? 1]
-    const currencyBIsUSD =  wrappedCurrency(currencyB, chainId)?.address == currencyUSD.address
+    const currencyWUSD = WUSD[chainId ?? 1]
+    const currencyBIsWUSD =  wrappedCurrency(currencyB, chainId)?.address == currencyWUSD.address
 
     const currencyBIsETH = currencyB === ETHER    
     const oneCurrencyIsETH = currencyA === ETHER || currencyBIsETH
@@ -248,10 +248,10 @@ export default function RemoveLiquidity({
       else {
         methodNames = ['removeLiquidity']
         args = [
-          currencyBIsUSD ? tokenA.address : tokenB.address,
+          currencyBIsWUSD ? tokenA.address : tokenB.address,
           liquidityAmount.raw.toString(),
-          amountsMin[currencyBIsUSD ? Field.CURRENCY_A : Field.CURRENCY_B].toString(),
-          amountsMin[currencyBIsUSD ? Field.CURRENCY_B : Field.CURRENCY_A].toString(),
+          amountsMin[currencyBIsWUSD ? Field.CURRENCY_A : Field.CURRENCY_B].toString(),
+          amountsMin[currencyBIsWUSD ? Field.CURRENCY_B : Field.CURRENCY_A].toString(),
           account,
           deadline.toHexString()
         ]
@@ -278,10 +278,10 @@ export default function RemoveLiquidity({
       else {
         methodNames = ['removeLiquidityWithPermit']
         args = [
-          currencyBIsUSD ? tokenA.address : tokenB.address,
+          currencyBIsWUSD ? tokenA.address : tokenB.address,
           liquidityAmount.raw.toString(),
-          amountsMin[currencyBIsUSD ? Field.CURRENCY_A : Field.CURRENCY_B].toString(),
-          amountsMin[currencyBIsUSD ? Field.CURRENCY_B : Field.CURRENCY_A].toString(),
+          amountsMin[currencyBIsWUSD ? Field.CURRENCY_A : Field.CURRENCY_B].toString(),
+          amountsMin[currencyBIsWUSD ? Field.CURRENCY_B : Field.CURRENCY_A].toString(),
           account,
           signatureData.deadline,
           false,
@@ -296,7 +296,7 @@ export default function RemoveLiquidity({
 
     // console.log('*********************************')
     // console.log('oneCurrencyIsETH: ', oneCurrencyIsETH)
-    // console.log('currencyBIsUSD: ', currencyBIsUSD)
+    // console.log('currencyBIsWUSD: ', currencyBIsWUSD)
     // console.log('tokenA: ', tokenA.address)
     // console.log('tokenB: ', tokenB.address)
     // console.log('currencyA: ', currencyA)

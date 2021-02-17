@@ -26,7 +26,7 @@ import { currencyId } from '../../utils/currencyId'
 import { useTotalSupply } from '../../data/TotalSupply'
 import { usePair } from '../../data/Reserves'
 import usePrevious from '../../hooks/usePrevious'
-import { BIG_INT_ZERO, USD } from '../../constants'
+import { BIG_INT_ZERO, WUSD } from '../../constants'
 import AppBody from '../AppBody'
 
 const PageWrapper = styled(AutoColumn)`
@@ -143,7 +143,7 @@ export default function Manage({
   const { account, chainId } = useActiveWeb3React()
 
   // get currencies and pair
-  const [currencyA, currencyB, currencyUSD] = [useCurrency(currencyIdA), useCurrency(currencyIdB), useCurrency(USD[chainId ?? 1].address)]
+  const [currencyA, currencyB, currencyWUSD] = [useCurrency(currencyIdA), useCurrency(currencyIdB), useCurrency(WUSD[chainId ?? 1].address)]
   const tokenA = wrappedCurrency(currencyA ?? undefined, chainId)
   const tokenB = wrappedCurrency(currencyB ?? undefined, chainId)
 
@@ -161,22 +161,22 @@ export default function Manage({
 
   // fade cards if nothing staked or nothing earned yet
   const disableTop = !stakingInfo?.stakedAmount || stakingInfo.stakedAmount.equalTo(JSBI.BigInt(0))
-  const token = currencyA === currencyUSD ? tokenB : tokenA
-  const tokenUSD = currencyA === currencyUSD ? tokenA : tokenB
+  const token = currencyA === currencyWUSD ? tokenB : tokenA
+  const tokenWUSD = currencyA === currencyWUSD ? tokenA : tokenB
 
   const backgroundColor = useColor(token)
 
-  // get tokenUSD value of staked LP tokens
+  // get tokenWUSD value of staked LP tokens
   const totalSupplyOfStakingToken = useTotalSupply(stakingInfo?.stakedAmount?.token)
   let valueOfTotalStakedAmountInUSD: TokenAmount | undefined
-  if (totalSupplyOfStakingToken && stakingTokenPair && stakingInfo && tokenUSD) {
-    // take the total amount of LP tokens staked, multiply by USD value of all LP tokens, divide by all LP tokens
+  if (totalSupplyOfStakingToken && stakingTokenPair && stakingInfo && tokenWUSD) {
+    // take the total amount of LP tokens staked, multiply by WUSD value of all LP tokens, divide by all LP tokens
     valueOfTotalStakedAmountInUSD = new TokenAmount(
-      tokenUSD,
+      tokenWUSD,
       JSBI.divide(
         JSBI.multiply(
-          JSBI.multiply(stakingInfo.totalStakedAmount.raw, stakingTokenPair.reserveOf(tokenUSD).raw),
-          JSBI.BigInt(2) // this is b/c the value of LP shares are ~double the value of the tokenUSD they entitle owner to
+          JSBI.multiply(stakingInfo.totalStakedAmount.raw, stakingTokenPair.reserveOf(tokenWUSD).raw),
+          JSBI.BigInt(2) // this is b/c the value of LP shares are ~double the value of the tokenWUSD they entitle owner to
         ),
         totalSupplyOfStakingToken.raw
       )
@@ -186,8 +186,8 @@ export default function Manage({
   const countUpAmount = stakingInfo?.earnedAmount?.toFixed(6) ?? '0'
   const countUpAmountPrevious = usePrevious(countUpAmount) ?? '0'
 
-  // get the USD value of staked tokenUSD
-  // const USDPrice = useUSDCPrice(tokenUSD)
+  // get the WUSD value of staked tokenWUSD
+  // const USDPrice = useUSDCPrice(tokenWUSD)
   // const valueOfTotalStakedAmountInUSDC =
   //   valueOfTotalStakedAmountInUSD && USDPrice?.quote(valueOfTotalStakedAmountInUSD)
 
@@ -249,7 +249,7 @@ export default function Manage({
                         {/* {valueOfTotalStakedAmountInUSDC
                           ? `$${valueOfTotalStakedAmountInUSDC.toFixed(0)}`
                           : `${valueOfTotalStakedAmountInUSD?.toSignificant(4) ?? '-'} ETH`} */}
-                        {`${valueOfTotalStakedAmountInUSD?.toSignificant(4) ?? '-'} uSD`}
+                        {`${valueOfTotalStakedAmountInUSD?.toSignificant(4) ?? '-'} WUSD`}
                       </TYPE.body>
                     </AutoColumn>
                   </PoolData>

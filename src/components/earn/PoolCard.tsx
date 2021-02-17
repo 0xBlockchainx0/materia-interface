@@ -14,7 +14,7 @@ import { unwrappedToken } from '../../utils/wrappedCurrency'
 import { useTotalSupply } from '../../data/TotalSupply'
 import { usePair } from '../../data/Reserves'
 import { useActiveWeb3React } from '../../hooks'
-import { USD } from '../../constants'
+import { WUSD } from '../../constants'
 
 const StatContainer = styled.div`
   display: flex;
@@ -74,13 +74,13 @@ export default function PoolCard({ stakingInfo }: { stakingInfo: StakingInfo }) 
 
   const currency0 = unwrappedToken(token0)
   const currency1 = unwrappedToken(token1)
-  const currencyUSD = unwrappedToken(USD[chainId ?? 1])
+  const currencyWUSD = unwrappedToken(WUSD[chainId ?? 1])
 
   const isStaking = Boolean(stakingInfo.stakedAmount.greaterThan('0'))
 
   // get the color of the token
-  const token = currency0 === currencyUSD ? token1 : token0
-  const tokenUSD = currency0 === currencyUSD ? token0 : token1
+  const token = currency0 === currencyWUSD ? token1 : token0
+  const tokenWUSD = currency0 === currencyWUSD ? token0 : token1
 
   const backgroundColor = useColor(token)
 
@@ -92,22 +92,17 @@ export default function PoolCard({ stakingInfo }: { stakingInfo: StakingInfo }) 
   if (totalSupplyOfStakingToken && stakingTokenPair) {
     // take the total amount of LP tokens staked, multiply by ETH value of all LP tokens, divide by all LP tokens
     valueOfTotalStakedAmountInUSD = new TokenAmount(
-      tokenUSD,
+      tokenWUSD,
       JSBI.divide(
         JSBI.multiply(
-          JSBI.multiply(stakingInfo.totalStakedAmount.raw, stakingTokenPair.reserveOf(tokenUSD).raw),
-          JSBI.BigInt(2) // this is b/c the value of LP shares are ~double the value of the tokenUSD they entitle owner to
+          JSBI.multiply(stakingInfo.totalStakedAmount.raw, stakingTokenPair.reserveOf(tokenWUSD).raw),
+          JSBI.BigInt(2) // this is b/c the value of LP shares are ~double the value of the tokenWUSD they entitle owner to
         ),
         totalSupplyOfStakingToken.raw
       )
     )
   }
-
-  // get the USD value of staked tokenUSD
-  // const USDPrice = useUSDCPrice(tokenUSD)
-  // const valueOfTotalStakedAmountInUSDC =
-  //   valueOfTotalStakedAmountInUSD && USDPrice?.quote(valueOfTotalStakedAmountInUSD)
-
+  
   return (
     <Wrapper showBackground={isStaking} bgColor={backgroundColor}>
       <CardBGImage desaturate />
@@ -133,7 +128,7 @@ export default function PoolCard({ stakingInfo }: { stakingInfo: StakingInfo }) 
             {/* {valueOfTotalStakedAmountInUSDC
               ? `$${valueOfTotalStakedAmountInUSDC.toFixed(0)}`
               : `${valueOfTotalStakedAmountInUSD?.toSignificant(4) ?? '-'} ETH`} */}
-            {`${valueOfTotalStakedAmountInUSD?.toSignificant(4) ?? '-'} uSD`}
+            {`${valueOfTotalStakedAmountInUSD?.toSignificant(4) ?? '-'} WUSD`}
           </TYPE.white>
         </RowBetween>
         <RowBetween>

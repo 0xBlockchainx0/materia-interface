@@ -1,17 +1,17 @@
 import { Token } from '@materia-dex/sdk'
 import { useMemo } from 'react'
-import { USD } from '../constants'
+import { WUSD } from '../constants'
 import { useActiveWeb3React } from './index'
 
 /**
- * Return the uSD Token object using selected chain
+ * Return the WUSD Token object using selected chain
  */
-export default function useUSD(): Token | undefined {
+export default function useWUSD(): Token | undefined {
   const { chainId } = useActiveWeb3React()
 
   return useMemo(() => {
     if (!chainId) return undefined
 
-    return USD[chainId]
+    return WUSD[chainId]
   }, [chainId])
 }

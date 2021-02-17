@@ -15,7 +15,7 @@ import { Field, replaceSwapState, selectCurrency, setRecipient, switchCurrencies
 import { SwapState } from './reducer'
 import { useUserSlippageTolerance } from '../user/hooks'
 import { computeSlippageAdjustedAmounts } from '../../utils/prices'
-import { ERC20WRAPPER, FACTORY_ADDRESS, MATERIA_DFO_ADDRESS, ORCHESTRATOR_ADDRESS, USD } from '../../constants'
+import { ERC20WRAPPER, FACTORY_ADDRESS, MATERIA_DFO_ADDRESS, ORCHESTRATOR_ADDRESS, WUSD } from '../../constants'
 import useGetEthItemInteroperable from '../../hooks/useGetEthItemInteroperable'
 import { formatUnits } from 'ethers/lib/utils'
 
@@ -360,7 +360,7 @@ export function useDerivedSwapInfo(
 }
 
 function parseCurrencyFromURLParameter(urlParam: any, chainId: ChainId | undefined): string {
-  const defaultCurrency = chainId ? (USD[chainId]?.address ?? 'ETH') : 'ETH'
+  const defaultCurrency = chainId ? (WUSD[chainId]?.address ?? 'ETH') : 'ETH'
 
   if (typeof urlParam === 'string') {
     const valid = isAddress(urlParam)
