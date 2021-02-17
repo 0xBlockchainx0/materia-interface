@@ -1,8 +1,9 @@
 import { ChainId } from '@materia-dex/sdk'
 import React, { useContext } from 'react'
+import { X } from 'react-feather'
 import styled, { ThemeContext } from 'styled-components'
 import Modal from '../Modal'
-import { ExternalLink } from '../../theme'
+import { ExternalLink, IconButton } from '../../theme'
 import { Text } from 'rebass'
 import { CloseIcon, CustomLightSpinner } from '../../theme/components'
 import { RowBetween } from '../Row'
@@ -114,19 +115,32 @@ export function ConfirmationModalContent({
   topContent: () => React.ReactNode
   bottomContent: () => React.ReactNode
 }) {
+  const theme = useContext(ThemeContext)
   return (
-    <Wrapper>
+    <>
+    <div className="token-selection-content-container">
+      <h6>{title}</h6>
+      <IconButton className={ `modal-close-icon confirmation-modal-close-icon ${theme.name}` } onClick={onDismiss}>
+        <X/>
+      </IconButton>
+      <div className="confirmation-modal-content">
+        {topContent()}
+        {bottomContent()}
+      </div>      
+    </div>    
+    {/* <Wrapper>
       <Section>
         <RowBetween>
           <Text fontWeight={500} fontSize={20}>
-            {title}
+            
           </Text>
           <CloseIcon onClick={onDismiss} />
         </RowBetween>
-        {topContent()}
+        
       </Section>
       <BottomSection gap="12px">{bottomContent()}</BottomSection>
-    </Wrapper>
+    </Wrapper> */}
+    </>
   )
 }
 

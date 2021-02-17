@@ -11,13 +11,15 @@ import { InputPanel, ContainerRow, Input } from '../../theme'
 export default function AddressInputPanel({
   id,
   value,
-  onChange
+  onChange,  
+  alignedToLeft
 }: {
   id?: string
   // the typed string value
   value: string
   // triggers whenever the typed value changes
-  onChange: (value: string) => void
+  onChange: (value: string) => void,
+  alignedToLeft?: boolean
 }) {
   const { chainId } = useActiveWeb3React()
   const theme = useContext(ThemeContext)
@@ -37,12 +39,12 @@ export default function AddressInputPanel({
 
   return (
     <InputPanel id={id}>
-      <ContainerRow error={error} className={theme.name}>
+      <ContainerRow error={error} className={`${(alignedToLeft ? 'aligned-left' : '')} ${theme.name}`}>
         <div className={ `input-container ${theme.name}` }>
           {address && chainId && (
             <ExternalLink href={getEtherscanLink(chainId, name ?? address, 'address')}>(View on Etherscan)</ExternalLink>
           )}
-          <label>Recipient</label>
+          <label className={`${(alignedToLeft ? 'aligned-left' : '')}`}>Recipient</label>
           <Input
               className={ `recipient-address-input ${theme.name}` }
               type="text"

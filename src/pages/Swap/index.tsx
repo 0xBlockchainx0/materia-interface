@@ -380,7 +380,7 @@ export default function Swap() {
                   <TradePriceContainer>
                     <AutoColumn justify="space-between">
                       <AutoRow justify={isExpertMode ? 'space-between' : 'center'} style={{ padding: '0 1rem' }}>
-                        <SwitchButton className={`${theme.name} ${originalCurrencies[Field.INPUT] && originalCurrencies[Field.OUTPUT] ? '' : 'disabled'}`} onClick={() => {
+                        <SwitchButton className={` ${(isExpertMode ? 'expert-mode' : '')} ${theme.name} ${originalCurrencies[Field.INPUT] && originalCurrencies[Field.OUTPUT] ? '' : 'disabled'}`} onClick={() => {
                           setApprovalSubmitted(false) // reset 2 step UI for approvals
                           onSwitchTokens()
                         }}>
@@ -445,7 +445,7 @@ export default function Swap() {
                   </div>
                 </PageContentContainer>
                 <BottomGrouping>
-                  <SwapButtonsContainer>
+                  <SwapButtonsContainer className={isExpertMode && swapErrorMessage ? 'has-error' : ''}>
                     {!account ? (
                       <OperationButton onClick={toggleWalletModal} className={`connect-wallet-button ${theme.name}`} label="Connect Wallet">
                         <Link />
@@ -466,7 +466,6 @@ export default function Swap() {
                           onClick={approveCallback}
                           disabled={approval !== ApprovalState.NOT_APPROVED || approvalSubmitted}
                           hide={approval !== ApprovalState.NOT_APPROVED || approvalSubmitted}
-                          width="48%"
                           altDisabledStyle={approval === ApprovalState.PENDING} // show solid button while waiting
                           confirmed={approval === ApprovalState.APPROVED}
                         >
@@ -508,7 +507,9 @@ export default function Swap() {
                         </ButtonMateriaError>
                       </RowCenter>
                     ) : (
-                              <ButtonMateriaError
+                          <>
+                            {isExpertMode && swapErrorMessage ? <SwapCallbackError error={swapErrorMessage} /> : null}
+                            <ButtonMateriaError
                                 onClick={() => {
                                   if (isExpertMode) {
                                     handleSwap()
@@ -537,13 +538,8 @@ export default function Swap() {
                                     ? `Price Impact Too High`
                                     : `Swap ${priceImpactSeverity > 2 ? 'Anyway' : ''}`}
                               </ButtonMateriaError>
-                            )}
-                    {showApproveFlow && (
-                      <Column style={{ marginTop: '1rem' }}>
-                        <ProgressSteps steps={[approval === ApprovalState.APPROVED]} />
-                      </Column>
-                    )}
-                    {isExpertMode && swapErrorMessage ? <SwapCallbackError error={swapErrorMessage} /> : null}
+                          </>                              
+                            )}                    
                   </SwapButtonsContainer>
                 </BottomGrouping>
               </div>

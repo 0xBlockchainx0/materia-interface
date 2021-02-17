@@ -606,7 +606,7 @@ export default function AddLiquidity({
                       <EmptyProposals className={theme.name}>
                         <SimpleTextParagraph className={`p20 text-center ${theme.name}`}>
                           No liquidity found.
-                  </SimpleTextParagraph>
+                        </SimpleTextParagraph>
                       </EmptyProposals>
                     )}
             </Scrollbars>

@@ -229,20 +229,18 @@ export default function FullPositionCard({ pair, border }: PositionCardProps) {
             </SimpleTextParagraph>             
             <RowBetween marginTop="10px">
               <ButtonMateriaPrimary
-                padding="8px"
-                borderRadius="8px"
                 as={Link}
                 to={`/add/${currencyId(currency0)}/${currencyId(currency1)}`}
                 width="48%"
+                className={theme.name}
               >
                 Add
               </ButtonMateriaPrimary>
               <ButtonMateriaPrimary
-                padding="8px"
-                borderRadius="8px"
                 as={Link}
                 width="48%"
                 to={`/remove/${currencyId(currency0)}/${currencyId(currency1)}`}
+                className={theme.name}
               >
                 Remove
               </ButtonMateriaPrimary>

@@ -98,7 +98,7 @@ export default function SwapModalHeader({
           </RowBetween>
         </SwapShowAcceptChanges>
       ) : null}
-      <AutoColumn justify="flex-start" gap="sm" style={{ padding: '12px 0 0 0px' }}>
+      <AutoColumn justify="flex-start" gap="sm" style={{ padding: '12px 0 0 0px', margin: '0px 0px 20px 0px' }}>
         {trade.tradeType === TradeType.EXACT_INPUT ? (
           <TYPE.italic textAlign="left" style={{ width: '100%' }}>
             {`Output is estimated. You will receive at least `}

@@ -777,6 +777,10 @@ MARGIN STYLE MINUS
   .pull-right { float: right; }
   .pull-left { float: left; }
   .center-block { margin: 0px auto !important; }
+  .text-centered { text-align: center !important; }
+  .font25 { font-size: 25px; }
+  .error { color: ${({ theme }) => theme.red2 }; }
+  .display-contents { display: contents; }
 
   svg.simple-icon { width: 16px;}
   svg.simple-icon.dark { stroke: ${({ theme }) => theme.azure1}; color: ${({ theme }) => theme.azure1}; }
@@ -1102,6 +1106,8 @@ export const SimpleTextParagraph = styled.p`
   & span.row span.column { display: inline-block; float: left; }
   & span.row span.column:last-child { float: right; }
   & span.row span.column img { display: inline-block !important; vertical-align: middle; }
+
+  & img.ethereumLogo, & img.tokenLogo { margin-top: 0px; }
 `
 export const SimpleInformationsTextParagraph = styled(SimpleTextParagraph)`
   &.dark { color: ${({ theme }) => theme.azure1}; }
@@ -1665,6 +1671,9 @@ export const SwitchButton = styled(Button)<{disabled?: boolean}>`
 
   &.classic:after {}
   &.classic:before {}
+
+  &.dark.expert-mode { margin-left: 30px; }
+  &.light.expert-mode { margin-left: 30px; }
 `
 export const OperationButton = styled(Button)<{label?: string, disabled?: boolean}>`
   padding: 0px !important;
@@ -1836,6 +1845,8 @@ export const MainOperationButton = styled(ActionButton)<{ disabled?: boolean, se
   &.classic:hover:before, &.classic:focus:before { display: block; }
   &#confirm-expert-mode.classic { padding: 20px !important; }
   &#confirm-expert-mode.classic:before { left: 10px; top: 15px; }
+
+  &.dark.width-auto, &.light.width-auto, { width: auto !important; }
 `
 export const TradePriceContainer = styled.div`
   margin-top: 250px;
@@ -1889,6 +1900,8 @@ export const ContainerRow = styled.div<{ error?: boolean }>`
     margin: 0px 0px 10px 10px;
   }
 
+  & > div.input-container > label.aligned-left { float: none; margin-left: 0px; }
+
   & > div.input-container.classic > label, & > div.input-container.classic > a {
     font-size: 9px;
     font-weight: 300;
@@ -1940,6 +1953,9 @@ export const SwapButtonsContainer = styled.div`
   display: flex;
   padding: 1rem 0rem;
   width:auto;
+
+  &.has-error { display: block; text-align: center; }
+
 `
 export const SecondaryPanelBoxContainer = styled.div`
   padding: 5px;
@@ -2193,6 +2209,8 @@ export const ThemedDialogContent = styled(({ minHeight, maxHeight, mobile, isOpe
   }
 
   &[data-reach-dialog-content] > .token-selection-content-container .modal-close-icon { right: 0px; top: 0px; }
+  &[data-reach-dialog-content] > .token-selection-content-container .modal-close-icon.confirmation-modal-close-icon { right: 20px; top: 15px; }
+  &[data-reach-dialog-content] > .token-selection-content-container > .confirmation-modal-content img.tokenLogo { margin-top: 0px; }
 `
 export const SearchTokenFormItems = styled(AutoColumn)`
   display: grid;
@@ -2460,6 +2478,13 @@ export const ModalContentWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+
+  &.claming {
+    display: grid;
+    grid-template-columns: 100%;
+    text-align: center;
+    width: 100%;
+  }
 `
 export const EmptyProposals = styled.div`
   display: flex;
@@ -2730,7 +2755,9 @@ export const StyledInput = styled.input<{ error?: boolean; fontSize?: string; al
   &.classic { font-size: 16px; text-shadow: 1px 1px 1px ${({ theme }) => theme.black}; }
 `
 export const StyledMenuIcon = styled(MenuIcon)`
-  path { stroke: ${({ theme }) => theme.text1}; }
+  &.footer-icon.dark path { stroke: ${({ theme }) => theme.azure1}; color: ${({ theme }) => theme.azure1}; }
+  &.footer-icon.light path { stroke: ${({ theme }) => theme.violet1}; color: ${({ theme }) => theme.violet1}; }
+  &.footer-icon.classic path {}
 `
 export const StyledMenuText = styled.b`
   :hover { cursor: pointer; }
@@ -2856,4 +2883,16 @@ export const TooltipContainer = styled.div`
   padding: 0.6rem 1rem;
   line-height: 150%;
   font-weight: 400;
+`
+export const SwapCallbackErrorContainer = styled.div`
+  align-items: center;
+  width: 100%;
+  color: ${({ theme }) => theme.red1};
+  overflow: hidden;
+  font-size: 12px;
+  font-weight: 500;
+  text-align: center;
+  margin-bottom: 20px;
+
+  & > div > svg { stroke: ${({ theme }) => theme.red1}; width: 20px; height: 20px; }  
 `

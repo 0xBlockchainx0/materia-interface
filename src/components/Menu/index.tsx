@@ -30,11 +30,9 @@ export default function Menu() {
     // https://github.com/DefinitelyTyped/DefinitelyTyped/issues/30451
     <StyledMenu ref={node as any} className={theme.name}>
       <StyledMenuButton onClick={toggle} className={theme.name}>
-        <StyledMenuIcon />
+        <StyledMenuIcon className={`footer-icon ${theme.name}`} />
       </StyledMenuButton>
-      <StyledMenuText onClick={toggle} className={theme.name}>
-        Menu
-      </StyledMenuText>
+      <StyledMenuText onClick={toggle} className={theme.name}>Menu</StyledMenuText>
 
       {open && (
         <MenuFlyout className={theme.name}>

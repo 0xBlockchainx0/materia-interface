@@ -122,27 +122,61 @@ export const ButtonMateriaLight = styled(ButtonLight)`
     }
   }
 `
-
 export const ButtonMateriaPrimary = styled(ButtonPrimary)`
-  width: auto;
-  background-color: linear-gradient(90deg, ${({ theme }) => theme.buttonMateriaPrimaryBackgroundFirstColor}, ${({ theme }) => theme.buttonMateriaPrimaryBackgroundSecondColor});
-  border: 1px solid ${({ theme }) => theme.buttonMateriaPrimaryBorderColor};
-  color: ${({ theme }) => theme.buttonMateriaPrimaryTextColor};
-  padding: 0.2rem 1.5rem;
-  border-radius: 3px;
-  transition: all 0.3s ease;
-  &:hover:enabled{
-    text-shadow: 0px 0px 2px 0px #111111; 
-    background-color: linear-gradient(90deg, ${({ theme }) => theme.buttonMateriaPrimaryBackgroundHoverFirstColor}, ${({ theme }) => theme.buttonMateriaPrimaryBackgroundHoverSecondColor});
-    border-color: ${({ theme }) => theme.buttonMateriaPrimaryHoverBorderColor};
-    box-shadow: 0px 0px 6px 0px #b0deff;
-  }
-  &:disabled {
-    background-color: linear-gradient(90deg, ${({ theme }) => theme.buttonMateriaPrimaryBackgroundFirstColor}, ${({ theme }) => theme.buttonMateriaPrimaryBackgroundSecondColor});
-    opacity: ${({ altDisabledStyle }) => (altDisabledStyle ? '0.7' : '1')};
-  }
-`
+  font-size: 16px !important;
+  padding: 5px 10px !important;
+  display: inline-block;
+  border-radius: 4px;
 
+  &:disabled { opacity: 0.5; }
+
+  &.dark.use-custom-properties.expert-mode:not([disabled]),
+  &.dark.popup-button.dismiss,
+  &.light.use-custom-properties.expert-mode:not([disabled]),
+  &.light.popup-button.dismiss { 
+    border: 1px solid ${({ theme }) => theme.red1} !important;
+    color: ${({ theme }) => theme.red1} !important;
+  }
+
+  &.dark, &.dark:disabled {
+    color: ${({ theme }) => theme.azure2} !important;
+    border: 1px solid ${({ theme }) => theme.azure2} !important;
+    background-color: ${({ theme }) => theme.blue3};
+  }
+
+  &.light, &.light:disabled {
+    color: ${({ theme }) => theme.violet1} !important;
+    border: 1px solid ${({ theme }) => theme.violet1} !important;
+    background-color: ${({ theme }) => theme.violet3};
+  }
+
+  &.light:disabled, &.light.popup-button.dismiss { background-color: ${({ theme }) => theme.red3}; }
+
+  &.dark:hover, &.dark:focus { box-shadow: 0px 0px 4px ${({ theme }) => theme.azure2}; }
+  &.light:hover, &.light:focus { box-shadow: 0px 0px 4px ${({ theme }) => theme.utils.hexToRGB(theme.grey3, 0.4)}; }
+  &.dark.use-custom-properties.expert-mode:hover, 
+  &.dark.use-custom-properties.expert-mode:focus, 
+  &.light.use-custom-properties.expert-mode:hover, 
+  &.light.use-custom-properties.expert-mode:focus { box-shadow: 0px 0px 4px ${({ theme }) => theme.red2}; }
+  &:disabled.dark:hover, &:disabled.dark:focus,
+  &:disabled.light:hover, &:disabled.light:focus, { box-shadow: none; } 
+
+  &.light {}
+  &.classic { 
+    position: relative; 
+    font-size: 11px !important;
+    font-weight: 300 !important;
+    text-shadow: 1px 1px 1px ${({ theme }) => theme.black};
+  }
+  &.classic.width80:before { left: -15px; }
+  &.classic:hover, &.classic:focus { color: ${({ theme }) => theme.azure2}; }
+  &.classic:disabled, &.classic.popup-button.dismiss:hover, &.classic.popup-button.dismiss:focus { color: ${({ theme }) => theme.red1}; }
+  &.classic:hover:before, &.classic:focus:before { display: block; }
+  &#confirm-expert-mode.classic { padding: 20px !important; }
+  &#confirm-expert-mode.classic:before { left: 10px; top: 15px; }
+
+  &.dark.width-auto, &.light.width-auto, { width: auto !important; }  
+`
 export const ButtonGray = styled(Base)`
   background-color: ${({ theme }) => theme.bg3};
   color: ${({ theme }) => theme.text2};
@@ -386,9 +420,9 @@ export function ButtonMateriaConfirmed({
   const theme = useContext(ThemeContext)
   if (!hide) {
     if (confirmed) {
-      return <MainOperationButton {...rest} />
+      return <MainOperationButton {...rest} className={`width-auto ${theme.name}`}/>
     } else {
-      return <MainOperationButton {...rest} altDisabledStyle={altDisabledStyle} />
+      return <MainOperationButton {...rest} altDisabledStyle={altDisabledStyle} className={`width-auto ${theme.name}`}/>
     }
   }
   else {

@@ -18,6 +18,8 @@ import tokenImageNotFoundDark from '../assets/images/token-backgrounds/default-t
 import tokenImageNotFoundLight from '../assets/images/token-backgrounds/default-token-image-light.png'
 import tokenImageNotFoundClassic from '../assets/images/token-backgrounds/default-token-image-classic.png'
 
+import circle from '../assets/images/blue-loader.svg'
+
 import FF7Cursor from '../assets/images/FF7Cursor.png'
 
 export const images = {
@@ -60,5 +62,8 @@ export const images = {
     },
     icons: {
       FF7Cursor: FF7Cursor
+    },
+    loader: {
+      circle: circle
     }
 }
