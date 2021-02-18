@@ -132,6 +132,8 @@ export function useSwapCallback(
   const recipient = recipientAddressOrName === null ? account : recipientAddress
 
   console.log('*********************************')
+  console.log('maximumAmountIn: ', trade?.maximumAmountIn(new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE)))
+  console.log('minimumAmountOut: ', trade?.minimumAmountOut(new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE)))
   console.log('swapCalls: ', swapCalls)
   console.log('*********************************')
 

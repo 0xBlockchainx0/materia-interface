@@ -47,7 +47,7 @@ import { currencyId } from '../../utils/currencyId'
 import useDebouncedChangeHandler from '../../utils/useDebouncedChangeHandler'
 import { wrappedCurrency } from '../../utils/wrappedCurrency'
 import AppBody from '../AppBody'
-import { useApproveCallback, ApprovalState } from '../../hooks/useApproveCallback'
+import { ApprovalState, useMPApproveCallback } from '../../hooks/useApproveCallback'
 import { Dots } from '../../components/swap/styleds'
 import { useBurnActionHandlers } from '../../state/burn/hooks'
 import { useDerivedBurnInfo, useBurnState } from '../../state/burn/hooks'
@@ -113,7 +113,7 @@ export default function RemoveLiquidity({
 
   // allowance handling
   const [signatureData, setSignatureData] = useState<{ v: number; r: string; s: string; deadline: number } | null>(null)
-  const [approval, approveCallback] = useApproveCallback(parsedAmounts[Field.LIQUIDITY], ORCHESTRATOR_ADDRESS)
+  const [approval, approveCallback] = useMPApproveCallback(parsedAmounts[Field.LIQUIDITY], ORCHESTRATOR_ADDRESS)
 
   const isArgentWallet = useIsArgentWallet()
 

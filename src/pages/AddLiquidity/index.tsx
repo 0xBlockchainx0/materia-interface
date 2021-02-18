@@ -17,7 +17,7 @@ import { Link } from 'react-feather'
 import { ORCHESTRATOR_ADDRESS, WUSD, ZERO_ADDRESS } from '../../constants'
 import { PairState, usePair } from '../../data/Reserves'
 import { useCurrency } from '../../hooks/Tokens'
-import { ApprovalState, useApproveCallback, useTokenApproveCallback } from '../../hooks/useApproveCallback'
+import { ApprovalState, useTokenApproveCallback } from '../../hooks/useApproveCallback'
 import useTransactionDeadline from '../../hooks/useTransactionDeadline'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import { Field } from '../../state/mint/actions'
@@ -359,7 +359,7 @@ export default function AddLiquidity({
       }
     }
 
-    console.log('*********************************')
+    // console.log('*********************************')
     // console.log('isETH: ', isETH)
     // console.log('approvalA: ', approvalA)
     // console.log('approvalB: ', approvalB)
@@ -388,10 +388,10 @@ export default function AddLiquidity({
     // console.log('isEthItem: ', isEthItem)
     // console.log('ethItemCollection: ', ethItemCollection)
     // console.log('ethItemObjectId: ', ethItemObjectId?.toString() ?? "0")
-    console.log('methodName: ', methodName)
-    console.log('args: ', args)
-    console.log('value: ', value)
-    console.log('*********************************')
+    // console.log('methodName: ', methodName)
+    // console.log('args: ', args)
+    // console.log('value: ', value)
+    // console.log('*********************************')
 
     setAttemptingTxn(true)
     await estimate(...args, value ? { value } : {})

@@ -13,7 +13,7 @@ import { TokenAmount, Pair } from '@materia-dex/sdk'
 import { useActiveWeb3React } from '../../hooks'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { usePairContract, useStakingContract } from '../../hooks/useContract'
-import { useApproveCallback, ApprovalState } from '../../hooks/useApproveCallback'
+import { useMPApproveCallback, ApprovalState } from '../../hooks/useApproveCallback'
 import { splitSignature } from 'ethers/lib/utils'
 import { StakingInfo, useDerivedStakeInfo } from '../../state/stake/hooks'
 import { wrappedCurrencyAmount } from '../../utils/wrappedCurrency'
@@ -76,7 +76,7 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
   // approval data for stake
   const deadline = useTransactionDeadline()
   const [signatureData, setSignatureData] = useState<{ v: number; r: string; s: string; deadline: number } | null>(null)
-  const [approval, approveCallback] = useApproveCallback(parsedAmount, stakingInfo.stakingRewardAddress)
+  const [approval, approveCallback] = useMPApproveCallback(parsedAmount, stakingInfo.stakingRewardAddress)
 
   const isArgentWallet = useIsArgentWallet()
   const stakingContract = useStakingContract(stakingInfo.stakingRewardAddress)
