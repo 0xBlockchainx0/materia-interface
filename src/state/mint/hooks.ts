@@ -172,7 +172,12 @@ export function useDerivedMintInfo(
       wrappedCurrencyAmount(currencyBAmount, chainId)
     ]
     if (pair && totalSupply && tokenAmountA && tokenAmountB && interoperable) {
-      return pair.getLiquidityMinted(totalSupply, tokenAmountA, tokenAmountB)
+      if (JSBI.equal(pair.reserve0.raw, ZERO) || JSBI.equal(pair.reserve1.raw, ZERO)) {
+        return undefined
+      }
+      else {
+        return pair.getLiquidityMinted(totalSupply, tokenAmountA, tokenAmountB)
+      }
     } else {
       return undefined
     }
