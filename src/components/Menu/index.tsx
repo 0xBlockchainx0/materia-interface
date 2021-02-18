@@ -4,11 +4,10 @@ import { BookOpen, Code, Info, MessageCircle, PieChart } from 'react-feather'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
 import { ApplicationModal } from '../../state/application/actions'
 import { useModalOpen, useToggleModal } from '../../state/application/hooks'
+import { ReactComponent as MenuIcon } from '../../assets/images/menu.svg'
 
 import { 
-  StyledMenuIcon,
-  StyledMenuText,
-  StyledMenuButton,
+  IconButton,
   StyledMenu,
   MenuFlyout,
   MenuItem
@@ -29,11 +28,10 @@ export default function Menu() {
   return (
     // https://github.com/DefinitelyTyped/DefinitelyTyped/issues/30451
     <StyledMenu ref={node as any} className={theme.name}>
-      <StyledMenuButton onClick={toggle} className={theme.name}>
-        <StyledMenuIcon className={`footer-icon ${theme.name}`} />
-      </StyledMenuButton>
-      <StyledMenuText onClick={toggle} className={theme.name}>Menu</StyledMenuText>
-
+      <IconButton onClick={toggle} className={`menuIcon ${theme.name}`}>
+        <MenuIcon className={`footer-icon ${theme.name}`} />
+      </IconButton>
+      <div className={ `custom-label ${theme.name}` } onClick={toggle}>Menu</div>
       {open && (
         <MenuFlyout className={theme.name}>
           <MenuItem id="link" href="https://materiadex.com/" className={theme.name}>

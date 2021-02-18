@@ -21,6 +21,7 @@ import tokenImageNotFoundClassic from '../assets/images/token-backgrounds/defaul
 import circle from '../assets/images/blue-loader.svg'
 
 import FF7Cursor from '../assets/images/FF7Cursor.png'
+import gil from '../assets/images/gil.png'
 
 export const images = {
     backgrounds: {
@@ -61,7 +62,8 @@ export const images = {
       classic: tokenImageNotFoundClassic
     },
     icons: {
-      FF7Cursor: FF7Cursor
+      FF7Cursor: FF7Cursor,
+      gil: gil
     },
     loader: {
       circle: circle

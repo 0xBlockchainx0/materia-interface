@@ -327,7 +327,8 @@ export function ListSelect({ onDismiss, onBack }: { onDismiss: () => void; onBac
                 placeholder="https:// or ipfs:// or ENS name"
                 value={listUrlInput}
                 onChange={handleInput}
-                onKeyDown={handleEnterKey}                
+                onKeyDown={handleEnterKey}  
+                className={theme.name}              
               />          
           </ContainerRow>
           <div>

@@ -128,7 +128,7 @@ export default function SettingsTab() {
         <SecondaryPanelBoxContainer className={ `settings-menu-panel ${theme.name}` }>
           <SecondaryPanelBoxContainerExtraDecorator className={ `top ${theme.name}` }/>
           <div className="inner-content">
-            <AutoColumn gap="md" style={{ padding: '1rem' }}>
+            <AutoColumn gap="md" style={{ padding: '10px' }}>
               <div className={ `sectionHeader ${theme.name}` }>Transaction Settings</div>
               <TransactionSettings rawSlippage={userSlippageTolerance} setRawSlippage={setUserslippageTolerance} deadline={ttl} setDeadline={setTtl} />
               <div className={ `sectionHeader ${theme.name}` }>Interface Settings</div>

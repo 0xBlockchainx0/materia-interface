@@ -86,7 +86,7 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
       {userPoolBalance && JSBI.greaterThan(userPoolBalance.raw, JSBI.BigInt(0)) ? (
         <>
           <SectionTitle className={ `mt20 mb20 ${theme.name}` }>Your position</SectionTitle>
-          <SecondaryPanelBoxContainer className={ `${theme.name}` }>
+          <SecondaryPanelBoxContainer className={ `${theme.name} mb20` }>
             <SecondaryPanelBoxContainerExtraDecorator className={ `top ${theme.name}` }/>
               <div className="inner-content">
                 <AutoColumn gap="12px" className="p15">
@@ -104,7 +104,7 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
                     </RowFixed>
                   </FixedHeightRow>
                   <AutoColumn gap="4px">
-                    <SimpleTextParagraph className={ `${theme.name}` }>
+                    <SimpleTextParagraph className={ `${theme.name} m0` }>
                       <span className="row">
                         <span className="column">Your pool share:</span>
                         <span className="column">{poolTokenPercentage ? poolTokenPercentage.toFixed(6) + '%' : '-'}</span>
@@ -128,7 +128,7 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
           </SecondaryPanelBoxContainer>   
         </>
       ) : (
-        <SecondaryPanelBoxContainer className={ `${theme.name}` }>
+        <SecondaryPanelBoxContainer className={ `${theme.name} mb20` }>
           <SecondaryPanelBoxContainerExtraDecorator className={ `top ${theme.name}` }/>
             <div className="inner-content">
               <SimpleTextParagraph className={ `p10 ${theme.name}` }>

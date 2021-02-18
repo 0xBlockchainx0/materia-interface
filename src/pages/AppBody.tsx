@@ -28,6 +28,7 @@ export default function AppBody({ children }: { children: React.ReactNode }) {
       break;
       case 'add':
       case 'remove':
+      case 'create':
       case 'pool':
         featureTitle = 'pool';
       break;
@@ -42,7 +43,6 @@ export default function AppBody({ children }: { children: React.ReactNode }) {
         {children}
         </FeatureChildrenContainer>
         <FooterInfo className={theme.name}>
-          <div></div>
           <div className="boxFooterCaption">
             Materia is an EthItem first DEX. Please note that if you use ERC20 tokens you will pay for EthItem wrap/unwrap operations.
           </div>

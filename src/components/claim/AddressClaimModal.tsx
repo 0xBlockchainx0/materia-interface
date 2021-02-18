@@ -133,6 +133,7 @@ export default function AddressClaimModal({ isOpen, onDismiss }: { isOpen: boole
               <div className="text-centered pt40 pb40">
                 {!claimConfirmed ? ( <CustomLightSpinner src={images.loader.circle} alt="loader" size={'90px'} className={ `mb40 ${theme.name}` }/> ) : ( <></> )}
                 <div>{claimConfirmed ? 'Claimed' : 'Claiming'}</div>
+                {claimConfirmed && (<img src={images.icons.gil} className="claimedIcon"/>)}
                 {!claimConfirmed && (
                   <div className="mt20 evidence-text error">
                     {unclaimedAmount?.toFixed(0, { groupSeparator: ',' } ?? '-')} GIL

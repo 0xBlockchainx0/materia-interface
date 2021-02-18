@@ -16,7 +16,6 @@ import { RowBetween } from '../components/Row'
 import Loader from '../components/Loader'
 import { Colors, DynamicGridColumnsDefinition } from './styled'
 import { images } from './images'
-import { ReactComponent as MenuIcon } from '../assets/images/menu.svg'
 import DavidFensTff from './fonts/DavidFens/DavidFens.ttf'
 import DavidFensWoff from './fonts/DavidFens/DavidFens.woff'
 import DavidFensWoff2 from './fonts/DavidFens/DavidFens.woff2'
@@ -1169,6 +1168,8 @@ export const IconButton = styled(BaseButton)<{ width?: string, borderRadius?: st
 
   &.popup-close-icon, &.modal-close-icon  { position: absolute; right: 10px; top: 10px; }
 
+  &.menuIcon > svg { width: 24px; height: 24px; margin-right: 10px; } 
+
   & + .custom-label { cursor: pointer; margin-top: -0.3rem; font-weight: 600; }
   & + .custom-label.dark {}
   & + .custom-label.light {}
@@ -1202,8 +1203,8 @@ export const FooterInfo = styled.div`
   z-index: 99;
   text-align: center;
   width: 100%;
-  display: grid;
-  grid-template-columns: 30% auto;  
+  /*display: grid;
+  grid-template-columns: 30% auto; */
 
   &.dark {}
   &.light {}
@@ -2485,6 +2486,8 @@ export const ModalContentWrapper = styled.div`
     text-align: center;
     width: 100%;
   }
+
+  & img.claimedIcon { max-width: 100px; margin-top: 25px; }
 `
 export const EmptyProposals = styled.div`
   display: flex;
@@ -2753,15 +2756,6 @@ export const StyledInput = styled.input<{ error?: boolean; fontSize?: string; al
   // }
 
   &.classic { font-size: 16px; text-shadow: 1px 1px 1px ${({ theme }) => theme.black}; }
-`
-export const StyledMenuIcon = styled(MenuIcon)`
-  &.footer-icon.dark path { stroke: ${({ theme }) => theme.azure1}; color: ${({ theme }) => theme.azure1}; }
-  &.footer-icon.light path { stroke: ${({ theme }) => theme.violet1}; color: ${({ theme }) => theme.violet1}; }
-  &.footer-icon.classic path {}
-`
-export const StyledMenuText = styled.b`
-  :hover { cursor: pointer; }
-  margin-top: -0.3rem;
 `
 export const StyledMenuButton = styled.button`
   width: 100%;
