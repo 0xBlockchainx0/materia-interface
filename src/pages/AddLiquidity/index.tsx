@@ -359,7 +359,7 @@ export default function AddLiquidity({
       }
     }
 
-    // console.log('*********************************')
+    console.log('*********************************')
     // console.log('isETH: ', isETH)
     // console.log('approvalA: ', approvalA)
     // console.log('approvalB: ', approvalB)
@@ -388,10 +388,10 @@ export default function AddLiquidity({
     // console.log('isEthItem: ', isEthItem)
     // console.log('ethItemCollection: ', ethItemCollection)
     // console.log('ethItemObjectId: ', ethItemObjectId?.toString() ?? "0")
-    // console.log('methodName: ', methodName)
-    // console.log('args: ', args)
-    // console.log('value: ', value)
-    // console.log('*********************************')
+    console.log('methodName: ', methodName)
+    console.log('args: ', args)
+    console.log('value: ', value)
+    console.log('*********************************')
 
     setAttemptingTxn(true)
     await estimate(...args, value ? { value } : {})
