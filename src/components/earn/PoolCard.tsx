@@ -90,13 +90,13 @@ export default function PoolCard({ stakingInfo }: { stakingInfo: StakingInfo }) 
   // let returnOverMonth: Percent = new Percent('0')
   let valueOfTotalStakedAmountInUSD: TokenAmount | undefined
   if (totalSupplyOfStakingToken && stakingTokenPair) {
-    // take the total amount of LP tokens staked, multiply by ETH value of all LP tokens, divide by all LP tokens
+    // take the total amount of MP tokens staked, multiply by ETH value of all MP tokens, divide by all MP tokens
     valueOfTotalStakedAmountInUSD = new TokenAmount(
       tokenWUSD,
       JSBI.divide(
         JSBI.multiply(
           JSBI.multiply(stakingInfo.totalStakedAmount.raw, stakingTokenPair.reserveOf(tokenWUSD).raw),
-          JSBI.BigInt(2) // this is b/c the value of LP shares are ~double the value of the tokenWUSD they entitle owner to
+          JSBI.BigInt(2) // this is b/c the value of MP shares are ~double the value of the tokenWUSD they entitle owner to
         ),
         totalSupplyOfStakingToken.raw
       )

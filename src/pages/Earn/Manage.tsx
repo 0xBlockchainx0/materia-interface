@@ -150,7 +150,7 @@ export default function Manage({
   const [, stakingTokenPair] = usePair(tokenA, tokenB)
   const stakingInfo = useStakingInfo(stakingTokenPair)?.[0]
 
-  // detect existing unstaked LP position to show add button if none found
+  // detect existing unstaked MP position to show add button if none found
   const userLiquidityUnstaked = useTokenBalance(account ?? undefined, stakingInfo?.stakedAmount?.token)
   const showAddLiquidityButton = Boolean(stakingInfo?.stakedAmount?.equalTo('0') && userLiquidityUnstaked?.equalTo('0'))
 
@@ -166,17 +166,17 @@ export default function Manage({
 
   const backgroundColor = useColor(token)
 
-  // get tokenWUSD value of staked LP tokens
+  // get tokenWUSD value of staked MP tokens
   const totalSupplyOfStakingToken = useTotalSupply(stakingInfo?.stakedAmount?.token)
   let valueOfTotalStakedAmountInUSD: TokenAmount | undefined
   if (totalSupplyOfStakingToken && stakingTokenPair && stakingInfo && tokenWUSD) {
-    // take the total amount of LP tokens staked, multiply by WUSD value of all LP tokens, divide by all LP tokens
+    // take the total amount of MP tokens staked, multiply by WUSD value of all MP tokens, divide by all MP tokens
     valueOfTotalStakedAmountInUSD = new TokenAmount(
       tokenWUSD,
       JSBI.divide(
         JSBI.multiply(
           JSBI.multiply(stakingInfo.totalStakedAmount.raw, stakingTokenPair.reserveOf(tokenWUSD).raw),
-          JSBI.BigInt(2) // this is b/c the value of LP shares are ~double the value of the tokenWUSD they entitle owner to
+          JSBI.BigInt(2) // this is b/c the value of MP shares are ~double the value of the tokenWUSD they entitle owner to
         ),
         totalSupplyOfStakingToken.raw
       )
@@ -277,7 +277,7 @@ export default function Manage({
                         </RowBetween>
                         <RowBetween style={{ marginBottom: '1rem' }}>
                           <TYPE.white fontSize={14}>
-                            {`LP tokens are required. Once you've added liquidity to the ${currencyA?.symbol}-${currencyB?.symbol} pool you can stake your liquidity tokens on this page.`}
+                            {`MP tokens are required. Once you've added liquidity to the ${currencyA?.symbol}-${currencyB?.symbol} pool you can stake your liquidity tokens on this page.`}
                           </TYPE.white>
                         </RowBetween>
                         <ButtonMateriaPrimary
@@ -332,7 +332,7 @@ export default function Manage({
                               {stakingInfo?.stakedAmount?.toSignificant(6) ?? '-'}
                             </TYPE.white>
                             <TYPE.white>
-                              LP {currencyA?.symbol}-{currencyB?.symbol}
+                              MP {currencyA?.symbol}-{currencyB?.symbol}
                             </TYPE.white>
                           </RowBetween>
                         </AutoColumn>
@@ -385,7 +385,7 @@ export default function Manage({
                   {!showAddLiquidityButton && (
                     <DataRow style={{ marginBottom: '1rem' }}>
                       <ButtonMateriaPrimary padding="8px" borderRadius="8px" onClick={handleDepositClick}>
-                        {stakingInfo?.stakedAmount?.greaterThan(JSBI.BigInt(0)) ? 'Deposit' : 'Deposit LP Tokens'}
+                        {stakingInfo?.stakedAmount?.greaterThan(JSBI.BigInt(0)) ? 'Deposit' : 'Deposit MP Tokens'}
                       </ButtonMateriaPrimary>
 
                       {stakingInfo?.stakedAmount?.greaterThan(JSBI.BigInt(0)) && (
@@ -402,7 +402,7 @@ export default function Manage({
                     </DataRow>
                   )}
                   {!userLiquidityUnstaked ? null : userLiquidityUnstaked.equalTo('0') ? null : (
-                    <TYPE.main>{userLiquidityUnstaked.toSignificant(6)} LP tokens available</TYPE.main>
+                    <TYPE.main>{userLiquidityUnstaked.toSignificant(6)} MP tokens available</TYPE.main>
                   )}
                 </PositionInfo>
               </PageWrapper>

@@ -84,7 +84,7 @@ export default function AddLiquidity({
   currencyIdB = poolCurrencyIdB
 
   // Pool
-  // fetch the user's balances of all tracked LP tokens
+  // fetch the user's balances of all tracked MP tokens
   const trackedTokenPairs = useTrackedTokenPairs()
 
   const tokenPairsWithLiquidityTokens = useMemo(

@@ -1,8 +1,6 @@
 import { ChainId, CurrencyAmount, JSBI, Token, TokenAmount, Pair, IETH } from '@materia-dex/sdk'
-// import { IETH } from '@materia-dex/sdk'
 import { useMemo } from 'react'
 import { GIL, IDAI, IGIL, IUSDC, IWBTC, WUSD, ZERO_ADDRESS } from '../../constants'
-// import { WUSD } from '../../constants'
 import { STAKING_REWARDS_INTERFACE } from '../../constants/abis/staking-rewards'
 import { useActiveWeb3React } from '../../hooks'
 import { NEVER_RELOAD, useMultipleContractSingleData } from '../multicall/hooks'
@@ -157,7 +155,7 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
           return memo
         }
 
-        // get the LP token
+        // get the MP token
         const tokens = info[index].tokens
         const dummyPair = new Pair(new TokenAmount(tokens[0], '0'), new TokenAmount(tokens[1], '0'))
 
