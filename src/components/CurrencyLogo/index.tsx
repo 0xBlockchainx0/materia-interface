@@ -15,7 +15,7 @@ const StyledEthereumLogo = styled.img<{ size: string }>`
   display: block;
   margin-left: auto;
   margin-right: auto;  
-  margin-top: 30%;
+  // margin-top: 30%;
 `
 const StyledLogo = styled(Logo)<{ size: string, radius: boolean }>`
   width: ${({ size }) => size};
@@ -24,7 +24,7 @@ const StyledLogo = styled(Logo)<{ size: string, radius: boolean }>`
   margin-left: auto;
   margin-right: auto;
   border-radius: ${({ radius }) => radius ? '15px' : 'unset'};
-  margin-top: 30%;
+  // margin-top: 30%;
 `
 export default function CurrencyLogo({
   currency,
