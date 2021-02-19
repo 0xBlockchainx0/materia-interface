@@ -5,7 +5,7 @@ import { ChainId } from '@materia-dex/sdk'
 import { abi as IMateriaPairABI } from '@materia-dex/materia-contracts-core/build/IMateriaPair.json'
 import { abi as IERC20WrapperV1_ABI } from '@materia-dex/materia-contracts-proxy/build/IERC20WrapperV1.json'
 import { useMemo } from 'react'
-import { MERKLE_DISTRIBUTOR_ADDRESS, ERC20WRAPPER, ETHITEM_ORCHESTRATOR_ADDRESS } from '../constants'
+import { MERKLE_DISTRIBUTOR_ADDRESS, ERC20WRAPPER } from '../constants'
 import {
   ARGENT_WALLET_DETECTOR_ABI,
   ARGENT_WALLET_DETECTOR_MAINNET_ADDRESS
@@ -60,11 +60,6 @@ export function useTokenContract(tokenAddress?: string, withSignerIfPossible?: b
 
 export function useWERC20TokenContract(tokenAddress?: string, withSignerIfPossible?: boolean): Contract | null {
   return useContract(tokenAddress, WERC20_ABI, withSignerIfPossible)
-}
-
-export function useEthItemOrchestratorContract(withSignerIfPossible?: boolean): Contract | null {
-  const { chainId } = useActiveWeb3React()
-  return useContract(chainId ? ETHITEM_ORCHESTRATOR_ADDRESS[chainId] : undefined, ETHITEM_ORCHESTRATOR_ABI, withSignerIfPossible)
 }
 
 export function useEthItemKnowledgeBaseContract(ethItemKnowledgeBaseAddress?: string, withSignerIfPossible?: boolean): Contract | null {
