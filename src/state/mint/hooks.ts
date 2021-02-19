@@ -64,15 +64,15 @@ export function useDerivedMintInfo(
 
   currencyAInteroperable = currencyA === ETHER ? IETH[chainId ?? 1] : currencyAInteroperable
   currencyBInteroperable = currencyB === ETHER ? IETH[chainId ?? 1] : currencyBInteroperable
-  
+
   const [interoperablePairState, interoperablePair] = usePair(currencyAInteroperable ?? currencies[Field.CURRENCY_A], currencyBInteroperable ?? currencies[Field.CURRENCY_B])
   const [originalPairState, originalPair] = usePair(currencies[Field.CURRENCY_A], currencies[Field.CURRENCY_B])
 
   // pair
-  const [pairState, pair] = interoperable 
+  const [pairState, pair] = interoperable
     ? [interoperablePairState, interoperablePair]
     : [originalPairState, originalPair]
-  
+
   const totalSupply = useTotalSupply(pair?.liquidityToken)
 
   const noLiquidity: boolean = pairState === PairState.NOT_EXISTS || Boolean(totalSupply && JSBI.equal(totalSupply.raw, ZERO))
@@ -86,15 +86,15 @@ export function useDerivedMintInfo(
     [Field.CURRENCY_A]: balances[0],
     [Field.CURRENCY_B]: balances[1]
   }
-  
+
   // amounts
-  const indipendentAmountField = interoperable 
-    ? ((independentField === Field.CURRENCY_A ? currencyAInteroperable : currencyBInteroperable) ?? currencies[independentField]) 
+  const indipendentAmountField = interoperable
+    ? ((independentField === Field.CURRENCY_A ? currencyAInteroperable : currencyBInteroperable) ?? currencies[independentField])
     : currencies[independentField]
   // const independentAmount: CurrencyAmount | undefined = tryParseAmount(typedValue, currencies[independentField])
   const independentAmount: CurrencyAmount | undefined = trySaferParseAmount(
-    typedValue, 
-    indipendentAmountField, 
+    typedValue,
+    indipendentAmountField,
     (independentField === Field.CURRENCY_A ? currencyAInteroperable : currencyBInteroperable)?.decimals ?? indipendentAmountField?.decimals
   )
   const dependentAmount: CurrencyAmount | undefined = useMemo(() => {
@@ -105,8 +105,8 @@ export function useDerivedMintInfo(
       if (!interoperable) {
         if (currencies[dependentField]) {
           return trySaferParseAmountIncludingZeroValues(
-            (otherTypedValue == '' ? '0' : otherTypedValue) ?? '0', 
-            currencies[dependentField], 
+            (otherTypedValue == '' ? '0' : otherTypedValue) ?? '0',
+            currencies[dependentField],
             (dependentField === Field.CURRENCY_B ? currencyBInteroperable : currencyAInteroperable)?.decimals ?? currencies[dependentField]?.decimals
           )
         }
@@ -122,13 +122,14 @@ export function useDerivedMintInfo(
       const wrappedIndependentAmount = wrappedCurrencyAmount(independentAmount, chainId)
       // const [tokenA, tokenB] = [wrappedCurrency(currencyA, chainId), wrappedCurrency(currencyB, chainId)]
       const [tokenA, tokenB] = [wrappedCurrency(interoperable ? currencyAInteroperable ?? currencyA : currencyA, chainId), wrappedCurrency(interoperable ? currencyBInteroperable ?? currencyB : currencyB, chainId)]
-      if (tokenA && tokenB && wrappedIndependentAmount && pair) {
+      if (tokenA && tokenB && wrappedIndependentAmount && pair && interoperable) {
+        const isEmptyPair = JSBI.equal(pair.reserve0.raw, ZERO) || JSBI.equal(pair.reserve1.raw, ZERO)
         // const dependentCurrency = dependentField === Field.CURRENCY_B ? currencyB : currencyA
         const dependentCurrency = dependentField === Field.CURRENCY_B ? (interoperable ? currencyBInteroperable ?? currencyB : currencyB) : (interoperable ? currencyAInteroperable ?? currencyA : currencyA)
-        const dependentTokenAmount =
+        const dependentTokenAmount = 
           dependentField === Field.CURRENCY_B
-            ? pair.priceOf(tokenA).quote(wrappedIndependentAmount)
-            : pair.priceOf(tokenB).quote(wrappedIndependentAmount)
+            ? isEmptyPair ? new TokenAmount(tokenA, ZERO) : pair.priceOf(tokenA).quote(wrappedIndependentAmount)
+            : isEmptyPair ? new TokenAmount(tokenB, ZERO) : pair.priceOf(tokenB).quote(wrappedIndependentAmount)
         return dependentCurrency === ETHER ? CurrencyAmount.ether(dependentTokenAmount.raw) : dependentTokenAmount
       }
       return undefined
