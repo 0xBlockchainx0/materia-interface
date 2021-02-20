@@ -96,7 +96,7 @@ export const IWBTC: { [chainId in ChainId]: Token } = {
 
 export const MERKLE_DISTRIBUTOR_ADDRESS: { [chainId in ChainId]?: string } = {
   [ChainId.MAINNET]: ZERO_ADDRESS,
-  [ChainId.ROPSTEN]: '0xCd7fe0b517B4Ce78453357cFA1606F13DeFBa364',
+  [ChainId.ROPSTEN]: '0x2Bc31241b68D68863730d1dDC680217c682c1dc0',
 }
 
 const WUSD_ONLY: ChainTokenList = {
