@@ -42,7 +42,11 @@ const TokenImage = styled.div<{ showBackground: boolean }>`
   &.single { padding-top: 12.5%; }
   &.single.default { padding-top: 30%; }
   &.single.default > img { margin-top: 0; }
-  &.single.remove-liquidity > img { margin-top: 0px; }
+  
+  &.stake-liquidity-token img.tokenLogo { margin-top: 30%; }
+  &.remove-liquidity { width: 20%; margin-top: 50px; padding: 0px; height: 130px; background-position: 10px center!important; }
+  &.double.remove-liquidity img.tokenLogo, &.double.remove-liquidity img.ethereumLogo { width: 50%; margin-top: 10%;}  
+  &.single.remove-liquidity > img { width: 50%; padding-top: 15%; margin-left: 40px; }
 `
 
 const TokenImageContainer = styled.div`
@@ -126,14 +130,14 @@ export default function CurrencyInputPanel({
 
   return (
     <>
-      <CurrencyFormPanel id={id} className={theme.name}>
-        <div className="itemsContainer">
+      <CurrencyFormPanel id={id}className={`${theme.name} ${customFatherPageCssClass}`}>
+        <div className={'itemsContainer ' + customFatherPageCssClass}>
           {!hideInput && (
-            <div className="labelRow">
+            <div className={'labelRow ' + customFatherPageCssClass}>
               <RowBetween>
-                <div className="label">{label}</div>
+                <div className={'label ' + customFatherPageCssClass}>{label}</div>
                 {account && (
-                  <div className="label link" onClick={onMax}>
+                  <div className={'label link ' + customFatherPageCssClass} onClick={onMax}>
                     {!hideBalance && !!currency && selectedCurrencyBalance ? (customBalanceText ?? 'Balance: ') + selectedCurrencyBalance?.toSignificant(6) : ' -'}
                   </div>
                 )}
@@ -181,7 +185,7 @@ export default function CurrencyInputPanel({
         )}
       </CurrencyFormPanel>
       <TokenImageContainer>
-        <TokenImage showBackground={true} className={(!pair ? 'single' : '') + ' ' + customFatherPageCssClass}>
+        <TokenImage showBackground={true} className={(!pair ? 'single' : 'double') + ' ' + customFatherPageCssClass}>
           {pair ? (
             <DoubleCurrencyLogo currency0={pair.token0} currency1={pair.token1} size={110} margin={false} radius={true} />
           ) : currency ? (

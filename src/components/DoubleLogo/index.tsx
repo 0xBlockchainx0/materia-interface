@@ -8,6 +8,7 @@ const Wrapper = styled.div<{ margin: boolean; sizeraw: number }>`
   display: flex;
   flex-direction: row;
   margin-right: ${({ sizeraw, margin }) => margin && (sizeraw / 3 + 8).toString() + 'px'};
+  &.liquidity-mining-double-token { display: grid; grid-template-columns: 36px 36px; float: right; }
 `
 
 interface DoubleCurrencyLogoProps {
@@ -15,7 +16,8 @@ interface DoubleCurrencyLogoProps {
   margin?: boolean
   size?: number
   currency0?: Currency
-  currency1?: Currency
+  currency1?: Currency,
+  cssClassName?: string
 }
 
 const HigherLogo = styled(CurrencyLogo)`
@@ -31,10 +33,11 @@ export default function DoubleCurrencyLogo({
   currency1,
   size = 16,
   margin = false,
-  radius = false
+  radius = false,
+  cssClassName = ''
 }: DoubleCurrencyLogoProps) {
   return (
-    <Wrapper sizeraw={size} margin={margin}>
+    <Wrapper sizeraw={size} margin={margin} className={cssClassName}>
       {currency0 && <HigherLogo radius={radius} currency={currency0} size={size.toString() + 'px'} />}
       {currency1 && <CoveredLogo radius={radius} currency={currency1} size={size.toString() + 'px'} sizeraw={size} />}
     </Wrapper>

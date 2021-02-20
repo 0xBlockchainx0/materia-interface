@@ -1,11 +1,16 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useContext } from 'react'
 import useIsArgentWallet from '../../hooks/useIsArgentWallet'
 import useTransactionDeadline from '../../hooks/useTransactionDeadline'
 import Modal from '../Modal'
+import { X } from 'react-feather'
+import styled, { ThemeContext } from 'styled-components'
 import { AutoColumn } from '../Column'
-import styled from 'styled-components'
-import { RowBetween } from '../Row'
-import { TYPE, CloseIcon } from '../../theme'
+import { 
+  TYPE, 
+  SimpleModalContentWrapper,
+  IconButton,
+  DynamicGrid
+} from '../../theme'
 import { ButtonMateriaConfirmed, ButtonMateriaError } from '../Button'
 import ProgressCircles from '../ProgressSteps'
 import CurrencyInputPanel from '../CurrencyInputPanel'
@@ -192,74 +197,73 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
       })
   }
 
+  const theme = useContext(ThemeContext)
+
   return (
     <Modal isOpen={isOpen} onDismiss={wrappedOnDismiss} maxHeight={90}>
-      {!attempting && !hash && (
-        <ContentWrapper gap="lg">
-          <RowBetween>
-            <TYPE.mediumHeader>Deposit</TYPE.mediumHeader>
-            <CloseIcon onClick={wrappedOnDismiss} />
-          </RowBetween>
-          <CurrencyInputPanel
-            value={typedValue}
-            onUserInput={onUserInput}
-            onMax={handleMax}
-            showMaxButton={!atMaxAmount}
-            currency={stakingInfo.stakedAmount.token}
-            pair={dummyPair}
-            label={''}
-            disableCurrencySelect={true}
-            customBalanceText={'Available to deposit: '}
-            id="stake-liquidity-token"
-          />
-
-          <HypotheticalRewardRate dim={!hypotheticalRewardRate.greaterThan('0')}>
-            <div>
-              <TYPE.black fontWeight={600}>Weekly Rewards</TYPE.black>
-            </div>
-
-            <TYPE.black>
-              {hypotheticalRewardRate.multiply((60 * 60 * 24).toString()).toSignificant(4)}{' '}
-              GIL / day
-            </TYPE.black>
-          </HypotheticalRewardRate>
-
-          <RowBetween>
-            <ButtonMateriaConfirmed
-              mr="0.5rem"
-              onClick={onAttemptToApprove}
-              confirmed={approval === ApprovalState.APPROVED || signatureData !== null}
-              disabled={approval !== ApprovalState.NOT_APPROVED || signatureData !== null}
-            >
-              Approve
-            </ButtonMateriaConfirmed>
-            <ButtonMateriaError
-              disabled={!!error || (signatureData === null && approval !== ApprovalState.APPROVED)}
-              error={!!error && !!parsedAmount}
-              onClick={onStake}
-            >
-              {error ?? 'Deposit'}
-            </ButtonMateriaError>
-          </RowBetween>
-          <ProgressCircles steps={[approval === ApprovalState.APPROVED || signatureData !== null]} disabled={true} />
-        </ContentWrapper>
-      )}
-      {attempting && !hash && (
-        <LoadingView onDismiss={wrappedOnDismiss}>
-          <AutoColumn gap="12px" justify={'center'}>
-            <TYPE.largeHeader>Depositing Liquidity</TYPE.largeHeader>
-            <TYPE.body fontSize={20}>{parsedAmount?.toSignificant(4)} MP</TYPE.body>
-          </AutoColumn>
-        </LoadingView>
-      )}
-      {attempting && hash && (
-        <SubmittedView onDismiss={wrappedOnDismiss} hash={hash}>
-          <AutoColumn gap="12px" justify={'center'}>
-            <TYPE.largeHeader>Transaction Submitted</TYPE.largeHeader>
-            <TYPE.body fontSize={20}>Deposited {parsedAmount?.toSignificant(4)} MP</TYPE.body>
-          </AutoColumn>
-        </SubmittedView>
-      )}
+      <SimpleModalContentWrapper>
+        {!attempting && !hash && (
+          <>
+          <h6>Deposit</h6>
+          <IconButton className={ `modal-close-icon ${theme.name}` } onClick={wrappedOnDismiss}>
+            <X/>
+          </IconButton>     
+            <CurrencyInputPanel
+              value={typedValue}
+              onUserInput={onUserInput}
+              onMax={handleMax}
+              showMaxButton={!atMaxAmount}
+              currency={stakingInfo.stakedAmount.token}
+              pair={dummyPair}
+              label={''}
+              disableCurrencySelect={true}
+              customBalanceText={'Available to deposit: '}
+              id="stake-liquidity-token"
+              fatherPage="stake-liquidity-token"
+            />
+            <DynamicGrid className={theme.name} columns={2}>
+              <div className="text-left text">
+                <div className="mb20">Weekly Rewards</div>
+                <ButtonMateriaConfirmed
+                  className={theme.name}
+                  onClick={onAttemptToApprove}
+                  confirmed={approval === ApprovalState.APPROVED || signatureData !== null}
+                  disabled={approval !== ApprovalState.NOT_APPROVED || signatureData !== null}
+                >
+                  Approve
+                </ButtonMateriaConfirmed>
+              </div>
+              <div className="text-right text">
+                <div className="mb20">{hypotheticalRewardRate.multiply((60 * 60 * 24).toString()).toSignificant(4)}{' '}GIL / day</div>
+                <ButtonMateriaError
+                  className={theme.name}
+                  disabled={!!error || (signatureData === null && approval !== ApprovalState.APPROVED)}
+                  error={!!error && !!parsedAmount}
+                  onClick={onStake}
+                >
+                  {error ?? 'Deposit'}
+                </ButtonMateriaError>
+              </div>
+            </DynamicGrid>
+          </>
+        )}
+        {attempting && !hash && (
+          <LoadingView onDismiss={wrappedOnDismiss}>
+            <AutoColumn gap="12px" justify={'center'}>
+              <TYPE.largeHeader>Depositing Liquidity</TYPE.largeHeader>
+              <TYPE.body fontSize={20}>{parsedAmount?.toSignificant(4)} MP</TYPE.body>
+            </AutoColumn>
+          </LoadingView>
+        )}
+        {attempting && hash && (
+          <SubmittedView onDismiss={wrappedOnDismiss} hash={hash}>
+            <AutoColumn gap="12px" justify={'center'}>
+              <TYPE.largeHeader>Transaction Submitted</TYPE.largeHeader>
+              <TYPE.body fontSize={20}>Deposited {parsedAmount?.toSignificant(4)} MP</TYPE.body>
+            </AutoColumn>
+          </SubmittedView>
+        )}
+      </SimpleModalContentWrapper>
     </Modal>
   )
 }

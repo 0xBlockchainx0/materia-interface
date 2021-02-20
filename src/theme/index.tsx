@@ -471,6 +471,7 @@ PADDING STYLE
 
 .pt0    { padding-top: 0px !important; }
 .pt5    { padding-top: 5px !important; }
+.pt7    { padding-top: 7px !important; }
 .pt10   { padding-top: 10px !important; }
 .pt15   { padding-top: 15px !important; }
 .pt20   { padding-top: 20px !important; }
@@ -777,7 +778,7 @@ MARGIN STYLE MINUS
   .pull-left { float: left; }
   .center-block { margin: 0px auto !important; }
   .text-centered { text-align: center !important; }
-  .font25 { font-size: 25px; }
+  .font25 { font-size: 25px !important; }
   .error { color: ${({ theme }) => theme.red2 }; }
   .display-contents { display: contents; }
 
@@ -1107,6 +1108,7 @@ export const SimpleTextParagraph = styled.p`
   & span.row span.column img { display: inline-block !important; vertical-align: middle; }
 
   & img.ethereumLogo, & img.tokenLogo { margin-top: 0px; }
+  &.dark.extreme, &.light.extreme { font-size: 25px; }
 `
 export const SimpleInformationsTextParagraph = styled(SimpleTextParagraph)`
   &.dark { color: ${({ theme }) => theme.azure1}; }
@@ -1124,6 +1126,7 @@ export const EvidencedTextParagraph = styled(SimpleTextParagraph)`
     font-size: 11px; 
     line-height: 2em;
   }
+  &.dark.extreme, &.light.extreme { font-size: 25px; }
 `
 const BaseButton = styled(Button)<{ width?: string, borderRadius?: string, selected?: boolean }>`
   padding: 0px !important;
@@ -1187,9 +1190,12 @@ export const PageGridContainer = styled.div`
 
   &.swap {}
   &.pool {}
+  &.liquidity-mining {}
 
   &.pool > .left-column { padding: 0 1rem 1rem 1rem; }
   &.pool > .left-column.classic { padding: 0 1rem 1rem 0; }
+  &.liquidity-mining > .left-column { padding: 0 1rem 1rem 1rem; }
+  &.liquidity-mining > .left-column.classic { padding: 0 1rem 1rem 0; }
 `
 export const PageItemsContainer = styled.div`
   &.dark {}
@@ -1270,9 +1276,9 @@ export const DynamicGrid = styled.div<{ columns: number, columnsDefinitions?: Dy
 
   & .title { font-size: 18px; font-weight: 500; }
 
-  &.dark .title { color: ${({ theme }) => theme.white}; }
-  &.light .title { color: ${({ theme }) => theme.grey1}; }
-  &.classic .title { font-size: 13px; text-shadow: 1px 1px 1px ${({ theme }) => theme.black}; line-height: 1.5em; }
+  &.dark .title, &.dark .text { color: ${({ theme }) => theme.white}; }
+  &.light .title, &.light .text { color: ${({ theme }) => theme.grey1}; }
+  &.classic .title, &.classic .text { font-size: 13px; text-shadow: 1px 1px 1px ${({ theme }) => theme.black}; line-height: 1.5em; }
 `
 const tabLinkItemActiveClassName = 'active'
 export const TabLinkItem = styled(NavLink).attrs({ tabLinkItemActiveClassName })`
@@ -1362,6 +1368,8 @@ export const CurrencyFormPanel = styled.div<{ hideInput?: boolean }>`
   position: relative;
   z-index: 1;
 
+  &.remove-liquidity { margin: 0 auto -7% auto; }
+
   & > .itemsContainer { border-radius: ${({ hideInput }) => (hideInput ? '8px' : '20px')}; }
 
   & > .itemsContainer .labelRow {
@@ -1374,10 +1382,18 @@ export const CurrencyFormPanel = styled.div<{ hideInput?: boolean }>`
     padding: 0rem 1rem 0 1rem;    
   }
 
+  & > .itemsContainer .labelRow.stake-liquidity-token { padding: 0rem; }
+  & > .itemsContainer .labelRow.stake-liquidity-token + div { padding: 0.75rem 0rem 0.75rem 0rem; }
+
+  & > .itemsContainer .labelRow.stake-liquidity-token + div > input + button { margin-right: 10px; }
+
   & > .itemsContainer .labelRow span:hover { cursor: pointer; }
 
   & > .itemsContainer .label { font-weight: 500; font-size: 14px; display: inline; }
   & > .itemsContainer .label.link { cursor: pointer; }
+
+  & > .itemsContainer .label.stake-liquidity-token { display: none; }
+  & > .itemsContainer .label.link.stake-liquidity-token { display: block; }
 
   &.dark > .itemsContainer .label { color: ${({ theme }) => theme.azure1}; }
   &.light > .itemsContainer .label { color: ${({ theme }) => theme.violet1}; }
@@ -1779,7 +1795,7 @@ export const OperationButton = styled(Button)<{label?: string, disabled?: boolea
   &.classic:hover:after { color: ${({ theme }) => theme.azure2}; }
   &.classic:hover:before, &.classic:focus:before { display: block; }
 
-  &.add-a-send-button { position: absolute; top: 120px; left: 70px; }  
+  &.add-a-send-button { position: absolute; top: 330px; left: 70px; }  
   &.connect-wallet-button { margin-left: -170px; }
   &.wrap-button { margin-left: -190px; }
 `
@@ -1856,7 +1872,7 @@ export const TradePriceContainer = styled.div`
 `
 export const AddRecipientPanel = styled.div`
   position: absolute;
-  top: 120px;
+  top: 330px;
   left: 70px;
 `
 export const InputPanel = styled.div`
@@ -2489,6 +2505,9 @@ export const ModalContentWrapper = styled.div`
 
   & img.claimedIcon { max-width: 100px; margin-top: 25px; }
 `
+export const SimpleModalContentWrapper = styled.div`
+  width: 100%;
+`
 export const EmptyProposals = styled.div`
   display: flex;
   flex-direction: column;
@@ -2889,4 +2908,32 @@ export const SwapCallbackErrorContainer = styled.div`
   margin-bottom: 20px;
 
   & > div > svg { stroke: ${({ theme }) => theme.red1}; width: 20px; height: 20px; }  
+`
+export const CountdownContainer= styled.div`
+  font-size: 18px;
+  font-weight: 500;
+
+  &.dark { color: ${({ theme }) => theme.white}; }
+  &.light { color: ${({ theme }) => theme.grey1}; }
+  &.classic { font-size: 13px; text-shadow: 1px 1px 1px ${({ theme }) => theme.black}; line-height: 1.5em; }
+`
+export const PoolSection = styled.div`
+  display: grid;
+  grid-template-columns: 1fr;
+  column-gap: 10px;
+  row-gap: 15px;
+  width: 100%;
+  justify-self: center;
+`
+export const Divider = styled.hr`
+  float: none;
+  clear: both;
+  height: 1px;
+  margin: 20px 0px 20px 0px;
+  border: none;
+  border-bottom: solid 1px;
+
+  &.dark { border-color: ${({ theme }) => theme.azure1}; }
+  &.light { border-color: ${({ theme }) => theme.violet1}; }
+  &.classic { border-color: ${({ theme }) => theme.white}; }
 `

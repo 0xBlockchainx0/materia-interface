@@ -1,6 +1,7 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState, useContext } from 'react'
 import { STAKING_GENESIS, REWARDS_DURATION_DAYS } from '../../state/stake/hooks'
-import { TYPE } from '../../theme'
+import { ThemeContext } from 'styled-components'
+import { CountdownContainer } from '../../theme'
 
 const MINUTE = 60
 const HOUR = MINUTE * 60
@@ -45,6 +46,8 @@ export function Countdown({ exactEnd }: { exactEnd?: Date }) {
     }
   }
 
+  const theme = useContext(ThemeContext)
+
   const days = (timeRemaining - (timeRemaining % DAY)) / DAY
   timeRemaining -= days * DAY
   const hours = (timeRemaining - (timeRemaining % HOUR)) / HOUR
@@ -54,15 +57,15 @@ export function Countdown({ exactEnd }: { exactEnd?: Date }) {
   const seconds = timeRemaining
 
   return (
-    <TYPE.black fontWeight={400}>
+    <CountdownContainer className={theme.name}>
       {message}{' '}
       {Number.isFinite(timeRemaining) && (
-        <code>
+        <span>
           {`${days}:${hours.toString().padStart(2, '0')}:${minutes
             .toString()
             .padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`}
-        </code>
+        </span>
       )}
-    </TYPE.black>
+    </CountdownContainer>
   )
 }

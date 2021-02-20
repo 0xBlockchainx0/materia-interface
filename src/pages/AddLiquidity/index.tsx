@@ -571,7 +571,6 @@ export default function AddLiquidity({
                   <br /><br />
                   Liquidity providers earn a dynamic fee (default 0.30%) on all trades proportional to their share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity.
                 </SimpleTextParagraph>
-                {/* <CardBGImage /> <CardNoise /> */}
               </div>
               <SecondaryPanelBoxContainerExtraDecorator className={`bottom ${theme.name}`} />
             </SecondaryPanelBoxContainer>

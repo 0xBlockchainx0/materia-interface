@@ -1,72 +1,32 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { AutoColumn } from '../Column'
 import { RowBetween } from '../Row'
-import styled from 'styled-components'
-import { TYPE, StyledInternalButtonLink } from '../../theme'
+import styled, { ThemeContext } from 'styled-components'
+import { 
+  SecondaryPanelBoxContainer,
+  SecondaryPanelBoxContainerExtraDecorator,
+  Divider,
+  ActionButton,
+  TYPE, 
+  StyledInternalButtonLink,
+  DynamicGrid
+} from '../../theme'
 import DoubleCurrencyLogo from '../DoubleLogo'
 import { JSBI, TokenAmount } from '@materia-dex/sdk'
 import { ButtonMateriaPrimary } from '../Button'
 import { StakingInfo } from '../../state/stake/hooks'
 import { useColor } from '../../hooks/useColor'
 import { currencyId } from '../../utils/currencyId'
-import { Break, CardNoise, CardBGImage } from './styled'
+import { Break } from './styled'
 import { unwrappedToken } from '../../utils/wrappedCurrency'
 import { useTotalSupply } from '../../data/TotalSupply'
 import { usePair } from '../../data/Reserves'
 import { useActiveWeb3React } from '../../hooks'
 import { WUSD } from '../../constants'
 
-const StatContainer = styled.div`
-  display: flex;
-  justify-content: space-between;
-  flex-direction: column;
-  gap: 12px;
-  margin-bottom: 1rem;
-  margin-right: 1rem;
-  margin-left: 1rem;
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-  display: none;
-`};
-`
-
-const Wrapper = styled(AutoColumn) <{ showBackground: boolean; bgColor: any }>`
-  width: 100%;
-  overflow: hidden;
-  position: relative;
-  opacity: ${({ showBackground }) => (showBackground ? '1' : '1')};
-  color: ${({ theme, showBackground }) => (showBackground ? theme.white : theme.text1)} !important;
-  background-color: ${({ theme }) => theme.primary4};
-
-  ${({ showBackground }) =>
-    showBackground &&
-    `  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
-    0px 24px 32px rgba(0, 0, 0, 0.01);`}
-`
-
-const TopSection = styled.div`
-  display: grid;
-  grid-template-columns: 48px 1fr 120px;
-  grid-gap: 0px;
-  align-items: center;
-  padding: 1rem;
-  z-index: 1;
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    grid-template-columns: 48px 1fr 96px;
-  `};
-`
-
-const BottomSection = styled.div<{ showBackground: boolean }>`
-  padding: 12px 16px;
-  opacity: ${({ showBackground }) => (showBackground ? '1' : '0.4')};
-  border-radius: 0 0 12px 12px;
-  display: flex;
-  flex-direction: row;
-  align-items: baseline;
-  justify-content: space-between;
-  z-index: 1;
-`
-
 export default function PoolCard({ stakingInfo }: { stakingInfo: StakingInfo }) {
+  const theme = useContext(ThemeContext)
+
   const { chainId } = useActiveWeb3React()
 
   const token0 = stakingInfo.tokens[0]
@@ -104,59 +64,49 @@ export default function PoolCard({ stakingInfo }: { stakingInfo: StakingInfo }) 
   }
   
   return (
-    <Wrapper showBackground={isStaking} bgColor={backgroundColor}>
-      <CardBGImage desaturate />
-      <CardNoise />
-
-      <TopSection>
-        <DoubleCurrencyLogo currency0={currency0} currency1={currency1} size={24} radius={true} />
-        <TYPE.white fontWeight={600} fontSize={24} style={{ marginLeft: '8px' }}>
-          {currency0.symbol}-{currency1.symbol}
-        </TYPE.white>
-
-        <StyledInternalButtonLink to={`/lm/${currencyId(currency0)}/${currencyId(currency1)}`} style={{ width: '100%' }}>
-          <ButtonMateriaPrimary padding="8px" borderRadius="8px">
-            {isStaking ? 'Manage' : 'Deposit'}
-          </ButtonMateriaPrimary>
-        </StyledInternalButtonLink>
-      </TopSection>
-
-      <StatContainer>
-        <RowBetween>
-          <TYPE.white> Total deposited</TYPE.white>
-          <TYPE.white>
+    <SecondaryPanelBoxContainer className={`${theme.name}`}>
+      <SecondaryPanelBoxContainerExtraDecorator className={`top ${theme.name}`} />
+      <div className="inner-content p15">
+        <DynamicGrid className={theme.name} columns={2} columnsDefinitions={[{value: 25, location: 2}]}>
+          <div className="text-left">
+            <DynamicGrid className={theme.name} columns={2} columnsDefinitions={[{value: 90, location: 2}]}>
+              <DoubleCurrencyLogo currency0={currency0} currency1={currency1} size={24} radius={true} />
+              <div className="title ml10">{currency0.symbol}-{currency1.symbol}</div>
+            </DynamicGrid>             
+          </div>
+          <div className="text-right">
+            <StyledInternalButtonLink to={`/lm/${currencyId(currency0)}/${currencyId(currency1)}`}>
+              <ActionButton className={theme.name}> {isStaking ? 'Manage' : 'Deposit'} </ActionButton>
+            </StyledInternalButtonLink>
+          </div>
+        </DynamicGrid>
+        <DynamicGrid className={`mt20 ${theme.name}`} columns={2}>
+          <div className="text-left">Total deposited</div>
+          <div className="text-right">
             {/* {valueOfTotalStakedAmountInUSDC
               ? `$${valueOfTotalStakedAmountInUSDC.toFixed(0)}`
               : `${valueOfTotalStakedAmountInUSD?.toSignificant(4) ?? '-'} ETH`} */}
             {`${valueOfTotalStakedAmountInUSD?.toSignificant(4) ?? '-'} WUSD`}
-          </TYPE.white>
-        </RowBetween>
-        <RowBetween>
-          <TYPE.white> Pool rate </TYPE.white>
-          <TYPE.white>
-            {`${stakingInfo.totalRewardRate
-            ?.multiply(`${60 * 60 * 24}`)
-            ?.toFixed(0)} GIL / day`}
-          </TYPE.white>
-        </RowBetween>
-      </StatContainer>
-
-      {isStaking && (
-        <>
-          <Break />
-          <BottomSection showBackground={true}>
-            <TYPE.black color={'white'} fontWeight={500}>
-              <span>Your rate</span>
-            </TYPE.black>
-
-            <TYPE.black style={{ textAlign: 'right' }} color={'white'} fontWeight={500}>
-              {`${stakingInfo.rewardRate
-                ?.multiply(`${60 * 60 * 24}`)
-                ?.toSignificant(4)} GIL / day`}
-            </TYPE.black>
-          </BottomSection>
-        </>
-      )}
-    </Wrapper>
+          </div>
+        </DynamicGrid>
+        <DynamicGrid className={`mt20 ${theme.name}`} columns={2}>
+          <div className="text-left">Pool rate</div>
+          <div className="text-right">
+            {`${stakingInfo.totalRewardRate ?.multiply(`${60 * 60 * 24}`) ?.toFixed(0)} GIL / day`} 
+          </div>
+        </DynamicGrid>
+          {isStaking && (
+            <>
+              <Divider className={theme.name}/>
+              <DynamicGrid className={`${theme.name}`} columns={2}>
+                <div className="text-left">Your rate</div>
+                <div className="text-right">{`${stakingInfo.rewardRate ?.multiply(`${60 * 60 * 24}`) ?.toSignificant(4)} GIL / day`}</div>
+              </DynamicGrid>
+            </>
+          )}
+      </div>
+      <SecondaryPanelBoxContainerExtraDecorator className={`bottom ${theme.name}`} />
+    </SecondaryPanelBoxContainer>
+    
   )
 }

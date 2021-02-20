@@ -1,6 +1,6 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useState, useContext } from 'react'
 import { AutoColumn, FittedAutoColumn } from '../../components/Column'
-import styled from 'styled-components'
+import styled, { ThemeContext } from 'styled-components'
 import { Link } from 'react-router-dom'
 
 import { JSBI, TokenAmount } from '@materia-dex/sdk'
@@ -8,7 +8,21 @@ import { RouteComponentProps } from 'react-router-dom'
 import DoubleCurrencyLogo from '../../components/DoubleLogo'
 import { useCurrency } from '../../hooks/Tokens'
 import { useWalletModalToggle } from '../../state/application/hooks'
-import { TYPE, ExternalLink } from '../../theme'
+import { 
+  TYPE, 
+  PageGridContainer,
+  SecondaryPanelBoxContainer,
+  SecondaryPanelBoxContainerExtraDecorator,
+  SimpleTextParagraph,
+  ActionButton,
+  SectionTitle,
+  PageItemsContainer,
+  TabsBar,
+  PageContentContainer,
+  DynamicGrid,
+  ExternalLink,
+  PoolSection
+} from '../../theme'
 import { RowBetween } from '../../components/Row'
 import { CardSection, DataCard, CardNoise, CardBGImage } from '../../components/earn/styled'
 import { ButtonEmpty, ButtonMateriaPrimary } from '../../components/Button'
@@ -86,44 +100,15 @@ const DataRow = styled(RowBetween)`
   `};
 `
 
-const LMGridContainer = styled.div`
-  display: grid;
-  grid-template-columns: 30px 30% auto;
-
-  @media (min-width: 601px) and (max-width: 1350px) {
-    grid-template-columns: 30px 30% auto !important;
-  }
-  @media (max-width: 600px) {
-    grid-template-columns: auto !important;
-  }
-`
-
-const InfoContainer = styled.div`
-  padding: 1rem;
-  font-size: smaller;
-  ${({ theme }) => theme.backgroundContainer}
-`
-
 const PoolsContainer = styled.div`
   padding: 1rem 0.5rem 1rem 0.5rem;
   ${({ theme }) => theme.backgroundContainer}
 `
 
-const EarnCard = styled(DataCard)`
-  background: rgba(0, 27, 49, 0.5) !important;
-  border-radius: 0px !important;
-  overflow: hidden;
-`
 
 
-const PoolSection = styled.div`
-  display: grid;
-  grid-template-columns: 1fr;
-  column-gap: 10px;
-  row-gap: 15px;
-  width: 100%;
-  justify-self: center;
-`
+
+
 
 
 const ItemColumn = styled.div`
@@ -140,6 +125,8 @@ export default function Manage({
     params: { currencyIdA, currencyIdB }
   }
 }: RouteComponentProps<{ currencyIdA: string; currencyIdB: string }>) {
+  const theme = useContext(ThemeContext)
+
   const { account, chainId } = useActiveWeb3React()
 
   // get currencies and pair
@@ -204,211 +191,147 @@ export default function Manage({
   return (
     <>
       <AppBody>
-        <LMGridContainer>
-          <ItemColumn></ItemColumn>
-          <InfoContainer>
-            <EarnCard>
-              <CardSection>
-                <FittedAutoColumn gap="md" minHeight={'580px'}>
-                  <RowBetween>
-                    <TYPE.white fontWeight={600}>Materia liquidity mining</TYPE.white>
-                  </RowBetween>
-                  <RowBetween>
-                    <TYPE.white fontSize={14}>
-                      Deposit your Liquidity Provider tokens to receive GIL, the Materia DFO protocol governance token.
-              </TYPE.white>
-                  </RowBetween>{' '}
-                  <ExternalLink
-                    style={{ color: 'white', textDecoration: 'underline' }}
-                    href="https://www.dfohub.com/"
-                    target="_blank"
-                  >
-                    <TYPE.white fontSize={14}>Read more about DFO</TYPE.white>
-                  </ExternalLink>
-                </FittedAutoColumn>
-              </CardSection>
-              <CardBGImage />
-              <CardNoise />
-            </EarnCard>
-          </InfoContainer>
-          <PoolsContainer>
-            <PoolSection>
-              <PageWrapper gap="lg" justify="center">
-                <RowBetween style={{ gap: '24px' }}>
-                  <TYPE.mediumHeader style={{ margin: 0 }}>
-                    {currencyA?.symbol}-{currencyB?.symbol} Liquidity Mining
-                  </TYPE.mediumHeader>
-                  <DoubleCurrencyLogo currency0={currencyA ?? undefined} currency1={currencyB ?? undefined} size={24} radius={true} />
-                </RowBetween>
-
-                <DataRow style={{ gap: '24px' }}>
-                  <PoolData>
-                    <AutoColumn gap="sm">
-                      <TYPE.body style={{ margin: 0 }}>Total deposits</TYPE.body>
-                      <TYPE.body fontSize={24} fontWeight={500}>
+        <PageGridContainer className="liquidity-mining">
+          <div className={`left-column ${theme.name}`}>
+            <SecondaryPanelBoxContainer className={`${theme.name}`}>
+              <SecondaryPanelBoxContainerExtraDecorator className={`top ${theme.name}`} />
+              <div className="inner-content">
+                <SimpleTextParagraph className={`p15 mt0 mb0 ${theme.name}`}>
+                  <strong>Materia liquidity mining</strong>
+                  <br /><br />
+                  Deposit your Liquidity Provider tokens to receive GIL, the Materia DFO protocol governance token.
+                  <br /><br />
+                  <ExternalLink href="https://www.dfohub.com/" target="_blank">Read more about DFO</ExternalLink>
+                </SimpleTextParagraph>
+              </div>
+              <SecondaryPanelBoxContainerExtraDecorator className={`bottom ${theme.name}`} />
+            </SecondaryPanelBoxContainer>
+          </div>
+          <PageItemsContainer className={theme.name}>
+            <TabsBar className={theme.name}>
+              <DynamicGrid className={theme.name} columns={2}>
+                <div className={ `text-left title ${theme.name}` }>{currencyA?.symbol}-{currencyB?.symbol} Liquidity Mining</div>
+                <div className="text-right">
+                  <DoubleCurrencyLogo currency0={currencyA ?? undefined} currency1={currencyB ?? undefined} size={24} radius={true} cssClassName="liquidity-mining-double-token"/>
+                </div>
+              </DynamicGrid>
+            </TabsBar>
+            <div className="clear-fix">
+              <PageContentContainer className={ `one ${theme.name}` }>
+                <PoolSection>
+                  <DynamicGrid className={theme.name} columns={2}>
+                    <div className="text-left">
+                      <SectionTitle className={theme.name}>Total deposits</SectionTitle>
+                      <SimpleTextParagraph className={ `extreme ${theme.name}` }>
                         {/* {valueOfTotalStakedAmountInUSDC
                           ? `$${valueOfTotalStakedAmountInUSDC.toFixed(0)}`
                           : `${valueOfTotalStakedAmountInUSD?.toSignificant(4) ?? '-'} ETH`} */}
                         {`${valueOfTotalStakedAmountInUSD?.toSignificant(4) ?? '-'} WUSD`}
-                      </TYPE.body>
-                    </AutoColumn>
-                  </PoolData>
-                  <PoolData>
-                    <AutoColumn gap="sm">
-                      <TYPE.body style={{ margin: 0 }}>Pool Rate</TYPE.body>
-                      <TYPE.body fontSize={24} fontWeight={500}>
-                        {stakingInfo?.totalRewardRate
-                          ?.multiply((60 * 60 * 24).toString())
-                          ?.toFixed(0) ?? '-'}
-                        {' GIL / day'}
-                      </TYPE.body>
-                    </AutoColumn>
-                  </PoolData>
-                </DataRow>
-
-                {showAddLiquidityButton && (
-                  <VoteCard>
-                    <CardBGImage />
-                    <CardNoise />
-                    <CardSection>
-                      <AutoColumn gap="md">
-                        <RowBetween>
-                          <TYPE.white fontWeight={600}>Step 1. Get Liquidity tokens</TYPE.white>
-                        </RowBetween>
-                        <RowBetween style={{ marginBottom: '1rem' }}>
-                          <TYPE.white fontSize={14}>
-                            {`MP tokens are required. Once you've added liquidity to the ${currencyA?.symbol}-${currencyB?.symbol} pool you can stake your liquidity tokens on this page.`}
-                          </TYPE.white>
-                        </RowBetween>
-                        <ButtonMateriaPrimary
-                          padding="8px"
-                          borderRadius="8px"
-                          width={'fit-content'}
-                          as={Link}
-                          to={`/add/${currencyA && currencyId(currencyA)}/${currencyB && currencyId(currencyB)}`}
-                        >
+                      </SimpleTextParagraph>
+                    </div>
+                    <div className="text-left">
+                      <SectionTitle className={theme.name}>Pool Rate</SectionTitle>
+                      <SimpleTextParagraph className={ `extreme ${theme.name}` }>
+                        {stakingInfo?.totalRewardRate ?.multiply((60 * 60 * 24).toString()) ?.toFixed(0) ?? '-'} {' GIL / day'}
+                      </SimpleTextParagraph>
+                    </div>
+                  </DynamicGrid>
+                  <>
+                    
+                    {showAddLiquidityButton && (
+                      <SimpleTextParagraph className={ `mt0 ${theme.name}` }>
+                        <strong>Step 1. Get Liquidity tokens</strong>
+                        <br/><br/>
+                        {`MP tokens are required. Once you've added liquidity to the ${currencyA?.symbol}-${currencyB?.symbol} pool you can stake your liquidity tokens on this page.`}                
+                        <br/><br/>
+                        <ButtonMateriaPrimary className={theme.name} as={Link} width={'fit-content'}
+                          to={`/add/${currencyA && currencyId(currencyA)}/${currencyB && currencyId(currencyB)}`}>
                           {`Add ${currencyA?.symbol}-${currencyB?.symbol} liquidity`}
                         </ButtonMateriaPrimary>
-                      </AutoColumn>
-                    </CardSection>
-                    <CardBGImage />
-                    <CardNoise />
-                  </VoteCard>
-                )}
+                      </SimpleTextParagraph>
+                    )}
 
-                {stakingInfo && (
-                  <>
-                    <StakingModal
-                      isOpen={showStakingModal}
-                      onDismiss={() => setShowStakingModal(false)}
-                      stakingInfo={stakingInfo}
-                      userLiquidityUnstaked={userLiquidityUnstaked}
-                    />
-                    <UnstakingModal
-                      isOpen={showUnstakingModal}
-                      onDismiss={() => setShowUnstakingModal(false)}
-                      stakingInfo={stakingInfo}
-                    />
-                    <ClaimRewardModal
-                      isOpen={showClaimRewardModal}
-                      onDismiss={() => setShowClaimRewardModal(false)}
-                      stakingInfo={stakingInfo}
-                    />
-                  </>
-                )}
+                    {stakingInfo && (
+                      <>
+                        <StakingModal
+                          isOpen={showStakingModal}
+                          onDismiss={() => setShowStakingModal(false)}
+                          stakingInfo={stakingInfo}
+                          userLiquidityUnstaked={userLiquidityUnstaked}
+                        />
+                        <UnstakingModal
+                          isOpen={showUnstakingModal}
+                          onDismiss={() => setShowUnstakingModal(false)}
+                          stakingInfo={stakingInfo}
+                        />
+                        <ClaimRewardModal
+                          isOpen={showClaimRewardModal}
+                          onDismiss={() => setShowClaimRewardModal(false)}
+                          stakingInfo={stakingInfo}
+                        />
+                      </>
+                    )}
 
-                <PositionInfo gap="lg" justify="center" dim={showAddLiquidityButton}>
-                  <BottomSection gap="lg" justify="center">
-                    <StyledDataCard disabled={disableTop} bgColor={backgroundColor} showBackground={!showAddLiquidityButton}>
-                      <CardSection>
-                        <CardBGImage desaturate />
-                        <CardNoise />
-                        <AutoColumn gap="md">
-                          <RowBetween>
-                            <TYPE.white fontWeight={600}>Your liquidity deposits</TYPE.white>
-                          </RowBetween>
-                          <RowBetween style={{ alignItems: 'baseline' }}>
-                            <TYPE.white fontSize={36} fontWeight={600}>
-                              {stakingInfo?.stakedAmount?.toSignificant(6) ?? '-'}
-                            </TYPE.white>
-                            <TYPE.white>
-                              MP {currencyA?.symbol}-{currencyB?.symbol}
-                            </TYPE.white>
-                          </RowBetween>
-                        </AutoColumn>
-                      </CardSection>
-                    </StyledDataCard>
-                    <StyledBottomCard dim={stakingInfo?.stakedAmount?.equalTo(JSBI.BigInt(0))}>
-                      <CardBGImage desaturate />
-                      <CardNoise />
-                      <AutoColumn gap="sm">
-                        <RowBetween>
-                          <div>
-                            <TYPE.black>Your unclaimed GIL</TYPE.black>
-                          </div>
+                    <SectionTitle className={theme.name}>Your liquidity deposits</SectionTitle>
+                    <DynamicGrid className={`${theme.name}`} columns={2}>
+                      <div className={`text text-left font25 ${theme.name}`}>{stakingInfo?.stakedAmount?.toSignificant(6) ?? '-'}</div>
+                      <div className={`text text-right font25 ${theme.name}`}>MP {currencyA?.symbol}-{currencyB?.symbol}</div>
+                    </DynamicGrid>
+                    <div className="clear-fix"></div>
+                    <SectionTitle className={`${theme.name}`}>Your unclaimed GIL</SectionTitle>
+                    <DynamicGrid className={`${theme.name}`} columns={2}>
+                      <div className={`text text-left font25 ${theme.name}`}>
+                        <CountUp
+                            key={countUpAmount}
+                            isCounting
+                            decimalPlaces={4}
+                            start={parseFloat(countUpAmountPrevious)}
+                            end={parseFloat(countUpAmount)}
+                            thousandsSeparator={','}
+                            duration={1}
+                        />
+                      </div>
+                      <div className="clear-fix pt7">
+                        <div className="pull-right ml10">
                           {stakingInfo?.earnedAmount && JSBI.notEqual(BIG_INT_ZERO, stakingInfo?.earnedAmount?.raw) && (
-                            <ButtonEmpty
-                              padding="8px"
-                              borderRadius="8px"
-                              width="fit-content"
-                              onClick={() => setShowClaimRewardModal(true)}
-                            >
-                              Claim
-                            </ButtonEmpty>
+                            <ActionButton width="fit-content" onClick={() => setShowClaimRewardModal(true)} className={theme.name}>Claim</ActionButton>
                           )}
-                        </RowBetween>
-                        <RowBetween>
-                          <TYPE.largeHeader fontSize={36} fontWeight={600}>
-                            <CountUp
-                              key={countUpAmount}
-                              isCounting
-                              decimalPlaces={4}
-                              start={parseFloat(countUpAmountPrevious)}
-                              end={parseFloat(countUpAmount)}
-                              thousandsSeparator={','}
-                              duration={1}
-                            />
-                          </TYPE.largeHeader>
-                          <TYPE.black fontSize={16} fontWeight={500} style={{ paddingLeft: '100px' }}>
-                            {stakingInfo?.rewardRate
-                              ?.multiply((60 * 60 * 24).toString())
-                              ?.toSignificant(4) ?? '-'}
-                            {' GIL / day'}
-                          </TYPE.black>
-                        </RowBetween>
-                      </AutoColumn>
-                    </StyledBottomCard>
-                  </BottomSection>
-                  <TYPE.main style={{ textAlign: 'center' }} fontSize={14}>
-                    When you withdraw, the contract will automagically claim GIL on your behalf!
-                   </TYPE.main>
-                  {!showAddLiquidityButton && (
-                    <DataRow style={{ marginBottom: '1rem' }}>
-                      <ButtonMateriaPrimary padding="8px" borderRadius="8px" onClick={handleDepositClick}>
-                        {stakingInfo?.stakedAmount?.greaterThan(JSBI.BigInt(0)) ? 'Deposit' : 'Deposit MP Tokens'}
-                      </ButtonMateriaPrimary>
-
-                      {stakingInfo?.stakedAmount?.greaterThan(JSBI.BigInt(0)) && (
-                        <>
-                          <ButtonMateriaPrimary
-                            padding="8px"
-                            borderRadius="8px"
-                            onClick={() => setShowUnstakingModal(true)}
-                          >
-                            Withdraw
+                        </div>
+                        <div className="pull-right">
+                          {stakingInfo?.rewardRate ?.multiply((60 * 60 * 24).toString()) ?.toSignificant(4) ?? '-'} {' GIL / day'}
+                        </div>
+                      </div>                      
+                    </DynamicGrid>
+                    <SimpleTextParagraph className={`text-centered ${theme.name}`}>
+                        When you withdraw, the contract will automagically claim GIL on your behalf!
+                    </SimpleTextParagraph>
+                    {!showAddLiquidityButton && (
+                      <DynamicGrid className={`${theme.name}`} columns={(stakingInfo?.stakedAmount?.greaterThan(JSBI.BigInt(0)) ? 2 : 1)}>
+                        <div className={`${(stakingInfo?.stakedAmount?.greaterThan(JSBI.BigInt(0)) ? 'text-left' : 'text-centered')}`}>
+                          <ButtonMateriaPrimary className={theme.name} width={'fit-content'} onClick={handleDepositClick}>
+                            {stakingInfo?.stakedAmount?.greaterThan(JSBI.BigInt(0)) ? 'Deposit' : 'Deposit MP Tokens'}
                           </ButtonMateriaPrimary>
-                        </>
-                      )}
-                    </DataRow>
-                  )}
-                  {!userLiquidityUnstaked ? null : userLiquidityUnstaked.equalTo('0') ? null : (
-                    <TYPE.main>{userLiquidityUnstaked.toSignificant(6)} MP tokens available</TYPE.main>
-                  )}
-                </PositionInfo>
-              </PageWrapper>
-            </PoolSection>
-          </PoolsContainer>
-        </LMGridContainer>
+                        </div>
+                          {stakingInfo?.stakedAmount?.greaterThan(JSBI.BigInt(0)) && (
+                            <div className="text-right">
+                              <ButtonMateriaPrimary className={theme.name} width={'fit-content'} onClick={() => setShowUnstakingModal(true)}>
+                                Withdraw
+                              </ButtonMateriaPrimary>
+                            </div>
+                          )}                      
+                      </DynamicGrid>
+                    )}
+                    {!userLiquidityUnstaked ? null : userLiquidityUnstaked.equalTo('0') ? null : (
+                      <SimpleTextParagraph className={`text-centered ${theme.name}`}>
+                         {userLiquidityUnstaked.toSignificant(6)} MP tokens available
+                      </SimpleTextParagraph>
+                    )}
+                  </>
+                </PoolSection>
+              </PageContentContainer>
+            </div>
+          </PageItemsContainer>
+        </PageGridContainer>
       </AppBody>
     </>
 
