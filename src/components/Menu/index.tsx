@@ -15,7 +15,7 @@ import {
 
 
 
-const CODE_LINK = 'https://github.com/Materia-dex/materia-interface'
+const CODE_LINK = 'https://github.com/materia-dex/materia-interface'
 
 export default function Menu() {
 

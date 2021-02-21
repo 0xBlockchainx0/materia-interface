@@ -32,15 +32,15 @@ export default function URLWarning() {
     <PhishAlert isActive={showURLWarning} className={theme.name}>
       <div style={{ display: 'flex' }}>
         <AlertTriangle style={{ marginRight: 6 }} size={12} /> Make sure the URL is
-        <code style={{ padding: '0 4px', display: 'inline', fontWeight: 'bold' }}>app.materiadex.com</code>
+        <code style={{ padding: '0 4px', display: 'inline', fontWeight: 'bold' }}>materia.exchange</code>
       </div>
       <StyledClose size={12} onClick={toggleURLWarning} />
     </PhishAlert>
-  ) : window.location.hostname === 'app.materiadex.com' ? (
+  ) : window.location.hostname === 'materia.exchange' ? (
     <PhishAlert isActive={showURLWarning} className={theme.name}>
       <div style={{ display: 'flex' }}>
         <AlertTriangle style={{ marginRight: 6 }} size={12} /> Always make sure the URL is
-        <code style={{ padding: '0 4px', display: 'inline', fontWeight: 'bold' }}>app.materiadex.com</code> - bookmark it
+        <code style={{ padding: '0 4px', display: 'inline', fontWeight: 'bold' }}>materia.exchange</code> - bookmark it
         to be safe.
       </div>
       <StyledClose size={12} onClick={toggleURLWarning} />
