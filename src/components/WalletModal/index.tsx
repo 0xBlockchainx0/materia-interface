@@ -250,7 +250,7 @@ export default function WalletModal({
       )
     }
     return (
-      <>
+      <div className="connect-wallet-modal">
         <IconButton className={ `modal-close-icon ${theme.name}` } onClick={toggleWalletModal}>
           <X />
         </IconButton>
@@ -297,7 +297,7 @@ export default function WalletModal({
             </ModalCaption>
           )}
         </div>
-      </>
+      </div>
     )
   }
 

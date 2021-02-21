@@ -33,6 +33,19 @@ const StyledAutoSizer = styled(AutoSizer)`
   @media (max-width: 1050px) { 
     height: 390px !important;
   }
+  @media (min-width: 375px) and (max-height: 812px) { 
+    height: 383px !important;
+  }
+  @media (min-width: 375px) and (max-height: 667px) { 
+    height: 280px !important;
+  }
+  @media (min-width: 414px) and (max-height: 736px) { 
+    height: 333px !important;
+  }
+  @media (max-width: 320px) { 
+    height: 180px !important;
+  }
+  
 `
 interface CurrencySearchProps {
   isOpen: boolean
