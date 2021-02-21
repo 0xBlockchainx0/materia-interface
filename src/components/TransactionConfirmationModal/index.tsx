@@ -118,7 +118,7 @@ export function ConfirmationModalContent({
   const theme = useContext(ThemeContext)
   return (
     <>
-    <div className="token-selection-content-container">
+    <div className="token-selection-content-container undragable">
       <h6>{title}</h6>
       <IconButton className={ `modal-close-icon confirmation-modal-close-icon ${theme.name}` } onClick={onDismiss}>
         <X/>

@@ -817,6 +817,14 @@ MARGIN STYLE MINUS
     }
     .add-token-list-container { padding: 0px 20px; }
     &.custom-token-added-by-user.classic button { margin-left: -8px; }
+    .undragable {
+      -webkit-user-drag: none;
+      -khtml-user-drag: none;
+      -moz-user-drag: none; 
+      -o-user-drag: none;
+      -webkit-app-region: no-drag;
+      user-drag: none;
+    }
   }
   
 `

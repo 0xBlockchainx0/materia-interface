@@ -57,7 +57,7 @@ export default function Modal({
             <ThemedDialogOverlay key={key} style={props} onDismiss={onDismiss} initialFocusRef={initialFocusRef} className={theme.name}>              
               <SecondaryPanelBoxContainer className={ `modal ${theme.name}` }>
                   <SecondaryPanelBoxContainerExtraDecorator className={ `top ${theme.name}` }/> 
-                  <div className="inner-content modal-inner-content">
+                  <div className="inner-content modal-inner-content undragable">
                     <ThemedDialogContent
                       {...(isMobile
                         ? {
