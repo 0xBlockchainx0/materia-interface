@@ -811,6 +811,15 @@ MARGIN STYLE MINUS
     &.classic, &.classic button { font-size: 9px !important; margin-top: 5px; }
   } 
 
+  .token-list-item-text {
+    font-weight: 400;
+    font-size: 16px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .token-list-item-text.classic { font-size: 11px; text-shadow: 1px 1px 1px ${({ theme }) => theme.black}; }
+  .token-list-item-text.selected { font-weight: 500; }
+
   @media (max-width: 1050px) { 
     .custom-recipient-data-container {
       padding: 0px  20px;
@@ -913,6 +922,7 @@ export const MainContainer = styled.div`
 
   &.light:before { background-image: url(${(images.decorators.grid.light)}); }
   &.light:after { background-image: url(${(images.decorators.grid.light)}); }
+  &.classic:after, &.classic:before { display: none; }
 `
 export const MainContainerExtraDecorator = styled.div`
   position: absolute;

@@ -173,17 +173,10 @@ const ListRow = memo(function ListRow({ listUrl, onBack }: { listUrl: string; on
       )}
       <Column style={{ flex: '1' }}>
         <Row>
-          <Text
-            fontWeight={isSelected ? 500 : 400}
-            fontSize={16}
-            style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}
-          >
-            {list.name}
-          </Text>
+          <div className={`token-list-item-text ${theme.name}`}>{list.name}</div>          
         </Row>
-        <Row style={{ marginTop: '4px' }}
-        >
-          <StyledListUrlText title={listUrl}>
+        <Row style={{ marginTop: '4px' }}>
+          <StyledListUrlText title={listUrl} className={`token-list-item-text ${theme.name}`}>
             <ListOrigin listUrl={listUrl} />
           </StyledListUrlText>
         </Row>

@@ -1,15 +1,12 @@
 import React, { useCallback, useState, useContext } from 'react'
-import { AutoColumn, FittedAutoColumn } from '../../components/Column'
-import styled, { ThemeContext } from 'styled-components'
+import { ThemeContext } from 'styled-components'
 import { Link } from 'react-router-dom'
-
 import { JSBI, TokenAmount } from '@materia-dex/sdk'
 import { RouteComponentProps } from 'react-router-dom'
 import DoubleCurrencyLogo from '../../components/DoubleLogo'
 import { useCurrency } from '../../hooks/Tokens'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import {
-  TYPE,
   PageGridContainer,
   SecondaryPanelBoxContainer,
   SecondaryPanelBoxContainerExtraDecorator,
@@ -23,9 +20,7 @@ import {
   ExternalLink,
   PoolSection
 } from '../../theme'
-import { RowBetween } from '../../components/Row'
-import { CardSection, DataCard, CardNoise, CardBGImage } from '../../components/earn/styled'
-import { ButtonEmpty, ButtonMateriaPrimary } from '../../components/Button'
+import { ButtonMateriaPrimary } from '../../components/Button'
 import StakingModal from '../../components/earn/StakingModal'
 import { useStakingInfo } from '../../state/stake/hooks'
 import UnstakingModal from '../../components/earn/UnstakingModal'
@@ -42,83 +37,6 @@ import { usePair } from '../../data/Reserves'
 import usePrevious from '../../hooks/usePrevious'
 import { BIG_INT_ZERO, WUSD } from '../../constants'
 import AppBody from '../AppBody'
-
-const PageWrapper = styled(AutoColumn)`
-  width: 100%;
-`
-
-const PositionInfo = styled(AutoColumn) <{ dim: any }>`
-  position: relative;
-  width: 100%;
-  opacity: ${({ dim }) => (dim ? 0.6 : 1)};
-`
-
-const BottomSection = styled(AutoColumn)`
-  border-radius: 12px;
-  width: 100%;
-  position: relative;
-`
-
-const StyledDataCard = styled(DataCard) <{ bgColor?: any; showBackground?: any }>`
-  z-index: 2;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-  background-color: #002852;
-  border-radius: 5px;
-  border: 1px solid ${({ theme }) => theme.border1};
-`
-
-const StyledBottomCard = styled(DataCard) <{ dim: any }>`
-  background-color: ${({ theme }) => theme.primary4};
-  border-radius: 5px;
-  opacity: ${({ dim }) => (dim ? 0.4 : 1)};
-  margin-top: -40px;
-  padding: 0 1.25rem 1rem 1.25rem;
-  padding-top: 32px;
-  z-index: 1;
-`
-
-const PoolData = styled(DataCard)`
-  background: none;
-  border-radius: 5px;
-  border: 1px solid ${({ theme }) => theme.border1};
-  padding: 1rem;
-  z-index: 1;
-`
-
-const VoteCard = styled(DataCard)`
-  // background: radial-gradient(76.02% 75.41% at 1.84% 0%, #27ae60 0%, #000000 100%);
-  overflow: hidden;
-`
-
-const DataRow = styled(RowBetween)`
-  justify-content: center;
-  gap: 12px;
-
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    flex-direction: column;
-    gap: 12px;
-  `};
-`
-
-const PoolsContainer = styled.div`
-  padding: 1rem 0.5rem 1rem 0.5rem;
-  ${({ theme }) => theme.backgroundContainer}
-`
-
-
-
-
-
-
-
-const ItemColumn = styled.div`
-  width: 0px;
-  @media (min-width: 601px) and (max-width: 1350px) { /*display: none;*/ }
-  @media (max-width: 1050px) { display: none; }
-  min-height: 580px;
-`
-
-
 
 export default function Manage({
   match: {
