@@ -1,5 +1,5 @@
 import React, { memo, useCallback, useMemo, useRef, useState, useContext } from 'react'
-import { ArrowLeft } from 'react-feather'
+import { ArrowLeft, X } from 'react-feather'
 import ReactGA from 'react-ga'
 import { usePopper } from 'react-popper'
 import { useDispatch, useSelector } from 'react-redux'
@@ -29,6 +29,7 @@ import {
   ContainerRow, 
   SearchInput,
   CloseIcon, 
+  IconButton,
   ExternalLink, 
   LinkStyledButton,
   ActionButton,
@@ -172,17 +173,10 @@ const ListRow = memo(function ListRow({ listUrl, onBack }: { listUrl: string; on
       )}
       <Column style={{ flex: '1' }}>
         <Row>
-          <Text
-            fontWeight={isSelected ? 500 : 400}
-            fontSize={16}
-            style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}
-          >
-            {list.name}
-          </Text>
+          <div className={`token-list-item-text ${theme.name}`}>{list.name}</div>          
         </Row>
-        <Row style={{ marginTop: '4px' }}
-        >
-          <StyledListUrlText title={listUrl}>
+        <Row style={{ marginTop: '4px' }}>
+          <StyledListUrlText title={listUrl} className={`token-list-item-text ${theme.name}`}>
             <ListOrigin listUrl={listUrl} />
           </StyledListUrlText>
         </Row>
@@ -304,18 +298,19 @@ export function ListSelect({ onDismiss, onBack }: { onDismiss: () => void; onBac
 
   return (
     <Column style={{ width: '100%', flex: '1 1' }}>
-      <PaddedColumn>
-        <RowBetween>
-          <div>
-            <ArrowLeft style={{ cursor: 'pointer' }} onClick={onBack} />
-          </div>
-          <Text fontWeight={500} fontSize={20}>
-            Manage Lists
-          </Text>
-          <CloseIcon onClick={onDismiss} />
-        </RowBetween>
-      </PaddedColumn>
-
+      <DynamicGrid columns={3} className={ `mt20 mb20 ${theme.name}` }>
+        <div className="text-left">
+          <IconButton className={ `ml20 ${theme.name}` } onClick={onBack}>
+            <ArrowLeft/>
+          </IconButton>
+        </div>
+        <div className="text-centered title">Manage Lists</div>
+        <div className="text-right">
+          <IconButton className={ `mr10 ${theme.name}` } onClick={onDismiss}>
+            <X/>
+          </IconButton>
+        </div>
+      </DynamicGrid>
       <Separator />
 
       <div className="mt20 add-token-list-container">

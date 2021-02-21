@@ -93,7 +93,7 @@ function TransactionSubmittedContent({
               </Text>
             </ExternalLink>
           )}
-          <ButtonMateriaPrimary onClick={onDismiss} style={{ margin: '20px 0 0 0' }}>
+          <ButtonMateriaPrimary onClick={onDismiss} style={{ margin: '20px 0 0 0' }} className={theme.name}>
             <Text fontWeight={500} fontSize={20}>
               Close
             </Text>
@@ -118,7 +118,7 @@ export function ConfirmationModalContent({
   const theme = useContext(ThemeContext)
   return (
     <>
-    <div className="token-selection-content-container">
+    <div className="token-selection-content-container undragable">
       <h6>{title}</h6>
       <IconButton className={ `modal-close-icon confirmation-modal-close-icon ${theme.name}` } onClick={onDismiss}>
         <X/>

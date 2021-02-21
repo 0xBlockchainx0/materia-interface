@@ -149,7 +149,7 @@ export function CurrencySearch({
   const selectedListInfo = useSelectedListInfo()
 
   return (
-    <div className="token-selection-content-container">
+    <div className="token-selection-content-container undragable">
       <SearchTokenFormItems className={theme.name}>
         <h6>
           Select a token

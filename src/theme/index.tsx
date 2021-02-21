@@ -811,12 +811,29 @@ MARGIN STYLE MINUS
     &.classic, &.classic button { font-size: 9px !important; margin-top: 5px; }
   } 
 
+  .token-list-item-text {
+    font-weight: 400;
+    font-size: 16px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .token-list-item-text.classic { font-size: 11px; text-shadow: 1px 1px 1px ${({ theme }) => theme.black}; }
+  .token-list-item-text.selected { font-weight: 500; }
+
   @media (max-width: 1050px) { 
     .custom-recipient-data-container {
       padding: 0px  20px;
     }
     .add-token-list-container { padding: 0px 20px; }
     &.custom-token-added-by-user.classic button { margin-left: -8px; }
+    .undragable {
+      -webkit-user-drag: none;
+      -khtml-user-drag: none;
+      -moz-user-drag: none; 
+      -o-user-drag: none;
+      -webkit-app-region: no-drag;
+      user-drag: none;
+    }
   }
   
 `
@@ -905,6 +922,7 @@ export const MainContainer = styled.div`
 
   &.light:before { background-image: url(${(images.decorators.grid.light)}); }
   &.light:after { background-image: url(${(images.decorators.grid.light)}); }
+  &.classic:after, &.classic:before { display: none; }
 `
 export const MainContainerExtraDecorator = styled.div`
   position: absolute;
@@ -1234,7 +1252,6 @@ export const GridContainer = styled.div`
 export const PageGridContainer = styled.div`
   display: grid;
   grid-template-columns: 30% auto;
-  @media (min-width: 601px) and (max-width: 1350px) { grid-template-columns: auto !important; }
   @media (max-width: 1050px) { grid-template-columns: auto !important; }
 
   &.swap {}
