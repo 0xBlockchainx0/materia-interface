@@ -1242,7 +1242,6 @@ export const GridContainer = styled.div`
 export const PageGridContainer = styled.div`
   display: grid;
   grid-template-columns: 30% auto;
-  @media (min-width: 601px) and (max-width: 1350px) { grid-template-columns: auto !important; }
   @media (max-width: 1050px) { grid-template-columns: auto !important; }
 
   &.swap {}
