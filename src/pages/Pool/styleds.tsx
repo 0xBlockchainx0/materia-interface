@@ -19,7 +19,7 @@ export const ClickableText = styled(Text)`
     margin: 10px auto;
   }
 
-  @media (max-width: 600px) { margin-bottom: 10px !important; padding-top: 10px; }
+  @media (max-width: 1050px) { margin-bottom: 10px !important; padding-top: 10px; }
 `
 export const MaxButton = styled.button<{ width: string }>`
   padding: 0.5rem 1rem;

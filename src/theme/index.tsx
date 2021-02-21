@@ -25,7 +25,7 @@ export * from './components'
 const MEDIA_WIDTHS = {
   upToExtraSmall: 500,
   upToSmall: 720,
-  upToMedium: 960,
+  upToMedium: 1050,
   upToLarge: 1280
 }
 
@@ -558,7 +558,7 @@ PADDING STYLE
 .pl95   { padding-left: 95px !important; }    
 .pl100  { padding-left: 100px !important; }
 
-@media (max-width: 600px) { 
+@media (max-width: 1050px) { 
   .pl-mobile-25 { padding-left: 25px; margin-top: 3px; }
 }
 
@@ -785,7 +785,7 @@ MARGIN STYLE MINUS
   .text-centered { text-align: center !important; }
   .font25 { 
     font-size: 25px !important; 
-    @media (max-width: 600px) { 
+    @media (max-width: 1050px) { 
       font-size: 20px !important;
     }
   }
@@ -811,7 +811,7 @@ MARGIN STYLE MINUS
     &.classic, &.classic button { font-size: 9px !important; margin-top: 5px; }
   } 
 
-  @media (max-width: 600px) { 
+  @media (max-width: 1050px) { 
     .custom-recipient-data-container {
       padding: 0px  20px;
     }
@@ -874,7 +874,9 @@ export const MainContainer = styled.div`
       0 2px #424542;
   }
 
-  @media (max-width: 600px) { 
+  @media (max-width: 1050px) { 
+    width: 375px;
+    margin: 0px auto 10px auto;
     max-width: 100% !important;
     min-height: auto !important;
     border: none !important; 
@@ -882,7 +884,6 @@ export const MainContainer = styled.div`
     &:before, &:after { display: none; }
     &.classic { margin-top: 30px; }
   }
-  @media (max-width: 1200px) { max-width: 90%; }
 
   &:before, &:after {
     content: "";
@@ -937,7 +938,7 @@ export const MainContainerExtraDecorator = styled.div`
   &.classic:before {}
   &.classic:after {}
 
-  @media (max-width: 600px) { display: none !important; }
+  @media (max-width: 1050px) { display: none !important; }
 `
 export const MainContainerContentWrapper = styled.div`
   position: relative;
@@ -955,7 +956,7 @@ export const MainContainerContentWrapper = styled.div`
     background: linear-gradient(0deg, ${({ theme }) => theme.utils.hexToRGB(theme.blue6, 1)} 0%, ${({ theme }) => theme.utils.hexToRGB(theme.blue5, 1)} 100%); 
   }
 
-  @media (max-width: 600px) { padding: 5px 5px 5px 5px !important; min-height: auto; }
+  @media (max-width: 1050px) { padding: 5px 5px 5px 5px !important; min-height: auto; }
 `
 export const FeatureTitle = styled.h2`
   writing-mode: vertical-rl;
@@ -1008,7 +1009,7 @@ export const FeatureTitle = styled.h2`
     background: linear-gradient(0deg, rgba(15,63,115,0) 0%, ${({ theme }) => theme.utils.hexToRGB(theme.violet1, 1)} 100%);
   }
   
-  @media (max-width: 600px) { display: none; }
+  @media (max-width: 1050px) { display: none; }
 `
 export const FeatureChildrenContainer = styled.div`
   border-radius:3px;
@@ -1020,7 +1021,7 @@ export const FeatureChildrenContainer = styled.div`
   &.light { background: linear-gradient(-60deg, ${({ theme }) => theme.utils.hexToRGB(theme.white, 0.8)} 60%, ${({ theme }) => theme.utils.hexToRGB(theme.white, 0.8)} 100%); }
   &.classic {}
 
-  @media (max-width: 600px) { min-height: auto; }
+  @media (max-width: 1050px) { min-height: auto; }
 `
 export const SectionTitle = styled.h6`
   font-weight: 500;
@@ -1067,7 +1068,7 @@ export const InventoryContainer = styled.div`
   max-height: 580px;
   overflow: hidden;
   
-  @media (max-width: 600px) { 
+  @media (max-width: 1050px) { 
     max-height: auto;
   }
 `
@@ -1145,7 +1146,7 @@ export const SimpleTextParagraph = styled.p`
   & img.ethereumLogo, & img.tokenLogo { margin-top: 0px; }
   &.dark.extreme, &.light.extreme { font-size: 25px; }
 
-  @media (max-width: 600px) { 
+  @media (max-width: 1050px) { 
     &.dark.extreme, &.light.extreme { font-size: 20px; }
   }
 `
@@ -1167,7 +1168,7 @@ export const EvidencedTextParagraph = styled(SimpleTextParagraph)`
   }
   &.dark.extreme, &.light.extreme { font-size: 25px; }
 
-  @media (max-width: 600px) { 
+  @media (max-width: 1050px) { 
     &.dark.extreme, &.light.extreme { font-size: 20px; }
   }
 `
@@ -1221,7 +1222,7 @@ export const IconButton = styled(BaseButton)<{ width?: string, borderRadius?: st
   & + .custom-label.light {}
   & + .custom-label.classic {}
 
-  @media (max-width: 600px) { 
+  @media (max-width: 1050px) { 
     & + .custom-label { display: none; }
     &.classic.menuIcon > svg { stroke: ${({ theme }) => theme.white}; }
   }
@@ -1234,7 +1235,7 @@ export const PageGridContainer = styled.div`
   display: grid;
   grid-template-columns: 30% auto;
   @media (min-width: 601px) and (max-width: 1350px) { grid-template-columns: auto !important; }
-  @media (max-width: 600px) { grid-template-columns: auto !important; }
+  @media (max-width: 1050px) { grid-template-columns: auto !important; }
 
   &.swap {}
   &.pool {}
@@ -1258,7 +1259,7 @@ export const PageGridContainer = styled.div`
   & > .left-column.light > .collapsable-title { color: ${({ theme }) => theme.grey3}; }
   & > .left-column.classic > .collapsable-title { color: ${({ theme }) => theme.azure1}; }
 
-  @media (max-width: 600px) { 
+  @media (max-width: 1050px) { 
     &.pool > .left-column { padding: 0; }
     &.liquidity-mining > .left-column { padding: 0; }
     &.swap > .left-column { min-height: auto !important; }
@@ -1299,7 +1300,7 @@ export const FooterInfo = styled.div`
   .advanced-swap-details-container.classic .advaced-swap-details.label,
   .advanced-swap-details-container.classic .advaced-swap-details.value { font-size: 9px; }
 
-  @media (max-width: 600px) { 
+  @media (max-width: 1050px) { 
     &.dark > div.boxFooterCaption, &.light > div.boxFooterCaption, &.classic > div.boxFooterCaption { font-size: smaller; }
     &.classic > div.boxFooterCaption { line-height: 1.5em; font-size: 7px; }  
   }
@@ -1347,7 +1348,7 @@ export const TabsBar = styled.div`
 
   & > .tabLinkItem > svg { display: none; }
 
-  @media (max-width: 600px) { 
+  @media (max-width: 1050px) { 
     & > .tabLinkItem > svg { display: block; }
     /*& > .tabLinkItem > span { display: none; }*/
   }
@@ -1362,8 +1363,9 @@ export const DynamicGrid = styled.div<{ columns: number, columnsDefinitions?: Dy
   &.light .title, &.light .text { color: ${({ theme }) => theme.grey1}; }
   &.classic .title, &.classic .text { font-size: 13px; text-shadow: 1px 1px 1px ${({ theme }) => theme.black}; line-height: 1.5em; }
 
-  @media (max-width: 600px) { 
+  @media (max-width: 1050px) { 
     & .title, & .text { font-size: small; }
+    &.classic .title, &.classic .text { font-size: 9px; }
   }
 `
 const tabLinkItemActiveClassName = 'active'
@@ -1404,14 +1406,14 @@ export const TabLinkItem = styled(NavLink).attrs({ tabLinkItemActiveClassName })
   &.light.disabled:hover, &.light.disabled:focus,
   &.classic.disabled:hover, &.classic.disabled:focus { opacity: 1; }
 
-  @media (max-width: 600px) { 
+  @media (max-width: 1050px) { 
     font-size: small !important;
     &.classic { font-size: 10px !important; }
   }
 `
 export const PageContentContainer = styled.div`
   margin-top:40px;
-  @media (min-width: 1050px) {
+  @media (min-width: 1051px) {
     display: grid;
     grid-template-columns: 42.5% 15% 42.5%;
 
@@ -1782,10 +1784,14 @@ export const SwitchButton = styled(Button)<{disabled?: boolean}>`
 
   &.dark.expert-mode { margin-left: 30px; }
   &.light.expert-mode { margin-left: 30px; }
+  
+  @media (max-width: 1050px) {
+    &.dark.expert-mode, &.light.expert-mode { margin-left: 146px; margin-bottom: 15px; }
+    &.classic { margin-top: 20px; margin-bottom: 20px; }
+  }
 
   @media (max-width: 600px) { 
     &.dark.expert-mode, &.light.expert-mode { margin-left: 130px; margin-bottom: 15px; }
-    &.classic { margin-top: 20px; margin-bottom: 20px; }
   }
 `
 export const OperationButton = styled(Button)<{label?: string, disabled?: boolean}>`
@@ -1964,7 +1970,7 @@ export const MainOperationButton = styled(ActionButton)<{ disabled?: boolean, se
 export const TradePriceContainer = styled.div`
   margin-top: 250px;
   @media (max-width: 960px) { padding-left: 30px; }
-  @media (max-width: 600px) { margin-top: 10px; padding-left: 0px; }  
+  @media (max-width: 1050px) { margin-top: 10px; padding-left: 0px; }  
   /* @media (max-width: 1920px) { padding-left: 30px; } */
 `
 export const AddRecipientPanel = styled.div`
@@ -2106,7 +2112,7 @@ export const SecondaryPanelBoxContainer = styled.div`
   
   &.popup > .popup-inner-content, &.modal > .modal-inner-content { padding: 10px 20px; }
 
-  @media (max-width: 600px) { 
+  @media (max-width: 1050px) { 
     &.modal > .modal-inner-content { 
       width: 95vw;
       margin: 0 auto;
@@ -2200,7 +2206,7 @@ export const SecondaryPanelBoxContainer = styled.div`
     z-index: 100;
 
     ${({ theme }) => theme.mediaWidth.upToExtraSmall` min-width: 18.125rem; right: -46px; `};
-    ${({ theme }) => theme.mediaWidth.upToMedium` min-width: 18.125rem; top: -22rem; right: -2px; @media (max-width: 960px) { top: -19.5rem; } `};
+    ${({ theme }) => theme.mediaWidth.upToMedium` min-width: 18.125rem; top: -22rem; right: -2px; @media (max-width: 1050px) { top: -19.5rem; } `};
   }
 
   &.settings-menu-panel.classic { min-width: 30rem; top: -25.35rem; }
@@ -2226,7 +2232,7 @@ export const SecondaryPanelBoxContainer = styled.div`
   &.light.popup > .popup-inner-content,
   &.light.settings-menu-panel > .inner-content { box-shadow: 0px 0px 16px ${({ theme }) => theme.utils.hexToRGB(theme.grey3, 0.4)}; }
 
-  @media (max-width: 600px) { 
+  @media (max-width: 1050px) { 
     &.dark { border: none; }
     padding: 0px;
   }
@@ -2273,7 +2279,7 @@ export const SecondaryPanelBoxContainerExtraDecorator = styled.div`
   &.classic:before {}
   &.classic:after {}
 
-  @media (max-width: 600px) { 
+  @media (max-width: 1050px) { 
     &:before, &:after { display: none; }
   }
 `
@@ -2297,7 +2303,7 @@ export const AdvancedDetailsFooter = styled.div<{ show: boolean }>`
   width: 100%;
   z-index: -1;
   transition: transform 300ms ease-in-out;
-  @media (max-width: 600px) { padding-left: -2rem !important; }
+  @media (max-width: 1050px) { padding-left: -2rem !important; }
 `
 const AnimatedDialogOverlay = animated(DialogOverlay)
 export const ThemedDialogOverlay = styled(AnimatedDialogOverlay)`
@@ -2335,7 +2341,7 @@ export const ThemedDialogContent = styled(({ minHeight, maxHeight, mobile, isOpe
     ${({ theme, mobile }) => theme.mediaWidth.upToSmall` width:  85vw; ${mobile && css` width: 100vw; `} `}
   }
 
-  @media (max-width: 600px) { 
+  @media (max-width: 1050px) { 
     display:block !important;
     width: 100vw !important;
     max-width: 100% !important;
@@ -2631,7 +2637,7 @@ export const ModalContentWrapper = styled.div`
   & img.claimedIcon { max-width: 100px; margin-top: 25px; }
   & > .modal-content-wrapper-inner-container { position: relative; padding: 10px 20px; }
 
-  @media (max-width: 600px) { 
+  @media (max-width: 1050px) { 
     /* margin: 5px; */
     & > .modal-content-wrapper-inner-container { }
   }  
@@ -2812,7 +2818,7 @@ export const FooterControls = styled.div`
   z-index:2;
   width: 100%;
 
-  @media (max-width: 600px) { max-width: 90%; }
+  @media (max-width: 1050px) { max-width: 90%; }
   @media (max-width: 1200px) { max-width: 90%; }
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
@@ -2820,7 +2826,7 @@ export const FooterControls = styled.div`
     justify-content: space-between;
     justify-self: center;
     width: 100%;
-    max-width: 960px;
+    max-width: 1050px;
     padding: 0rem 0.5rem;
     position: fixed;
     bottom: 0px;
@@ -2849,7 +2855,7 @@ export const FooterElementClock = styled.div`
 
   ${({ theme }) => theme.mediaWidth.upToMedium` flex-direction: row-reverse; align-items: center; `};
 
-  @media (max-width: 960px) { display: none !important; }
+  @media (max-width: 1050px) { display: none !important; }
 
   & svg.footer-icon { 
     width: 15px;
@@ -3048,8 +3054,9 @@ export const CountdownContainer= styled.div`
   &.light { color: ${({ theme }) => theme.grey1}; }
   &.classic { font-size: 13px; text-shadow: 1px 1px 1px ${({ theme }) => theme.black}; line-height: 1.5em; }
 
-  @media (max-width: 600px) { 
+  @media (max-width: 1050px) { 
     font-size: small;
+    &.classic { font-size: 9px; }
   }
 `
 export const PoolSection = styled.div`

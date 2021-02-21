@@ -30,7 +30,7 @@ import {
 import { X } from 'react-feather'
 
 const StyledAutoSizer = styled(AutoSizer)`
-  @media (max-width: 600px) { 
+  @media (max-width: 1050px) { 
     height: 390px !important;
   }
 `

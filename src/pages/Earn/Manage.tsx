@@ -114,7 +114,7 @@ const PoolsContainer = styled.div`
 const ItemColumn = styled.div`
   width: 0px;
   @media (min-width: 601px) and (max-width: 1350px) { /*display: none;*/ }
-  @media (max-width: 600px) { display: none; }
+  @media (max-width: 1050px) { display: none; }
   min-height: 580px;
 `
 

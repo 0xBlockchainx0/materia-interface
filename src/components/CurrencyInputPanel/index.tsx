@@ -28,7 +28,7 @@ const Aligner = styled.span`
 const MobileCurrencyLogo = styled.div`
   margin-left: 10px;
   display: none;
-  @media (max-width: 600px) { display: inline-block; }
+  @media (max-width: 1050px) { display: inline-block; }
 `
 // const tokenBackground = styled.var`${({ theme }) => theme.tokenBackground}`
 
@@ -57,7 +57,7 @@ const TokenImage = styled.div<{ showBackground: boolean }>`
 const TokenImageContainer = styled.div`
   float: none;
   margin: 0 auto;
-  @media (max-width: 600px) { display: none; }
+  @media (max-width: 1050px) { display: none; }
 `
 
 const StyledDropDown = styled(DropDown) <{ selected: boolean }>`
