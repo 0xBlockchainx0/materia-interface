@@ -93,7 +93,7 @@ function TransactionSubmittedContent({
               </Text>
             </ExternalLink>
           )}
-          <ButtonMateriaPrimary onClick={onDismiss} style={{ margin: '20px 0 0 0' }}>
+          <ButtonMateriaPrimary onClick={onDismiss} style={{ margin: '20px 0 0 0' }} className={theme.name}>
             <Text fontWeight={500} fontSize={20}>
               Close
             </Text>
