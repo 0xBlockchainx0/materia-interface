@@ -75,9 +75,6 @@ const TradeCard = styled(Card)`
   display: flex;
   justify-content: center
 `
-
-
-
 export const Center = styled.div`
   display: flex;
   margin: 0 auto;

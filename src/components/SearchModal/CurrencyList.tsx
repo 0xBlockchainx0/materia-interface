@@ -122,7 +122,7 @@ function CurrencyRow({
         </Text>
         <FadedSpan>
           {!isOnSelectedList && customAdded ? (
-            <TYPE.main fontWeight={500}>
+            <TYPE.main className={`custom-token-added-by-user ${theme.name}`}>
               Added by user
               <LinkStyledButton
                 onClick={event => {

@@ -314,7 +314,7 @@ export function ListSelect({ onDismiss, onBack }: { onDismiss: () => void; onBac
 
       <Separator />
 
-      <div className="mt20">
+      <div className="mt20 add-token-list-container">
         <h6>
           Add a list
           <QuestionHelper text="Token lists are an open specification for lists of ERC20 tokens. You can use any token list by entering its URL below. Beware that third party token lists can contain fake or malicious ERC20 tokens." />

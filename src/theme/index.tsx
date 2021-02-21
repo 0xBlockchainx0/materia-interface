@@ -806,11 +806,17 @@ MARGIN STYLE MINUS
   #remove-liquidity-tokena-symbol + img, #remove-liquidity-tokenb-symbol + img { margin-top: 3px; }
   
   .claim-footer { min-width: 85px !important; }
+  .custom-token-added-by-user { 
+    font-weight: 500;
+    &.classic, &.classic button { font-size: 9px !important; margin-top: 5px; }
+  } 
 
   @media (max-width: 600px) { 
     .custom-recipient-data-container {
       padding: 0px  20px;
     }
+    .add-token-list-container { padding: 0px 20px; }
+    &.custom-token-added-by-user.classic button { margin-left: -8px; }
   }
   
 `
@@ -874,6 +880,7 @@ export const MainContainer = styled.div`
     border: none !important; 
     padding: 10px 0px 0px 0px; 
     &:before, &:after { display: none; }
+    &.classic { margin-top: 30px; }
   }
   @media (max-width: 1200px) { max-width: 90%; }
 
@@ -1058,7 +1065,11 @@ export const InventoryContainer = styled.div`
   margin-right: 1rem;
   overflow-y: auto;
   max-height: 580px;
-  overflow: hidden;  
+  overflow: hidden;
+  
+  @media (max-width: 600px) { 
+    max-height: auto;
+  }
 `
 export const InventoryItemContainer = styled.div`
   padding: 10px 15px 10px 15px; 
@@ -1212,6 +1223,7 @@ export const IconButton = styled(BaseButton)<{ width?: string, borderRadius?: st
 
   @media (max-width: 600px) { 
     & + .custom-label { display: none; }
+    &.classic.menuIcon > svg { stroke: ${({ theme }) => theme.white}; }
   }
 `
 export const GridContainer = styled.div`
@@ -1289,7 +1301,7 @@ export const FooterInfo = styled.div`
 
   @media (max-width: 600px) { 
     &.dark > div.boxFooterCaption, &.light > div.boxFooterCaption, &.classic > div.boxFooterCaption { font-size: smaller; }
-    &.classic > div.boxFooterCaption { line-height: 1.5em; }  
+    &.classic > div.boxFooterCaption { line-height: 1.5em; font-size: 7px; }  
   }
 `
 export const TabsBar = styled.div`
@@ -1773,6 +1785,7 @@ export const SwitchButton = styled(Button)<{disabled?: boolean}>`
 
   @media (max-width: 600px) { 
     &.dark.expert-mode, &.light.expert-mode { margin-left: 130px; margin-bottom: 15px; }
+    &.classic { margin-top: 20px; margin-bottom: 20px; }
   }
 `
 export const OperationButton = styled(Button)<{label?: string, disabled?: boolean}>`
