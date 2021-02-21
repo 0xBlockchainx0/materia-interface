@@ -224,7 +224,7 @@ const ListContainer = styled.div`
   overflow: auto;
 
   @media (max-width: 1050px) { 
-    height: 300px;
+    max-height: 300px;
   }
 `
 
