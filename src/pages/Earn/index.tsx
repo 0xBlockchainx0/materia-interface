@@ -35,7 +35,7 @@ export default function Earn() {
             <div className="collapsable-title">
               <div className="pull-right">
                 <ActionButton className={theme.name} onClick={() => { setShowMore(!showMore) }}>
-                  {showMore ? ( 'Hide Rewards' ) : ( 'View Rewards' )}
+                  {showMore ? ( 'Hide Rewards Info' ) : ( 'View Rewards Info' )}
                 </ActionButton>
               </div>
               <div className="clear-fix"></div>
