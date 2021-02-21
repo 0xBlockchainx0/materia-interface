@@ -222,6 +222,10 @@ const ListRow = memo(function ListRow({ listUrl, onBack }: { listUrl: string; on
 const ListContainer = styled.div`
   flex: 1;
   overflow: auto;
+
+  @media (max-width: 1050px) { 
+    height: 300px;
+  }
 `
 
 export function ListSelect({ onDismiss, onBack }: { onDismiss: () => void; onBack: () => void }) {
