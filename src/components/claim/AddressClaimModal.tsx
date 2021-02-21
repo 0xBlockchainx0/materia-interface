@@ -102,7 +102,7 @@ export default function AddressClaimModal({ isOpen, onDismiss }: { isOpen: boole
     <Modal isOpen={isOpen} onDismiss={wrappedOnDismiss} maxHeight={90}>
       {/* <Confetti start={Boolean(isOpen && claimConfirmed && attempting)} /> */}
       <ModalContentWrapper className={((attempting || claimConfirmed) ? 'claming' : '')}>   
-        <div>   
+        <div className="modal-content-wrapper-inner-container">   
           {!attempting && (
             <>
               <h6>Claim GIL Token</h6>

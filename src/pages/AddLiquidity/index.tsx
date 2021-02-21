@@ -54,7 +54,8 @@ import {
   OperationButton,
   IconButton,
   MainOperationButton,
-  DynamicGrid
+  DynamicGrid,
+  ActionButton
 } from '../../theme'
 import { Text } from 'rebass'
 import { useActiveWeb3React } from '../../hooks'
@@ -529,6 +530,7 @@ export default function AddLiquidity({
   }, [onFieldAInput, txHash])
 
   const isCreate = history.location.pathname.includes('/create')
+  const [showMore, setShowMore] = useState(false)
 
   const activeClassName = 'ACTIVE'
   const StyledNavLink = styled(NavLink).attrs({
@@ -562,67 +564,77 @@ export default function AddLiquidity({
     <>
       <AppBody>
         <PageGridContainer className="pool">
-          <div className={`left-column ${theme.name}`}>
-            <SecondaryPanelBoxContainer className={`${theme.name}`}>
-              <SecondaryPanelBoxContainerExtraDecorator className={`top ${theme.name}`} />
-              <div className="inner-content">
-                <SimpleTextParagraph className={`p15 mt0 mb0 ${theme.name}`}>
-                  <strong>Liquidity provider rewards</strong>
-                  <br /><br />
-                  Liquidity providers earn a dynamic fee (default 0.30%) on all trades proportional to their share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity.
-                </SimpleTextParagraph>
+          <div className={`left-column pool ${theme.name}`}>
+            <div className="collapsable-title">
+              <div className="pull-right">
+                <ActionButton className={theme.name} onClick={() => { setShowMore(!showMore) }}>
+                  {showMore ? ( 'Hide Pools' ) : ( 'View Pools' )}
+                </ActionButton>
               </div>
-              <SecondaryPanelBoxContainerExtraDecorator className={`bottom ${theme.name}`} />
-            </SecondaryPanelBoxContainer>
-            <HideSmall>
-              <SectionTitle className={`mt20 ${theme.name}`}>Your liquidity</SectionTitle>
-            </HideSmall>
-            <Scrollbars autoHeight autoHeightMin={280} autoHide>
-              {!account ? (
-                <SimpleTextParagraph className={`p20 text-center ${theme.name}`}>
-                  Connect to a wallet to view your liquidity.
-                </SimpleTextParagraph>
-              ) : isLoading ? (
-                <EmptyProposals className={theme.name}>
+              <div className="clear-fix"></div>
+            </div>
+            <div className={`collapsable-item ${showMore ? 'opened' : 'collapsed'}`}>
+              <SecondaryPanelBoxContainer className={`${theme.name}`}>
+                <SecondaryPanelBoxContainerExtraDecorator className={`top ${theme.name}`} />
+                <div className="inner-content">
+                  <SimpleTextParagraph className={`p15 mt0 mb0 ${theme.name}`}>
+                    <strong>Liquidity provider rewards</strong>
+                    <br /><br />
+                    Liquidity providers earn a dynamic fee (default 0.30%) on all trades proportional to their share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity.
+                  </SimpleTextParagraph>
+                </div>
+                <SecondaryPanelBoxContainerExtraDecorator className={`bottom ${theme.name}`} />
+              </SecondaryPanelBoxContainer>
+              <HideSmall>
+                <SectionTitle className={`mt20 ${theme.name}`}>Your liquidity</SectionTitle>
+              </HideSmall>
+              <Scrollbars autoHeight autoHide>
+                {!account ? (
                   <SimpleTextParagraph className={`p20 text-center ${theme.name}`}>
-                    <Dots>Loading</Dots>
+                    Connect to a wallet to view your liquidity.
                   </SimpleTextParagraph>
-                </EmptyProposals>
-              ) : allPairsWithLiquidity?.length > 0 ? (
-                <>
-                  <SimpleTextParagraph className={`text-left ${theme.name}`}>
-                    <ExternalLink href={'https://info.materiadex.com/account/' + account}>
-                      Account analytics and accrued fees
-                      <IconButton className={`hide-classic ${theme.name}`}>
-                        <span className="icon-symbol">↗</span>
-                      </IconButton>
-                    </ExternalLink>
-                  </SimpleTextParagraph>
-                  {allPairsWithLiquidity.map(pair => (
-                    <FullPositionCard key={pair.liquidityToken.address} pair={pair} />
-                  ))}
-                </>
-              ) : (
-                      <EmptyProposals className={theme.name}>
-                        <SimpleTextParagraph className={`p20 text-center ${theme.name}`}>
-                          No liquidity found.
-                        </SimpleTextParagraph>
-                      </EmptyProposals>
-                    )}
-            </Scrollbars>
-            <SimpleTextParagraph className={`text-left ${theme.name}`}>
-              Don't see a pool you joined? <StyledInternalLink className={`${theme.name}`} id="refresh-pool-link" to={'#'} onClick={onLiquidityPoolsUpdate}>Refresh</StyledInternalLink> your pools or <StyledInternalLink className={`${theme.name}`} id="import-pool-link" to={'/find'}>import it</StyledInternalLink>.
-            </SimpleTextParagraph>
+                ) : isLoading ? (
+                  <EmptyProposals className={theme.name}>
+                    <SimpleTextParagraph className={`p20 text-center ${theme.name}`}>
+                      <Dots>Loading</Dots>
+                    </SimpleTextParagraph>
+                  </EmptyProposals>
+                ) : allPairsWithLiquidity?.length > 0 ? (
+                  <>
+                    <SimpleTextParagraph className={`text-left ${theme.name}`}>
+                      <ExternalLink href={'https://info.materiadex.com/account/' + account}>
+                        Account analytics and accrued fees
+                        <IconButton className={`hide-classic ${theme.name}`}>
+                          <span className="icon-symbol">↗</span>
+                        </IconButton>
+                      </ExternalLink>
+                    </SimpleTextParagraph>
+                    {allPairsWithLiquidity.map(pair => (
+                      <FullPositionCard key={pair.liquidityToken.address} pair={pair} />
+                    ))}
+                  </>
+                ) : (
+                        <EmptyProposals className={theme.name}>
+                          <SimpleTextParagraph className={`p20 text-center ${theme.name}`}>
+                            No liquidity found.
+                          </SimpleTextParagraph>
+                        </EmptyProposals>
+                      )}
+              </Scrollbars>
+              <SimpleTextParagraph className={`text-left ${theme.name}`}>
+                Don't see a pool you joined? <StyledInternalLink className={`${theme.name}`} id="refresh-pool-link" to={'#'} onClick={onLiquidityPoolsUpdate}>Refresh</StyledInternalLink> your pools or <StyledInternalLink className={`${theme.name}`} id="import-pool-link" to={'/find'}>import it</StyledInternalLink>.
+              </SimpleTextParagraph>
+            </div>
           </div>
 
           <PageItemsContainer className={theme.name}>
             <TabsBar className={theme.name}>
               <TabLinkItem id={`Add-Liquidity`} to={'/add/WUSD'}
-                className={`${theme.name}`}
+                className={`tabLinkItem ${theme.name}`}
                 isActive={(match, { pathname }) => Boolean(match) || pathname.startsWith('/add')}
               >Add Liquidity</TabLinkItem>
               <TabLinkItem id={`Create-a-pair`} to={'/create/WUSD'}
-                className={`${theme.name}`}
+                className={`tabLinkItem ${theme.name}`}
                 isActive={(match, { pathname }) => Boolean(match) || pathname.startsWith('/create')}
               >Create a pair</TabLinkItem>
             </TabsBar>

@@ -25,6 +25,11 @@ const Aligner = styled.span`
   align-items: center;
   justify-content: space-between;
 `
+const MobileCurrencyLogo = styled.div`
+  margin-left: 10px;
+  display: none;
+  @media (max-width: 600px) { display: inline-block; }
+`
 // const tokenBackground = styled.var`${({ theme }) => theme.tokenBackground}`
 
 const TokenImage = styled.div<{ showBackground: boolean }>`
@@ -52,6 +57,7 @@ const TokenImage = styled.div<{ showBackground: boolean }>`
 const TokenImageContainer = styled.div`
   float: none;
   margin: 0 auto;
+  @media (max-width: 600px) { display: none; }
 `
 
 const StyledDropDown = styled(DropDown) <{ selected: boolean }>`
@@ -130,7 +136,7 @@ export default function CurrencyInputPanel({
 
   return (
     <>
-      <CurrencyFormPanel id={id}className={`${theme.name} ${customFatherPageCssClass}`}>
+      <CurrencyFormPanel id={id} className={`${theme.name} ${customFatherPageCssClass}`}>
         <div className={'itemsContainer ' + customFatherPageCssClass}>
           {!hideInput && (
             <div className={'labelRow ' + customFatherPageCssClass}>
@@ -148,13 +154,20 @@ export default function CurrencyInputPanel({
             {!hideInput && (
               <>
                 <NumericalInput className="token-amount-input" value={value} onUserInput={val => { onUserInput(val) }} />
-                {account && currency && showMaxButton && label !== 'To' && ( <ActionButton className={theme.name} onClick={onMax}>MAX</ActionButton> )}
-                {currency && showErc20Badge && ( <Erc20Badge className={`${theme.name} ml5`}>ERC20</Erc20Badge> )}
-                {currency && showEthItemBadge && ( <EthItemBadge className={`${theme.name} ml5`}>ITEM</EthItemBadge> )}
+                {account && currency && showMaxButton && label !== 'To' && (<ActionButton className={theme.name} onClick={onMax}>MAX</ActionButton>)}
+                {currency && showErc20Badge && (<Erc20Badge className={`${theme.name} ml5`}>ERC20</Erc20Badge>)}
+                {currency && showEthItemBadge && (<EthItemBadge className={`${theme.name} ml5`}>ITEM</EthItemBadge>)}
               </>
             )}
-            <DropDownButton className={ `open-currency-select-button ${theme.name}` } selected={!!currency} onClick={() => { if (!disableCurrencySelect) { setModalOpen(true)  } }} >
+            <DropDownButton className={`open-currency-select-button ${theme.name}`} selected={!!currency} onClick={() => { if (!disableCurrencySelect) { setModalOpen(true) } }} >
               <Aligner>
+                <MobileCurrencyLogo>
+                  {pair ? (
+                    <DoubleCurrencyLogo currency0={pair.token0} currency1={pair.token1} size={24} margin={true} />
+                  ) : currency ? (
+                    <CurrencyLogo currency={currency} size={'24px'} />
+                  ) : null}
+                </MobileCurrencyLogo>                
                 {pair ? (
                   <StyledTokenName className={`pair-name-container ${theme.name}`}>
                     {pair?.token0.symbol}:{pair?.token1.symbol}
@@ -168,7 +181,7 @@ export default function CurrencyInputPanel({
                         : currency?.symbol) || t('selectToken')}
                     </StyledTokenName>
                   )}
-                {!disableCurrencySelect && <StyledDropDown className={ `${theme.name}` } selected={!!currency} />}
+                {!disableCurrencySelect && <StyledDropDown className={`${theme.name}`} selected={!!currency} />}
               </Aligner>
             </DropDownButton>
           </InputRow>

@@ -18,6 +18,7 @@ import { filterTokens } from './filtering'
 import SortButton from './SortButton'
 import { useTokenComparator } from './sorting'
 import AutoSizer from 'react-virtualized-auto-sizer'
+import styled from 'styled-components'
 import { 
   SearchTokenFormItems, 
   IconButton,
@@ -28,6 +29,11 @@ import {
  } from '../../theme' 
 import { X } from 'react-feather'
 
+const StyledAutoSizer = styled(AutoSizer)`
+  @media (max-width: 600px) { 
+    height: 390px !important;
+  }
+`
 interface CurrencySearchProps {
   isOpen: boolean
   onDismiss: () => void
@@ -174,7 +180,7 @@ export function CurrencySearch({
       </SearchTokenFormItems>
 
       <div className={ `tokens-list-container ${theme.name}` }>
-        <AutoSizer disableWidth>
+        <StyledAutoSizer disableWidth>
           {({ height }) => (
             <CurrencyList
               height={height}
@@ -186,7 +192,7 @@ export function CurrencySearch({
               fixedListRef={fixedList}
             />
           )}
-        </AutoSizer>
+        </StyledAutoSizer>
       </div>
       <Card>
         <RowBetween>

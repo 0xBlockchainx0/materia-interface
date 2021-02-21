@@ -8,8 +8,8 @@ import { RouteComponentProps } from 'react-router-dom'
 import DoubleCurrencyLogo from '../../components/DoubleLogo'
 import { useCurrency } from '../../hooks/Tokens'
 import { useWalletModalToggle } from '../../state/application/hooks'
-import { 
-  TYPE, 
+import {
+  TYPE,
   PageGridContainer,
   SecondaryPanelBoxContainer,
   SecondaryPanelBoxContainerExtraDecorator,
@@ -187,42 +187,53 @@ export default function Manage({
       toggleWalletModal()
     }
   }, [account, toggleWalletModal])
+  const [showMore, setShowMore] = useState(false)
 
   return (
     <>
       <AppBody>
         <PageGridContainer className="liquidity-mining">
-          <div className={`left-column ${theme.name}`}>
-            <SecondaryPanelBoxContainer className={`${theme.name}`}>
-              <SecondaryPanelBoxContainerExtraDecorator className={`top ${theme.name}`} />
-              <div className="inner-content">
-                <SimpleTextParagraph className={`p15 mt0 mb0 ${theme.name}`}>
-                  <strong>Materia liquidity mining</strong>
-                  <br /><br />
+          <div className={`left-column liquidity-mining ${theme.name}`}>
+            <div className="collapsable-title">
+              <div className="pull-right">
+                <ActionButton className={theme.name} onClick={() => { setShowMore(!showMore) }}>
+                  {showMore ? ('Hide Rewards') : ('View Rewards')}
+                </ActionButton>
+              </div>
+              <div className="clear-fix"></div>
+            </div>
+            <div className={`collapsable-item ${showMore ? 'opened' : 'collapsed'}`}>
+              <SecondaryPanelBoxContainer className={`${theme.name}`}>
+                <SecondaryPanelBoxContainerExtraDecorator className={`top ${theme.name}`} />
+                <div className="inner-content">
+                  <SimpleTextParagraph className={`p15 mt0 mb0 ${theme.name}`}>
+                    <strong>Materia liquidity mining</strong>
+                    <br /><br />
                   Deposit your Liquidity Provider tokens to receive GIL, the Materia DFO protocol governance token.
                   <br /><br />
-                  <ExternalLink href="https://www.dfohub.com/" target="_blank">Read more about DFO</ExternalLink>
-                </SimpleTextParagraph>
-              </div>
-              <SecondaryPanelBoxContainerExtraDecorator className={`bottom ${theme.name}`} />
-            </SecondaryPanelBoxContainer>
+                    <ExternalLink href="https://www.dfohub.com/" target="_blank">Read more about DFO</ExternalLink>
+                  </SimpleTextParagraph>
+                </div>
+                <SecondaryPanelBoxContainerExtraDecorator className={`bottom ${theme.name}`} />
+              </SecondaryPanelBoxContainer>
+            </div>
           </div>
           <PageItemsContainer className={theme.name}>
             <TabsBar className={theme.name}>
               <DynamicGrid className={theme.name} columns={2}>
-                <div className={ `text-left title ${theme.name}` }>{currencyA?.symbol}-{currencyB?.symbol} Liquidity Mining</div>
+                <div className={`text-left title ${theme.name}`}>{currencyA?.symbol}-{currencyB?.symbol} Liquidity Mining</div>
                 <div className="text-right">
-                  <DoubleCurrencyLogo currency0={currencyA ?? undefined} currency1={currencyB ?? undefined} size={24} radius={true} cssClassName="liquidity-mining-double-token"/>
+                  <DoubleCurrencyLogo currency0={currencyA ?? undefined} currency1={currencyB ?? undefined} size={24} radius={true} cssClassName="liquidity-mining-double-token" />
                 </div>
               </DynamicGrid>
             </TabsBar>
             <div className="clear-fix">
-              <PageContentContainer className={ `one ${theme.name}` }>
+              <PageContentContainer className={`one ${theme.name}`}>
                 <PoolSection>
                   <DynamicGrid className={theme.name} columns={2}>
                     <div className="text-left">
                       <SectionTitle className={theme.name}>Total deposits</SectionTitle>
-                      <SimpleTextParagraph className={ `extreme ${theme.name}` }>
+                      <SimpleTextParagraph className={`extreme ${theme.name}`}>
                         {/* {valueOfTotalStakedAmountInUSDC
                           ? `$${valueOfTotalStakedAmountInUSDC.toFixed(0)}`
                           : `${valueOfTotalStakedAmountInUSD?.toSignificant(4) ?? '-'} ETH`} */}
@@ -231,19 +242,19 @@ export default function Manage({
                     </div>
                     <div className="text-left">
                       <SectionTitle className={theme.name}>Pool Rate</SectionTitle>
-                      <SimpleTextParagraph className={ `extreme ${theme.name}` }>
-                        {stakingInfo?.totalRewardRate ?.multiply((60 * 60 * 24).toString()) ?.toFixed(0) ?? '-'} {' GIL / day'}
+                      <SimpleTextParagraph className={`extreme ${theme.name}`}>
+                        {stakingInfo?.totalRewardRate?.multiply((60 * 60 * 24).toString())?.toFixed(0) ?? '-'} {' GIL / day'}
                       </SimpleTextParagraph>
                     </div>
                   </DynamicGrid>
                   <>
-                    
+
                     {showAddLiquidityButton && (
-                      <SimpleTextParagraph className={ `mt0 ${theme.name}` }>
+                      <SimpleTextParagraph className={`mt0 ${theme.name}`}>
                         <strong>Step 1. Get Liquidity tokens</strong>
-                        <br/><br/>
-                        {`MP tokens are required. Once you've added liquidity to the ${currencyA?.symbol}-${currencyB?.symbol} pool you can stake your liquidity tokens on this page.`}                
-                        <br/><br/>
+                        <br /><br />
+                        {`MP tokens are required. Once you've added liquidity to the ${currencyA?.symbol}-${currencyB?.symbol} pool you can stake your liquidity tokens on this page.`}
+                        <br /><br />
                         <ButtonMateriaPrimary className={theme.name} as={Link} width={'fit-content'}
                           to={`/add/${currencyA && currencyId(currencyA)}/${currencyB && currencyId(currencyB)}`}>
                           {`Add ${currencyA?.symbol}-${currencyB?.symbol} liquidity`}
@@ -282,13 +293,13 @@ export default function Manage({
                     <DynamicGrid className={`${theme.name}`} columns={2}>
                       <div className={`text text-left font25 ${theme.name}`}>
                         <CountUp
-                            key={countUpAmount}
-                            isCounting
-                            decimalPlaces={4}
-                            start={parseFloat(countUpAmountPrevious)}
-                            end={parseFloat(countUpAmount)}
-                            thousandsSeparator={','}
-                            duration={1}
+                          key={countUpAmount}
+                          isCounting
+                          decimalPlaces={4}
+                          start={parseFloat(countUpAmountPrevious)}
+                          end={parseFloat(countUpAmount)}
+                          thousandsSeparator={','}
+                          duration={1}
                         />
                       </div>
                       <div className="clear-fix pt7">
@@ -298,12 +309,12 @@ export default function Manage({
                           )}
                         </div>
                         <div className="pull-right">
-                          {stakingInfo?.rewardRate ?.multiply((60 * 60 * 24).toString()) ?.toSignificant(4) ?? '-'} {' GIL / day'}
+                          {stakingInfo?.rewardRate?.multiply((60 * 60 * 24).toString())?.toSignificant(4) ?? '-'} {' GIL / day'}
                         </div>
-                      </div>                      
+                      </div>
                     </DynamicGrid>
                     <SimpleTextParagraph className={`text-centered ${theme.name}`}>
-                        When you withdraw, the contract will automagically claim GIL on your behalf!
+                      When you withdraw, the contract will automagically claim GIL on your behalf!
                     </SimpleTextParagraph>
                     {!showAddLiquidityButton && (
                       <DynamicGrid className={`${theme.name}`} columns={(stakingInfo?.stakedAmount?.greaterThan(JSBI.BigInt(0)) ? 2 : 1)}>
@@ -312,18 +323,18 @@ export default function Manage({
                             {stakingInfo?.stakedAmount?.greaterThan(JSBI.BigInt(0)) ? 'Deposit' : 'Deposit MP Tokens'}
                           </ButtonMateriaPrimary>
                         </div>
-                          {stakingInfo?.stakedAmount?.greaterThan(JSBI.BigInt(0)) && (
-                            <div className="text-right">
-                              <ButtonMateriaPrimary className={theme.name} width={'fit-content'} onClick={() => setShowUnstakingModal(true)}>
-                                Withdraw
+                        {stakingInfo?.stakedAmount?.greaterThan(JSBI.BigInt(0)) && (
+                          <div className="text-right">
+                            <ButtonMateriaPrimary className={theme.name} width={'fit-content'} onClick={() => setShowUnstakingModal(true)}>
+                              Withdraw
                               </ButtonMateriaPrimary>
-                            </div>
-                          )}                      
+                          </div>
+                        )}
                       </DynamicGrid>
                     )}
                     {!userLiquidityUnstaked ? null : userLiquidityUnstaked.equalTo('0') ? null : (
                       <SimpleTextParagraph className={`text-centered ${theme.name}`}>
-                         {userLiquidityUnstaked.toSignificant(6)} MP tokens available
+                        {userLiquidityUnstaked.toSignificant(6)} MP tokens available
                       </SimpleTextParagraph>
                     )}
                   </>

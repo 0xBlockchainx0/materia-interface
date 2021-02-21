@@ -22,6 +22,8 @@ import circle from '../assets/images/blue-loader.svg'
 
 import FF7Cursor from '../assets/images/FF7Cursor.png'
 import gil from '../assets/images/gil.png'
+import classicSwap from '../assets/images/classic-swap-icon.svg'
+import batchSwap from '../assets/images/batch-swap-icon.svg'
 
 export const images = {
     backgrounds: {
@@ -63,7 +65,9 @@ export const images = {
     },
     icons: {
       FF7Cursor: FF7Cursor,
-      gil: gil
+      gil: gil,
+      batchSwap: batchSwap,
+      classicSwap: classicSwap
     },
     loader: {
       circle: circle

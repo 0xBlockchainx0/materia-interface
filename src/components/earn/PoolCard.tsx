@@ -71,7 +71,7 @@ export default function PoolCard({ stakingInfo }: { stakingInfo: StakingInfo }) 
           <div className="text-left">
             <DynamicGrid className={theme.name} columns={2} columnsDefinitions={[{value: 90, location: 2}]}>
               <DoubleCurrencyLogo currency0={currency0} currency1={currency1} size={24} radius={true} />
-              <div className="title ml10">{currency0.symbol}-{currency1.symbol}</div>
+              <div className="title ml10 pl-mobile-25">{currency0.symbol}-{currency1.symbol}</div>
             </DynamicGrid>             
           </div>
           <div className="text-right">

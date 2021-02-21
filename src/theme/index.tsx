@@ -558,6 +558,10 @@ PADDING STYLE
 .pl95   { padding-left: 95px !important; }    
 .pl100  { padding-left: 100px !important; }
 
+@media (max-width: 600px) { 
+  .pl-mobile-25 { padding-left: 25px; margin-top: 3px; }
+}
+
 /*  --------------------------------------------------------
 MARGIN STYLE
 -------------------------------------------------------- */
@@ -584,6 +588,7 @@ MARGIN STYLE
 .m100    { margin: 100px !important; }
 
 .mt0    { margin-top: 0px !important; }
+.mt3    { margin-top: 3px !important; }
 .mt5    { margin-top: 5px !important; }
 .mt10   { margin-top: 10px !important; }
 .mt15   { margin-top: 15px !important; }
@@ -778,7 +783,12 @@ MARGIN STYLE MINUS
   .pull-left { float: left; }
   .center-block { margin: 0px auto !important; }
   .text-centered { text-align: center !important; }
-  .font25 { font-size: 25px !important; }
+  .font25 { 
+    font-size: 25px !important; 
+    @media (max-width: 600px) { 
+      font-size: 20px !important;
+    }
+  }
   .error { color: ${({ theme }) => theme.red2 }; }
   .display-contents { display: contents; }
 
@@ -796,6 +806,13 @@ MARGIN STYLE MINUS
   #remove-liquidity-tokena-symbol + img, #remove-liquidity-tokenb-symbol + img { margin-top: 3px; }
   
   .claim-footer { min-width: 85px !important; }
+
+  @media (max-width: 600px) { 
+    .custom-recipient-data-container {
+      padding: 0px  20px;
+    }
+  }
+  
 `
 export const AppWrapper = styled.div`
   display: flex;
@@ -851,7 +868,13 @@ export const MainContainer = styled.div`
       0 2px #424542;
   }
 
-  @media (max-width: 600px) { max-width: 90% !important; }
+  @media (max-width: 600px) { 
+    max-width: 100% !important;
+    min-height: auto !important;
+    border: none !important; 
+    padding: 10px 0px 0px 0px; 
+    &:before, &:after { display: none; }
+  }
   @media (max-width: 1200px) { max-width: 90%; }
 
   &:before, &:after {
@@ -906,6 +929,8 @@ export const MainContainerExtraDecorator = styled.div`
 
   &.classic:before {}
   &.classic:after {}
+
+  @media (max-width: 600px) { display: none !important; }
 `
 export const MainContainerContentWrapper = styled.div`
   position: relative;
@@ -922,6 +947,8 @@ export const MainContainerContentWrapper = styled.div`
     padding: 5px 5px 5px 35px;
     background: linear-gradient(0deg, ${({ theme }) => theme.utils.hexToRGB(theme.blue6, 1)} 0%, ${({ theme }) => theme.utils.hexToRGB(theme.blue5, 1)} 100%); 
   }
+
+  @media (max-width: 600px) { padding: 5px 5px 5px 5px !important; min-height: auto; }
 `
 export const FeatureTitle = styled.h2`
   writing-mode: vertical-rl;
@@ -985,6 +1012,8 @@ export const FeatureChildrenContainer = styled.div`
   &.dark { background: linear-gradient(-60deg, ${({ theme }) => theme.utils.hexToRGB(theme.blue2, 0.24)} 60%, ${({ theme }) => theme.utils.hexToRGB(theme.azure3, 0.59)} 100%); }
   &.light { background: linear-gradient(-60deg, ${({ theme }) => theme.utils.hexToRGB(theme.white, 0.8)} 60%, ${({ theme }) => theme.utils.hexToRGB(theme.white, 0.8)} 100%); }
   &.classic {}
+
+  @media (max-width: 600px) { min-height: auto; }
 `
 export const SectionTitle = styled.h6`
   font-weight: 500;
@@ -1025,16 +1054,11 @@ export const SectionTitle = styled.h6`
     text-shadow: 1px 1px 1px ${({ theme }) => theme.black};
   }
 `
-export const InventoryColumn = styled.div`
-  min-height: 580px;
-  @media (max-width: 1350px) { display: none; }
-`
 export const InventoryContainer = styled.div`
   margin-right: 1rem;
   overflow-y: auto;
   max-height: 580px;
-  overflow: hidden;
-  @media (max-width: 1350px) { display: none; }
+  overflow: hidden;  
 `
 export const InventoryItemContainer = styled.div`
   padding: 10px 15px 10px 15px; 
@@ -1109,6 +1133,10 @@ export const SimpleTextParagraph = styled.p`
 
   & img.ethereumLogo, & img.tokenLogo { margin-top: 0px; }
   &.dark.extreme, &.light.extreme { font-size: 25px; }
+
+  @media (max-width: 600px) { 
+    &.dark.extreme, &.light.extreme { font-size: 20px; }
+  }
 `
 export const SimpleInformationsTextParagraph = styled(SimpleTextParagraph)`
   &.dark { color: ${({ theme }) => theme.azure1}; }
@@ -1127,6 +1155,10 @@ export const EvidencedTextParagraph = styled(SimpleTextParagraph)`
     line-height: 2em;
   }
   &.dark.extreme, &.light.extreme { font-size: 25px; }
+
+  @media (max-width: 600px) { 
+    &.dark.extreme, &.light.extreme { font-size: 20px; }
+  }
 `
 const BaseButton = styled(Button)<{ width?: string, borderRadius?: string, selected?: boolean }>`
   padding: 0px !important;
@@ -1177,6 +1209,10 @@ export const IconButton = styled(BaseButton)<{ width?: string, borderRadius?: st
   & + .custom-label.dark {}
   & + .custom-label.light {}
   & + .custom-label.classic {}
+
+  @media (max-width: 600px) { 
+    & + .custom-label { display: none; }
+  }
 `
 export const GridContainer = styled.div`
   display: grid;
@@ -1192,10 +1228,32 @@ export const PageGridContainer = styled.div`
   &.pool {}
   &.liquidity-mining {}
 
+  &.swap > .left-column { min-height: 580px; }
   &.pool > .left-column { padding: 0 1rem 1rem 1rem; }
   &.pool > .left-column.classic { padding: 0 1rem 1rem 0; }
   &.liquidity-mining > .left-column { padding: 0 1rem 1rem 1rem; }
   &.liquidity-mining > .left-column.classic { padding: 0 1rem 1rem 0; }
+
+  & > .left-column > .collapsable-title { 
+    font-weight: 400;
+    font-size: 14px;
+    margin-bottom: 15px;
+    display: none;
+    padding-left: 10px;
+  }
+
+  & > .left-column.dark > .collapsable-title { color: ${({ theme }) => theme.azure1}; }
+  & > .left-column.light > .collapsable-title { color: ${({ theme }) => theme.grey3}; }
+  & > .left-column.classic > .collapsable-title { color: ${({ theme }) => theme.azure1}; }
+
+  @media (max-width: 600px) { 
+    &.pool > .left-column { padding: 0; }
+    &.liquidity-mining > .left-column { padding: 0; }
+    &.swap > .left-column { min-height: auto !important; }
+    & > .left-column > .collapsable-title { display: block; }
+    & > .left-column > .collapsable-title + .collapsable-item.collapsed { display: none; }
+    & > .left-column > .collapsable-title + .collapsable-item.opened { display: block; padding-left: 10px; margin-bottom: 20px; }
+  }
 `
 export const PageItemsContainer = styled.div`
   &.dark {}
@@ -1228,6 +1286,11 @@ export const FooterInfo = styled.div`
   }
   .advanced-swap-details-container.classic .advaced-swap-details.label,
   .advanced-swap-details-container.classic .advaced-swap-details.value { font-size: 9px; }
+
+  @media (max-width: 600px) { 
+    &.dark > div.boxFooterCaption, &.light > div.boxFooterCaption, &.classic > div.boxFooterCaption { font-size: smaller; }
+    &.classic > div.boxFooterCaption { line-height: 1.5em; }  
+  }
 `
 export const TabsBar = styled.div`
   &.dark { }
@@ -1269,6 +1332,13 @@ export const TabsBar = styled.div`
   &.light .navigation-link:hover, &.light .navigation-link:focus > svg { filter: drop-shadow(0px 0px 3px ${({ theme }) => theme.yellowLight}); }
   &.classic .navigation-link > svg { stroke: ${({ theme }) => theme.azure1}; color: ${({ theme }) => theme.azure1}; }
   &.classic .navigation-link:hover, &.classic .navigation-link:focus > svg { filter: drop-shadow(0px 0px 3px ${({ theme }) => theme.yellowLight}); }
+
+  & > .tabLinkItem > svg { display: none; }
+
+  @media (max-width: 600px) { 
+    & > .tabLinkItem > svg { display: block; }
+    /*& > .tabLinkItem > span { display: none; }*/
+  }
 `
 export const DynamicGrid = styled.div<{ columns: number, columnsDefinitions?: DynamicGridColumnsDefinition[] }>`
   display: grid;
@@ -1279,6 +1349,10 @@ export const DynamicGrid = styled.div<{ columns: number, columnsDefinitions?: Dy
   &.dark .title, &.dark .text { color: ${({ theme }) => theme.white}; }
   &.light .title, &.light .text { color: ${({ theme }) => theme.grey1}; }
   &.classic .title, &.classic .text { font-size: 13px; text-shadow: 1px 1px 1px ${({ theme }) => theme.black}; line-height: 1.5em; }
+
+  @media (max-width: 600px) { 
+    & .title, & .text { font-size: small; }
+  }
 `
 const tabLinkItemActiveClassName = 'active'
 export const TabLinkItem = styled(NavLink).attrs({ tabLinkItemActiveClassName })`
@@ -1317,6 +1391,11 @@ export const TabLinkItem = styled(NavLink).attrs({ tabLinkItemActiveClassName })
   &.dark.disabled:hover, &.dark.disabled:focus,
   &.light.disabled:hover, &.light.disabled:focus,
   &.classic.disabled:hover, &.classic.disabled:focus { opacity: 1; }
+
+  @media (max-width: 600px) { 
+    font-size: small !important;
+    &.classic { font-size: 10px !important; }
+  }
 `
 export const PageContentContainer = styled.div`
   margin-top:40px;
@@ -1691,6 +1770,10 @@ export const SwitchButton = styled(Button)<{disabled?: boolean}>`
 
   &.dark.expert-mode { margin-left: 30px; }
   &.light.expert-mode { margin-left: 30px; }
+
+  @media (max-width: 600px) { 
+    &.dark.expert-mode, &.light.expert-mode { margin-left: 130px; margin-bottom: 15px; }
+  }
 `
 export const OperationButton = styled(Button)<{label?: string, disabled?: boolean}>`
   padding: 0px !important;
@@ -1795,7 +1878,7 @@ export const OperationButton = styled(Button)<{label?: string, disabled?: boolea
   &.classic:hover:after { color: ${({ theme }) => theme.azure2}; }
   &.classic:hover:before, &.classic:focus:before { display: block; }
 
-  &.add-a-send-button { position: absolute; top: 330px; left: 70px; }  
+  &.add-a-send-button { /*position: absolute; top: 330px; left: 70px;*/ }  
   &.connect-wallet-button { margin-left: -170px; }
   &.wrap-button { margin-left: -190px; }
 `
@@ -1868,12 +1951,13 @@ export const MainOperationButton = styled(ActionButton)<{ disabled?: boolean, se
 export const TradePriceContainer = styled.div`
   margin-top: 250px;
   @media (max-width: 960px) { padding-left: 30px; }
-  // @media (max-width: 1920px) { padding-left: 30px; }
+  @media (max-width: 600px) { margin-top: 10px; padding-left: 0px; }  
+  /* @media (max-width: 1920px) { padding-left: 30px; } */
 `
 export const AddRecipientPanel = styled.div`
-  position: absolute;
+  /*position: absolute;
   top: 330px;
-  left: 70px;
+  left: 70px;*/
 `
 export const InputPanel = styled.div`
   ${({ theme }) => theme.flexColumnNoWrap}
@@ -2009,6 +2093,18 @@ export const SecondaryPanelBoxContainer = styled.div`
   
   &.popup > .popup-inner-content, &.modal > .modal-inner-content { padding: 10px 20px; }
 
+  @media (max-width: 600px) { 
+    &.modal > .modal-inner-content { 
+      width: 95vw;
+      margin: 0 auto;
+      padding: 0;
+    }
+    & .popup-close-icon, & .modal-close-icon  { 
+      right: 20px;
+      top: 10px; 
+    }
+  }
+
   &.popup > .popup-inner-content h6 { font-size: 13px; margin: 0px 0px 15px 0px; }
   &.popup > .popup-inner-content h6 + ul { font-size: 13px; }
   &.classic.popup > .popup-inner-content h6 + ul { 
@@ -2091,7 +2187,7 @@ export const SecondaryPanelBoxContainer = styled.div`
     z-index: 100;
 
     ${({ theme }) => theme.mediaWidth.upToExtraSmall` min-width: 18.125rem; right: -46px; `};
-    ${({ theme }) => theme.mediaWidth.upToMedium` min-width: 18.125rem; top: -22rem; right: 2rem; @media (max-width: 960px) { top: -19.5rem; } `};
+    ${({ theme }) => theme.mediaWidth.upToMedium` min-width: 18.125rem; top: -22rem; right: -2px; @media (max-width: 960px) { top: -19.5rem; } `};
   }
 
   &.settings-menu-panel.classic { min-width: 30rem; top: -25.35rem; }
@@ -2116,6 +2212,11 @@ export const SecondaryPanelBoxContainer = styled.div`
 
   &.light.popup > .popup-inner-content,
   &.light.settings-menu-panel > .inner-content { box-shadow: 0px 0px 16px ${({ theme }) => theme.utils.hexToRGB(theme.grey3, 0.4)}; }
+
+  @media (max-width: 600px) { 
+    &.dark { border: none; }
+    padding: 0px;
+  }
 `
 export const SecondaryPanelBoxContainerExtraDecorator = styled.div`
   position: absolute;
@@ -2158,6 +2259,10 @@ export const SecondaryPanelBoxContainerExtraDecorator = styled.div`
 
   &.classic:before {}
   &.classic:after {}
+
+  @media (max-width: 600px) { 
+    &:before, &:after { display: none; }
+  }
 `
 export const WalletConnectorsContainer = styled.div`
   display: grid;
@@ -2216,6 +2321,12 @@ export const ThemedDialogContent = styled(({ minHeight, maxHeight, mobile, isOpe
     ${({ theme }) => theme.mediaWidth.upToMedium` width: 65vw; margin: 0; `}
     ${({ theme, mobile }) => theme.mediaWidth.upToSmall` width:  85vw; ${mobile && css` width: 100vw; `} `}
   }
+
+  @media (max-width: 600px) { 
+    display:block !important;
+    width: 100vw !important;
+    max-width: 100% !important;
+  }
   
   &[data-reach-dialog-content] > .token-selection-content-container {
     width: 100%;
@@ -2223,6 +2334,7 @@ export const ThemedDialogContent = styled(({ minHeight, maxHeight, mobile, isOpe
     flex-direction: column;
     justify-content: flex-start;
     flex: 1 1 0%;
+    padding: 10px 20px;
   }
 
   &[data-reach-dialog-content] > .token-selection-content-container .modal-close-icon { right: 0px; top: 0px; }
@@ -2504,6 +2616,12 @@ export const ModalContentWrapper = styled.div`
   }
 
   & img.claimedIcon { max-width: 100px; margin-top: 25px; }
+  & > .modal-content-wrapper-inner-container { position: relative; padding: 10px 20px; }
+
+  @media (max-width: 600px) { 
+    /* margin: 5px; */
+    & > .modal-content-wrapper-inner-container { }
+  }  
 `
 export const SimpleModalContentWrapper = styled.div`
   width: 100%;
@@ -2916,6 +3034,10 @@ export const CountdownContainer= styled.div`
   &.dark { color: ${({ theme }) => theme.white}; }
   &.light { color: ${({ theme }) => theme.grey1}; }
   &.classic { font-size: 13px; text-shadow: 1px 1px 1px ${({ theme }) => theme.black}; line-height: 1.5em; }
+
+  @media (max-width: 600px) { 
+    font-size: small;
+  }
 `
 export const PoolSection = styled.div`
   display: grid;

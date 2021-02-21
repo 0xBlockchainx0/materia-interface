@@ -1,7 +1,7 @@
 import { CurrencyAmount, ETHER, JSBI, Token, Trade } from '@materia-dex/sdk'
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { useIsClassicMode } from '../../state/user/hooks'
-import { RefreshCw, Plus, Minus, Link } from 'react-feather'
+import { RefreshCw, Plus, Minus, Link, ChevronUp, ChevronDown } from 'react-feather'
 import ReactGA from 'react-ga'
 
 import styled, { ThemeContext } from 'styled-components'
@@ -40,9 +40,7 @@ import {
 import { useExpertModeManager, useUserSlippageTolerance } from '../../state/user/hooks'
 import AppBody from '../AppBody'
 import {
-  TYPE,
   PageGridContainer,
-  InventoryColumn,
   PageItemsContainer,
   TabsBar,
   TabLinkItem,
@@ -52,8 +50,10 @@ import {
   OperationButton,
   MainOperationButton,
   AddRecipientPanel,
-  FooterInfo,
-  SwapButtonsContainer
+  DynamicGrid,
+  SwapButtonsContainer,
+  IconButton,
+  ActionButton
 } from '../../theme'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { computeTradePriceBreakdown, warningSeverity } from '../../utils/prices'
@@ -63,6 +63,8 @@ import Inventory from '../../components/Inventory'
 import FFCursor from '../../assets/images/FF7Cursor.png'
 import useSound from 'use-sound'
 import { wrappedCurrency } from '../../utils/wrappedCurrency'
+import ClassicSwapIcon from '../../assets/images/classic-swap-icon.png'
+import BatchSwapIcon from '../../assets/images/batch-swap-icon.png'
 
 export const ButtonBgItem = styled.img`
   height: 3ch;
@@ -303,10 +305,11 @@ export default function Swap() {
   ])
 
   const [isShown, setIsShown] = useState(false)
+  const [showMore, setShowMore] = useState(false)
 
   const alarm = require("../../assets/audio/FF7CursorMove.mp3")
   const [play, { stop }] = useSound(alarm)
-  const classicMode = useIsClassicMode()
+  const classicMode = useIsClassicMode()  
 
   // console.log('*********************************')
   // console.log('isValid: ', isValid)
@@ -346,19 +349,29 @@ export default function Swap() {
             onDismiss={handleConfirmDismiss}
           />
           <PageGridContainer className="swap">
-            <InventoryColumn>
-              <Inventory onCurrencySelect={handleOutputSelect} />
-            </InventoryColumn>
+            <div className={`left-column swap ${theme.name}`}>
+              <div className="collapsable-title">
+                <div className="pull-right">
+                  <ActionButton className={theme.name} onClick={() => { setShowMore(!showMore) }}>
+                    {showMore ? ( 'Hide Inventory' ) : ( 'View Inventory' )}
+                  </ActionButton>
+                </div>
+                <div className="clear-fix"></div>
+              </div>
+              <div className={`collapsable-item ${showMore ? 'opened' : 'collapsed'}`}>
+                <Inventory onCurrencySelect={handleOutputSelect} />
+              </div>              
+            </div>
             <PageItemsContainer className={theme.name}>
               <TabsBar className={theme.name}>
                 <TabLinkItem id={`batch-swap`} to={'/batch-swap'}
-                  className={`disabled ${theme.name}`}
+                  className={`tabLinkItem disabled ${theme.name}`}
                 //isActive={(match, { pathname }) => Boolean(match) || pathname.startsWith('/batchswap') }
-                >Batch SWAP (coming soon)</TabLinkItem>
+                ><span>Batch SWAP {(!classicMode ? '(coming soon)' : '')}</span> {/* <BatchSwapIcon/> */} </TabLinkItem>
                 <TabLinkItem id={`classic-swap`} to={'/swap'}
-                  className={`${theme.name}`}
+                  className={`tabLinkItem ${theme.name}`}
                   isActive={(match, { pathname }) => Boolean(match) || pathname.startsWith('/swap')}
-                >Classic SWAP</TabLinkItem>
+                ><span>Classic SWAP</span> {/* <ClassicSwapIcon/> */} </TabLinkItem>
               </TabsBar>
               <div className="clear-fix">
                 <PageContentContainer className={theme.name}>
@@ -417,20 +430,7 @@ export default function Swap() {
                     )}
                   </TradePriceContainer>
                   <div>
-                    <AutoColumn gap={'lg'}>
-                      {recipient === null && !showWrap && isExpertMode ? (
-                        <OperationButton id="add-recipient-button" onClick={() => onChangeRecipient('')} className={`add-a-send-button ${theme.name}`} label="Add a send (optional)">
-                          <Plus />
-                        </OperationButton>
-                      ) : null}
-                      {recipient !== null && !showWrap ? (
-                        <AddRecipientPanel>
-                          <OperationButton id="remove-recipient-button" onClick={() => onChangeRecipient(null)} className={`remove-send-button ${theme.name}`} label="Remove send">
-                            <Minus />
-                          </OperationButton>
-                          <AddressInputPanel id="recipient" value={recipient} onChange={onChangeRecipient} />
-                        </AddRecipientPanel>
-                      ) : null}
+                    <AutoColumn gap={'lg'}>                      
                       <CurrencyInputPanel
                         value={formattedAmounts[Field.OUTPUT]}
                         onUserInput={handleTypeOutput}
@@ -444,6 +444,25 @@ export default function Swap() {
                     </AutoColumn>
                   </div>
                 </PageContentContainer>
+                { isExpertMode && (
+                  <DynamicGrid className={`mt20 mb20 ${theme.name}`} columns={1}>
+                    <div className="custom-recipient-data-container">
+                      {recipient === null && !showWrap && isExpertMode ? (
+                        <OperationButton id="add-recipient-button" onClick={() => onChangeRecipient('')} className={`add-a-send-button ${theme.name}`} label="Add a send (optional)">
+                          <Plus />
+                        </OperationButton>
+                      ) : null}
+                      {recipient !== null && !showWrap ? (
+                        <AddRecipientPanel>
+                          <OperationButton id="remove-recipient-button" onClick={() => onChangeRecipient(null)} className={`remove-send-button ${theme.name}`} label="Remove send">
+                            <Minus />
+                          </OperationButton>
+                          <AddressInputPanel id="recipient" value={recipient} onChange={onChangeRecipient} />
+                        </AddRecipientPanel>
+                      ) : null}
+                    </div>
+                  </DynamicGrid>
+                ) }                
                 <BottomGrouping>
                   <SwapButtonsContainer className={isExpertMode && swapErrorMessage ? 'has-error' : ''}>
                     {!account ? (

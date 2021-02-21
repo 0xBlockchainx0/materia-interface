@@ -89,9 +89,7 @@ export default function Footer() {
           )}
         </HideSmall>
         {account && (
-          <HideSmall>
-            <ActionButton className={`claim-footer full-width ${theme.name}`} onClick={openClaimModal}>Claim GIL</ActionButton>
-          </HideSmall>
+          <ActionButton className={`claim-footer full-width ${theme.name}`} onClick={openClaimModal}>Claim GIL</ActionButton>
         )}
       </FooterElement>
       <FooterElementWrap className={`mr20 ${theme.name}`}>

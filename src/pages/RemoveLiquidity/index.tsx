@@ -494,12 +494,22 @@ export default function RemoveLiquidity({
     Number.parseInt(parsedAmounts[Field.LIQUIDITY_PERCENT].toFixed(0)),
     liquidityPercentChangeCallback
   )
+  const [showMore, setShowMore] = useState(false)
 
   return (
     <>
       <AppBody>
         <PageGridContainer className="pool">
-          <div className={`left-column ${theme.name}`}>
+          <div className={`left-column pool ${theme.name}`}>
+            <div className="collapsable-title">
+              <div className="pull-right">
+                <ActionButton className={theme.name} onClick={() => { setShowMore(!showMore) }}>
+                  {showMore ? ( 'Hide Pools' ) : ( 'View Pools' )}
+                </ActionButton>
+              </div>
+              <div className="clear-fix"></div>
+            </div>
+            <div className={`collapsable-item ${showMore ? 'opened' : 'collapsed'}`}>
             <SecondaryPanelBoxContainer className={ `${theme.name}` }>
               <SecondaryPanelBoxContainerExtraDecorator className={ `top ${theme.name}` }/>
               <div className="inner-content">
@@ -518,6 +528,7 @@ export default function RemoveLiquidity({
                 </AutoColumn>
               ) : null}
             </AutoColumn>
+            </div>
           </div>
           <PageItemsContainer className={theme.name}>
               <AddRemoveTabs creating={false} adding={false} />

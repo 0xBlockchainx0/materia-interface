@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import { ThemeContext } from 'styled-components'
 import { STAKING_REWARDS_INFO, useStakingInfo } from '../../state/stake/hooks'
 import PoolCard from '../../components/earn/PoolCard'
@@ -16,7 +16,8 @@ import {
   PageContentContainer,
   DynamicGrid,
   ExternalLink,
-  PoolSection
+  PoolSection,
+  ActionButton
 } from '../../theme'
 
 export default function Earn() {
@@ -24,12 +25,22 @@ export default function Earn() {
   const stakingInfos = useStakingInfo()
   const stakingRewardsExist = Boolean(typeof chainId === 'number' && (STAKING_REWARDS_INFO[chainId]?.length ?? 0) > 0)
   const theme = useContext(ThemeContext)
+  const [showMore, setShowMore] = useState(false)
 
   return (
     <>
       <AppBody>
         <PageGridContainer className="liquidity-mining">
-          <div className={`left-column ${theme.name}`}>
+          <div className={`left-column liquidity-mining ${theme.name}`}>
+            <div className="collapsable-title">
+              <div className="pull-right">
+                <ActionButton className={theme.name} onClick={() => { setShowMore(!showMore) }}>
+                  {showMore ? ( 'Hide Rewards' ) : ( 'View Rewards' )}
+                </ActionButton>
+              </div>
+              <div className="clear-fix"></div>
+            </div>
+            <div className={`collapsable-item ${showMore ? 'opened' : 'collapsed'}`}>
             <SecondaryPanelBoxContainer className={`${theme.name}`}>
               <SecondaryPanelBoxContainerExtraDecorator className={`top ${theme.name}`} />
               <div className="inner-content">
@@ -43,6 +54,7 @@ export default function Earn() {
               </div>
               <SecondaryPanelBoxContainerExtraDecorator className={`bottom ${theme.name}`} />
             </SecondaryPanelBoxContainer>
+            </div>
           </div>
           <PageItemsContainer className={theme.name}>
             <TabsBar className={theme.name}>
