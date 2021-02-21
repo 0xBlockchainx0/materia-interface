@@ -120,16 +120,6 @@ export default function AddLiquidity({
 
   const allPairsWithLiquidity = pairs.map(([, pair]) => pair).filter((pair): pair is Pair => Boolean(pair))
 
-  // console.log('***************************************')
-  // console.log('allPairsWithLiquidity: ', allPairsWithLiquidity)
-  // console.log('liquidityTokensWithBalances: ', liquidityTokensWithBalances)
-  // console.log('fetchingPairBalances: ', fetchingPairBalances)
-  // console.log('pairsBalances: ', pairsBalances)
-  // console.log('liquidityTokens: ', liquidityTokens)
-  // console.log('tokenPairsWithLiquidityTokens: ', tokenPairsWithLiquidityTokens)
-  // console.log('trackedTokenPairs: ', trackedTokenPairs)
-  // console.log('***************************************')
-
   // AddLiquidity
   const currencyA = useCurrency(currencyIdA)
   const currencyB = useCurrency(currencyIdB)
@@ -186,16 +176,6 @@ export default function AddLiquidity({
     [dependentField]: noLiquidity ? otherTypedValue : parsedAmounts[dependentField]?.toSignificant(6) ?? ''
   }
 
-  // console.log('*********************************')
-  // console.log('noLiquidity: ', noLiquidity)
-  // console.log('typedValue: ', typedValue)
-  // console.log('otherTypedValue: ', otherTypedValue)
-  // console.log('independentField: ', independentField)
-  // console.log('dependentField: ', dependentField)
-  // console.log('parsedAmounts: ', parsedAmounts)
-  // console.log('formattedAmounts: ', formattedAmounts)
-  // console.log('*********************************')
-
   // get the max amounts user can add
   const maxAmounts: { [field in Field]?: TokenAmount } = [Field.CURRENCY_A, Field.CURRENCY_B].reduce(
     (accumulator, field) => {
@@ -229,13 +209,6 @@ export default function AddLiquidity({
     ORCHESTRATOR_ADDRESS
   )
 
-  // console.log('*********************************')
-  // console.log('approvalA: ', approvalA)
-  // console.log('approvalB: ', approvalB)
-  // console.log('tokenA: ', wrappedCurrency(currencies[Field.CURRENCY_B], chainId))
-  // console.log('tokenB: ', wrappedCurrency(currencies[Field.CURRENCY_B], chainId))
-  // console.log('*********************************')
-
   const addTransaction = useTransactionAdder()
   const addInteroperableTokens = useAddInteroperableTokens()
 
@@ -258,14 +231,6 @@ export default function AddLiquidity({
 
     const currencyWUSD = WUSD[chainId ?? 1]
     const currencyBIsWUSD = wrappedCurrency(currencyB, chainId)?.address == currencyWUSD.address
-
-    // console.log('***************************************')
-    // console.log('currencyBIsWUSD: ', currencyBIsWUSD)
-    // console.log('parsedAmounts[Field.CURRENCY_A]: ', parsedAmounts[Field.CURRENCY_A])
-    // console.log('originalParsedAmounts[Field.CURRENCY_A]: ', originalParsedAmounts[Field.CURRENCY_A])
-    // console.log('parsedAmounts[Field.CURRENCY_B]: ', parsedAmounts[Field.CURRENCY_B])
-    // console.log('originalParsedAmounts[Field.CURRENCY_B]: ', originalParsedAmounts[Field.CURRENCY_B])
-    // console.log('***************************************')
 
     // const { [Field.CURRENCY_A]: parsedAmountA, [Field.CURRENCY_B]: parsedAmountB } = parsedAmounts
     // const modifiedParsedAmountA = currencyBIsWUSD 
@@ -360,41 +325,7 @@ export default function AddLiquidity({
         value = null
       }
     }
-
-    console.log('*********************************')
-    // console.log('isETH: ', isETH)
-    // console.log('approvalA: ', approvalA)
-    // console.log('approvalB: ', approvalB)
-    // console.log('originalApprovalA: ', originalApprovalA)
-    // console.log('originalApprovalB: ', originalApprovalB)
-    // console.log('parsedAmountA: ', parsedAmountA)
-    // console.log('parsedAmountB: ', parsedAmountB)
-    // console.log('parsedAmountA value: ', parsedAmountA?.toSignificant(6))
-    // console.log('parsedAmountB value: ', parsedAmountB?.toSignificant(6))
-    // console.log('modifiedParsedAmountA: ', modifiedParsedAmountA)
-    // console.log('modifiedParsedAmountB: ', modifiedParsedAmountB)
-    // console.log('modifiedParsedAmountA value: ', modifiedParsedAmountA?.toSignificant(6))
-    // console.log('modifiedParsedAmountB value: ', modifiedParsedAmountB?.toSignificant(6))
-    // console.log('parsedAmountsA: ', parsedAmounts[Field.CURRENCY_A])
-    // console.log('parsedAmountsB: ', parsedAmounts[Field.CURRENCY_B])
-    // console.log('parsedAmountsA value: ', parsedAmounts[Field.CURRENCY_A]?.toSignificant(6))
-    // console.log('parsedAmountsB value: ', parsedAmounts[Field.CURRENCY_B]?.toSignificant(6))
-    // console.log('originalParsedAmountsA: ', originalParsedAmounts[Field.CURRENCY_A])
-    // console.log('originalParsedAmountsB: ', originalParsedAmounts[Field.CURRENCY_B])
-    // console.log('originalParsedAmountsA value: ', originalParsedAmounts[Field.CURRENCY_A]?.toSignificant(6))
-    // console.log('originalParsedAmountsB value: ', originalParsedAmounts[Field.CURRENCY_B]?.toSignificant(6))
-    // console.log('currencyA: ', currencyA)
-    // console.log('currencyB: ', currencyB)
-    // console.log('currencyA ETH: ', currencyA === ETHER)
-    // console.log('currencyB ETH: ', currencyB === ETHER)
-    // console.log('isEthItem: ', isEthItem)
-    // console.log('ethItemCollection: ', ethItemCollection)
-    // console.log('ethItemObjectId: ', ethItemObjectId?.toString() ?? "0")
-    console.log('methodName: ', methodName)
-    console.log('args: ', args)
-    console.log('value: ', value)
-    console.log('*********************************')
-
+    
     setAttemptingTxn(true)
     await estimate(...args, value ? { value } : {})
       .then(estimatedGasLimit =>

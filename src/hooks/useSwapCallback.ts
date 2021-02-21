@@ -64,13 +64,6 @@ function useSwapCallArguments(
       ? null
       : getEthItemCollectionContract(chainId, ethItemCollection, library, account)
 
-  // console.log('*********************************')
-  // console.log('isEthItem: ', isEthItem)
-  // console.log('ethItemCollection: ', ethItemCollection)
-  // console.log('ethItemObjectId: ', ethItemObjectId?.toString() ?? "0")
-  // console.log('tokenAddressA: ', tokenAddressA)
-  // console.log('*********************************')
-
   return useMemo(() => {
     const swapMethods = []
 
@@ -130,10 +123,6 @@ export function useSwapCallback(
 
   const { address: recipientAddress } = useENS(recipientAddressOrName)
   const recipient = recipientAddressOrName === null ? account : recipientAddress
-
-  console.log('*********************************')
-  console.log('swapCalls: ', swapCalls)
-  console.log('*********************************')
 
   return useMemo(() => {
     if (!trade || !tokenIn || !tokenOut || !library || !account || !chainId) {
@@ -196,11 +185,7 @@ export function useSwapCallback(
           (el, ix, list): el is SuccessfulCall =>
             'gasEstimate' in el && (ix === list.length - 1 || 'gasEstimate' in list[ix + 1])
         )
-
-        // console.log('*********************************')
-        // console.log('successfulEstimation: ', successfulEstimation)
-        // console.log('*********************************')
-
+        
         if (!successfulEstimation) {
           const errorCalls = estimatedCalls.filter((call): call is FailedCall => 'error' in call)
           if (errorCalls.length > 0) {

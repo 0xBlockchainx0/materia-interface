@@ -293,20 +293,7 @@ export default function RemoveLiquidity({
     } else {
       throw new Error('Attempting to confirm without approval or a signature. Please contact support.')
     }
-
-    // console.log('*********************************')
-    // console.log('oneCurrencyIsETH: ', oneCurrencyIsETH)
-    // console.log('currencyBIsWUSD: ', currencyBIsWUSD)
-    // console.log('tokenA: ', tokenA.address)
-    // console.log('tokenB: ', tokenB.address)
-    // console.log('currencyA: ', currencyA)
-    // console.log('currencyB: ', currencyB)
-    // console.log('currencyA ETH: ', currencyA === ETHER)
-    // console.log('currencyB ETH: ', currencyB === ETHER)
-    // console.log('methodNames: ', methodNames)
-    // console.log('args: ', args)
-    // console.log('*********************************')
-
+    
     const safeGasEstimates: (BigNumber | undefined)[] = await Promise.all(
       methodNames.map(methodName =>
         orchestrator.estimateGas[methodName](...args)

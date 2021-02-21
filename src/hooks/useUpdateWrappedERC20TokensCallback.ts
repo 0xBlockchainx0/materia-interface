@@ -21,10 +21,6 @@ export default function useUpdateWrappedERC20TokensCallback(
       const wrappedTokensAddresses: string[] = logs?.map(log => web3.eth.abi.decodeParameter("address", log.topics[2]).toString()) ?? []
     
       addInteroperableTokens(chainId ?? 1, wrappedTokensAddresses)
-
-      // console.log('*********************************')
-      // console.log('wrappedTokensAddresses: ', wrappedTokensAddresses)
-      // console.log('*********************************')
     }
   }
 }

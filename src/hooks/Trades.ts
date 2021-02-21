@@ -84,12 +84,6 @@ function useAllCommonPairs(currencyA?: Currency, currencyB?: Currency): Pair[] {
 export function useTradeExactIn(currencyAmountIn?: CurrencyAmount, currencyOut?: Currency): Trade | null {
   const allowedPairs = useAllCommonPairs(currencyAmountIn?.currency, currencyOut)
 
-  // console.log('*********************************')
-  // console.log('useTradeExactIn allowedPairs: ', allowedPairs)
-  // console.log('useTradeExactIn currencyAmountIn: ', currencyAmountIn)
-  // console.log('useTradeExactIn currencyOut: ', currencyOut)
-  // console.log('*********************************')
-
   return useMemo(() => {
     if (currencyAmountIn && currencyOut && allowedPairs.length > 0) {
       return (
@@ -105,12 +99,6 @@ export function useTradeExactIn(currencyAmountIn?: CurrencyAmount, currencyOut?:
  */
 export function useTradeExactOut(currencyIn?: Currency, currencyAmountOut?: CurrencyAmount): Trade | null {
   const allowedPairs = useAllCommonPairs(currencyIn, currencyAmountOut?.currency)
-
-  // console.log('*********************************')
-  // console.log('useTradeExactOut allowedPairs: ', allowedPairs)
-  // console.log('useTradeExactOut currencyIn: ', currencyIn)
-  // console.log('useTradeExactOut currencyAmountOut: ', currencyAmountOut)
-  // console.log('*********************************')
 
   return useMemo(() => {
     if (currencyIn && currencyAmountOut && allowedPairs.length > 0) {
