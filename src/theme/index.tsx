@@ -2135,6 +2135,7 @@ export const SecondaryPanelBoxContainer = styled.div`
       margin: 0 auto;
       padding: 0;
     }
+    .connect-wallet-modal { padding: 10px 20px; }
     & .popup-close-icon, & .modal-close-icon  { 
       right: 20px;
       top: 10px; 
