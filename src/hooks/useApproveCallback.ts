@@ -40,15 +40,6 @@ export function useTokenApproveCallback(
     // we might not have enough data to know whether or not we need to approve
     if (!currentAllowance) return ApprovalState.UNKNOWN
 
-    // console.log('*********************************')
-    // console.log('currency: ', amountToApprove.currency)
-    // console.log('token: ', token)
-    // console.log('symbol: ', token?.symbol)
-    // console.log('amountToApprove: ', amountToApprove?.toSignificant(6))
-    // console.log('currentAllowance: ', currentAllowance?.toSignificant(6))
-    // console.log('currentAllowance.lessThan(amountToApprove): ', currentAllowance.lessThan(amountToApprove))
-    // console.log('*********************************')
-
     // amountToApprove will be defined if currentAllowance is
     return currentAllowance.lessThan(amountToApprove)
       ? pendingApproval
@@ -107,16 +98,6 @@ export function useTokenApproveCallback(
         throw error
       })
   }, [approvalState, token, tokenContract, amountToApprove, spender, addTransaction])
-
-
-  // console.log('*********************************')
-  // console.log('ethItem: ', ethItem)
-  // console.log('isWUSD: ', isWUSD)
-  // console.log('token: ', token?.address)
-  // console.log('approvalState: ', approvalState)
-  // console.log('spender: ', spender)
-  // console.log('account: ', account)
-  // console.log('*********************************')
 
   return [approvalState, approve]
 }

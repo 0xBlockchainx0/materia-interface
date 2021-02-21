@@ -307,16 +307,7 @@ export default function Swap() {
   const alarm = require("../../assets/audio/FF7CursorMove.mp3")
   const [play, { stop }] = useSound(alarm)
   const classicMode = useIsClassicMode()
-
-  // console.log('*********************************')
-  // console.log('isValid: ', isValid)
-  // console.log('priceImpactSeverity: ', priceImpactSeverity)
-  // console.log('isExpertMode: ', isExpertMode)
-  // console.log('swapCallbackError: ', !!swapCallbackError)
-  // console.log('trade: ', trade)
-  // console.log('route: ', route)
-  // console.log('*********************************')
-
+  
   return (
     <>
       {/* <TokenWarningModal
