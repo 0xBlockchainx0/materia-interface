@@ -4,7 +4,7 @@
 An open source interface for Materia -- a protocol for decentralized exchange of Ethereum tokens.
 
 - Website: [materiadex.com](https://materiadex.com/)
-- Interface: [app.materiadex.org](https://app.materiadex.com)
+- Interface: [materia.exchange](https://materia.exchange)
 - Docs: [materiadex.com/docs/](https://materiadex.com/docs/)
 - Twitter: [@MateriaDex](https://twitter.com/MateriaDex)
 - Reddit: [/r/Materia](https://www.reddit.com/r/Materia/)
@@ -13,9 +13,9 @@ An open source interface for Materia -- a protocol for decentralized exchange of
 
 ## Accessing the Materia Interface
 
-To access the Mateira Interface, use an IPFS gateway link from the
-[latest release](https://github.com/Materia-dex/materia-interface/releases/latest), 
-or visit [app.materiadex.com](https://app.materiadex.com).
+To access the Materia Interface, use an IPFS gateway link from the
+[latest release](https://github.com/materia-dex/materia-interface/releases/latest), 
+or visit [materia.exchange](https://materia.exchange).
 
 ## Listing a token
 

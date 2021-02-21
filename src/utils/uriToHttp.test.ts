@@ -17,9 +17,9 @@ describe('uriToHttp', () => {
     ])
   })
   // it('returns ipns gateways for ipns:// urls', () => {
-  //   expect(uriToHttp('ipns://app.materiadex.com')).toEqual([
-  //     'https://cloudflare-ipfs.com/ipns/app.materiadex.com/',
-  //     'https://ipfs.io/ipns/app.materiadex.com/'
+  //   expect(uriToHttp('ipns://materia.exchange')).toEqual([
+  //     'https://cloudflare-ipfs.com/ipns/materia.exchange/',
+  //     'https://ipfs.io/ipns/materia.exchange/'
   //   ])
   // })
   it('returns empty array for invalid scheme', () => {
