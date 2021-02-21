@@ -65,7 +65,7 @@ export const AMPL = new Token(ChainId.MAINNET, '0xD46bA6D942050d489DBd938a2C909A
 export const IGIL: { [chainId in ChainId]: Token } = {
   [ChainId.MAINNET]: new Token(ChainId.MAINNET, ZERO_ADDRESS, 18, 'IGIL', 'MateriaItem'),
   [ChainId.RINKEBY]: new Token(ChainId.RINKEBY, ZERO_ADDRESS, 18, 'IGIL', 'MateriaItem'),
-  [ChainId.ROPSTEN]: new Token(ChainId.ROPSTEN, '0xf2a16989b81898e5952a13714ae0d3dd81b346bd', 18, 'ILIG', 'MateriaItem'),
+  [ChainId.ROPSTEN]: new Token(ChainId.ROPSTEN, '0x2E78e06859476359967a222eb5fB51A5b0C95e8C', 18, 'IGIL', 'MateriaItem'),
   [ChainId.GÖRLI]: new Token(ChainId.GÖRLI, ZERO_ADDRESS, 18, 'IGIL', 'MateriaItem'),
   [ChainId.KOVAN]: new Token(ChainId.KOVAN, ZERO_ADDRESS, 18, 'IGIL', 'MateriaItem')
 }
@@ -81,7 +81,7 @@ export const IUSDC: { [chainId in ChainId]: Token } = {
 export const IDAI: { [chainId in ChainId]: Token } = {
   [ChainId.MAINNET]: new Token(ChainId.MAINNET, ZERO_ADDRESS, 18, 'IDAI', 'Dai StablecoinItem'),
   [ChainId.RINKEBY]: new Token(ChainId.RINKEBY, ZERO_ADDRESS, 18, 'IDAI', 'Dai StablecoinItem'),
-  [ChainId.ROPSTEN]: new Token(ChainId.ROPSTEN, ZERO_ADDRESS, 18, 'IDAI', 'Dai StablecoinItem'),
+  [ChainId.ROPSTEN]: new Token(ChainId.ROPSTEN, '0x25E4ac6a9ADba26eFb3aDE755aC33A7C85552F0f', 18, 'IDAI', 'Dai StablecoinItem'),
   [ChainId.GÖRLI]: new Token(ChainId.GÖRLI, ZERO_ADDRESS, 18, 'IDAI', 'Dai StablecoinItem'),
   [ChainId.KOVAN]: new Token(ChainId.KOVAN, ZERO_ADDRESS, 18, 'IDAI', 'Dai StablecoinItem')
 }
