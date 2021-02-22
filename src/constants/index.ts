@@ -63,7 +63,7 @@ export const AMPL = new Token(ChainId.MAINNET, '0xD46bA6D942050d489DBd938a2C909A
 
 // EthItems
 export const IGIL: { [chainId in ChainId]: Token } = {
-  [ChainId.MAINNET]: new Token(ChainId.MAINNET, ZERO_ADDRESS, 18, 'IGIL', 'MateriaItem'),
+  [ChainId.MAINNET]: new Token(ChainId.MAINNET, '0xE51a7641A2D62119458B38e074367D9bFA8a3916', 18, 'IGIL', 'MateriaItem'),
   [ChainId.RINKEBY]: new Token(ChainId.RINKEBY, ZERO_ADDRESS, 18, 'IGIL', 'MateriaItem'),
   [ChainId.ROPSTEN]: new Token(ChainId.ROPSTEN, '0x2E78e06859476359967a222eb5fB51A5b0C95e8C', 18, 'IGIL', 'MateriaItem'),
   [ChainId.GÖRLI]: new Token(ChainId.GÖRLI, ZERO_ADDRESS, 18, 'IGIL', 'MateriaItem'),
@@ -71,7 +71,7 @@ export const IGIL: { [chainId in ChainId]: Token } = {
 }
 
 export const IUSDC: { [chainId in ChainId]: Token } = {
-  [ChainId.MAINNET]: new Token(ChainId.MAINNET, ZERO_ADDRESS, 18, 'IUSDC', 'USD CoinItem'),
+  [ChainId.MAINNET]: new Token(ChainId.MAINNET, '0x7a3428F1CBA2756aB9a6D672311ca6C8DcE65C6B', 18, 'IUSDC', 'USD CoinItem'),
   [ChainId.RINKEBY]: new Token(ChainId.RINKEBY, ZERO_ADDRESS, 18, 'IUSDC', 'USD CoinItem'),
   [ChainId.ROPSTEN]: new Token(ChainId.ROPSTEN, ZERO_ADDRESS, 18, 'IUSDC', 'USD CoinItem'),
   [ChainId.GÖRLI]: new Token(ChainId.GÖRLI, ZERO_ADDRESS, 18, 'IUSDC', 'USD CoinItem'),
