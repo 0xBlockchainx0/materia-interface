@@ -397,8 +397,8 @@ html {
 }
 
 ${({ theme }) => ( (theme.name == 'classic' ? 'html, input, textarea, button { font-family: \'Press Start 2P\', cursive; font-size: 11px; /*font-family: \'VT323\', monospace;*/ /*font-family: \'DavidFens\', sans-serif;*/ }' : 
-  'html, input, textarea, button { font-family: \'Cera Pro\', sans-serif; font-display: fallback; }' + 
-  '@supports (font-variation-settings: normal) { html, input, textarea, button { font-family: \'Cera Pro\', sans-serif; } }' ) )}
+  'html, input, textarea, button { font-family: \'Inter\', sans-serif; font-display: fallback; }' + 
+  '@supports (font-variation-settings: normal) { html, input, textarea, button { font-family: \'Inter\', sans-serif; } }' ) )}
 
 body {
   min-height: 100vh;
