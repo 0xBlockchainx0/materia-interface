@@ -40,10 +40,14 @@ export const STAKING_REWARDS_INFO: {
     // },
   ],
   [ChainId.ROPSTEN]: [
-    {
-      tokens: [WUSD[ChainId.ROPSTEN], IGIL[ChainId.ROPSTEN]],
-      stakingRewardAddress: '0xed84c148470Eb71f194f9aeCA68b073849320837'
-    }
+    // {
+    //   tokens: [WUSD[ChainId.ROPSTEN], IGIL[ChainId.ROPSTEN]],
+    //   stakingRewardAddress: '0x3f68561Bc9ed3229e768E0461C3bCC4991C01299'
+    // },
+    // {
+    //   tokens: [WUSD[ChainId.ROPSTEN], IDAI[ChainId.ROPSTEN]],
+    //   stakingRewardAddress: '0x9FD2699B70533FA52e021be0Cb1C9A0C0b51fE9a'
+    // }
   ]
 }
 

@@ -3,8 +3,8 @@ import { AbstractConnector } from '@web3-react/abstract-connector'
 
 import { fortmatic, injected, portis, walletconnect, walletlink } from '../connectors'
 
-export const FACTORY_ADDRESS = '0xBC3AdaD2908cC3556DCE07547AEE76651Ac3d5AE'
-export const ORCHESTRATOR_ADDRESS = '0xd8076B5913934f6Cc8A223c27FD7949c4Ca64A55'
+export const FACTORY_ADDRESS = '0xB498a69fF7b9a73C58491d564Fc6a462b259c860'
+export const ORCHESTRATOR_ADDRESS = '0xB0F720Baa5BD1715897d4790A59f5c7aa1377D79'
 export const MATERIA_DFO_ADDRESS = '0xf056aE03Cf991e4587Da458B2c85e9a353684B3a'
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 export const ETHEREUM_OBJECT_ID = '11027808402393750762873608378930398077418220124669629658698890017122249518391'
@@ -63,35 +63,35 @@ export const AMPL = new Token(ChainId.MAINNET, '0xD46bA6D942050d489DBd938a2C909A
 
 // EthItems
 export const IGIL: { [chainId in ChainId]: Token } = {
-  [ChainId.MAINNET]: new Token(ChainId.MAINNET, ZERO_ADDRESS, 18, 'IGIL', 'MateriaItem'),
-  [ChainId.RINKEBY]: new Token(ChainId.RINKEBY, ZERO_ADDRESS, 18, 'IGIL', 'MateriaItem'),
-  [ChainId.ROPSTEN]: new Token(ChainId.ROPSTEN, '0xf2a16989b81898e5952a13714ae0d3dd81b346bd', 18, 'ILIG', 'MateriaItem'),
-  [ChainId.GÖRLI]: new Token(ChainId.GÖRLI, ZERO_ADDRESS, 18, 'IGIL', 'MateriaItem'),
-  [ChainId.KOVAN]: new Token(ChainId.KOVAN, ZERO_ADDRESS, 18, 'IGIL', 'MateriaItem')
+  [ChainId.MAINNET]: new Token(ChainId.MAINNET, '0xE51a7641A2D62119458B38e074367D9bFA8a3916', 18, 'iGIL', 'Materia item'),
+  [ChainId.RINKEBY]: new Token(ChainId.RINKEBY, ZERO_ADDRESS, 18, 'iGIL', 'Materia item'),
+  [ChainId.ROPSTEN]: new Token(ChainId.ROPSTEN, '0x2E78e06859476359967a222eb5fB51A5b0C95e8C', 18, 'iGIL', 'Materia item'),
+  [ChainId.GÖRLI]: new Token(ChainId.GÖRLI, ZERO_ADDRESS, 18, 'iGIL', 'Materia item'),
+  [ChainId.KOVAN]: new Token(ChainId.KOVAN, ZERO_ADDRESS, 18, 'iGIL', 'Materia item')
 }
 
 export const IUSDC: { [chainId in ChainId]: Token } = {
-  [ChainId.MAINNET]: new Token(ChainId.MAINNET, ZERO_ADDRESS, 18, 'IUSDC', 'USD CoinItem'),
-  [ChainId.RINKEBY]: new Token(ChainId.RINKEBY, ZERO_ADDRESS, 18, 'IUSDC', 'USD CoinItem'),
-  [ChainId.ROPSTEN]: new Token(ChainId.ROPSTEN, ZERO_ADDRESS, 18, 'IUSDC', 'USD CoinItem'),
-  [ChainId.GÖRLI]: new Token(ChainId.GÖRLI, ZERO_ADDRESS, 18, 'IUSDC', 'USD CoinItem'),
-  [ChainId.KOVAN]: new Token(ChainId.KOVAN, ZERO_ADDRESS, 18, 'IUSDC', 'USD CoinItem')
+  [ChainId.MAINNET]: new Token(ChainId.MAINNET, '0x7a3428F1CBA2756aB9a6D672311ca6C8DcE65C6B', 18, 'iUSDC', 'USD Coin item'),
+  [ChainId.RINKEBY]: new Token(ChainId.RINKEBY, ZERO_ADDRESS, 18, 'iUSDC', 'USD Coin item'),
+  [ChainId.ROPSTEN]: new Token(ChainId.ROPSTEN, ZERO_ADDRESS, 18, 'iUSDC', 'USD Coin item'),
+  [ChainId.GÖRLI]: new Token(ChainId.GÖRLI, ZERO_ADDRESS, 18, 'iUSDC', 'USD Coin item'),
+  [ChainId.KOVAN]: new Token(ChainId.KOVAN, ZERO_ADDRESS, 18, 'iUSDC', 'USD Coin item')
 }
 
 export const IDAI: { [chainId in ChainId]: Token } = {
-  [ChainId.MAINNET]: new Token(ChainId.MAINNET, ZERO_ADDRESS, 18, 'IDAI', 'Dai StablecoinItem'),
-  [ChainId.RINKEBY]: new Token(ChainId.RINKEBY, ZERO_ADDRESS, 18, 'IDAI', 'Dai StablecoinItem'),
-  [ChainId.ROPSTEN]: new Token(ChainId.ROPSTEN, ZERO_ADDRESS, 18, 'IDAI', 'Dai StablecoinItem'),
-  [ChainId.GÖRLI]: new Token(ChainId.GÖRLI, ZERO_ADDRESS, 18, 'IDAI', 'Dai StablecoinItem'),
-  [ChainId.KOVAN]: new Token(ChainId.KOVAN, ZERO_ADDRESS, 18, 'IDAI', 'Dai StablecoinItem')
+  [ChainId.MAINNET]: new Token(ChainId.MAINNET, ZERO_ADDRESS, 18, 'iDAI', 'Dai Stablecoin item'),
+  [ChainId.RINKEBY]: new Token(ChainId.RINKEBY, ZERO_ADDRESS, 18, 'iDAI', 'Dai Stablecoin item'),
+  [ChainId.ROPSTEN]: new Token(ChainId.ROPSTEN, '0x25E4ac6a9ADba26eFb3aDE755aC33A7C85552F0f', 18, 'iDAI', 'Dai Stablecoin item'),
+  [ChainId.GÖRLI]: new Token(ChainId.GÖRLI, ZERO_ADDRESS, 18, 'iDAI', 'Dai Stablecoin item'),
+  [ChainId.KOVAN]: new Token(ChainId.KOVAN, ZERO_ADDRESS, 18, 'iDAI', 'Dai Stablecoin item')
 }
 
 export const IWBTC: { [chainId in ChainId]: Token } = {
-  [ChainId.MAINNET]: new Token(ChainId.MAINNET, ZERO_ADDRESS, 18, 'IWBTC', 'Wrapped BTCItem'),
-  [ChainId.RINKEBY]: new Token(ChainId.RINKEBY, ZERO_ADDRESS, 18, 'IWBTC', 'Wrapped BTCItem'),
-  [ChainId.ROPSTEN]: new Token(ChainId.ROPSTEN, ZERO_ADDRESS, 18, 'IWBTC', 'Wrapped BTCItem'),
-  [ChainId.GÖRLI]: new Token(ChainId.GÖRLI, ZERO_ADDRESS, 18, 'IWBTC', 'Wrapped BTCItem'),
-  [ChainId.KOVAN]: new Token(ChainId.KOVAN, ZERO_ADDRESS, 18, 'IWBTC', 'Wrapped BTCItem')
+  [ChainId.MAINNET]: new Token(ChainId.MAINNET, ZERO_ADDRESS, 18, 'iWBTC', 'Wrapped BTC item'),
+  [ChainId.RINKEBY]: new Token(ChainId.RINKEBY, ZERO_ADDRESS, 18, 'iWBTC', 'Wrapped BTC item'),
+  [ChainId.ROPSTEN]: new Token(ChainId.ROPSTEN, ZERO_ADDRESS, 18, 'iWBTC', 'Wrapped BTC item'),
+  [ChainId.GÖRLI]: new Token(ChainId.GÖRLI, ZERO_ADDRESS, 18, 'iWBTC', 'Wrapped BTC item'),
+  [ChainId.KOVAN]: new Token(ChainId.KOVAN, ZERO_ADDRESS, 18, 'iWBTC', 'Wrapped BTC item')
 }
 
 export const MERKLE_DISTRIBUTOR_ADDRESS: { [chainId in ChainId]?: string } = {
