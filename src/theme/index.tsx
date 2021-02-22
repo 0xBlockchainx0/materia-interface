@@ -914,8 +914,8 @@ export const MainContainer = styled.div`
     background-size: 100% 100%;
   }
 
-  &:before { bottom: -110px; left: -112px; }
-  &:after { bottom: -110px; right: -112px; }
+  &:before { bottom: -100px; left: -112px; }
+  &:after { bottom: -100px; right: -112px; }
 
   &.dark:before { background-image: url(${(images.decorators.grid.dark)}); }
   &.dark:after { background-image: url(${(images.decorators.grid.dark)}); }
