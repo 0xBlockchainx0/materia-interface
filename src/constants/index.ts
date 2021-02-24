@@ -79,7 +79,7 @@ export const IUSDC: { [chainId in ChainId]: Token } = {
 }
 
 export const IDAI: { [chainId in ChainId]: Token } = {
-  [ChainId.MAINNET]: new Token(ChainId.MAINNET, ZERO_ADDRESS, 18, 'iDAI', 'Dai Stablecoin item'),
+  [ChainId.MAINNET]: new Token(ChainId.MAINNET, '0x4d69a1d482ff9b89600c1DD9e535538957Cd8E29', 18, 'iDAI', 'Dai Stablecoin item'),
   [ChainId.RINKEBY]: new Token(ChainId.RINKEBY, ZERO_ADDRESS, 18, 'iDAI', 'Dai Stablecoin item'),
   [ChainId.ROPSTEN]: new Token(ChainId.ROPSTEN, '0x25E4ac6a9ADba26eFb3aDE755aC33A7C85552F0f', 18, 'iDAI', 'Dai Stablecoin item'),
   [ChainId.GÖRLI]: new Token(ChainId.GÖRLI, ZERO_ADDRESS, 18, 'iDAI', 'Dai Stablecoin item'),
@@ -87,7 +87,7 @@ export const IDAI: { [chainId in ChainId]: Token } = {
 }
 
 export const IWBTC: { [chainId in ChainId]: Token } = {
-  [ChainId.MAINNET]: new Token(ChainId.MAINNET, ZERO_ADDRESS, 18, 'iWBTC', 'Wrapped BTC item'),
+  [ChainId.MAINNET]: new Token(ChainId.MAINNET, '0x4FA2d28cEc65f86A843Bd1806Dc88930554b6756', 18, 'iWBTC', 'Wrapped BTC item'),
   [ChainId.RINKEBY]: new Token(ChainId.RINKEBY, ZERO_ADDRESS, 18, 'iWBTC', 'Wrapped BTC item'),
   [ChainId.ROPSTEN]: new Token(ChainId.ROPSTEN, ZERO_ADDRESS, 18, 'iWBTC', 'Wrapped BTC item'),
   [ChainId.GÖRLI]: new Token(ChainId.GÖRLI, ZERO_ADDRESS, 18, 'iWBTC', 'Wrapped BTC item'),
@@ -212,24 +212,24 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
     mobile: true,
     mobileOnly: true
   },
-  FORTMATIC: {
-    connector: fortmatic,
-    name: 'Fortmatic',
-    iconName: 'fortmaticIcon.png',
-    description: 'Login using Fortmatic hosted wallet',
-    href: null,
-    color: '#6748FF',
-    mobile: true
-  },
-  Portis: {
-    connector: portis,
-    name: 'Portis',
-    iconName: 'portisIcon.png',
-    description: 'Login using Portis hosted wallet',
-    href: null,
-    color: '#4A6C9B',
-    mobile: true
-  }
+  // FORTMATIC: {
+  //   connector: fortmatic,
+  //   name: 'Fortmatic',
+  //   iconName: 'fortmaticIcon.png',
+  //   description: 'Login using Fortmatic hosted wallet',
+  //   href: null,
+  //   color: '#6748FF',
+  //   mobile: true
+  // },
+  // Portis: {
+  //   connector: portis,
+  //   name: 'Portis',
+  //   iconName: 'portisIcon.png',
+  //   description: 'Login using Portis hosted wallet',
+  //   href: null,
+  //   color: '#4A6C9B',
+  //   mobile: true
+  // }
 }
 
 export const NetworkContextName = 'NETWORK'
