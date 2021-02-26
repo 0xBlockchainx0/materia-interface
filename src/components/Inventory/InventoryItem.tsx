@@ -1,19 +1,20 @@
 import React, { useCallback, useContext, useState } from 'react'
 import styled, { ThemeContext } from 'styled-components'
-import { GridContainer, InventoryItemContainer, IconButton, ActionButton } from '../../theme'
+import { InventoryGridContainer, InventoryItemContainer, IconButton, ActionButton } from '../../theme'
 import { ButtonMateriaPrimary } from '../Button'
 import { RowBetween } from '../Row'
 import { AutoColumn } from '../Column'
 import { Text } from 'rebass'
 import { Input as NumericalInput } from '../NumericalInput'
-import { Currency, ETHER, Token } from '@materia-dex/sdk'
+import { Currency, ETHER, IETH, Token } from '@materia-dex/sdk'
 import { useActiveWeb3React } from '../../hooks'
 import { Field } from '../../state/wrap/actions'
 import { useWrapActionHandlers, useWrapState } from '../../state/wrap/hooks'
 import Dropdown from 'react-dropdown';
 import 'react-dropdown/style.css';
 import { unwrappedToken } from '../../utils/wrappedCurrency'
-import { ChevronUp, ChevronDown, ExternalLink } from 'react-feather'
+import { ChevronUp, ChevronDown, ExternalLink, Disc } from 'react-feather'
+import useAddTokenToMetamask from '../../hooks/useAddTokenToMetamask'
 
 export const FixedHeightRow = styled(RowBetween)`
   height: auto;
@@ -46,7 +47,7 @@ export default function InventoryItem({
   // const [isERC721, setIsERC721] = useState(false)
   // const [isERC1155, setIsERC1155] = useState(false)
 
-  const { account } = useActiveWeb3React()
+  const { account, library, chainId } = useActiveWeb3React()
   const { onUserInput } = useWrapActionHandlers()
   const handleMaxButton = useCallback(() => {
     onUserInput(Field.INPUT, balance ?? '0.0')
@@ -65,7 +66,7 @@ export default function InventoryItem({
   //   parsedAmount,
   // } = useDerivedWrapInfo()
   const { independentField, typedValue } = useWrapState()
-  
+
   // const parsedAmounts = {
   //   [Field.INPUT]: independentField === Field.INPUT ? parsedAmount : balance,
   // }
@@ -110,21 +111,23 @@ export default function InventoryItem({
       if (token.symbol != 'ETH') {
         currency = unwrappedToken(token)
       }
-      
+
       onCurrencySelect(currency)
     },
     [onCurrencySelect]
   )
 
+  const { addToken, } = useAddTokenToMetamask(undefined, token)
+
   return (
     <InventoryItemContainer className={theme.name}>
-      <GridContainer>
+      <InventoryGridContainer>
         <div>
           <div>{tokenName} ({tokenSymbol})</div>
           <div className="balanceRow">
-              <div>Balance:</div>
-              <div>{balance}</div>
-              {tokenType
+            <div>Balance:</div>
+            <div>{balance}</div>
+            {tokenType
               && (
                 <span className="tokenType">
                   <span>{tokenType}</span>
@@ -132,15 +135,22 @@ export default function InventoryItem({
               )}
           </div>
         </div>
-        <div className="margin-auto">
-          <IconButton className={ `${theme.name}` } onClick={() => { setShowMore(!showMore) }}>              
-              {showMore ? ( <ChevronUp/> ) : ( <ChevronDown/> )}
+        <div className="margin-pull-right">
+          <IconButton className={theme.name} onClick={() => { onTokenSelection(token) }}>
+            <ExternalLink />
           </IconButton>
-          <IconButton className={theme.name} onClick={() => { onTokenSelection(token) }}>              
-              <ExternalLink/>
-          </IconButton>           
+          {token.symbol != 'ETH' && library?.provider?.isMetaMask && (
+            <IconButton className={theme.name} onClick={addToken}>
+              <Disc />
+            </IconButton>
+          )}
+          {token.symbol != 'ETH' && (
+            <IconButton className={`${theme.name}`} onClick={() => { setShowMore(!showMore) }}>
+              {showMore ? (<ChevronUp />) : (<ChevronDown />)}
+            </IconButton>
+          )}
         </div>
-      </GridContainer>
+      </InventoryGridContainer>
 
       {showMore && (
         <AutoColumn>

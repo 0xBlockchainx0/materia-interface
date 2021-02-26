@@ -61,9 +61,11 @@ export function ConfirmAddModalBottom({
         <TYPE.body>Share of Pool:</TYPE.body>
         <TYPE.body>{noLiquidity ? '100' : poolTokenPercentage?.toSignificant(4)}%</TYPE.body>
       </RowBetween>
-      <MainOperationButton style={{ margin: '20px 0 0 0' }} onClick={onAdd} className={theme.name}>
-        {noLiquidity ? 'Create Pool & Supply' : 'Confirm Supply'}
-      </MainOperationButton>
+      <div className="text-centered">
+        <MainOperationButton style={{ margin: '20px 0 0 0' }} onClick={onAdd} className={theme.name}>
+          {noLiquidity ? 'Create Pool & Supply' : 'Confirm Supply'}
+        </MainOperationButton>
+      </div>
     </>
   )
 }

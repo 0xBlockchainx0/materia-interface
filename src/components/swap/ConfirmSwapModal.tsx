@@ -109,6 +109,7 @@ export default function ConfirmSwapModal({
       hash={txHash}
       content={confirmationContent}
       pendingText={pendingText}
+      currencyToAdd={originalCurrencies[Field.OUTPUT]}
     />
   )
 }

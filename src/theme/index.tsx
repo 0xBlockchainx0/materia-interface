@@ -427,6 +427,7 @@ body {
 ::-webkit-outer-spin-button, ::-webkit-inner-spin-button { -webkit-appearance: none; }
 
 .margin-auto { margin: auto; }
+.margin-pull-right { margin: auto 0px auto auto; }
 .clear-fix { clear:both !important; float:none !important; }
 .text-left { text-align: left !important;}
 .text-right { text-align: right !important;}
@@ -1244,6 +1245,10 @@ export const IconButton = styled(BaseButton)<{ width?: string, borderRadius?: st
     & + .custom-label { display: none; }
     &.classic.menuIcon > svg { stroke: ${({ theme }) => theme.white}; }
   }
+`
+export const InventoryGridContainer = styled.div`
+  display: grid;
+  grid-template-columns: 70% auto;
 `
 export const GridContainer = styled.div`
   display: grid;

@@ -585,6 +585,7 @@ export default function AddLiquidity({
                     />
                   )}
                   pendingText={pendingText}
+                  currencyToAdd={pair?.liquidityToken}
                 />
                 <div>
                   <AutoColumn gap={'lg'}>
