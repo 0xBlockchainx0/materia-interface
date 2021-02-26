@@ -420,7 +420,7 @@ export default function RemoveLiquidity({
             </RowBetween>
           </>
         )}
-        <ButtonMateriaPrimary disabled={!(approval === ApprovalState.APPROVED || signatureData !== null)} onClick={onRemove}>
+        <ButtonMateriaPrimary disabled={!(approval === ApprovalState.APPROVED || signatureData !== null)} onClick={onRemove} className={theme.name}>
           <Text fontWeight={500} fontSize={20}>
             Confirm
           </Text>
