@@ -73,7 +73,7 @@ export const IGIL: { [chainId in ChainId]: Token } = {
 export const IUSDC: { [chainId in ChainId]: Token } = {
   [ChainId.MAINNET]: new Token(ChainId.MAINNET, '0x7a3428F1CBA2756aB9a6D672311ca6C8DcE65C6B', 18, 'iUSDC', 'USD Coin item'),
   [ChainId.RINKEBY]: new Token(ChainId.RINKEBY, ZERO_ADDRESS, 18, 'iUSDC', 'USD Coin item'),
-  [ChainId.ROPSTEN]: new Token(ChainId.ROPSTEN, ZERO_ADDRESS, 18, 'iUSDC', 'USD Coin item'),
+  [ChainId.ROPSTEN]: new Token(ChainId.ROPSTEN, '0xCE34847810703C5FD47b23327c1B8dAD6413B1A9', 18, 'iUSDC', 'USD Coin item'),
   [ChainId.GÖRLI]: new Token(ChainId.GÖRLI, ZERO_ADDRESS, 18, 'iUSDC', 'USD Coin item'),
   [ChainId.KOVAN]: new Token(ChainId.KOVAN, ZERO_ADDRESS, 18, 'iUSDC', 'USD Coin item')
 }
@@ -89,7 +89,7 @@ export const IDAI: { [chainId in ChainId]: Token } = {
 export const IWBTC: { [chainId in ChainId]: Token } = {
   [ChainId.MAINNET]: new Token(ChainId.MAINNET, '0x4FA2d28cEc65f86A843Bd1806Dc88930554b6756', 18, 'iWBTC', 'Wrapped BTC item'),
   [ChainId.RINKEBY]: new Token(ChainId.RINKEBY, ZERO_ADDRESS, 18, 'iWBTC', 'Wrapped BTC item'),
-  [ChainId.ROPSTEN]: new Token(ChainId.ROPSTEN, ZERO_ADDRESS, 18, 'iWBTC', 'Wrapped BTC item'),
+  [ChainId.ROPSTEN]: new Token(ChainId.ROPSTEN, '0x0419b5c078cdf1cac30051ae1a84e20b3642c9a3', 18, 'iWBTC', 'Wrapped BTC item'),
   [ChainId.GÖRLI]: new Token(ChainId.GÖRLI, ZERO_ADDRESS, 18, 'iWBTC', 'Wrapped BTC item'),
   [ChainId.KOVAN]: new Token(ChainId.KOVAN, ZERO_ADDRESS, 18, 'iWBTC', 'Wrapped BTC item')
 }
