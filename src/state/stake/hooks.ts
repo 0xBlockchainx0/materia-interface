@@ -6,7 +6,7 @@ import { useActiveWeb3React } from '../../hooks'
 import { NEVER_RELOAD, useMultipleContractSingleData } from '../multicall/hooks'
 import { tryParseAmount } from '../swap/hooks'
 
-export const STAKING_GENESIS = 1614612600
+export const STAKING_GENESIS = 1614615000
 
 export const REWARDS_DURATION_DAYS = 45
 
@@ -42,23 +42,23 @@ export const STAKING_REWARDS_INFO: {
   [ChainId.ROPSTEN]: [
     {
       tokens: [WUSD[ChainId.ROPSTEN], IETH[ChainId.ROPSTEN]],
-      stakingRewardAddress: '0x3CC48243bb9E4546E9dEf4a84b7A24cA32aDA299'
+      stakingRewardAddress: '0x3b88dad68fCf3De0781d79F1aBA2047b2b82B034'
     },
     {
       tokens: [WUSD[ChainId.ROPSTEN], IGIL[ChainId.ROPSTEN]],
-      stakingRewardAddress: '0x8bab29e8B767F647530A0a61dbe0C13EF1856566'
+      stakingRewardAddress: '0xd0172f46880169F30857D301Daac9cB069de69Dc'
     },
     {
       tokens: [WUSD[ChainId.ROPSTEN], IDAI[ChainId.ROPSTEN]],
-      stakingRewardAddress: '0xb82b08A58Af6AEF3D1421474C98CfBaB21DE6aC7'
+      stakingRewardAddress: '0x044748A01a5CEbc13F2928377d9932E9D4CD3354'
     },
     {
       tokens: [WUSD[ChainId.ROPSTEN], IUSDC[ChainId.ROPSTEN]],
-      stakingRewardAddress: '0xcfF2606297F9B16774d53311546E7f6Cdf7F8FC4'
+      stakingRewardAddress: '0xb24c0288208b058d0B3aC974b99132f81fa4FC88'
     },
     {
       tokens: [WUSD[ChainId.ROPSTEN], IWBTC[ChainId.ROPSTEN]],
-      stakingRewardAddress: '0xe6c78004932111C8A55d9d9FBF5c3fc5905B4FE5'
+      stakingRewardAddress: '0xC7f9C38ef14A3b46F5D5Ce44E0aB405A62Ad5B6A'
     },
   ]
 }
