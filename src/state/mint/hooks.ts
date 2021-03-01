@@ -97,6 +97,7 @@ export function useDerivedMintInfo(
     indipendentAmountField,
     (independentField === Field.CURRENCY_A ? currencyAInteroperable : currencyBInteroperable)?.decimals ?? indipendentAmountField?.decimals
   )
+  
   const dependentAmount: CurrencyAmount | undefined = useMemo(() => {
     if (noLiquidity) {
       // if (otherTypedValue && currencies[dependentField]) {
@@ -122,7 +123,7 @@ export function useDerivedMintInfo(
       const wrappedIndependentAmount = wrappedCurrencyAmount(independentAmount, chainId)
       // const [tokenA, tokenB] = [wrappedCurrency(currencyA, chainId), wrappedCurrency(currencyB, chainId)]
       const [tokenA, tokenB] = [wrappedCurrency(interoperable ? currencyAInteroperable ?? currencyA : currencyA, chainId), wrappedCurrency(interoperable ? currencyBInteroperable ?? currencyB : currencyB, chainId)]
-      if (tokenA && tokenB && wrappedIndependentAmount && pair && interoperable) {
+      if (tokenA && tokenB && wrappedIndependentAmount && pair) {
         const isEmptyPair = JSBI.equal(pair.reserve0.raw, ZERO) || JSBI.equal(pair.reserve1.raw, ZERO)
         // const dependentCurrency = dependentField === Field.CURRENCY_B ? currencyB : currencyA
         const dependentCurrency = dependentField === Field.CURRENCY_B ? (interoperable ? currencyBInteroperable ?? currencyB : currencyB) : (interoperable ? currencyAInteroperable ?? currencyA : currencyA)

@@ -231,9 +231,7 @@ export default function AddLiquidity({
 
     const currencyWUSD = WUSD[chainId ?? 1]
     const currencyBIsWUSD = wrappedCurrency(currencyB, chainId)?.address == currencyWUSD.address
-
-    // const { [Field.CURRENCY_A]: parsedAmountA, [Field.CURRENCY_B]: parsedAmountB } = parsedAmounts
-    // const modifiedParsedAmountA = currencyBIsWUSD 
+    
     const parsedAmountA = currencyBIsWUSD
       ? decodeInteroperableValueToERC20TokenAmount(parsedAmounts[Field.CURRENCY_A], originalParsedAmounts[Field.CURRENCY_A])
       : parsedAmounts[Field.CURRENCY_A]
