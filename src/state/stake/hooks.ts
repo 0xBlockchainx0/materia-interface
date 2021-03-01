@@ -6,7 +6,7 @@ import { useActiveWeb3React } from '../../hooks'
 import { NEVER_RELOAD, useMultipleContractSingleData } from '../multicall/hooks'
 import { tryParseAmount } from '../swap/hooks'
 
-export const STAKING_GENESIS = 1614615000
+export const STAKING_GENESIS = 1614634200
 
 export const REWARDS_DURATION_DAYS = 45
 
@@ -18,26 +18,26 @@ export const STAKING_REWARDS_INFO: {
   }[]
 } = {
   [ChainId.MAINNET]: [
-    // {
-    //   tokens: [WUSD[ChainId.MAINNET], IETH[ChainId.MAINNET]],
-    //   stakingRewardAddress: ZERO_ADDRESS
-    // },
-    // {
-    //   tokens: [WUSD[ChainId.MAINNET], IGIL[ChainId.MAINNET]],
-    //   stakingRewardAddress: ZERO_ADDRESS
-    // },
-    // {
-    //   tokens: [WUSD[ChainId.MAINNET], IUSDC[ChainId.MAINNET]],
-    //   stakingRewardAddress: ZERO_ADDRESS
-    // },
-    // {
-    //   tokens: [WUSD[ChainId.MAINNET], IWBTC[ChainId.MAINNET]],
-    //   stakingRewardAddress: ZERO_ADDRESS
-    // },
-    // {
-    //   tokens: [WUSD[ChainId.MAINNET], IDAI[ChainId.MAINNET]],
-    //   stakingRewardAddress: ZERO_ADDRESS
-    // },
+    {
+      tokens: [WUSD[ChainId.MAINNET], IETH[ChainId.MAINNET]],
+      stakingRewardAddress: '0x3CC48243bb9E4546E9dEf4a84b7A24cA32aDA299'
+    },
+    {
+      tokens: [WUSD[ChainId.MAINNET], IGIL[ChainId.MAINNET]],
+      stakingRewardAddress: '0x8bab29e8B767F647530A0a61dbe0C13EF1856566'
+    },
+    {
+      tokens: [WUSD[ChainId.MAINNET], IDAI[ChainId.MAINNET]],
+      stakingRewardAddress: '0xb82b08A58Af6AEF3D1421474C98CfBaB21DE6aC7'
+    },
+    {
+      tokens: [WUSD[ChainId.MAINNET], IUSDC[ChainId.MAINNET]],
+      stakingRewardAddress: '0xcfF2606297F9B16774d53311546E7f6Cdf7F8FC4'
+    },
+    {
+      tokens: [WUSD[ChainId.MAINNET], IWBTC[ChainId.MAINNET]],
+      stakingRewardAddress: '0xe6c78004932111C8A55d9d9FBF5c3fc5905B4FE5'
+    },
   ],
   [ChainId.ROPSTEN]: [
     {
