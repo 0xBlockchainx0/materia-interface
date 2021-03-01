@@ -65,8 +65,7 @@ export default function PoolCard({ stakingInfo }: { stakingInfo: StakingInfo }) 
   
   return (
     <SecondaryPanelBoxContainer className={`${theme.name}`}>
-      <SecondaryPanelBoxContainerExtraDecorator className={`top ${theme.name}`} />
-      <div className="inner-content p15">
+      <div className="inner-content p10">
         <DynamicGrid className={theme.name} columns={2} columnsDefinitions={[{value: 25, location: 2}]}>
           <div className="text-left">
             <DynamicGrid className={theme.name} columns={2} columnsDefinitions={[{value: 90, location: 2}]}>
@@ -83,9 +82,6 @@ export default function PoolCard({ stakingInfo }: { stakingInfo: StakingInfo }) 
         <DynamicGrid className={`mt20 ${theme.name}`} columns={2}>
           <div className="text-left">Total deposited</div>
           <div className="text-right">
-            {/* {valueOfTotalStakedAmountInUSDC
-              ? `$${valueOfTotalStakedAmountInUSDC.toFixed(0)}`
-              : `${valueOfTotalStakedAmountInUSD?.toSignificant(4) ?? '-'} ETH`} */}
             {`${valueOfTotalStakedAmountInUSD?.toSignificant(4) ?? '-'} WUSD`}
           </div>
         </DynamicGrid>
@@ -105,7 +101,6 @@ export default function PoolCard({ stakingInfo }: { stakingInfo: StakingInfo }) 
             </>
           )}
       </div>
-      <SecondaryPanelBoxContainerExtraDecorator className={`bottom ${theme.name}`} />
     </SecondaryPanelBoxContainer>
     
   )
