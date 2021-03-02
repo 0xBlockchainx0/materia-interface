@@ -293,11 +293,6 @@ export default function RemoveLiquidity({
     } else {
       throw new Error('Attempting to confirm without approval or a signature. Please contact support.')
     }
-
-    if (oneCurrencyIsETH) {
-      // Added error to block removeLiquidityETH/removeLiquidityETHWithPermit issue
-      throw new Error('removeLiquidityETH/removeLiquidityETHWithPermit issue detected. We are working to fix the problem!')
-    }
     
     const safeGasEstimates: (BigNumber | undefined)[] = await Promise.all(
       methodNames.map(methodName =>
