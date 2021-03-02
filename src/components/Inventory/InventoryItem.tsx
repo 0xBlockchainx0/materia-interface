@@ -1,20 +1,19 @@
 import React, { useCallback, useContext, useState } from 'react'
 import styled, { ThemeContext } from 'styled-components'
-import { InventoryGridContainer, InventoryItemContainer, IconButton, ActionButton } from '../../theme'
-import { ButtonMateriaPrimary } from '../Button'
+import { InventoryGridContainer, InventoryItemContainer, IconButton } from '../../theme'
 import { RowBetween } from '../Row'
 import { AutoColumn } from '../Column'
 import { Text } from 'rebass'
-import { Input as NumericalInput } from '../NumericalInput'
-import { Currency, ETHER, IETH, Token } from '@materia-dex/sdk'
+import { ExternalLink as Link } from '../../theme'
+import { Currency, ETHER, Token } from '@materia-dex/sdk'
 import { useActiveWeb3React } from '../../hooks'
 import { Field } from '../../state/wrap/actions'
 import { useWrapActionHandlers, useWrapState } from '../../state/wrap/hooks'
-import Dropdown from 'react-dropdown';
 import 'react-dropdown/style.css';
 import { unwrappedToken } from '../../utils/wrappedCurrency'
-import { ChevronUp, ChevronDown, ExternalLink, Disc } from 'react-feather'
+import { ChevronUp, ChevronDown, Disc, ExternalLink } from 'react-feather'
 import useAddTokenToMetamask from '../../hooks/useAddTokenToMetamask'
+import { getEtherscanLink } from '../../utils'
 
 export const FixedHeightRow = styled(RowBetween)`
   height: auto;
@@ -154,7 +153,20 @@ export default function InventoryItem({
 
       {showMore && (
         <AutoColumn>
-          <Text className={` token-address ${theme.name}`} fontSize={10} fontWeight={500} style={{ marginBottom: '10px' }}>{tokenAddress}</Text>
+          <div className="addressRow">
+            <div>Address:</div>
+            <Link href={getEtherscanLink(chainId ?? 1, tokenAddress ?? '', 'token')}>
+              <Text className={` token-address ${theme.name}`}>
+                {tokenAddress && tokenAddress.slice(0, 6) + '...' + tokenAddress?.slice(38, 42)}
+              </Text>
+            </Link>
+          </div>
+          <div className="decimalsRow">
+            <div>Decimals:</div>
+            <Text className={` token-decimals ${theme.name}`}>
+                {token && token?.decimals}
+            </Text>
+          </div>
           {/* <FixedHeightRow>
             <>
               <NumericalInput

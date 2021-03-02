@@ -798,8 +798,10 @@ MARGIN STYLE MINUS
   svg.simple-icon.light {}
   svg.simple-icon.classic {}
 
-  .token-address { font-size: 10px; font-weight: 500; margin-bottom: 10px; }
-  .token-address.classic { font-size: 7px; font-weight: 500; margin-bottom: 10px; margin-top: 10px; }
+  .token-address { font-size: 12px; font-weight: 500; margin-bottom: 10px; }
+  .token-address.classic { font-size: 7px; font-weight: 500; }
+  .token-decimals { font-size: 12px; font-weight: 500; margin-bottom: 10px; }
+  .token-decimals.classic { font-size: 7px; font-weight: 500; }
   .hide-dark { ${({ theme }) => (theme.name == 'dark' ? 'display: none !important;' : '')} }
   .hide-light { ${({ theme }) => (theme.name == 'light' ? 'display: none !important;' : '')} }
   .hide-classic { ${({ theme }) => (theme.name == 'classic' ? 'display: none !important;' : '')} }
@@ -1126,7 +1128,7 @@ export const InventoryItemContainer = styled.div`
     font-size: 9px;
   }
 
-  & .balanceRow { display: inline-flex; margin: 5px 0px; font-size: 12px; }
+  & .balanceRow { display: inline-flex; margin: 5px 0px 0px 0px; font-size: 12px; }
   &.classic .balanceRow { font-size: 7px; margin-top: 10px; }
 
   & .balanceRow > div:first-child { margin-right: 5px; }
@@ -1136,6 +1138,28 @@ export const InventoryItemContainer = styled.div`
   &.light .balanceRow > div:first-child { color: ${({ theme }) => theme.violet1}; }
 
   &.classic .balanceRow > div:first-child { color: ${({ theme }) => theme.blue1}; }
+
+  & .addressRow { display: inline-flex; margin: 5px 0px 0px 0px; font-size: 12px; }
+  &.classic .addressRow { font-size: 7px; }
+
+  & .addressRow > div:first-child { margin-right: 5px; }
+  
+  &.dark .addressRow > div:first-child { color: ${({ theme }) => theme.azure2}; }
+
+  &.light .addressRow > div:first-child { color: ${({ theme }) => theme.violet1}; }
+
+  &.classic .addressRow > div:first-child { color: ${({ theme }) => theme.blue1}; }
+
+  & .decimalsRow { display: inline-flex; margin: 5px 0px 0px 0px; font-size: 12px; }
+  &.classic .decimalsRow { font-size: 7px; }
+
+  & .decimalsRow > div:first-child { margin-right: 5px; }
+  
+  &.dark .decimalsRow > div:first-child { color: ${({ theme }) => theme.azure2}; }
+
+  &.light .decimalsRow > div:first-child { color: ${({ theme }) => theme.violet1}; }
+
+  &.classic .decimalsRow > div:first-child { color: ${({ theme }) => theme.blue1}; }
 
   & .tokenType { margin: 5px 0px 5px 10px; display: inline-block; }
 `
