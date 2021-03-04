@@ -1,4 +1,4 @@
-import { Currency, ETHER, Pair, Token } from '@materia-dex/sdk'
+import { Currency, ETHER, JSBI, Pair, Token, TokenAmount } from '@materia-dex/sdk'
 import React, { useState, useContext, useCallback } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 import { useCurrencyBalance } from '../../state/wallet/hooks'
@@ -14,6 +14,7 @@ import { useActiveWeb3React } from '../../hooks'
 import { useTranslation } from 'react-i18next'
 import useCheckIsEthItem from '../../hooks/useCheckIsEthItem'
 import { ZERO_ADDRESS } from '../../constants'
+import { formatUnits, parseUnits } from 'ethers/lib/utils'
 
 const InputRow = styled.div<{ selected: boolean }>`
   ${({ theme }) => theme.flexRowNoWrap}
@@ -81,8 +82,6 @@ const StyledTokenName = styled.span<{ active?: boolean }>`
   }
 `
 
-
-
 interface CurrencyInputPanelProps {
   value: string
   onUserInput: (value: string) => void
@@ -100,6 +99,17 @@ interface CurrencyInputPanelProps {
   showCommonBases?: boolean
   customBalanceText?: string,
   fatherPage?: string
+}
+
+export function roundInput(token: Token, value: string): string {
+  if (token.decimals >= 18 || !value || value.trim() == '') return value
+
+  const units: string = parseUnits(value, 18).toString()
+  const amount: JSBI = JSBI.BigInt(Math.trunc(Number(formatUnits(units, 18 - token.decimals))))
+  const roundedAmount: JSBI = JSBI.add(amount, JSBI.BigInt(1))
+  const tokenAmount = new TokenAmount(token, roundedAmount)
+
+  return tokenAmount.toExact()
 }
 
 export default function CurrencyInputPanel({
@@ -133,7 +143,7 @@ export default function CurrencyInputPanel({
   const ethItem = useCheckIsEthItem((currency instanceof Token ? currency?.address : undefined) ?? ZERO_ADDRESS)?.ethItem ?? undefined
   const showErc20Badge = currency !== ETHER && (ethItem !== undefined && ethItem === false) && pair === null
   const showEthItemBadge = currency !== ETHER && (ethItem !== undefined && ethItem === true) && pair === null
-
+  
   return (
     <>
       <CurrencyFormPanel id={id} className={`${theme.name} ${customFatherPageCssClass}`}>

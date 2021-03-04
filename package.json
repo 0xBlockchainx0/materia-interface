@@ -9,7 +9,7 @@
     "@materia-dex/materia-contracts-distributor": "^1.0.4",
     "@materia-dex/materia-contracts-liquidity-mining": "^1.0.3",
     "@materia-dex/materia-contracts-proxy": "^1.1.7",
-    "@materia-dex/sdk": "^1.6.0",
+    "@materia-dex/sdk": "^1.6.1",
     "@popperjs/core": "^2.4.4",
     "@reach/dialog": "^0.10.3",
     "@reach/portal": "^0.10.3",
