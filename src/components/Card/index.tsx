@@ -5,26 +5,48 @@ import { Box } from 'rebass/styled-components'
 
 const Card = styled(Box)<{ padding?: string; border?: string; borderRadius?: string }>`
   width: 100%;
-  border-radius: 16px;
+  // border-radius: 16px;
   padding: 1.25rem;
   padding: ${({ padding }) => padding};
   border: ${({ border }) => border};
-  border-radius: ${({ borderRadius }) => borderRadius};
+  // border-radius: ${({ borderRadius }) => borderRadius};
 `
 export default Card
 
 export const LightCard = styled(Card)`
-  border: 1px solid ${({ theme }) => theme.bg2};
-  background-color: ${({ theme }) => theme.bg1};
+  border: 1px solid ${({ theme }) => theme.cyan2};
+  background-color: ${({ theme }) => theme.primary5};
 `
 
-export const GreyCard = styled(Card)`
-  background-color: ${({ theme }) => theme.bg3};
-  text-shadow: none;
+export const SwapGreyCard = styled(Card)`
+  width: auto;
+  background-color: linear-gradient(90deg, ${({ theme }) => theme.buttonMateriaPrimaryBackgroundFirstColor}, ${({ theme }) => theme.buttonMateriaPrimaryBackgroundSecondColor});
+  border: 1px solid ${({ theme }) => theme.buttonMateriaPrimaryBorderColor};
+  color: ${({ theme }) => theme.text1};
+  padding: 0.2rem 1.5rem;
+  border-radius: 3px;
+  transition: all 0.3s ease;
+  opacity: 0.7;
+  text-align: center;
+  font-size: 20px;
+  font-weight: 500;
+
+  &.classic {
+    background: none;
+    color: ${({ theme }) => theme.red1};
+    font-size: 13px;
+    margin: 20px auto;
+    text-shadow: 1px 1px 1px ${({ theme }) => theme.black};
+    border: none;
+  }
 `
 
 export const OutlineCard = styled(Card)`
   border: 1px solid ${({ theme }) => theme.bg3};
+`
+export const TransparentCard = styled(Card)`
+  color: ${({ theme }) => theme.text1 };
+  padding: 0;
 `
 
 export const YellowCard = styled(Card)`

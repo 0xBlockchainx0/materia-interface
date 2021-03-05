@@ -1,10 +1,10 @@
-import React, { memo, useCallback, useMemo, useRef, useState } from 'react'
-import { ArrowLeft } from 'react-feather'
+import React, { memo, useCallback, useMemo, useRef, useState, useContext } from 'react'
+import { ArrowLeft, X } from 'react-feather'
 import ReactGA from 'react-ga'
 import { usePopper } from 'react-popper'
 import { useDispatch, useSelector } from 'react-redux'
 import { Text } from 'rebass'
-import styled from 'styled-components'
+import styled, { ThemeContext } from 'styled-components'
 import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
 import { useFetchListCallback } from '../../hooks/useFetchListCallback'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
@@ -13,17 +13,29 @@ import useToggle from '../../hooks/useToggle'
 import { AppDispatch, AppState } from '../../state'
 import { acceptListUpdate, removeList, selectList } from '../../state/lists/actions'
 import { useSelectedListUrl } from '../../state/lists/hooks'
-import { CloseIcon, ExternalLink, LinkStyledButton, TYPE } from '../../theme'
 import listVersionLabel from '../../utils/listVersionLabel'
 import { parseENSAddress } from '../../utils/parseENSAddress'
 import uriToHttp from '../../utils/uriToHttp'
-import { ButtonOutlined, ButtonPrimary, ButtonSecondary } from '../Button'
+import { ButtonMateriaPrimary, ButtonOutlined, ButtonSecondary } from '../Button'
 
 import Column from '../Column'
 import ListLogo from '../ListLogo'
 import QuestionHelper from '../QuestionHelper'
 import Row, { RowBetween } from '../Row'
-import { PaddedColumn, SearchInput, Separator, SeparatorDark } from './styleds'
+import { Separator, SeparatorDark } from './styleds'
+
+import {
+  DynamicGrid, 
+  ContainerRow, 
+  SearchInput,
+  CloseIcon, 
+  IconButton,
+  ExternalLink, 
+  LinkStyledButton,
+  ActionButton,
+  MainOperationButton,
+  PaddedColumn, TYPE
+ } from '../../theme' 
 
 const UnpaddedLinkStyledButton = styled(LinkStyledButton)`
   padding: 0;
@@ -148,7 +160,9 @@ const ListRow = memo(function ListRow({ listUrl, onBack }: { listUrl: string; on
     }
   }, [dispatch, listUrl])
 
-  if (!list) return null
+  const theme = useContext(ThemeContext)
+
+  if (!list) return null 
 
   return (
     <Row key={listUrl} align="center" padding="16px" id={listUrlRowHTMLId(listUrl)}>
@@ -159,38 +173,22 @@ const ListRow = memo(function ListRow({ listUrl, onBack }: { listUrl: string; on
       )}
       <Column style={{ flex: '1' }}>
         <Row>
-          <Text
-            fontWeight={isSelected ? 500 : 400}
-            fontSize={16}
-            style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}
-          >
-            {list.name}
-          </Text>
+          <div className={`token-list-item-text ${theme.name}`}>{list.name}</div>          
         </Row>
-        <Row
-          style={{
-            marginTop: '4px'
-          }}
-        >
-          <StyledListUrlText title={listUrl}>
+        <Row style={{ marginTop: '4px' }}>
+          <StyledListUrlText title={listUrl} className={`token-list-item-text ${theme.name}`}>
             <ListOrigin listUrl={listUrl} />
           </StyledListUrlText>
         </Row>
       </Column>
       <StyledMenu ref={node as any}>
-        <ButtonOutlined
-          style={{
-            width: '2rem',
-            padding: '.8rem .35rem',
-            borderRadius: '12px',
-            fontSize: '14px',
-            marginRight: '0.5rem'
-          }}
+        <ActionButton
+          className={`mr10 ${theme.name}`}
           onClick={toggle}
           ref={setReferenceElement}
         >
           <DropDown />
-        </ButtonOutlined>
+        </ActionButton>
 
         {open && (
           <PopoverContainer show={true} ref={setPopperElement as any} style={styles.popper} {...attributes.popper}>
@@ -207,44 +205,21 @@ const ListRow = memo(function ListRow({ listUrl, onBack }: { listUrl: string; on
         )}
       </StyledMenu>
       {isSelected ? (
-        <ButtonPrimary
-          disabled={true}
-          className="select-button"
-          style={{ width: '5rem', minWidth: '5rem', padding: '0.5rem .35rem', borderRadius: '12px', fontSize: '14px' }}
-        >
-          Selected
-        </ButtonPrimary>
+        <MainOperationButton disabled={true} className={ `select-button ${theme.name}` }>Selected</MainOperationButton>
       ) : (
-        <>
-          <ButtonPrimary
-            className="select-button"
-            style={{
-              width: '5rem',
-              minWidth: '4.5rem',
-              padding: '0.5rem .35rem',
-              borderRadius: '12px',
-              fontSize: '14px'
-            }}
-            onClick={selectThisList}
-          >
-            Select
-          </ButtonPrimary>
-        </>
+        <MainOperationButton className={ `select-button ${theme.name}` } onClick={selectThisList}>Select</MainOperationButton>
       )}
     </Row>
   )
 })
 
-const AddListButton = styled(ButtonSecondary)`
-  max-width: 4rem;
-  margin-left: 1rem;
-  border-radius: 12px;
-  padding: 10px 18px;
-`
-
 const ListContainer = styled.div`
   flex: 1;
   overflow: auto;
+
+  @media (max-width: 1050px) { 
+    max-height: 300px;
+  }
 `
 
 export function ListSelect({ onDismiss, onBack }: { onDismiss: () => void; onBack: () => void }) {
@@ -319,56 +294,60 @@ export function ListSelect({ onDismiss, onBack }: { onDismiss: () => void; onBac
       })
   }, [lists])
 
+  const theme = useContext(ThemeContext)
+
   return (
     <Column style={{ width: '100%', flex: '1 1' }}>
-      <PaddedColumn>
-        <RowBetween>
-          <div>
-            <ArrowLeft style={{ cursor: 'pointer' }} onClick={onBack} />
-          </div>
-          <Text fontWeight={500} fontSize={20}>
-            Manage Lists
-          </Text>
-          <CloseIcon onClick={onDismiss} />
-        </RowBetween>
-      </PaddedColumn>
-
+      <DynamicGrid columns={3} className={ `mt20 mb20 ${theme.name}` }>
+        <div className="text-left">
+          <IconButton className={ `ml20 ${theme.name}` } onClick={onBack}>
+            <ArrowLeft/>
+          </IconButton>
+        </div>
+        <div className="text-centered title">Manage Lists</div>
+        <div className="text-right">
+          <IconButton className={ `mr10 ${theme.name}` } onClick={onDismiss}>
+            <X/>
+          </IconButton>
+        </div>
+      </DynamicGrid>
       <Separator />
 
-      <PaddedColumn gap="14px">
-        <Text fontWeight={600}>
-          Add a list{' '}
+      <div className="mt20 add-token-list-container">
+        <h6>
+          Add a list
           <QuestionHelper text="Token lists are an open specification for lists of ERC20 tokens. You can use any token list by entering its URL below. Beware that third party token lists can contain fake or malicious ERC20 tokens." />
-        </Text>
-        <Row>
-          <SearchInput
-            type="text"
-            id="list-add-input"
-            placeholder="https:// or ipfs:// or ENS name"
-            value={listUrlInput}
-            onChange={handleInput}
-            onKeyDown={handleEnterKey}
-            style={{ height: '2.75rem', borderRadius: 12, padding: '12px' }}
-          />
-          <AddListButton onClick={handleAddList} disabled={!validUrl}>
-            Add
-          </AddListButton>
-        </Row>
+        </h6>
+        <DynamicGrid className={theme.name} columns={2} columnsDefinitions={[{value: 15, location: 2}]}>
+          <ContainerRow className={ `search-token-container ${theme.name}` }>
+            <SearchInput
+                type="text"
+                id="list-add-input"
+                placeholder="https:// or ipfs:// or ENS name"
+                value={listUrlInput}
+                onChange={handleInput}
+                onKeyDown={handleEnterKey}  
+                className={theme.name}              
+              />          
+          </ContainerRow>
+          <div>
+            <ActionButton className={ `ml10 ${theme.name}` } onClick={handleAddList} disabled={!validUrl}>Add</ActionButton>
+          </div>
+        </DynamicGrid>
+        <div className="clear-fix"></div>
         {addError ? (
           <TYPE.error title={addError} style={{ textOverflow: 'ellipsis', overflow: 'hidden' }} error>
             {addError}
           </TYPE.error>
         ) : null}
-      </PaddedColumn>
-
-      <Separator />
-
+      </div>
+      <Separator className={ `mb20 ${theme.name}` }/>
       <ListContainer>
         {sortedLists.map(listUrl => (
           <ListRow key={listUrl} listUrl={listUrl} onBack={onBack} />
         ))}
       </ListContainer>
-      <Separator />
+      <Separator className={ `mt20 mb20 ${theme.name}` }/>
 
       <div style={{ padding: '16px', textAlign: 'center' }}>
         <ExternalLink href="https://tokenlists.org">Browse lists</ExternalLink>

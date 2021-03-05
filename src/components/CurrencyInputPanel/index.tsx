@@ -1,119 +1,85 @@
-import { Currency, Pair } from '@uniswap/sdk'
+import { Currency, ETHER, JSBI, Pair, Token, TokenAmount } from '@materia-dex/sdk'
 import React, { useState, useContext, useCallback } from 'react'
 import styled, { ThemeContext } from 'styled-components'
-import { darken } from 'polished'
 import { useCurrencyBalance } from '../../state/wallet/hooks'
 import CurrencySearchModal from '../SearchModal/CurrencySearchModal'
 import CurrencyLogo from '../CurrencyLogo'
 import DoubleCurrencyLogo from '../DoubleLogo'
 import { RowBetween } from '../Row'
-import { TYPE } from '../../theme'
+import { CurrencyFormPanel, ActionButton, DropDownButton, Erc20Badge, EthItemBadge } from '../../theme'
 import { Input as NumericalInput } from '../NumericalInput'
 import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
 
 import { useActiveWeb3React } from '../../hooks'
 import { useTranslation } from 'react-i18next'
+import useCheckIsEthItem from '../../hooks/useCheckIsEthItem'
+import { ZERO_ADDRESS } from '../../constants'
+import { formatUnits, parseUnits } from 'ethers/lib/utils'
 
 const InputRow = styled.div<{ selected: boolean }>`
   ${({ theme }) => theme.flexRowNoWrap}
   align-items: center;
   padding: ${({ selected }) => (selected ? '0.75rem 0.5rem 0.75rem 1rem' : '0.75rem 0.75rem 0.75rem 1rem')};
 `
-
-const CurrencySelect = styled.button<{ selected: boolean }>`
-  text-shadow: 2px 2px #212421, 1px 1px #212021;
-  font-family: Verdana, sans-serif;
-  margin: 5px 0;
-
-  align-items: center;
-  height: 2.2rem;
-  font-size: 20px;
-  font-weight: 800;
-  background-color: transparent;
-  color: ${({ selected, theme }) => (selected ? theme.text6 : theme.white)};
-  border-radius: 0px;
-  box-shadow: ${({ selected }) => (selected ? 'none' : '0px 6px 10px rgba(0, 0, 0, 0.075)')};
-  outline: none;
-  cursor: pointer;
-  user-select: none;
-  border: none;
-  border-bottom: 1px solid white;
-  padding: 0 0.5rem;
-
-  :focus, ;
-`
-
-const LabelRow = styled.div`
-  ${({ theme }) => theme.flexRowNoWrap}
-  align-items: center;
-  color: ${({ theme }) => theme.text1};
-  font-size: 0.75rem;
-  line-height: 1rem;
-  padding: 0.75rem 1rem 0 1rem;
-  span:hover {
-    cursor: pointer;
-    color: ${({ theme }) => darken(0.2, theme.text2)};
-  }
-`
-
 const Aligner = styled.span`
   display: flex;
   align-items: center;
   justify-content: space-between;
 `
+const MobileCurrencyLogo = styled.div`
+  margin-left: 10px;
+  display: none;
+  @media (max-width: 1050px) { display: inline-block; }
+`
+// const tokenBackground = styled.var`${({ theme }) => theme.tokenBackground}`
 
-const StyledDropDown = styled(DropDown)<{ selected: boolean }>`
+const TokenImage = styled.div<{ showBackground: boolean }>`
+  background: ${props => props.showBackground ? ({ theme }) => theme.tokenBackground : 'unset'}    
+  background-size: contain;
+  height: 300px;
+  width: 300px;
+  background-position: ${({ theme }) => (theme.name == 'classic' ? '' : '-5px')} center!important;
+  /*display: table-cell;*/
+  margin: 0 auto;
+  vertical-align: middle;
+  @media (max-width: 1050px) { padding: 2rem !important; }
+  @media (max-width: 450px) { padding: 1rem !important; margin-top: -2.5rem; }
+
+  &.single { padding-top: 12.5%; }
+  &.single.default { padding-top: 30%; }
+  &.single.default > img { margin-top: 0; }
+  
+  &.stake-liquidity-token img.tokenLogo { margin-top: 30%; }
+  &.remove-liquidity { width: 20%; margin-top: 50px; padding: 0px; height: 130px; background-position: 10px center!important; }
+  &.double.remove-liquidity img.tokenLogo, &.double.remove-liquidity img.ethereumLogo { width: 50%; margin-top: 10%;}  
+  &.single.remove-liquidity > img { width: 50%; padding-top: 15%; margin-left: 40px; }
+`
+
+const TokenImageContainer = styled.div`
+  float: none;
+  margin: 0 auto;
+  @media (max-width: 1050px) { display: none; }
+`
+
+const StyledDropDown = styled(DropDown) <{ selected: boolean }>`
   margin: 0 0.25rem 0 0.5rem;
   height: 35%;
 
-  path {
-    stroke: ${({ selected, theme }) => (selected ? theme.text1 : theme.white)};
-    stroke-width: 1.5px;
-  }
-`
+  & path { stroke-width: 1.5px; }
 
-const InputPanel = styled.div<{ hideInput?: boolean }>`
-  ${({ theme }) => theme.flexColumnNoWrap}
-  position: relative;
-  border-radius: ${({ hideInput }) => (hideInput ? '8px' : '10px')};
-  background-color: transparent;
-  z-index: 1;
-`
-
-const Container = styled.div<{ hideInput: boolean }>`
-  border-radius: ${({ hideInput }) => (hideInput ? '8px' : '10px')};
-  border: none;
-  background-color: transparent;
+  &.dark path, &.classic path { stroke: ${({ selected, theme }) => (selected ? theme.text1 : theme.white)}; }
+  &.light path { stroke: ${({ selected, theme }) => (selected ? theme.black : theme.black)}; }
 `
 
 const StyledTokenName = styled.span<{ active?: boolean }>`
   ${({ active }) => (active ? '  margin: 0 0.25rem 0 0.75rem;' : '  margin: 0 0.25rem 0 0.25rem;')}
   font-size:  ${({ active }) => (active ? '20px' : '16px')};
+  color: ${({ theme }) => theme.text1};
 
-`
-
-const StyledBalanceMax = styled.button`
-  height: 28px;
-  background-color: transparent;
-  border: 1px solid ${({ theme }) => theme.primary5};
-  border-radius: 0.5rem;
-  font-size: 0.875rem;
-
-  font-weight: 500;
-  cursor: pointer;
-  margin-right: 0.5rem;
-  color: ${({ theme }) => theme.primaryText1};
-  :hover {
-    border: 1px solid ${({ theme }) => theme.primary1};
+  &.classic { 
+    font-size:  ${({ active }) => (active ? '16px' : '12px')};
+    text-shadow: 1px 1px 1px ${({ theme }) => theme.black};
   }
-  :focus {
-    border: 1px solid ${({ theme }) => theme.primary1};
-    outline: none;
-  }
-
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-    margin-right: 0.5rem;
-  `};
 `
 
 interface CurrencyInputPanelProps {
@@ -131,7 +97,19 @@ interface CurrencyInputPanelProps {
   otherCurrency?: Currency | null
   id: string
   showCommonBases?: boolean
-  customBalanceText?: string
+  customBalanceText?: string,
+  fatherPage?: string
+}
+
+export function roundInput(token: Token, value: string): string {
+  if (token.decimals >= 18 || !value || value.trim() == '') return value
+
+  const units: string = parseUnits(value, 18).toString()
+  const amount: JSBI = JSBI.BigInt(Math.trunc(Number(formatUnits(units, 18 - token.decimals))))
+  const roundedAmount: JSBI = JSBI.add(amount, JSBI.BigInt(1))
+  const tokenAmount = new TokenAmount(token, roundedAmount)
+
+  return tokenAmount.toExact()
 }
 
 export default function CurrencyInputPanel({
@@ -149,7 +127,8 @@ export default function CurrencyInputPanel({
   otherCurrency,
   id,
   showCommonBases,
-  customBalanceText
+  customBalanceText,
+  fatherPage
 }: CurrencyInputPanelProps) {
   const { t } = useTranslation()
 
@@ -158,93 +137,85 @@ export default function CurrencyInputPanel({
   const selectedCurrencyBalance = useCurrencyBalance(account ?? undefined, currency ?? undefined)
   const theme = useContext(ThemeContext)
 
-  const handleDismissSearch = useCallback(() => {
-    setModalOpen(false)
-  }, [setModalOpen])
+  const handleDismissSearch = useCallback(() => { setModalOpen(false) }, [setModalOpen])
+  const customFatherPageCssClass = (fatherPage ? fatherPage : 'default')
 
+  const ethItem = useCheckIsEthItem((currency instanceof Token ? currency?.address : undefined) ?? ZERO_ADDRESS)?.ethItem ?? undefined
+  const showErc20Badge = currency !== ETHER && (ethItem !== undefined && ethItem === false) && pair === null
+  const showEthItemBadge = currency !== ETHER && (ethItem !== undefined && ethItem === true) && pair === null
+  
   return (
-    <InputPanel id={id}>
-      <Container hideInput={hideInput}>
-        {!hideInput && (
-          <LabelRow>
-            <RowBetween>
-              <TYPE.body color={theme.text1} fontWeight={500} fontSize={14}>
-                {label}
-              </TYPE.body>
-              {account && (
-                <TYPE.body
-                  onClick={onMax}
-                  color={theme.text1}
-                  fontWeight={500}
-                  fontSize={14}
-                  style={{ display: 'inline', cursor: 'pointer' }}
-                >
-                  {!hideBalance && !!currency && selectedCurrencyBalance
-                    ? (customBalanceText ?? 'Balance: ') + selectedCurrencyBalance?.toSignificant(6)
-                    : ' -'}
-                </TYPE.body>
-              )}
-            </RowBetween>
-          </LabelRow>
-        )}
-        <InputRow style={hideInput ? { padding: '0', borderRadius: '8px' } : {}} selected={disableCurrencySelect}>
+    <>
+      <CurrencyFormPanel id={id} className={`${theme.name} ${customFatherPageCssClass}`}>
+        <div className={'itemsContainer ' + customFatherPageCssClass}>
           {!hideInput && (
-            <>
-              <NumericalInput
-                className="token-amount-input"
-                value={value}
-                onUserInput={val => {
-                  onUserInput(val)
-                }}
-              />
-              {account && currency && showMaxButton && label !== 'To' && (
-                <StyledBalanceMax onClick={onMax}>MAX</StyledBalanceMax>
-              )}
-            </>
+            <div className={'labelRow ' + customFatherPageCssClass}>
+              <RowBetween>
+                <div className={'label ' + customFatherPageCssClass}>{label}</div>
+                {account && (
+                  <div className={'label link ' + customFatherPageCssClass} onClick={onMax}>
+                    {!hideBalance && !!currency && selectedCurrencyBalance ? (customBalanceText ?? 'Balance: ') + selectedCurrencyBalance?.toSignificant(6) : ' -'}
+                  </div>
+                )}
+              </RowBetween>
+            </div>
           )}
-          <CurrencySelect
-            selected={!!currency}
-            className="open-currency-select-button"
-            onClick={() => {
-              if (!disableCurrencySelect) {
-                setModalOpen(true)
-              }
-            }}
-          >
-            <Aligner>
-              {pair ? (
-                <DoubleCurrencyLogo currency0={pair.token0} currency1={pair.token1} size={24} margin={true} />
-              ) : currency ? (
-                <CurrencyLogo currency={currency} size={'24px'} />
-              ) : null}
-              {pair ? (
-                <StyledTokenName className="pair-name-container">
-                  {pair?.token0.symbol}:{pair?.token1.symbol}
-                </StyledTokenName>
-              ) : (
-                <StyledTokenName className="token-symbol-container" active={Boolean(currency && currency.symbol)}>
-                  {(currency && currency.symbol && currency.symbol.length > 20
-                    ? currency.symbol.slice(0, 4) +
-                      '...' +
-                      currency.symbol.slice(currency.symbol.length - 5, currency.symbol.length)
-                    : currency?.symbol) || t('selectToken')}
-                </StyledTokenName>
-              )}
-              {!disableCurrencySelect && <StyledDropDown selected={!!currency} />}
-            </Aligner>
-          </CurrencySelect>
-        </InputRow>
-      </Container>
-      {!disableCurrencySelect && onCurrencySelect && (
-        <CurrencySearchModal
-          isOpen={modalOpen}
-          onDismiss={handleDismissSearch}
-          onCurrencySelect={onCurrencySelect}
-          selectedCurrency={currency}
-          otherSelectedCurrency={otherCurrency}
-          showCommonBases={showCommonBases}
-        />
-      )}
-    </InputPanel>
+          <InputRow style={hideInput ? { padding: '0', borderRadius: '8px' } : {}} selected={disableCurrencySelect}>
+            {!hideInput && (
+              <>
+                <NumericalInput className="token-amount-input" value={value} onUserInput={val => { onUserInput(val) }} />
+                {account && currency && showMaxButton && label !== 'To' && (<ActionButton className={theme.name} onClick={onMax}>MAX</ActionButton>)}
+                {currency && showErc20Badge && (<Erc20Badge className={`${theme.name} ml5`}>ERC20</Erc20Badge>)}
+                {currency && showEthItemBadge && (<EthItemBadge className={`${theme.name} ml5`}>ITEM</EthItemBadge>)}
+              </>
+            )}
+            <DropDownButton className={`open-currency-select-button ${theme.name}`} selected={!!currency} onClick={() => { if (!disableCurrencySelect) { setModalOpen(true) } }} >
+              <Aligner>
+                <MobileCurrencyLogo>
+                  {pair ? (
+                    <DoubleCurrencyLogo currency0={pair.token0} currency1={pair.token1} size={24} margin={true} />
+                  ) : currency ? (
+                    <CurrencyLogo currency={currency} size={'24px'} />
+                  ) : null}
+                </MobileCurrencyLogo>                
+                {pair ? (
+                  <StyledTokenName className={`pair-name-container ${theme.name}`}>
+                    {pair?.token0.symbol}:{pair?.token1.symbol}
+                  </StyledTokenName>
+                ) : (
+                    <StyledTokenName className={`token-symbol-container ${theme.name}`} active={Boolean(currency && currency.symbol)}>
+                      {(currency && currency.symbol && currency.symbol.length > 20
+                        ? currency.symbol.slice(0, 4) +
+                        '...' +
+                        currency.symbol.slice(currency.symbol.length - 5, currency.symbol.length)
+                        : currency?.symbol) || t('selectToken')}
+                    </StyledTokenName>
+                  )}
+                {!disableCurrencySelect && <StyledDropDown className={`${theme.name}`} selected={!!currency} />}
+              </Aligner>
+            </DropDownButton>
+          </InputRow>
+        </div>
+        {!disableCurrencySelect && onCurrencySelect && (
+          <CurrencySearchModal
+            isOpen={modalOpen}
+            onDismiss={handleDismissSearch}
+            onCurrencySelect={onCurrencySelect}
+            selectedCurrency={currency}
+            otherSelectedCurrency={otherCurrency}
+            showCommonBases={showCommonBases}
+          />
+        )}
+      </CurrencyFormPanel>
+      <TokenImageContainer>
+        <TokenImage showBackground={true} className={(!pair ? 'single' : 'double') + ' ' + customFatherPageCssClass}>
+          {pair ? (
+            <DoubleCurrencyLogo currency0={pair.token0} currency1={pair.token1} size={110} margin={false} radius={true} />
+          ) : currency ? (
+            <CurrencyLogo currency={currency} size={'110px'} />
+          ) : null}
+        </TokenImage>
+      </TokenImageContainer>
+    </>
   )
 }

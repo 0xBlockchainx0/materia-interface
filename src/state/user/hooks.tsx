@@ -1,11 +1,11 @@
-import { ChainId, Pair, Token } from '@uniswap/sdk'
+import { ChainId, Pair, Token } from '@materia-dex/sdk'
 import flatMap from 'lodash.flatmap'
 import { useCallback, useMemo } from 'react'
 import { shallowEqual, useDispatch, useSelector } from 'react-redux'
 import { BASES_TO_TRACK_LIQUIDITY_FOR, PINNED_PAIRS } from '../../constants'
 
 import { useActiveWeb3React } from '../../hooks'
-import { useAllTokens } from '../../hooks/Tokens'
+import { useAllTokens, useTokens } from '../../hooks/Tokens'
 import { AppDispatch, AppState } from '../index'
 import {
   addSerializedPair,
@@ -17,7 +17,10 @@ import {
   updateUserDeadline,
   updateUserExpertMode,
   updateUserSlippageTolerance,
-  toggleURLWarning
+  toggleURLWarning,
+  updateUserClassicMode,
+  addInteroperableTokens,
+  removeInteroperableTokens
 } from './actions'
 
 function serializeToken(token: Token): SerializedToken {
@@ -64,6 +67,32 @@ export function useDarkModeManager(): [boolean, () => void] {
   }, [darkMode, dispatch])
 
   return [darkMode, toggleSetDarkMode]
+}
+
+export function useIsClassicMode(): boolean {
+  const { userClassicMode, matchesClassicMode } = useSelector<
+    AppState,
+    { userClassicMode: boolean | null; matchesClassicMode: boolean }
+  >(
+    ({ user: { matchesClassicMode, userClassicMode } }) => ({
+      userClassicMode,
+      matchesClassicMode
+    }),
+    shallowEqual
+  )
+
+  return userClassicMode === null ? matchesClassicMode : userClassicMode
+}
+
+export function useClassicModeManager(): [boolean, () => void] {
+  const dispatch = useDispatch<AppDispatch>()
+  const classicMode = useIsClassicMode()
+
+  const toggleSetClassicMode = useCallback(() => {
+    dispatch(updateUserClassicMode({ userClassicMode: !classicMode }))
+  }, [classicMode, dispatch])
+
+  return [classicMode, toggleSetClassicMode]
 }
 
 export function useIsExpertMode(): boolean {
@@ -143,6 +172,16 @@ export function useUserAddedTokens(): Token[] {
   }, [serializedTokensMap, chainId])
 }
 
+export function useInteroperableTokens(): string[] {
+  const { chainId } = useActiveWeb3React()
+  const interoperableTokensMap = useSelector<AppState, AppState['user']['interoperableTokens']>(({ user: { interoperableTokens } }) => interoperableTokens)
+
+  return useMemo(() => {
+    if (!chainId) return []
+    return Object.values(interoperableTokensMap[chainId as ChainId] ?? {})
+  }, [interoperableTokensMap, chainId])
+}
+
 function serializePair(pair: Pair): SerializedPair {
   return {
     token0: serializeToken(pair.token0),
@@ -170,13 +209,34 @@ export function useURLWarningToggle(): () => void {
   return useCallback(() => dispatch(toggleURLWarning()), [dispatch])
 }
 
+export function useAddInteroperableTokens(): (chainId: number, interoperableTokens: string[]) => void {
+  const dispatch = useDispatch<AppDispatch>()
+  return useCallback(
+    (chainId: number, interoperableTokens: string[]) => {
+      dispatch(
+        addInteroperableTokens({ chainId: chainId, interoperableTokens: interoperableTokens }))
+    },
+    [dispatch]
+  )
+}
+
+export function useRemoveInteroperableTokens(): (chainId: number) => void {
+  const dispatch = useDispatch<AppDispatch>()
+  return useCallback(
+    (chainId: number) => {
+      dispatch(removeInteroperableTokens({ chainId: chainId }))
+    },
+    [dispatch]
+  )
+}
+
 /**
  * Given two tokens return the liquidity token that represents its liquidity shares
  * @param tokenA one of the two tokens
  * @param tokenB the other token
  */
-export function toV2LiquidityToken([tokenA, tokenB]: [Token, Token]): Token {
-  return new Token(tokenA.chainId, Pair.getAddress(tokenA, tokenB), 18, 'UNI-V2', 'Uniswap V2')
+export function toLiquidityToken([tokenA, tokenB]: [Token, Token]): Token {
+  return new Token(tokenA.chainId, Pair.getAddress(tokenA, tokenB), 18, 'MP', 'Materia Pool')
 }
 
 /**
@@ -184,7 +244,24 @@ export function toV2LiquidityToken([tokenA, tokenB]: [Token, Token]): Token {
  */
 export function useTrackedTokenPairs(): [Token, Token][] {
   const { chainId } = useActiveWeb3React()
-  const tokens = useAllTokens()
+  const interoperableTokens = useInteroperableTokens() ?? []
+  
+  let tokens = useAllTokens()
+  let newInteroperableTokens = interoperableTokens.filter(x => !tokens[x])
+
+  const wrappedTokens = useTokens(newInteroperableTokens)
+
+  tokens = useMemo(() => {
+    if (wrappedTokens == undefined) return tokens
+
+    return (Object.keys(wrappedTokens).reduce<{ [address: string]: Token }>(
+      (tokenMap, wrappedTokenAddress, index) => {
+        if(!tokenMap[wrappedTokenAddress]) tokenMap[wrappedTokenAddress] = wrappedTokens[index]
+        return tokenMap
+      },
+      { ...tokens }
+    ))
+  }, [tokens, wrappedTokens])
 
   // pinned pairs
   const pinnedPairs = useMemo(() => (chainId ? PINNED_PAIRS[chainId] ?? [] : []), [chainId])
@@ -194,22 +271,22 @@ export function useTrackedTokenPairs(): [Token, Token][] {
     () =>
       chainId
         ? flatMap(Object.keys(tokens), tokenAddress => {
-            const token = tokens[tokenAddress]
-            // for each token on the current chain,
-            return (
-              // loop though all bases on the current chain
-              (BASES_TO_TRACK_LIQUIDITY_FOR[chainId] ?? [])
-                // to construct pairs of the given token with each base
-                .map(base => {
-                  if (base.address === token.address) {
-                    return null
-                  } else {
-                    return [base, token]
-                  }
-                })
-                .filter((p): p is [Token, Token] => p !== null)
-            )
-          })
+          const token = tokens[tokenAddress]
+          // for each token on the current chain,
+          return (
+            // loop though all bases on the current chain
+            (BASES_TO_TRACK_LIQUIDITY_FOR[chainId] ?? [])
+              // to construct pairs of the given token with each base
+              .map(base => {
+                if (base.address === token.address) {
+                  return null
+                } else {
+                  return [base, token]
+                }
+              })
+              .filter((p): p is [Token, Token] => p !== null)
+          )
+        })
         : [],
     [tokens, chainId]
   )

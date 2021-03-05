@@ -4,12 +4,22 @@ import styled from 'styled-components'
 export const Wrapper = styled.div`
   position: relative;
 `
-
 export const ClickableText = styled(Text)`
-  :hover {
-    cursor: pointer;
+  :hover { cursor: pointer; }
+  color: ${({ theme }) => theme.text2};
+  font-weight: 500;
+  font-size: 14px;
+
+  &.classic { 
+    color: ${({ theme }) => theme.white};
+    font-size: 11px; 
+    text-shadow: 1px 1px 1px ${({ theme }) => theme.black}; 
+    line-height: 2em; 
+    text-align: center;
+    margin: 10px auto;
   }
-  color: ${({ theme }) => theme.primary1};
+
+  @media (max-width: 1050px) { margin-bottom: 10px !important; padding-top: 10px; }
 `
 export const MaxButton = styled.button<{ width: string }>`
   padding: 0.5rem 1rem;
@@ -17,9 +27,7 @@ export const MaxButton = styled.button<{ width: string }>`
   border: 1px solid ${({ theme }) => theme.primary5};
   border-radius: 0.5rem;
   font-size: 1rem;
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    padding: 0.25rem 0.5rem;
-  `};
+  ${({ theme }) => theme.mediaWidth.upToSmall` padding: 0.25rem 0.5rem; `};
   font-weight: 500;
   cursor: pointer;
   margin: 0.25rem;
@@ -34,23 +42,4 @@ export const MaxButton = styled.button<{ width: string }>`
   }
 `
 
-export const Dots = styled.span`
-  &::after {
-    display: inline-block;
-    animation: ellipsis 1.25s infinite;
-    content: '.';
-    width: 1em;
-    text-align: left;
-  }
-  @keyframes ellipsis {
-    0% {
-      content: '.';
-    }
-    33% {
-      content: '..';
-    }
-    66% {
-      content: '...';
-    }
-  }
-`
+

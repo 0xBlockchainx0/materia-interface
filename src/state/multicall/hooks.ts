@@ -106,7 +106,56 @@ function useCallsData(calls: (Call | undefined)[], options?: ListenerOptions): C
   )
 }
 
-interface CallState {
+function useUnmemoizedCallsData(calls: (Call | undefined)[], options?: ListenerOptions): CallResult[] {
+  const { chainId } = useActiveWeb3React()
+  const callResults = useSelector<AppState, AppState['multicall']['callResults']>(state => state.multicall.callResults)
+  const dispatch = useDispatch<AppDispatch>()
+
+  const serializedCallKeys: string = JSON.stringify(
+    calls
+      ?.filter((c): c is Call => Boolean(c))
+      ?.map(toCallKey)
+      ?.sort() ?? []
+  )
+
+  // update listeners when there is an actual change that persists for at least 100ms
+  useEffect(() => {
+    const callKeys: string[] = JSON.parse(serializedCallKeys)
+    if (!chainId || callKeys.length === 0) return undefined
+    const calls = callKeys.map(key => parseCallKey(key))
+    dispatch(
+      addMulticallListeners({
+        chainId,
+        calls,
+        options
+      })
+    )
+
+    return () => {
+      dispatch(
+        removeMulticallListeners({
+          chainId,
+          calls,
+          options
+        })
+      )
+    }
+  }, [chainId, dispatch, options, serializedCallKeys])
+
+  return calls.map<CallResult>(call => {
+    if (!chainId || !call) return INVALID_RESULT
+
+    const result = callResults[chainId]?.[toCallKey(call)]
+    let data
+    if (result?.data && result?.data !== '0x') {
+      data = result.data
+    }
+
+    return { valid: true, data, blockNumber: result?.blockNumber }
+  })
+}
+
+export interface CallState {
   readonly valid: boolean
   // the result, or undefined if loading or errored/no data
   readonly result: Result | undefined
@@ -121,7 +170,7 @@ interface CallState {
 const INVALID_CALL_STATE: CallState = { valid: false, result: undefined, loading: false, syncing: false, error: false }
 const LOADING_CALL_STATE: CallState = { valid: true, result: undefined, loading: true, syncing: true, error: false }
 
-function toCallState(
+export function toCallState(
   callResult: CallResult | undefined,
   contractInterface: Interface | undefined,
   fragment: FunctionFragment | undefined,
@@ -253,4 +302,27 @@ export function useSingleCallResult(
   return useMemo(() => {
     return toCallState(result, contract?.interface, fragment, latestBlockNumber)
   }, [result, contract, fragment, latestBlockNumber])
+}
+
+export function useUnmemoizedSingleCallResult(
+  contract: Contract | null | undefined,
+  methodName: string,
+  inputs?: OptionalMethodInputs,
+  options?: ListenerOptions
+): CallState {
+  const fragment = contract?.interface?.getFunction(methodName)
+
+  const calls = contract && fragment && isValidMethodArgs(inputs)
+  ? [
+      {
+        address: contract.address,
+        callData: contract.interface.encodeFunctionData(fragment, inputs)
+      }
+    ]
+  : []
+
+  const result = useUnmemoizedCallsData(calls, options)[0]
+  const latestBlockNumber = useBlockNumber()
+
+  return toCallState(result, contract?.interface, fragment, latestBlockNumber)
 }

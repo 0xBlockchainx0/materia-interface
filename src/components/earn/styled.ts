@@ -1,23 +1,18 @@
 import styled from 'styled-components'
 import { AutoColumn } from '../Column'
 
-import uImage from '../../assets/images/big_unicorn.png'
-import xlUnicorn from '../../assets/images/xl_uni.png'
-import noise from '../../assets/images/noise.png'
-
 export const TextBox = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 4px 12px;
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  border-radius: 20px;
+  border: 1px solid ${({ theme }) => theme.cyan2};
+  // border-radius: 20px;
   width: fit-content;
   justify-self: flex-end;
 `
 
 export const DataCard = styled(AutoColumn)<{ disabled?: boolean }>`
-  background: radial-gradient(76.02% 75.41% at 1.84% 0%, #ff007a 0%, #2172e5 100%);
   border-radius: 12px;
   width: 100%;
   position: relative;
@@ -25,7 +20,6 @@ export const DataCard = styled(AutoColumn)<{ disabled?: boolean }>`
 `
 
 export const CardBGImage = styled.span<{ desaturate?: boolean }>`
-  background: url(${uImage});
   width: 1000px;
   height: 600px;
   position: absolute;
@@ -39,22 +33,7 @@ export const CardBGImage = styled.span<{ desaturate?: boolean }>`
   ${({ desaturate }) => desaturate && `filter: saturate(0)`}
 `
 
-export const CardBGImageSmaller = styled.span<{ desaturate?: boolean }>`
-  background: url(${xlUnicorn});
-  width: 1200px;
-  height: 1200px;
-  position: absolute;
-  border-radius: 12px;
-  top: -300px;
-  left: -300px;
-  opacity: 0.4;
-  user-select: none;
-
-  ${({ desaturate }) => desaturate && `filter: saturate(0)`}
-`
-
 export const CardNoise = styled.span`
-  background: url(${noise});
   background-size: cover;
   mix-blend-mode: overlay;
   border-radius: 12px;
@@ -71,6 +50,7 @@ export const CardSection = styled(AutoColumn)<{ disabled?: boolean }>`
   padding: 1rem;
   z-index: 1;
   opacity: ${({ disabled }) => disabled && '0.4'};
+  ${({ theme }) => theme.backgroundContainer2}
 `
 
 export const Break = styled.div`

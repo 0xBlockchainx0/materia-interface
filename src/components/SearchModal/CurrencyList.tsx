@@ -1,25 +1,24 @@
-import { Currency, CurrencyAmount, currencyEquals, Token } from '@uniswap/sdk'
-import { USD } from '../../constants/index'
-import React, { CSSProperties, MutableRefObject, useCallback, useMemo } from 'react'
+import React, { CSSProperties, MutableRefObject, useCallback, useMemo, useContext } from 'react'
+import { Currency, CurrencyAmount, currencyEquals, ETHER, Token } from '@materia-dex/sdk'
 import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'
-import styled from 'styled-components'
+import styled, { ThemeContext } from 'styled-components'
 import { useActiveWeb3React } from '../../hooks'
 import { useSelectedTokenList, WrappedTokenInfo } from '../../state/lists/hooks'
 import { useAddUserToken, useRemoveUserAddedToken } from '../../state/user/hooks'
 import { useCurrencyBalance } from '../../state/wallet/hooks'
-import { LinkStyledButton, TYPE } from '../../theme'
+import { LinkStyledButton, TYPE, SearchTokenListItem } from '../../theme'
 import { useIsUserAddedToken } from '../../hooks/Tokens'
 import Column from '../Column'
 import { RowFixed } from '../Row'
 import CurrencyLogo from '../CurrencyLogo'
 import { MouseoverTooltip } from '../Tooltip'
-import { FadedSpan, MenuItem } from './styleds'
+import { FadedSpan } from './styleds'
 import Loader from '../Loader'
 import { isTokenOnList } from '../../utils'
 
 function currencyKey(currency: Currency): string {
-  return currency instanceof Token ? currency.address : currency === USD ? 'USD' : ''
+  return currency instanceof Token ? currency.address : currency === ETHER ? 'ETHER' : ''
 }
 
 const StyledBalanceText = styled(Text)`
@@ -30,7 +29,7 @@ const StyledBalanceText = styled(Text)`
 `
 
 const Tag = styled.div`
-  background-color: ${({ theme }) => theme.bg1};
+  background-color: ${({ theme }) => theme.bg3};
   color: ${({ theme }) => theme.text2};
   font-size: 14px;
   border-radius: 4px;
@@ -94,6 +93,9 @@ function CurrencyRow({
   otherSelected: boolean
   style: CSSProperties
 }) {
+
+  const theme = useContext(ThemeContext)
+
   const { account, chainId } = useActiveWeb3React()
   const key = currencyKey(currency)
   const selectedTokenList = useSelectedTokenList()
@@ -106,9 +108,9 @@ function CurrencyRow({
 
   // only show add or remove buttons if not on selected list
   return (
-    <MenuItem
+    <SearchTokenListItem
       style={style}
-      className={`token-item-${key}`}
+      className={`token-item-${key} ${theme.name}`}
       onClick={() => (isSelected ? null : onSelect())}
       disabled={isSelected}
       selected={otherSelected}
@@ -120,7 +122,7 @@ function CurrencyRow({
         </Text>
         <FadedSpan>
           {!isOnSelectedList && customAdded ? (
-            <TYPE.main fontWeight={500}>
+            <TYPE.main className={`custom-token-added-by-user ${theme.name}`}>
               Added by user
               <LinkStyledButton
                 onClick={event => {
@@ -151,7 +153,7 @@ function CurrencyRow({
       <RowFixed style={{ justifySelf: 'flex-end' }}>
         {balance ? <Balance balance={balance} /> : account ? <Loader /> : null}
       </RowFixed>
-    </MenuItem>
+    </SearchTokenListItem>
   )
 }
 

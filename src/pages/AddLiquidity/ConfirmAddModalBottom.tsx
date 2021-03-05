@@ -1,11 +1,12 @@
-import { Currency, CurrencyAmount, Fraction, Percent } from '@uniswap/sdk'
-import React from 'react'
-import { Text } from 'rebass'
-import { ButtonPrimary } from '../../components/Button'
+import { Currency, CurrencyAmount, Fraction, Percent } from '@materia-dex/sdk'
+import React, { useContext } from 'react'
+import { ThemeContext } from 'styled-components'
 import { RowBetween, RowFixed } from '../../components/Row'
 import CurrencyLogo from '../../components/CurrencyLogo'
 import { Field } from '../../state/mint/actions'
-import { TYPE } from '../../theme'
+import { 
+  TYPE, 
+  MainOperationButton } from '../../theme'
 
 export function ConfirmAddModalBottom({
   noLiquidity,
@@ -22,6 +23,9 @@ export function ConfirmAddModalBottom({
   poolTokenPercentage?: Percent
   onAdd: () => void
 }) {
+
+  const theme = useContext(ThemeContext)
+
   return (
     <>
       <RowBetween>
@@ -57,11 +61,11 @@ export function ConfirmAddModalBottom({
         <TYPE.body>Share of Pool:</TYPE.body>
         <TYPE.body>{noLiquidity ? '100' : poolTokenPercentage?.toSignificant(4)}%</TYPE.body>
       </RowBetween>
-      <ButtonPrimary style={{ margin: '20px 0 0 0' }} onClick={onAdd}>
-        <Text fontWeight={500} fontSize={20}>
+      <div className="text-centered">
+        <MainOperationButton style={{ margin: '20px 0 0 0' }} onClick={onAdd} className={theme.name}>
           {noLiquidity ? 'Create Pool & Supply' : 'Confirm Supply'}
-        </Text>
-      </ButtonPrimary>
+        </MainOperationButton>
+      </div>
     </>
   )
 }

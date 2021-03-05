@@ -1,23 +1,29 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
+import { X } from 'react-feather'
 import Modal from '../Modal'
 import { AutoColumn, ColumnCenter } from '../Column'
-import styled from 'styled-components'
-import { DataCard, CardSection, Break } from '../earn/styled'
-import { RowBetween } from '../Row'
-import { TYPE, ExternalLink, CloseIcon, CustomLightSpinner, UniTokenAnimated } from '../../theme'
-import { ButtonPrimary } from '../Button'
+import styled, { ThemeContext } from 'styled-components'
+import { DataCard } from '../earn/styled'
+import { 
+  TYPE, 
+  ExternalLink, 
+  CustomLightSpinner, 
+  MainOperationButton,
+  SimpleTextParagraph, 
+  IconButton,
+  ModalContentWrapper } from '../../theme'
 import { useClaimCallback, useUserUnclaimedAmount, useUserHasAvailableClaim } from '../../state/claim/hooks'
-import tokenLogo from '../../assets/images/token-logo.png'
-import Circle from '../../assets/images/blue-loader.svg'
+import { images } from '../../theme/images'
+
 import { Text } from 'rebass'
 import AddressInputPanel from '../AddressInputPanel'
 import useENS from '../../hooks/useENS'
 import { useActiveWeb3React } from '../../hooks'
 import { isAddress } from 'ethers/lib/utils'
 import Confetti from '../Confetti'
-import { CardNoise, CardBGImage, CardBGImageSmaller } from '../earn/styled'
+import { CardNoise, CardBGImage } from '../earn/styled'
 import { useIsTransactionPending } from '../../state/transactions/hooks'
-import { TokenAmount } from '@uniswap/sdk'
+import { TokenAmount } from '@materia-dex/sdk'
 import { getEtherscanLink, shortenAddress } from '../../utils'
 
 const ContentWrapper = styled(AutoColumn)`
@@ -91,103 +97,68 @@ export default function AddressClaimModal({ isOpen, onDismiss }: { isOpen: boole
     setTyped('')
     onDismiss()
   }
-
+  const theme = useContext(ThemeContext)
   return (
     <Modal isOpen={isOpen} onDismiss={wrappedOnDismiss} maxHeight={90}>
-      <Confetti start={Boolean(isOpen && claimConfirmed && attempting)} />
-      {!attempting && (
-        <ContentWrapper gap="lg">
-          <ModalUpper>
-            <CardBGImage />
-            <CardNoise />
-            <CardSection gap="md">
-              <RowBetween>
-                <TYPE.white fontWeight={500}>Claim UNI Token</TYPE.white>
-                <CloseIcon onClick={wrappedOnDismiss} style={{ zIndex: 99 }} stroke="white" />
-              </RowBetween>
-              <TYPE.white fontWeight={700} fontSize={36}>
-                {unclaimedAmount?.toFixed(0, { groupSeparator: ',' } ?? '-')} UNI
-              </TYPE.white>
-            </CardSection>
-            <Break />
-          </ModalUpper>
-          <AutoColumn gap="md" style={{ padding: '1rem', paddingTop: '0' }} justify="center">
-            <TYPE.subHeader fontWeight={500}>
-              Enter an address to trigger a UNI claim. If the address has any claimable UNI it will be sent to them on
-              submission.
-            </TYPE.subHeader>
-            <AddressInputPanel value={typed} onChange={handleRecipientType} />
-            {parsedAddress && !hasAvailableClaim && (
-              <TYPE.error error={true}>Address has no available claim</TYPE.error>
-            )}
-            <ButtonPrimary
-              disabled={!isAddress(parsedAddress ?? '') || !hasAvailableClaim}
-              padding="16px 16px"
-              width="100%"
-              borderRadius="12px"
-              mt="1rem"
-              onClick={onClaim}
-            >
-              Claim UNI
-            </ButtonPrimary>
-          </AutoColumn>
-        </ContentWrapper>
-      )}
-      {(attempting || claimConfirmed) && (
-        <ConfirmOrLoadingWrapper activeBG={true}>
-          <CardNoise />
-          <CardBGImageSmaller desaturate />
-          <RowBetween>
-            <div />
-            <CloseIcon onClick={wrappedOnDismiss} style={{ zIndex: 99 }} stroke="black" />
-          </RowBetween>
-          <ConfirmedIcon>
-            {!claimConfirmed ? (
-              <CustomLightSpinner src={Circle} alt="loader" size={'90px'} />
-            ) : (
-              <UniTokenAnimated width="72px" src={tokenLogo} />
-            )}
-          </ConfirmedIcon>
-          <AutoColumn gap="100px" justify={'center'}>
-            <AutoColumn gap="12px" justify={'center'}>
-              <TYPE.largeHeader fontWeight={600} color="black">
-                {claimConfirmed ? 'Claimed' : 'Claiming'}
-              </TYPE.largeHeader>
-              {!claimConfirmed && (
-                <Text fontSize={36} color={'#ff007a'} fontWeight={800}>
-                  {unclaimedAmount?.toFixed(0, { groupSeparator: ',' } ?? '-')} UNI
-                </Text>
-              )}
-              {parsedAddress && (
-                <TYPE.largeHeader fontWeight={600} color="black">
-                  for {shortenAddress(parsedAddress)}
-                </TYPE.largeHeader>
-              )}
-            </AutoColumn>
-            {claimConfirmed && (
-              <>
-                <TYPE.subHeader fontWeight={500} color="black">
-                  <span role="img" aria-label="party-hat">
-                    🎉{' '}
-                  </span>
-                  Welcome to team Unicorn :){' '}
-                  <span role="img" aria-label="party-hat">
-                    🎉
-                  </span>
-                </TYPE.subHeader>
-              </>
-            )}
-            {attempting && !hash && (
-              <TYPE.subHeader color="black">Confirm this transaction in your wallet</TYPE.subHeader>
-            )}
-            {attempting && hash && !claimConfirmed && chainId && hash && (
-              <ExternalLink href={getEtherscanLink(chainId, hash, 'transaction')} style={{ zIndex: 99 }}>
-                View transaction on Etherscan
-              </ExternalLink>
-            )}
-          </AutoColumn>
-        </ConfirmOrLoadingWrapper>
-      )}
+      {/* <Confetti start={Boolean(isOpen && claimConfirmed && attempting)} /> */}
+      <ModalContentWrapper className={((attempting || claimConfirmed) ? 'claming' : '')}>   
+        <div className="modal-content-wrapper-inner-container">   
+          {!attempting && (
+            <>
+              <h6>Claim GIL Token</h6>
+              <IconButton className={ `modal-close-icon ${theme.name}` } onClick={wrappedOnDismiss}>
+                <X/>
+              </IconButton>
+              <div className="evidence-text font25">{unclaimedAmount?.toFixed(0, { groupSeparator: ',' } ?? '-')} GIL</div>
+              <div>
+                <SimpleTextParagraph>
+                  Enter an address to trigger a GIL claim. If the address has any claimable GIL it will be sent to them on
+                  submission.
+                </SimpleTextParagraph>
+                <AddressInputPanel value={typed} onChange={handleRecipientType} alignedToLeft={true}/>
+                {parsedAddress && !hasAvailableClaim && ( <TYPE.error error={true}>Address has no available claim</TYPE.error> )}
+                <div className="text-centered">
+                  <MainOperationButton disabled={!isAddress(parsedAddress ?? '') || !hasAvailableClaim} onClick={onClaim} className={ `mt20 ${theme.name}` }>
+                    Claim GIL
+                  </MainOperationButton>
+                </div>                
+              </div>
+            </>
+          )}
+          {(attempting || claimConfirmed) && (
+            <>
+              <IconButton className={ `modal-close-icon ${theme.name}` } onClick={wrappedOnDismiss}>
+                <X/>
+              </IconButton>
+              <div className="text-centered pt40 pb40">
+                {!claimConfirmed ? ( <CustomLightSpinner src={images.loader.circle} alt="loader" size={'90px'} className={ `mb40 ${theme.name}` }/> ) : ( <></> )}
+                <div>{claimConfirmed ? 'Claimed' : 'Claiming'}</div>
+                {claimConfirmed && (<img src={images.icons.gil} className="claimedIcon"/>)}
+                {!claimConfirmed && (
+                  <div className="mt20 evidence-text error">
+                    {unclaimedAmount?.toFixed(0, { groupSeparator: ',' } ?? '-')} GIL
+                  </div>                  
+                )}
+                {parsedAddress && (
+                  <div className="mt20 evidence-text">
+                    for {shortenAddress(parsedAddress)}
+                  </div>
+                )}
+                {attempting && !hash && (
+                  <div className="mt20 evidence-text">Confirm this transaction in your wallet</div>
+                )}
+                {attempting && hash && !claimConfirmed && chainId && hash && (
+                  <div className="mt20">
+                    <ExternalLink href={getEtherscanLink(chainId, hash, 'transaction')}>
+                      View transaction on Etherscan
+                    </ExternalLink>
+                  </div>
+                )}
+              </div>
+            </>
+          )}
+        </div>
+      </ModalContentWrapper>
     </Modal>
   )
 }

@@ -1,4 +1,4 @@
-import { Trade, TradeType } from '@uniswap/sdk'
+import { Currency, Trade, TradeType } from '@materia-dex/sdk'
 import React, { useContext, useMemo, useState } from 'react'
 import { Repeat } from 'react-feather'
 import { Text } from 'rebass'
@@ -11,7 +11,7 @@ import {
   formatExecutionPrice,
   warningSeverity
 } from '../../utils/prices'
-import { ButtonError } from '../Button'
+import { ButtonMateriaError } from '../Button'
 import { AutoColumn } from '../Column'
 import QuestionHelper from '../QuestionHelper'
 import { AutoRow, RowBetween, RowFixed } from '../Row'
@@ -20,12 +20,14 @@ import { StyledBalanceMaxMini, SwapCallbackError } from './styleds'
 
 export default function SwapModalFooter({
   trade,
+  originalCurrencies,
   onConfirm,
   allowedSlippage,
   swapErrorMessage,
   disabledConfirm
 }: {
   trade: Trade
+  originalCurrencies: { [field in Field]?: Currency }
   allowedSlippage: number
   onConfirm: () => void
   swapErrorMessage: string | undefined
@@ -42,9 +44,9 @@ export default function SwapModalFooter({
 
   return (
     <>
-      <AutoColumn gap="0px">
+      <AutoColumn gap="0px" className="mb20">
         <RowBetween align="center">
-          <Text fontWeight={400} fontSize={14} color={theme.text6}>
+          <Text fontWeight={400} fontSize={14} color={theme.text2}>
             Price
           </Text>
           <Text
@@ -59,7 +61,7 @@ export default function SwapModalFooter({
               paddingLeft: '10px'
             }}
           >
-            {formatExecutionPrice(trade, showInverted)}
+            {formatExecutionPrice(trade, originalCurrencies, showInverted)}
             <StyledBalanceMaxMini onClick={() => setShowInverted(!showInverted)}>
               <Repeat size={14} />
             </StyledBalanceMaxMini>
@@ -68,7 +70,7 @@ export default function SwapModalFooter({
 
         <RowBetween>
           <RowFixed>
-            <TYPE.black fontSize={14} fontWeight={400} color={theme.text6}>
+            <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
               {trade.tradeType === TradeType.EXACT_INPUT ? 'Minimum received' : 'Maximum sold'}
             </TYPE.black>
             <QuestionHelper text="Your transaction will revert if there is a large, unfavorable price movement before it is confirmed." />
@@ -81,14 +83,14 @@ export default function SwapModalFooter({
             </TYPE.black>
             <TYPE.black fontSize={14} marginLeft={'4px'}>
               {trade.tradeType === TradeType.EXACT_INPUT
-                ? trade.outputAmount.currency.symbol
-                : trade.inputAmount.currency.symbol}
+                ? originalCurrencies[Field.OUTPUT]?.symbol
+                : originalCurrencies[Field.INPUT]?.symbol}
             </TYPE.black>
           </RowFixed>
         </RowBetween>
         <RowBetween>
           <RowFixed>
-            <TYPE.black color={theme.text6} fontSize={14} fontWeight={400}>
+            <TYPE.black color={theme.text2} fontSize={14} fontWeight={400}>
               Price Impact
             </TYPE.black>
             <QuestionHelper text="The difference between the market price and your price due to trade size." />
@@ -97,32 +99,27 @@ export default function SwapModalFooter({
         </RowBetween>
         <RowBetween>
           <RowFixed>
-            <TYPE.black fontSize={14} fontWeight={400} color={theme.text6}>
+            <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
               Liquidity Provider Fee
             </TYPE.black>
             <QuestionHelper text="A portion of each trade (0.30%) goes to liquidity providers as a protocol incentive." />
           </RowFixed>
           <TYPE.black fontSize={14}>
-            {realizedLPFee ? realizedLPFee?.toSignificant(6) + ' ' + trade.inputAmount.currency.symbol : '-'}
+            {realizedLPFee ? realizedLPFee?.toSignificant(6) + ' ' + originalCurrencies[Field.INPUT]?.symbol : '-'}
           </TYPE.black>
         </RowBetween>
       </AutoColumn>
 
-      <AutoRow>
-        <ButtonError
+      <div className="text-centered">
+        <ButtonMateriaError
           onClick={onConfirm}
           disabled={disabledConfirm}
           error={severity > 2}
-          style={{ margin: '10px 0 0 0' }}
           id="confirm-swap-or-send"
-        >
-          <Text fontSize={20} fontWeight={500}>
-            {severity > 2 ? 'Swap Anyway' : 'Confirm Swap'}
-          </Text>
-        </ButtonError>
-
+        >{severity > 2 ? 'Swap Anyway' : 'Confirm Swap'}
+        </ButtonMateriaError>
         {swapErrorMessage ? <SwapCallbackError error={swapErrorMessage} /> : null}
-      </AutoRow>
+      </div>
     </>
   )
 }

@@ -1,45 +1,7 @@
-import React from 'react'
-import styled from 'styled-components'
+import React, { useContext } from 'react'
+import styled, { ThemeContext } from 'styled-components'
 import { escapeRegExp } from '../../utils'
-
-const StyledInput = styled.input<{ error?: boolean; fontSize?: string; align?: string }>`
-  color: #eff1ff;
-  text-shadow: 2px 2px #212421, 1px 1px #212021;
-  font-family: Verdana, sans-serif;
-  margin: 5px 0;
-
-  width: 0;
-  position: relative;
-  font-weight: 800;
-  outline: none;
-  border: none;
-  flex: 1 1 auto;
-  background-color: transparent;
-  font-size: ${({ fontSize }) => fontSize ?? '24px'};
-  text-align: ${({ align }) => align && align};
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  padding: 0px;
-  -webkit-appearance: textfield;
-
-  ::-webkit-search-decoration {
-    -webkit-appearance: none;
-  }
-
-  [type='number'] {
-    -moz-appearance: textfield;
-  }
-
-  ::-webkit-outer-spin-button,
-  ::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-  }
-
-  ::placeholder {
-    color: ${({ theme }) => theme.text4};
-  }
-`
+import { StyledInput } from '../../theme'
 
 const inputRegex = RegExp(`^\\d*(?:\\\\[.])?\\d*$`) // match escaped "." characters via in a non-capturing group
 
@@ -60,13 +22,15 @@ export const Input = React.memo(function InnerInput({
       onUserInput(nextUserInput)
     }
   }
+  const theme = useContext(ThemeContext)
 
   return (
     <StyledInput
       {...rest}
+      className={theme.name}
       value={value}
       onChange={event => {
-        // replace commas with periods, because uniswap exclusively uses period as the decimal separator
+        // replace commas with periods, because it uses period as the decimal separator
         enforcer(event.target.value.replace(/,/g, '.'))
       }}
       // universal input options

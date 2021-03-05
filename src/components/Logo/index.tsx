@@ -1,6 +1,7 @@
-import React, { useState } from 'react'
-import { HelpCircle } from 'react-feather'
+import React, { useState, useContext } from 'react'
+import { ThemeContext } from 'styled-components'
 import { ImageProps } from 'rebass'
+import { images } from '../../theme/images'
 
 const BAD_SRCS: { [tokenAddress: string]: true } = {}
 
@@ -13,8 +14,8 @@ export interface LogoProps extends Pick<ImageProps, 'style' | 'alt' | 'className
  */
 export default function Logo({ srcs, alt, ...rest }: LogoProps) {
   const [, refresh] = useState<number>(0)
-
   const src: string | undefined = srcs.find(src => !BAD_SRCS[src])
+  const theme = useContext(ThemeContext)
 
   if (src) {
     return (
@@ -29,6 +30,13 @@ export default function Logo({ srcs, alt, ...rest }: LogoProps) {
       />
     )
   }
-
-  return <HelpCircle {...rest} />
+  if(theme.name == 'dark'){
+    return <img {...rest} alt="Token Image Not Found" src={images.tokenImageNotFound.dark}/>
+  }
+  else if(theme.name == 'light'){
+    return <img {...rest} alt="Token Image Not Found" src={images.tokenImageNotFound.light}/>
+  }
+  else {
+    return <img {...rest} alt="Token Image Not Found" src={images.tokenImageNotFound.classic}/>
+  }
 }

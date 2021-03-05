@@ -1,44 +1,58 @@
 import React from 'react'
-import { Price } from '@uniswap/sdk'
+import { Currency, Price } from '@materia-dex/sdk'
 import { useContext } from 'react'
-import { Repeat } from 'react-feather'
 import { Text } from 'rebass'
-import { ThemeContext } from 'styled-components'
-import { StyledBalanceMaxMini } from './styleds'
+import styled, { ThemeContext } from 'styled-components'
+import { TYPE } from '../../theme'
+import { Field } from '../../state/swap/actions'
 
 interface TradePriceProps {
   price?: Price
+  originalCurrencies: { [field in Field]?: Currency }
   showInverted: boolean
   setShowInverted: (showInverted: boolean) => void
 }
 
-export default function TradePrice({ price, showInverted, setShowInverted }: TradePriceProps) {
+const PriceLabel = styled.div`
+  display: flex;
+  justify-content: center;
+  margin: 0 auto;
+`
+
+export default function TradePrice({ price, originalCurrencies, showInverted, setShowInverted }: TradePriceProps) {
   const theme = useContext(ThemeContext)
 
   const formattedPrice = showInverted ? price?.toSignificant(6) : price?.invert()?.toSignificant(6)
 
   const show = Boolean(price?.baseCurrency && price?.quoteCurrency)
+  // const label = showInverted
+  //   ? `${price?.quoteCurrency?.symbol} per ${price?.baseCurrency?.symbol}`
+  //   : `${price?.baseCurrency?.symbol} per ${price?.quoteCurrency?.symbol}`
   const label = showInverted
-    ? `${price?.quoteCurrency?.symbol} per ${price?.baseCurrency?.symbol}`
-    : `${price?.baseCurrency?.symbol} per ${price?.quoteCurrency?.symbol}`
+    ? `${originalCurrencies[Field.OUTPUT]?.symbol} per ${originalCurrencies[Field.INPUT]?.symbol}`
+    : `${originalCurrencies[Field.INPUT]?.symbol} per ${originalCurrencies[Field.OUTPUT]?.symbol}`
+
+  const tradePrice = (formattedPrice ?? '-') + ' ' + label
 
   return (
     <Text
       fontWeight={500}
       fontSize={14}
-      color={theme.text1}
-      style={{ justifyContent: 'center', alignItems: 'center', display: 'flex' }}
+      color={theme.text2}
+      style={{ justifyContent: 'center', alignItems: 'center' }}
     >
       {show ? (
         <>
-          {formattedPrice ?? '-'} {label}
-          <StyledBalanceMaxMini onClick={() => setShowInverted(!showInverted)}>
-            <Repeat size={14} />
-          </StyledBalanceMaxMini>
+          <PriceLabel>
+            <TYPE.body color={theme.blue2} fontWeight={500} fontSize={14}>Price</TYPE.body>
+          </PriceLabel>
+          <div>
+            {tradePrice}
+          </div>
         </>
       ) : (
-        '-'
-      )}
+          '-'
+        )}
     </Text>
   )
 }

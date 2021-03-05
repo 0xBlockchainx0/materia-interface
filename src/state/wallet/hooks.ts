@@ -1,14 +1,15 @@
-import { UNI } from './../../constants/index'
-import { Currency, CurrencyAmount, ETHER, JSBI, Token, TokenAmount } from '@uniswap/sdk'
+import { GIL } from './../../constants/index'
+import { Currency, CurrencyAmount, ETHER, JSBI, Token, TokenAmount } from '@materia-dex/sdk'
 import { useMemo } from 'react'
 import ERC20_INTERFACE from '../../constants/abis/erc20'
-import { useAllTokens } from '../../hooks/Tokens'
+import { useAllListTokens, useAllTokens } from '../../hooks/Tokens'
 import { useActiveWeb3React } from '../../hooks'
 import { useMulticallContract } from '../../hooks/useContract'
 import { isAddress } from '../../utils'
 import { useSingleContractMultipleData, useMultipleContractSingleData } from '../multicall/hooks'
 import { useUserUnclaimedAmount } from '../claim/hooks'
 import { useTotalUniEarned } from '../stake/hooks'
+
 
 /**
  * Returns a map of the given addresses to their eventually consistent ETH balances.
@@ -22,9 +23,9 @@ export function useETHBalances(
     () =>
       uncheckedAddresses
         ? uncheckedAddresses
-            .map(isAddress)
-            .filter((a): a is string => a !== false)
-            .sort()
+          .map(isAddress)
+          .filter((a): a is string => a !== false)
+          .sort()
         : [],
     [uncheckedAddresses]
   )
@@ -69,13 +70,13 @@ export function useTokenBalancesWithLoadingIndicator(
       () =>
         address && validatedTokens.length > 0
           ? validatedTokens.reduce<{ [tokenAddress: string]: TokenAmount | undefined }>((memo, token, i) => {
-              const value = balances?.[i]?.result?.[0]
-              const amount = value ? JSBI.BigInt(value.toString()) : undefined
-              if (amount) {
-                memo[token.address] = new TokenAmount(token, amount)
-              }
-              return memo
-            }, {})
+            const value = balances?.[i]?.result?.[0]
+            const amount = value ? JSBI.BigInt(value.toString()) : undefined
+            if (amount) {
+              memo[token.address] = new TokenAmount(token, amount)
+            }
+            return memo
+          }, {})
           : {},
       [address, validatedTokens, balances]
     ),
@@ -88,6 +89,28 @@ export function useTokenBalances(
   tokens?: (Token | undefined)[]
 ): { [tokenAddress: string]: TokenAmount | undefined } {
   return useTokenBalancesWithLoadingIndicator(address, tokens)[0]
+}
+
+export function useUserTokens(): any {
+  const { account } = useActiveWeb3React()
+  const allTokens = useAllListTokens()
+  const allTokensArray = useMemo(() => Object.values(allTokens ?? {}), [allTokens])
+  const balances = useTokenBalances(account ?? undefined, allTokensArray)
+  const ethBalance = useCurrencyBalance(account ?? undefined, ETHER)
+  let filteredBalances: Array<any> = []
+
+  if (ethBalance && JSBI.greaterThan(ethBalance.raw, JSBI.BigInt(0))) {
+    filteredBalances.push(ethBalance)
+  }
+
+  Object.keys(balances).forEach(currency => {
+    const balance = balances[currency]?.raw
+    if (balance && JSBI.greaterThan(balance, JSBI.BigInt(0))) {
+      filteredBalances.push(balances[currency])
+    }
+  });
+
+  return filteredBalances ?? []
 }
 
 // get the balance for a single token/account combo
@@ -134,20 +157,20 @@ export function useAllTokenBalances(): { [tokenAddress: string]: TokenAmount | u
   return balances ?? {}
 }
 
-// get the total owned, unclaimed, and unharvested UNI for account
+// get the total owned, unclaimed, and unharvested GIL for account
 export function useAggregateUniBalance(): TokenAmount | undefined {
   const { account, chainId } = useActiveWeb3React()
 
-  const uni = chainId ? UNI[chainId] : undefined
+  const gil = chainId ? GIL[chainId] : undefined
 
-  const uniBalance: TokenAmount | undefined = useTokenBalance(account ?? undefined, uni)
+  const uniBalance: TokenAmount | undefined = useTokenBalance(account ?? undefined, gil)
   const uniUnclaimed: TokenAmount | undefined = useUserUnclaimedAmount(account)
   const uniUnHarvested: TokenAmount | undefined = useTotalUniEarned()
 
-  if (!uni) return undefined
+  if (!gil) return undefined
 
   return new TokenAmount(
-    uni,
+    gil,
     JSBI.add(
       JSBI.add(uniBalance?.raw ?? JSBI.BigInt(0), uniUnclaimed?.raw ?? JSBI.BigInt(0)),
       uniUnHarvested?.raw ?? JSBI.BigInt(0)

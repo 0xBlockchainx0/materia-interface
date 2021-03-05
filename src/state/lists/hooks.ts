@@ -1,7 +1,8 @@
-import { ChainId, Token } from '@uniswap/sdk'
+import { ChainId, Token } from '@materia-dex/sdk'
 import { Tags, TokenInfo, TokenList } from '@uniswap/token-lists'
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
+import { deepMerge } from '../../utils/deepMerge'
 import { AppState } from '../index'
 
 type TagDetails = Tags[keyof Tags]
@@ -41,6 +42,9 @@ const EMPTY_LIST: TokenAddressMap = {
 const listCache: WeakMap<TokenList, TokenAddressMap> | null =
   typeof WeakMap !== 'undefined' ? new WeakMap<TokenList, TokenAddressMap>() : null
 
+const allListCache: WeakMap<TokenList, TokenAddressMap> | null =
+  typeof WeakMap !== 'undefined' ? new WeakMap<TokenList, TokenAddressMap>() : null
+
 export function listToTokenMap(list: TokenList): TokenAddressMap {
   const result = listCache?.get(list)
   if (result) return result
@@ -55,7 +59,9 @@ export function listToTokenMap(list: TokenList): TokenAddressMap {
           })
           ?.filter((x): x is TagInfo => Boolean(x)) ?? []
       const token = new WrappedTokenInfo(tokenInfo, tags)
-      if (tokenMap[token.chainId][token.address] !== undefined) throw Error('Duplicate tokens.')
+      if (tokenMap[token.chainId][token.address] !== undefined) {
+        throw Error('Duplicate tokens.')
+      }
       return {
         ...tokenMap,
         [token.chainId]: {
@@ -67,6 +73,34 @@ export function listToTokenMap(list: TokenList): TokenAddressMap {
     { ...EMPTY_LIST }
   )
   listCache?.set(list, map)
+  return map
+}
+
+export function listToAllTokenMap(list: TokenList): TokenAddressMap {
+  const result = allListCache?.get(list)
+  if (result) return result
+
+  const map = list.tokens.reduce<TokenAddressMap>(
+    (tokenMap, tokenInfo) => {
+      const tags: TagInfo[] =
+        tokenInfo.tags
+          ?.map(tagId => {
+            if (!list.tags?.[tagId]) return undefined
+            return { ...list.tags[tagId], id: tagId }
+          })
+          ?.filter((x): x is TagInfo => Boolean(x)) ?? []
+      const token = new WrappedTokenInfo(tokenInfo, tags)
+      return {
+        ...tokenMap,
+        [token.chainId]: {
+          ...tokenMap[token.chainId],
+          [token.address]: token
+        }
+      }
+    },
+    { ...EMPTY_LIST }
+  )
+  allListCache?.set(list, map)
   return map
 }
 
@@ -102,6 +136,23 @@ export function useSelectedListInfo(): { current: TokenList | null; pending: Tok
     pending: list?.pendingUpdate ?? null,
     loading: list?.loadingRequestId !== null
   }
+}
+
+export function useAllTokenList(): TokenAddressMap {
+  let allTokenAddressMap: any = { ...EMPTY_LIST }
+  const tokenLists = useAllLists()
+
+  tokenLists.map((list) => {
+    try {
+      allTokenAddressMap = deepMerge(allTokenAddressMap, listToAllTokenMap(list))
+    }
+    catch (error) {
+      console.error('Could not show inventory token list due to error', error)
+    }
+    return true;
+  })
+
+  return allTokenAddressMap;
 }
 
 // returns all downloaded current lists

@@ -1,5 +1,6 @@
-import { currencyEquals, Trade } from '@uniswap/sdk'
+import { Currency, currencyEquals, Trade } from '@materia-dex/sdk'
 import React, { useCallback, useMemo } from 'react'
+import { Field } from '../../state/swap/actions'
 import TransactionConfirmationModal, {
   ConfirmationModalContent,
   TransactionErrorContent
@@ -25,6 +26,7 @@ function tradeMeaningfullyDiffers(tradeA: Trade, tradeB: Trade): boolean {
 export default function ConfirmSwapModal({
   trade,
   originalTrade,
+  originalCurrencies,
   onAcceptChanges,
   allowedSlippage,
   onConfirm,
@@ -38,6 +40,7 @@ export default function ConfirmSwapModal({
   isOpen: boolean
   trade: Trade | undefined
   originalTrade: Trade | undefined
+  originalCurrencies: { [field in Field]?: Currency }
   attemptingTxn: boolean
   txHash: string | undefined
   recipient: string | null
@@ -56,30 +59,32 @@ export default function ConfirmSwapModal({
     return trade ? (
       <SwapModalHeader
         trade={trade}
+        originalCurrencies={originalCurrencies}
         allowedSlippage={allowedSlippage}
         recipient={recipient}
         showAcceptChanges={showAcceptChanges}
         onAcceptChanges={onAcceptChanges}
       />
     ) : null
-  }, [allowedSlippage, onAcceptChanges, recipient, showAcceptChanges, trade])
+  }, [allowedSlippage, onAcceptChanges, recipient, showAcceptChanges, trade, originalCurrencies])
 
   const modalBottom = useCallback(() => {
     return trade ? (
       <SwapModalFooter
         onConfirm={onConfirm}
         trade={trade}
+        originalCurrencies={originalCurrencies}
         disabledConfirm={showAcceptChanges}
         swapErrorMessage={swapErrorMessage}
         allowedSlippage={allowedSlippage}
       />
     ) : null
-  }, [allowedSlippage, onConfirm, showAcceptChanges, swapErrorMessage, trade])
+  }, [allowedSlippage, onConfirm, showAcceptChanges, swapErrorMessage, trade, originalCurrencies])
 
   // text to show while loading
   const pendingText = `Swapping ${trade?.inputAmount?.toSignificant(6)} ${
-    trade?.inputAmount?.currency?.symbol
-  } for ${trade?.outputAmount?.toSignificant(6)} ${trade?.outputAmount?.currency?.symbol}`
+    originalCurrencies[Field.INPUT]?.symbol
+  } for ${trade?.outputAmount?.toSignificant(6)} ${originalCurrencies[Field.OUTPUT]?.symbol}`
 
   const confirmationContent = useCallback(
     () =>
@@ -104,6 +109,7 @@ export default function ConfirmSwapModal({
       hash={txHash}
       content={confirmationContent}
       pendingText={pendingText}
+      currencyToAdd={originalCurrencies[Field.OUTPUT]}
     />
   )
 }

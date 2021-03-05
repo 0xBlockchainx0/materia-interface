@@ -1,16 +1,18 @@
 import { diffTokenLists, TokenList } from '@uniswap/token-lists'
-import React, { useCallback, useMemo } from 'react'
+import React, { useCallback, useMemo, useContext } from 'react'
 import ReactGA from 'react-ga'
 import { useDispatch } from 'react-redux'
-import { Text } from 'rebass'
+import styled, { ThemeContext } from 'styled-components'
 import { AppDispatch } from '../../state'
 import { useRemovePopup } from '../../state/application/hooks'
 import { acceptListUpdate } from '../../state/lists/actions'
-import { TYPE } from '../../theme'
+import { MainOperationButton } from '../../theme'
 import listVersionLabel from '../../utils/listVersionLabel'
-import { ButtonSecondary } from '../Button'
-import { AutoColumn } from '../Column'
-import { AutoRow } from '../Row'
+
+export const ChangesList = styled.ul`
+  max-height: 400px;
+  overflow: auto;
+`
 
 export default function ListUpdatePopup({
   popKey,
@@ -28,6 +30,7 @@ export default function ListUpdatePopup({
   const removePopup = useRemovePopup()
   const removeThisPopup = useCallback(() => removePopup(popKey), [popKey, removePopup])
   const dispatch = useDispatch<AppDispatch>()
+  const theme = useContext(ThemeContext)
 
   const handleAcceptUpdate = useCallback(() => {
     if (auto) return
@@ -50,57 +53,49 @@ export default function ListUpdatePopup({
   )
 
   return (
-    <AutoRow>
-      <AutoColumn style={{ flex: '1' }} gap="8px">
+    <div className="list-update-popup">
         {auto ? (
-          <TYPE.body fontWeight={500}>
-            The token list &quot;{oldList.name}&quot; has been updated to{' '}
-            <strong>{listVersionLabel(newList.version)}</strong>.
-          </TYPE.body>
+          <h6>
+             The token list &quot;{oldList.name}&quot; has been updated to{' '}
+             <strong>{listVersionLabel(newList.version)}</strong>.
+          </h6>
         ) : (
           <>
-            <div>
-              <Text>
-                An update is available for the token list &quot;{oldList.name}&quot; (
-                {listVersionLabel(oldList.version)} to {listVersionLabel(newList.version)}).
-              </Text>
-              <ul>
-                {tokensAdded.length > 0 ? (
-                  <li>
-                    {tokensAdded.map((token, i) => (
-                      <React.Fragment key={`${token.chainId}-${token.address}`}>
-                        <strong title={token.address}>{token.symbol}</strong>
-                        {i === tokensAdded.length - 1 ? null : ', '}
-                      </React.Fragment>
-                    ))}{' '}
-                    added
-                  </li>
-                ) : null}
-                {tokensRemoved.length > 0 ? (
-                  <li>
-                    {tokensRemoved.map((token, i) => (
-                      <React.Fragment key={`${token.chainId}-${token.address}`}>
-                        <strong title={token.address}>{token.symbol}</strong>
-                        {i === tokensRemoved.length - 1 ? null : ', '}
-                      </React.Fragment>
-                    ))}{' '}
-                    removed
-                  </li>
-                ) : null}
-                {numTokensChanged > 0 ? <li>{numTokensChanged} tokens updated</li> : null}
-              </ul>
+            <h6>
+              An update is available for the token list &quot;{oldList.name}&quot; (
+              {listVersionLabel(oldList.version)} to {listVersionLabel(newList.version)}).
+            </h6>
+            <ChangesList>
+              {tokensAdded.length > 0 ? (
+                <li>
+                  {tokensAdded.map((token, i) => (
+                    <React.Fragment key={`${token.chainId}-${token.address}`}>
+                      <strong title={token.address}>{token.symbol}</strong>
+                      {i === tokensAdded.length - 1 ? null : ', '}
+                    </React.Fragment>
+                  ))}{' '}
+                  added
+                </li>
+              ) : null}
+              {tokensRemoved.length > 0 ? (
+                <li>
+                  {tokensRemoved.map((token, i) => (
+                    <React.Fragment key={`${token.chainId}-${token.address}`}>
+                      <strong title={token.address}>{token.symbol}</strong>
+                      {i === tokensRemoved.length - 1 ? null : ', '}
+                    </React.Fragment>
+                  ))}{' '}
+                  removed
+                </li>
+              ) : null}
+              {numTokensChanged > 0 ? <li>{numTokensChanged} tokens updated</li> : null}
+            </ChangesList>
+            <div className="popup-operations-container">
+              <MainOperationButton onClick={handleAcceptUpdate} className={ `popup-button ${theme.name}` }>Accept update</MainOperationButton>
+              <MainOperationButton onClick={removeThisPopup} className={ `popup-button ${theme.name} dismiss` }>Dismiss</MainOperationButton>
             </div>
-            <AutoRow>
-              <div style={{ flexGrow: 1, marginRight: 12 }}>
-                <ButtonSecondary onClick={handleAcceptUpdate}>Accept update</ButtonSecondary>
-              </div>
-              <div style={{ flexGrow: 1 }}>
-                <ButtonSecondary onClick={removeThisPopup}>Dismiss</ButtonSecondary>
-              </div>
-            </AutoRow>
           </>
         )}
-      </AutoColumn>
-    </AutoRow>
+      </div>
   )
 }

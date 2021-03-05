@@ -6,12 +6,20 @@ import { useOnClickOutside } from '../../hooks/useOnClickOutside'
 import { ApplicationModal } from '../../state/application/actions'
 import { useModalOpen, useToggleSettingsMenu } from '../../state/application/hooks'
 import {
-  useDarkModeManager,
+  // useDarkModeManager,
   useExpertModeManager,
   useUserTransactionTTL,
-  useUserSlippageTolerance
+  useUserSlippageTolerance,
+  useClassicModeManager
 } from '../../state/user/hooks'
-import { TYPE } from '../../theme'
+import { 
+  SecondaryPanelBoxContainer,
+  SecondaryPanelBoxContainerExtraDecorator,
+  ModalContentWrapper,
+  IconButton,
+  EvidencedTextParagraph,
+  MainOperationButton
+} from '../../theme'
 import { ButtonError } from '../Button'
 import { AutoColumn } from '../Column'
 import Modal from '../Modal'
@@ -20,41 +28,12 @@ import { RowBetween, RowFixed } from '../Row'
 import Toggle from '../Toggle'
 import TransactionSettings from '../TransactionSettings'
 
-const StyledMenuIcon = styled(Settings)`
-  height: 20px;
-  width: 20px;
-
-  > * {
-    stroke: ${({ theme }) => theme.text1};
-  }
-`
-
-const StyledCloseIcon = styled(X)`
-  height: 20px;
-  width: 20px;
-  :hover {
-    cursor: pointer;
-  }
-
-  > * {
-    stroke: ${({ theme }) => theme.text1};
-  }
+const StyledMenuText = styled.b`
+  :hover { cursor: pointer; }
+  margin-top: -0.3rem;
 `
 
 const StyledMenuButton = styled.button`
-  border: solid 1px #424542;
-  box-shadow: 1px 1px #e7dfe7, -1px -1px #e7dfe7, 1px -1px #e7dfe7, -1px 1px #e7dfe7, 0 -2px #9c9a9c, -2px 0 #7b757b,
-    0 2px #424542;
-
-  background: #04009d;
-  background: -moz-linear-gradient(top, #04009d 0%, #06004d 100%);
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #04009d), color-stop(100%, #06004d));
-  background: -webkit-linear-gradient(top, #04009d 0%, #06004d 100%);
-  background: -o-linear-gradient(top, #04009d 0%, #06004d 100%);
-  background: -ms-linear-gradient(top, #04009d 0%, #06004d 100%);
-  background: linear-gradient(to bottom, #04009d 0%, #06004d 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#04009d', endColorstr='#06004d',GradientType=0 );
-
   position: relative;
   width: 100%;
   height: 100%;
@@ -67,22 +46,8 @@ const StyledMenuButton = styled.button`
   padding: 0.15rem 0.5rem;
   border-radius: 0.5rem;
 
-  :hover,
-  :focus {
-    cursor: pointer;
-    outline: none;
-    background-color: ${({ theme }) => theme.bg4};
-  }
-
-  svg {
-    margin-top: 2px;
-  }
-`
-const EmojiWrapper = styled.div`
-  position: absolute;
-  bottom: -6px;
-  right: 0px;
-  font-size: 14px;
+  :hover, :focus { cursor: pointer; outline: none; }
+  svg { margin-top: 2px; }
 `
 
 const StyledMenu = styled.div`
@@ -95,55 +60,7 @@ const StyledMenu = styled.div`
   text-align: left;
 `
 
-const MenuFlyout = styled.span`
-  min-width: 20.125rem;
-  border: solid 1px #424542;
-  box-shadow: 1px 1px #e7dfe7, -1px -1px #e7dfe7, 1px -1px #e7dfe7, -1px 1px #e7dfe7, 0 -2px #9c9a9c, -2px 0 #7b757b,
-    0 2px #424542;
 
-  background: #04009d;
-  background: -moz-linear-gradient(top, #04009d 0%, #06004d 100%);
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #04009d), color-stop(100%, #06004d));
-  background: -webkit-linear-gradient(top, #04009d 0%, #06004d 100%);
-  background: -o-linear-gradient(top, #04009d 0%, #06004d 100%);
-  background: -ms-linear-gradient(top, #04009d 0%, #06004d 100%);
-  background: linear-gradient(to bottom, #04009d 0%, #06004d 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#04009d', endColorstr='#06004d',GradientType=0 );
-
-  border-radius: 10px;
-  display: flex;
-  flex-direction: column;
-  font-size: 1rem;
-  position: absolute;
-  top: 4rem;
-  right: 0rem;
-  z-index: 100;
-
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-    min-width: 18.125rem;
-    right: -46px;
-  `};
-
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    min-width: 18.125rem;
-    top: -22rem;
-  `};
-`
-
-const Break = styled.div`
-  width: 100%;
-  height: 1px;
-  background-color: ${({ theme }) => theme.bg3};
-`
-
-const ModalContentWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 2rem 0;
-  background-color: ${({ theme }) => theme.bg2};
-  border-radius: 20px;
-`
 
 export default function SettingsTab() {
   const node = useRef<HTMLDivElement>()
@@ -157,7 +74,7 @@ export default function SettingsTab() {
 
   const [expertMode, toggleExpertMode] = useExpertModeManager()
 
-  const [darkMode, toggleDarkMode] = useDarkModeManager()
+  const [classicMode, toggleClassicMode] = useClassicModeManager()
 
   // show confirmation view before turning on
   const [showConfirmation, setShowConfirmation] = useState(false)
@@ -169,43 +86,34 @@ export default function SettingsTab() {
     <StyledMenu ref={node as any}>
       <Modal isOpen={showConfirmation} onDismiss={() => setShowConfirmation(false)} maxHeight={100}>
         <ModalContentWrapper>
-          <AutoColumn gap="lg">
-            <RowBetween style={{ padding: '0 2rem' }}>
-              <div />
-              <Text fontWeight={500} fontSize={20}>
-                Are you sure?
-              </Text>
-              <StyledCloseIcon onClick={() => setShowConfirmation(false)} />
-            </RowBetween>
-            <Break />
+          <div>
+            <h6 className="with-content-divisor">Are you sure?</h6>
+            <IconButton className={ `modal-close-icon ${theme.name}` } onClick={() => setShowConfirmation(false)}>
+              <X/>
+            </IconButton>
             <AutoColumn gap="lg" style={{ padding: '0 2rem' }}>
-              <Text fontWeight={500} fontSize={20}>
+              <EvidencedTextParagraph className={theme.name}>
                 Expert mode turns off the confirm transaction prompt and allows high slippage trades that often result
                 in bad rates and lost funds.
-              </Text>
-              <Text fontWeight={600} fontSize={20}>
+                <br/><br/>
                 ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING.
-              </Text>
-              <ButtonError
-                error={true}
-                padding={'12px'}
-                onClick={() => {
+              </EvidencedTextParagraph>
+              <MainOperationButton 
+                  id="confirm-expert-mode"
+                  className={ `use-custom-properties expert-mode ${theme.name}` } 
+                  onClick={() => {
                   if (window.prompt(`Please type the word "confirm" to enable expert mode.`) === 'confirm') {
                     toggleExpertMode()
                     setShowConfirmation(false)
                   }
-                }}
-              >
-                <Text fontSize={20} fontWeight={500} id="confirm-expert-mode">
-                  Turn On Expert Mode
-                </Text>
-              </ButtonError>
+                }}>Turn On Expert Mode</MainOperationButton>
             </AutoColumn>
-          </AutoColumn>
+          </div>
         </ModalContentWrapper>
       </Modal>
-      <StyledMenuButton onClick={toggle} id="open-settings-dialog-button">
-        <StyledMenuIcon />
+      <IconButton className={`${theme.name} mr10`} onClick={toggle} id="open-settings-dialog-button">
+        <Settings className={`footer-icon ${theme.name}`} />
+        {/*
         {expertMode ? (
           <EmojiWrapper>
             <span role="img" aria-label="wizard-icon">
@@ -213,55 +121,37 @@ export default function SettingsTab() {
             </span>
           </EmojiWrapper>
         ) : null}
-      </StyledMenuButton>
+        */}
+      </IconButton>
+      <div className={ `custom-label ${theme.name}` } onClick={toggle}>Settings</div>
       {open && (
-        <MenuFlyout>
-          <AutoColumn gap="md" style={{ padding: '1rem' }}>
-            <Text fontWeight={600} fontSize={14}>
-              Transaction Settings
-            </Text>
-            <TransactionSettings
-              rawSlippage={userSlippageTolerance}
-              setRawSlippage={setUserslippageTolerance}
-              deadline={ttl}
-              setDeadline={setTtl}
-            />
-            <Text fontWeight={600} fontSize={14}>
-              Interface Settings
-            </Text>
-            <RowBetween>
-              <RowFixed>
-                <TYPE.black fontWeight={400} fontSize={14} color={theme.text2}>
-                  Toggle Expert Mode
-                </TYPE.black>
-                <QuestionHelper text="Bypasses confirmation modals and allows high slippage trades. Use at your own risk." />
-              </RowFixed>
-              <Toggle
-                id="toggle-expert-mode-button"
-                isActive={expertMode}
-                toggle={
-                  expertMode
-                    ? () => {
-                        toggleExpertMode()
-                        setShowConfirmation(false)
-                      }
-                    : () => {
-                        toggle()
-                        setShowConfirmation(true)
-                      }
-                }
-              />
-            </RowBetween>
-            <RowBetween>
-              <RowFixed>
-                <TYPE.black fontWeight={400} fontSize={14} color={theme.text2}>
-                  Toggle Dark Mode
-                </TYPE.black>
-              </RowFixed>
-              <Toggle isActive={darkMode} toggle={toggleDarkMode} />
-            </RowBetween>
-          </AutoColumn>
-        </MenuFlyout>
+        <SecondaryPanelBoxContainer className={ `settings-menu-panel ${theme.name}` }>
+          <SecondaryPanelBoxContainerExtraDecorator className={ `top ${theme.name}` }/>
+          <div className="inner-content">
+            <AutoColumn gap="md" style={{ padding: '10px' }}>
+              <div className={ `sectionHeader ${theme.name}` }>Transaction Settings</div>
+              <TransactionSettings rawSlippage={userSlippageTolerance} setRawSlippage={setUserslippageTolerance} deadline={ttl} setDeadline={setTtl} />
+              <div className={ `sectionHeader ${theme.name}` }>Interface Settings</div>
+              <RowBetween>
+                <RowFixed>
+                  <div className={ `sectionOption ${theme.name}` }>Toggle Expert Mode</div>
+                  <QuestionHelper text="Bypasses confirmation modals and allows high slippage trades. Use at your own risk." />
+                </RowFixed>
+                <Toggle
+                  id="toggle-expert-mode-button"
+                  isActive={expertMode}
+                  toggle={ expertMode ? () => { toggleExpertMode(); setShowConfirmation(false); } : () => { toggle(); setShowConfirmation(true); } } />
+              </RowBetween>
+              <RowBetween>
+                <RowFixed>
+                  <div className={ `sectionOption ${theme.name}` }>Toggle Classic Mode</div>
+                </RowFixed>
+                <Toggle isActive={classicMode} toggle={toggleClassicMode} />
+              </RowBetween> 
+            </AutoColumn>
+          </div>
+          <SecondaryPanelBoxContainerExtraDecorator className={ `bottom ${theme.name}` }/>  
+        </SecondaryPanelBoxContainer>
       )}
     </StyledMenu>
   )

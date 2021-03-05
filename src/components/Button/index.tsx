@@ -1,27 +1,25 @@
-import React from 'react'
-import styled from 'styled-components'
+import React, { useContext } from 'react'
+import styled, { ThemeContext } from 'styled-components'
 import { darken, lighten } from 'polished'
-
 import { RowBetween } from '../Row'
 import { ChevronDown } from 'react-feather'
 import { Button as RebassButton, ButtonProps } from 'rebass/styled-components'
+import { MainOperationButton } from '../../theme'
 
-const Base = styled(RebassButton)<{
+const Base = styled(RebassButton) <{
   padding?: string
   width?: string
   borderRadius?: string
   altDisabledStyle?: boolean
 }>`
-  padding: ${({ padding }) => (padding ? padding : '15px')};
+  padding: ${({ padding }) => (padding ? padding : '18px')};
   width: ${({ width }) => (width ? width : '100%')};
-  font-weight: 800;
+  font-weight: 500;
   text-align: center;
+  border-radius: 12px;
+  border-radius: ${({ borderRadius }) => borderRadius && borderRadius};
   outline: none;
-
-  text-shadow: 2px 2px #212421, 1px 1px #212021;
-  font-family: Verdana, sans-serif;
-  margin: 5px 0;
-
+  border: 1px solid transparent;
   color: white;
   text-decoration: none;
   display: flex;
@@ -41,7 +39,8 @@ const Base = styled(RebassButton)<{
 `
 
 export const ButtonPrimary = styled(Base)`
-  background-color: ${({ theme }) => theme.primary1};
+  background-color: ${({ theme }) => theme.primary1};  
+  border: 1px solid ${({ theme }) => theme.cyan1};
   color: white;
   &:focus {
     box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.05, theme.primary1)};
@@ -49,10 +48,6 @@ export const ButtonPrimary = styled(Base)`
   }
   &:hover {
     background-color: ${({ theme }) => darken(0.05, theme.primary1)};
-  }
-  &:active {
-    box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.1, theme.primary1)};
-    background-color: ${({ theme }) => darken(0.1, theme.primary1)};
   }
   &:disabled {
     background-color: ${({ theme, altDisabledStyle }) => (altDisabledStyle ? theme.primary1 : theme.bg3)};
@@ -63,30 +58,12 @@ export const ButtonPrimary = styled(Base)`
     outline: none;
     opacity: ${({ altDisabledStyle }) => (altDisabledStyle ? '0.7' : '1')};
   }
-
-  border: solid 1px #424542;
-  box-shadow: 1px 1px #e7dfe7, -1px -1px #e7dfe7, 1px -1px #e7dfe7, -1px 1px #e7dfe7, 0 -2px #9c9a9c, -2px 0 #7b757b,
-    0 2px #424542;
-
-  background: #700e9c;
-  background: -moz-linear-gradient(top, #700e9c 0%, #6c1237 100%);
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #700e9c), color-stop(100%, #6c1237));
-  background: -webkit-linear-gradient(top, #700e9c 0%, #6c1237 100%);
-  background: -o-linear-gradient(top, #700e9c 0%, #6c1237 100%);
-  background: -ms-linear-gradient(top, #700e9c 0%, #6c1237 100%);
-  background: linear-gradient(to bottom, #700e9c 0%, #6c1237 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#700e9c', endColorstr='#6c1237',GradientType=0 );
-
-  -webkit-border-radius: 7px;
-  -moz-border-radius: 7px;
-  border-radius: 10px;
 `
 
 export const ButtonLight = styled(Base)`
   background-color: ${({ theme }) => theme.primary5};
   color: ${({ theme }) => theme.primaryText1};
-  font-size: 18px;
-  text-shadow: none;
+  font-size: 16px;
   font-weight: 500;
   &:focus {
     box-shadow: 0 0 0 1pt ${({ theme, disabled }) => !disabled && darken(0.03, theme.primary5)};
@@ -105,33 +82,105 @@ export const ButtonLight = styled(Base)`
       cursor: auto;
       background-color: ${({ theme }) => theme.primary5};
       box-shadow: none;
+      border: 1px solid transparent;
       outline: none;
     }
   }
-
-  border: solid 1px #424542;
-  box-shadow: 1px 1px #e7dfe7, -1px -1px #e7dfe7, 1px -1px #e7dfe7, -1px 1px #e7dfe7, 0 -2px #9c9a9c, -2px 0 #7b757b,
-    0 2px #424542;
-
-  background: #700e9c;
-  background: -moz-linear-gradient(top, #700e9c 0%, #6c1237 100%);
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #700e9c), color-stop(100%, #6c1237));
-  background: -webkit-linear-gradient(top, #700e9c 0%, #6c1237 100%);
-  background: -o-linear-gradient(top, #700e9c 0%, #6c1237 100%);
-  background: -ms-linear-gradient(top, #700e9c 0%, #6c1237 100%);
-  background: linear-gradient(to bottom, #700e9c 0%, #6c1237 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#700e9c', endColorstr='#6c1237',GradientType=0 );
-
-  -webkit-border-radius: 7px;
-  -moz-border-radius: 7px;
-  border-radius: 10px;
 `
 
+export const ButtonMateriaLight = styled(ButtonLight)`
+  width: auto;
+  color: ${({ theme }) => theme.text1};
+  background-color: ${({ theme }) => theme.bg8};
+  border: 2px solid ${({ theme }) => theme.cyan1};
+  padding: 5px 10px;
+  border-radius: 35px;
+  padding: 5px 15px;
+  border-radius: 15px;
+  &:focus {
+    box-shadow: none;
+    background-color: ${({ theme }) => theme.bg8};
+    border: 2px solid ${({ theme }) => theme.cyan1};
+  }
+  &:hover {
+    background-color: ${({ theme }) => theme.bg8};
+    border: 2px solid ${({ theme }) => theme.cyan1};
+  }
+  &:active {
+    box-shadow: none;
+    background-color: r${({ theme }) => theme.bg8};
+    border: 2px solid ${({ theme }) => theme.cyan1};
+  }
+  :disabled {
+    opacity: 0.4;
+    :hover {
+      cursor: auto;
+      background-color: ${({ theme }) => theme.bg8};
+      border: 2px solid ${({ theme }) => theme.cyan1};
+      box-shadow: none;
+      outline: none;
+    }
+  }
+`
+export const ButtonMateriaPrimary = styled(ButtonPrimary)`
+  font-size: 16px !important;
+  padding: 5px 10px !important;
+  display: inline-block;
+  border-radius: 4px;
+
+  &:disabled { opacity: 0.5; }
+
+  &.dark.use-custom-properties.expert-mode:not([disabled]),
+  &.dark.popup-button.dismiss,
+  &.light.use-custom-properties.expert-mode:not([disabled]),
+  &.light.popup-button.dismiss { 
+    border: 1px solid ${({ theme }) => theme.red1} !important;
+    color: ${({ theme }) => theme.red1} !important;
+  }
+
+  &.dark, &.dark:disabled {
+    color: ${({ theme }) => theme.azure2} !important;
+    border: 1px solid ${({ theme }) => theme.azure2} !important;
+    background-color: ${({ theme }) => theme.blue3};
+  }
+
+  &.light, &.light:disabled {
+    color: ${({ theme }) => theme.violet1} !important;
+    border: 1px solid ${({ theme }) => theme.violet1} !important;
+    background-color: ${({ theme }) => theme.violet3};
+  }
+
+  &.light:disabled, &.light.popup-button.dismiss { background-color: ${({ theme }) => theme.red3}; }
+
+  &.dark:hover, &.dark:focus { box-shadow: 0px 0px 4px ${({ theme }) => theme.azure2}; }
+  &.light:hover, &.light:focus { box-shadow: 0px 0px 4px ${({ theme }) => theme.utils.hexToRGB(theme.grey3, 0.4)}; }
+  &.dark.use-custom-properties.expert-mode:hover, 
+  &.dark.use-custom-properties.expert-mode:focus, 
+  &.light.use-custom-properties.expert-mode:hover, 
+  &.light.use-custom-properties.expert-mode:focus { box-shadow: 0px 0px 4px ${({ theme }) => theme.red2}; }
+  &:disabled.dark:hover, &:disabled.dark:focus,
+  &:disabled.light:hover, &:disabled.light:focus, { box-shadow: none; } 
+
+  &.light {}
+  &.classic { 
+    position: relative; 
+    font-size: 11px !important;
+    font-weight: 300 !important;
+    text-shadow: 1px 1px 1px ${({ theme }) => theme.black};
+  }
+  &.classic.width80:before { left: -15px; }
+  &.classic:hover, &.classic:focus { color: ${({ theme }) => theme.azure2}; }
+  &.classic:disabled, &.classic.popup-button.dismiss:hover, &.classic.popup-button.dismiss:focus { color: ${({ theme }) => theme.red1}; }
+  &.classic:hover:before, &.classic:focus:before { display: block; }
+  &#confirm-expert-mode.classic { padding: 20px !important; }
+  &#confirm-expert-mode.classic:before { left: 10px; top: 15px; }
+
+  &.dark.width-auto, &.light.width-auto, { width: auto !important; }  
+`
 export const ButtonGray = styled(Base)`
   background-color: ${({ theme }) => theme.bg3};
   color: ${({ theme }) => theme.text2};
-  font-size: 18px;
-  text-shadow: none;
+  font-size: 16px;
   font-weight: 500;
   &:focus {
     box-shadow: 0 0 0 1pt ${({ theme, disabled }) => !disabled && darken(0.05, theme.bg2)};
@@ -147,11 +196,11 @@ export const ButtonGray = styled(Base)`
 `
 
 export const ButtonSecondary = styled(Base)`
-  border: 1px solid ${({ theme }) => theme.primary4};
-  color: ${({ theme }) => theme.primary1};
-  background-color: transparent;
-  font-size: 18px;
-  border-radius: 12px;
+border: 1px solid ${({ theme }) => theme.primary4};
+color: ${({ theme }) => theme.primary1};
+background-color: transparent;
+  font-size: small;
+  border-radius: 35px;
   padding: ${({ padding }) => (padding ? padding : '10px')};
 
   &:focus {
@@ -166,11 +215,11 @@ export const ButtonSecondary = styled(Base)`
     border: 1px solid ${({ theme }) => theme.primary3};
   }
   &:disabled {
-    opacity: 50%;
     cursor: auto;
-  }
-  a:hover {
-    text-decoration: none;
+    box-shadow: none;
+    border: 1px solid transparent;
+    outline: none;
+    opacity: 50%;
   }
 `
 
@@ -194,38 +243,23 @@ export const ButtonPink = styled(Base)`
     opacity: 50%;
     cursor: auto;
   }
-
-  border: solid 1px #424542;
-  box-shadow: 1px 1px #e7dfe7, -1px -1px #e7dfe7, 1px -1px #e7dfe7, -1px 1px #e7dfe7, 0 -2px #9c9a9c, -2px 0 #7b757b,
-    0 2px #424542;
-
-  background: #700e9c;
-  background: -moz-linear-gradient(top, #700e9c 0%, #6c1237 100%);
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #700e9c), color-stop(100%, #6c1237));
-  background: -webkit-linear-gradient(top, #700e9c 0%, #6c1237 100%);
-  background: -o-linear-gradient(top, #700e9c 0%, #6c1237 100%);
-  background: -ms-linear-gradient(top, #700e9c 0%, #6c1237 100%);
-  background: linear-gradient(to bottom, #700e9c 0%, #6c1237 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#700e9c', endColorstr='#6c1237',GradientType=0 );
-
-  -webkit-border-radius: 7px;
-  -moz-border-radius: 7px;
-  border-radius: 10px;
 `
 
 export const ButtonOutlined = styled(Base)`
-  border: 1px solid ${({ theme }) => theme.bg2};
+  border: 1px solid ${({ theme }) => theme.cyan1};
+  border-radius: 0px !important;
+
   background-color: transparent;
   color: ${({ theme }) => theme.text1};
 
   &:focus {
-    box-shadow: 0 0 0 1px ${({ theme }) => theme.bg4};
+    box-shadow: 0 0 0 1px ${({ theme }) => theme.cyan2};
   }
   &:hover {
-    box-shadow: 0 0 0 1px ${({ theme }) => theme.bg4};
+    box-shadow: 0 0 0 1px ${({ theme }) => theme.cyan2};
   }
   &:active {
-    box-shadow: 0 0 0 1px ${({ theme }) => theme.bg4};
+    box-shadow: 0 0 0 1px ${({ theme }) => theme.cyan2};
   }
   &:disabled {
     opacity: 50%;
@@ -240,19 +274,8 @@ export const ButtonEmpty = styled(Base)`
   justify-content: center;
   align-items: center;
 
-  &:focus {
-    text-decoration: underline;
-  }
-  &:hover {
-    text-decoration: underline;
-  }
-  &:active {
-    text-decoration: underline;
-  }
-  &:disabled {
-    opacity: 50%;
-    cursor: auto;
-  }
+  &:hover, &:focus, &:active { text-decoration: underline; }
+  &:disabled { opacity: 50%; cursor: auto; }
 `
 
 export const ButtonWhite = styled(Base)`
@@ -277,40 +300,101 @@ export const ButtonWhite = styled(Base)`
 `
 
 const ButtonConfirmedStyle = styled(Base)`
-  background-color: ${({ theme }) => lighten(0.5, theme.green1)};
-  color: ${({ theme }) => theme.green1};
+  width: auto;
+  background-color: linear-gradient(90deg, ${({ theme }) => lighten(0.5, theme.green1)}, ${({ theme }) => theme.green1});
+  border: 1px solid ${({ theme }) => theme.buttonMateriaErrorBorderColor};
+  color: ${({ theme }) => theme.buttonMateriaPrimaryTextColor};
+  padding: 0.2rem 1.5rem;
+  border-radius: 3px;
+  transition: all 0.3s ease;
+  &:hover:enabled{
+    text-shadow: 0px 0px 2px 0px #111111; 
+    background-color: linear-gradient(90deg, ${({ theme }) => lighten(0.5, theme.green1)}, ${({ theme }) => theme.green1});
+    border-color: ${({ theme }) => theme.buttonMateriaErrorHoverBorderColor};
+    box-shadow: 0px 0px 6px 0px #b0deff;
+  }
+  &:disabled {
+    background-color: linear-gradient(90deg, ${({ theme }) => lighten(0.5, theme.green1)}, ${({ theme }) => theme.green1});
+    opacity: ${({ altDisabledStyle }) => (altDisabledStyle ? '0.7' : '1')};
+    border-radius: 3px;
+  }
+  background-color: ${({ theme }) => theme.green1};
   border: 1px solid ${({ theme }) => theme.green1};
-
+  &:focus {
+    box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.05, theme.green1)};
+    background-color: ${({ theme }) => darken(0.05, theme.green1)};
+  }
+  &:hover {
+    background-color: ${({ theme }) => darken(0.05, theme.green1)};
+  }
+  &:active {
+    box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.1, theme.green1)};
+    background-color: ${({ theme }) => darken(0.1, theme.green1)};
+  }
   &:disabled {
     opacity: 50%;
     cursor: auto;
+    box-shadow: none;
+    background-color: ${({ theme }) => theme.green1};
+    border: 1px solid ${({ theme }) => theme.green1};
   }
 `
 
 const ButtonErrorStyle = styled(Base)`
-  border: solid 1px #424542;
-  box-shadow: 1px 1px #e7dfe7, -1px -1px #e7dfe7, 1px -1px #e7dfe7, -1px 1px #e7dfe7, 0 -2px #9c9a9c, -2px 0 #7b757b,
-    0 2px #424542;
-
-  background: #700e9c;
-  background: -moz-linear-gradient(top, #700e9c 0%, #6c1237 100%);
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #700e9c), color-stop(100%, #6c1237));
-  background: -webkit-linear-gradient(top, #700e9c 0%, #6c1237 100%);
-  background: -o-linear-gradient(top, #700e9c 0%, #6c1237 100%);
-  background: -ms-linear-gradient(top, #700e9c 0%, #6c1237 100%);
-  background: linear-gradient(to bottom, #700e9c 0%, #6c1237 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#700e9c', endColorstr='#6c1237',GradientType=0 );
-
-  -webkit-border-radius: 7px;
-  -moz-border-radius: 7px;
-  border-radius: 10px;
+  width: auto;
+  background-color: linear-gradient(90deg, ${({ theme }) => theme.buttonMateriaErrorBackgroundFirstColor}, ${({ theme }) => theme.buttonMateriaErrorBackgroundSecondColor});
+  border: 1px solid ${({ theme }) => theme.buttonMateriaErrorBorderColor};
+  color: ${({ theme }) => theme.buttonMateriaPrimaryTextColor};
+  padding: 0.2rem 1.5rem;
+  border-radius: 3px;
+  transition: all 0.3s ease;
+  &:hover:enabled{
+    text-shadow: 0px 0px 2px 0px #111111; 
+    background-color: linear-gradient(90deg, ${({ theme }) => theme.buttonMateriaErrorBackgroundHoverFirstColor}, ${({ theme }) => theme.buttonMateriaErrorBackgroundHoverSecondColor});
+    border-color: ${({ theme }) => theme.buttonMateriaErrorHoverBorderColor};
+    box-shadow: 0px 0px 6px 0px #b0deff;
+  }
+  &:disabled {
+    background-color: linear-gradient(90deg, ${({ theme }) => theme.buttonMateriaErrorBackgroundFirstColor}, ${({ theme }) => theme.buttonMateriaErrorBackgroundSecondColor});
+    opacity: ${({ altDisabledStyle }) => (altDisabledStyle ? '0.7' : '1')};
+    border-radius: 3px;
+  }
+  background-color: ${({ theme }) => theme.red1};
+  border: 1px solid ${({ theme }) => theme.red1};
+  &:focus {
+    box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.05, theme.red1)};
+    background-color: ${({ theme }) => darken(0.05, theme.red1)};
+  }
+  &:hover {
+    background-color: ${({ theme }) => darken(0.05, theme.red1)};
+  }
+  &:active {
+    box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.1, theme.red1)};
+    background-color: ${({ theme }) => darken(0.1, theme.red1)};
+  }
+  &:disabled {
+    opacity: 50%;
+    cursor: auto;
+    box-shadow: none;
+    background-color: ${({ theme }) => theme.red1};
+    border: 1px solid ${({ theme }) => theme.red1};
+  }
 `
 
-export function ButtonConfirmed({
+const ButtonMateriaConfirmedStyle = styled(ButtonConfirmedStyle)`
+
+`
+
+const ButtonMateriaErrorStyle = styled(ButtonErrorStyle)`
+  z-index:2;
+`
+
+export function ButtonConfirmed({  
   confirmed,
   altDisabledStyle,
   ...rest
 }: { confirmed?: boolean; altDisabledStyle?: boolean } & ButtonProps) {
+  const theme = useContext(ThemeContext)
   if (confirmed) {
     return <ButtonConfirmedStyle {...rest} />
   } else {
@@ -319,6 +403,7 @@ export function ButtonConfirmed({
 }
 
 export function ButtonError({ error, ...rest }: { error?: boolean } & ButtonProps) {
+  const theme = useContext(ThemeContext)
   if (error) {
     return <ButtonErrorStyle {...rest} />
   } else {
@@ -326,7 +411,54 @@ export function ButtonError({ error, ...rest }: { error?: boolean } & ButtonProp
   }
 }
 
+export function ButtonMateriaConfirmed({
+  hide,
+  confirmed,
+  altDisabledStyle,
+  ...rest
+}: { hide?: boolean; confirmed?: boolean; altDisabledStyle?: boolean } & ButtonProps) {
+  const theme = useContext(ThemeContext)
+  if (!hide) {
+    if (confirmed) {
+      return <MainOperationButton {...rest} className={`width-auto ${theme.name}`}/>
+    } else {
+      return <MainOperationButton {...rest} altDisabledStyle={altDisabledStyle} className={`width-auto ${theme.name}`}/>
+    }
+  }
+  else {
+    return <></>
+  }
+}
+
+export function ButtonMateriaError({
+  hide,
+  showSwap,
+  error,
+  useCustomProperties,
+  isExpertModeActive,
+  ...rest
+}: { hide?: boolean; showSwap?: boolean, error?: boolean, useCustomProperties?: boolean, isExpertModeActive?: boolean } & ButtonProps) {
+  const theme = useContext(ThemeContext)
+  if (!hide || showSwap) {
+    var className = theme.name + ' ' + (useCustomProperties ? 'use-custom-properties' : '' ) + ' ' + (isExpertModeActive ? 'expert-mode' : ' ')
+    if (error) {      
+      return <MainOperationButton {...rest} className={className}/>
+    } else {
+      if (showSwap) {
+        return <MainOperationButton {...rest} className={className}/>
+      }
+      else {
+        return <MainOperationButton {...rest} className={className}/>
+      }
+    }
+  }
+  else {
+    return <></>
+  }
+}
+
 export function ButtonDropdown({ disabled = false, children, ...rest }: { disabled?: boolean } & ButtonProps) {
+  const theme = useContext(ThemeContext)
   return (
     <ButtonPrimary {...rest} disabled={disabled}>
       <RowBetween>
@@ -338,6 +470,7 @@ export function ButtonDropdown({ disabled = false, children, ...rest }: { disabl
 }
 
 export function ButtonDropdownLight({ disabled = false, children, ...rest }: { disabled?: boolean } & ButtonProps) {
+  const theme = useContext(ThemeContext)
   return (
     <ButtonOutlined {...rest} disabled={disabled}>
       <RowBetween>
@@ -349,6 +482,7 @@ export function ButtonDropdownLight({ disabled = false, children, ...rest }: { d
 }
 
 export function ButtonRadio({ active, ...rest }: { active?: boolean } & ButtonProps) {
+  const theme = useContext(ThemeContext)
   if (!active) {
     return <ButtonWhite {...rest} />
   } else {

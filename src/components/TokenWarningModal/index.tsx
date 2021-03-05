@@ -1,4 +1,4 @@
-import { Token } from '@uniswap/sdk'
+import { Token } from '@materia-dex/sdk'
 import { transparentize } from 'polished'
 import React, { useCallback, useMemo, useState } from 'react'
 import styled from 'styled-components'
@@ -11,12 +11,12 @@ import Modal from '../Modal'
 import { AutoRow, RowBetween } from '../Row'
 import { AutoColumn } from '../Column'
 import { AlertTriangle } from 'react-feather'
-import { ButtonError } from '../Button'
+import { ButtonMateriaError } from '../Button'
 
 const Wrapper = styled.div<{ error: boolean }>`
   background: ${({ theme }) => transparentize(0.6, theme.bg3)};
   padding: 0.75rem;
-  border-radius: 20px;
+  border-radius: 5px;
 `
 
 const WarningContainer = styled.div`
@@ -24,8 +24,7 @@ const WarningContainer = styled.div`
   width: 100%;
   padding: 1rem;
   background: rgba(242, 150, 2, 0.05);
-  border: 1px solid #f3841e;
-  border-radius: 20px;
+  // border: 2px solid #f3841e;
   overflow: auto;
 `
 
@@ -130,7 +129,7 @@ export default function TokenWarningModal({
                 I understand
               </label>
             </div>
-            <ButtonError
+            <ButtonMateriaError
               disabled={!understandChecked}
               error={true}
               width={'140px'}
@@ -144,7 +143,7 @@ export default function TokenWarningModal({
               }}
             >
               <TYPE.body color="white">Continue</TYPE.body>
-            </ButtonError>
+            </ButtonMateriaError>
           </RowBetween>
         </AutoColumn>
       </WarningContainer>

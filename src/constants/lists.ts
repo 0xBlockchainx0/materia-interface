@@ -1,10 +1,12 @@
-// the Uniswap Default token list lives here
-export const DEFAULT_TOKEN_LIST_URL = 'tokens.uniswap.eth'
+// Default token list
+export const DEFAULT_TOKEN_LIST_URL = 'https://list.materia.exchange/materia-default.tokenlist.json'
 
 export const DEFAULT_LIST_OF_LISTS: string[] = [
   DEFAULT_TOKEN_LIST_URL,
-  't2crtokens.eth', // kleros
-  'tokens.1inch.eth', // 1inch
+  'https://raw.githubusercontent.com/b-u-i-d-l/ITEMswap/master/src/constants/ethItemLists/dist/tokensList.json',
+  'tokens.uniswap.eth',
+  't2crtokens.eth',
+  'tokens.1inch.eth',
   'synths.snx.eth',
   'tokenlist.dharma.eth',
   'defi.cmc.eth',

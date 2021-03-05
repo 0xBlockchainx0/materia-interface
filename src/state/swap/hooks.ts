@@ -1,11 +1,9 @@
 import useENS from '../../hooks/useENS'
-import { Version } from '../../hooks/useToggledVersion'
 import { parseUnits } from '@ethersproject/units'
-import { Currency, CurrencyAmount, ETHER, JSBI, Token, TokenAmount, Trade } from '@uniswap/sdk'
+import { ChainId, Currency, CurrencyAmount, ETHER, IETH, JSBI, Token, TokenAmount, Trade } from '@materia-dex/sdk'
 import { ParsedQs } from 'qs'
 import { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useV1Trade } from '../../data/V1'
 import { useActiveWeb3React } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
 import { useTradeExactIn, useTradeExactOut } from '../../hooks/Trades'
@@ -15,9 +13,11 @@ import { AppDispatch, AppState } from '../index'
 import { useCurrencyBalances } from '../wallet/hooks'
 import { Field, replaceSwapState, selectCurrency, setRecipient, switchCurrencies, typeInput } from './actions'
 import { SwapState } from './reducer'
-import useToggledVersion from '../../hooks/useToggledVersion'
 import { useUserSlippageTolerance } from '../user/hooks'
 import { computeSlippageAdjustedAmounts } from '../../utils/prices'
+import { ERC20WRAPPER, FACTORY_ADDRESS, MATERIA_DFO_ADDRESS, ORCHESTRATOR_ADDRESS, WUSD } from '../../constants'
+import useGetEthItemInteroperable from '../../hooks/useGetEthItemInteroperable'
+import { formatUnits } from 'ethers/lib/utils'
 
 export function useSwapState(): AppState['swap'] {
   return useSelector<AppState, AppState['swap']>(state => state.swap)
@@ -88,10 +88,112 @@ export function tryParseAmount(value?: string, currency?: Currency): CurrencyAmo
   return undefined
 }
 
+// try to parse a user entered amount for a given token
+export function trySaferParseAmount(value?: string, currency?: Currency, decimals?: number): CurrencyAmount | undefined {
+  if (!value || !currency) {
+    return undefined
+  }
+  try {
+    const typedValueParsed = parseUnits(value, currency.decimals).toString()
+    if (typedValueParsed !== '0') {
+      return currency instanceof Token
+        ? new TokenAmount(currency, JSBI.BigInt(typedValueParsed))
+        : CurrencyAmount.ether(JSBI.BigInt(typedValueParsed))
+    }
+  } catch (error) {
+    // should fail if the user specifies too many decimal places of precision (or maybe exceed max uint?)
+    console.debug(`Failed to parse input amount: "${value}"`, error)
+    try {
+      if (decimals) {
+        const typedValueParsed = parseUnits(value, decimals).toString()
+        if (typedValueParsed !== '0') {
+          return currency instanceof Token
+            ? new TokenAmount(currency, JSBI.BigInt(typedValueParsed))
+            : CurrencyAmount.ether(JSBI.BigInt(typedValueParsed))
+        }
+      }
+    } catch (error) {
+      // should fail if the user specifies too many decimal places of precision (or maybe exceed max uint?)
+      console.debug(`Failed to parse input amount with provided decimals: "${value}"`, error)
+    }
+  }
+  // necessary for all paths to return a value
+  return undefined
+}
+
+// try to parse a user entered amount for a given token
+export function trySaferParseAmountIncludingZeroValues(value?: string, currency?: Currency, decimals?: number): CurrencyAmount | undefined {
+  if (!value || !currency) {
+    return undefined
+  }
+  try {
+    const typedValueParsed = parseUnits(value, currency.decimals).toString()
+    return currency instanceof Token
+      ? new TokenAmount(currency, JSBI.BigInt(typedValueParsed))
+      : CurrencyAmount.ether(JSBI.BigInt(typedValueParsed))
+  } catch (error) {
+    // should fail if the user specifies too many decimal places of precision (or maybe exceed max uint?)
+    console.debug(`Failed to parse input amount: "${value}"`, error)
+    try {
+      if (decimals) {
+        const typedValueParsed = parseUnits(value, decimals).toString()
+        return currency instanceof Token
+          ? new TokenAmount(currency, JSBI.BigInt(typedValueParsed))
+          : CurrencyAmount.ether(JSBI.BigInt(typedValueParsed))
+      }
+    } catch (error) {
+      // should fail if the user specifies too many decimal places of precision (or maybe exceed max uint?)
+      console.debug(`Failed to parse input amount with provided decimals: "${value}"`, error)
+    }
+  }
+  // necessary for all paths to return a value
+  return undefined
+}
+
+export function decodeInteroperableValueToERC20TokenAmount(currencyAmount?: CurrencyAmount, erc20CurrencyAmount?: CurrencyAmount): CurrencyAmount | undefined {
+  if (!currencyAmount || !erc20CurrencyAmount) {
+    return undefined
+  }
+  const value = currencyAmount.toExact()
+  const currency = currencyAmount.currency
+  const erc20Currency = erc20CurrencyAmount.currency
+
+  if (!value || !currency || !erc20Currency) {
+    return undefined
+  }
+  try {
+    const formattedDecimals = currency.decimals - erc20Currency.decimals
+    const typedValueParsed = parseUnits(value, currency.decimals).toString()
+
+    let typedValueFormatted: JSBI = JSBI.BigInt(0)
+
+    if (formattedDecimals > 0) {
+      typedValueFormatted = JSBI.BigInt(Math.trunc(Number(formatUnits(typedValueParsed, formattedDecimals))))
+    }
+    else if (formattedDecimals == 0) {
+      typedValueFormatted = JSBI.BigInt(typedValueParsed)
+    }
+    else {
+      // EthItem can't unwrap token with more than 18 decimals 
+      throw 'Too much decimals for EthItem'
+    }
+    
+    return erc20Currency instanceof Token
+      ? new TokenAmount(erc20Currency, JSBI.BigInt(typedValueFormatted))
+      : CurrencyAmount.ether(JSBI.BigInt(typedValueFormatted))
+  } catch (error) {
+    // should fail if the user specifies too many decimal places of precision (or maybe exceed max uint?)
+    console.log(`Failed to parse input amount: "${value}"`, error)
+  }
+  return undefined
+}
+
 const BAD_RECIPIENT_ADDRESSES: string[] = [
-  '0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f', // v2 factory
-  '0xf164fC0Ec4E93095b804a4795bBe1e041497b92a', // v2 router 01
-  '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D' // v2 router 02
+  FACTORY_ADDRESS,
+  ORCHESTRATOR_ADDRESS,
+  MATERIA_DFO_ADDRESS,
+  ERC20WRAPPER[ChainId.ROPSTEN],
+  ERC20WRAPPER[ChainId.MAINNET]
 ]
 
 /**
@@ -107,43 +209,69 @@ function involvesAddress(trade: Trade, checksummedAddress: string): boolean {
 }
 
 // from the current swap inputs, compute the best trade and return it.
-export function useDerivedSwapInfo(): {
+export function useDerivedSwapInfo(
+  interoperable: boolean | false
+): {
   currencies: { [field in Field]?: Currency }
+  originalCurrencies: { [field in Field]?: Currency }
   currencyBalances: { [field in Field]?: CurrencyAmount }
+  originalCurrencyBalances: { [field in Field]?: CurrencyAmount }
   parsedAmount: CurrencyAmount | undefined
-  v2Trade: Trade | undefined
+  v2Trade: Trade | undefined,
   inputError?: string
-  v1Trade: Trade | undefined
 } {
-  const { account } = useActiveWeb3React()
-
-  const toggledVersion = useToggledVersion()
-
+  const { account, chainId } = useActiveWeb3React()
+  const swapState = useSwapState()
   const {
     independentField,
     typedValue,
     [Field.INPUT]: { currencyId: inputCurrencyId },
     [Field.OUTPUT]: { currencyId: outputCurrencyId },
     recipient
-  } = useSwapState()
+  } = swapState
+  
+  const inputCurrencyInteroperableId = useGetEthItemInteroperable(inputCurrencyId)
+  const outputCurrencyInteroperableId = useGetEthItemInteroperable(outputCurrencyId)
 
-  const inputCurrency = useCurrency(inputCurrencyId)
-  const outputCurrency = useCurrency(outputCurrencyId)
+  const inputCurrency: Currency | undefined = useCurrency(inputCurrencyId) ?? undefined
+  const outputCurrency: Currency | undefined = useCurrency(outputCurrencyId) ?? undefined
+
+  let inputCurrencyInteroperable: Currency | undefined = useCurrency(inputCurrencyInteroperableId) ?? undefined
+  let outputCurrencyInteroperable: Currency | undefined = useCurrency(outputCurrencyInteroperableId) ?? undefined
+
+  inputCurrencyInteroperable = inputCurrency === ETHER ? IETH[chainId ?? 1] : inputCurrencyInteroperable
+  outputCurrencyInteroperable = outputCurrency === ETHER ? IETH[chainId ?? 1] : outputCurrencyInteroperable
+
   const recipientLookup = useENS(recipient ?? undefined)
   const to: string | null = (recipient === null ? account : recipientLookup.address) ?? null
 
-  const relevantTokenBalances = useCurrencyBalances(account ?? undefined, [
+  const originalRelevantTokenBalances = useCurrencyBalances(account ?? undefined, [
     inputCurrency ?? undefined,
     outputCurrency ?? undefined
   ])
 
+  const relevantTokenBalances = useCurrencyBalances(account ?? undefined, [
+    interoperable ? (inputCurrencyInteroperable ?? inputCurrency) : inputCurrency ?? undefined,
+    interoperable ? (outputCurrencyInteroperable ?? outputCurrency) : outputCurrency ?? undefined
+  ])
+
   const isExactIn: boolean = independentField === Field.INPUT
-  const parsedAmount = tryParseAmount(typedValue, (isExactIn ? inputCurrency : outputCurrency) ?? undefined)
 
-  const check = outputCurrency === undefined ? false : true
+  const parsedAmount = tryParseAmount(typedValue,
+    (isExactIn ?
+      inputCurrencyInteroperable ?? inputCurrency :
+      outputCurrencyInteroperable ?? outputCurrency)
+    ?? undefined
+  )
 
-  const bestTradeExactIn = useTradeExactIn(isExactIn ? parsedAmount : undefined, outputCurrency ?? undefined, check)
-  const bestTradeExactOut = useTradeExactOut(inputCurrency ?? undefined, !isExactIn ? parsedAmount : undefined, check)
+  const bestTradeExactIn = useTradeExactIn(
+    (isExactIn ? parsedAmount : undefined),
+    (outputCurrencyInteroperable ?? outputCurrency) ?? undefined
+  )
+  const bestTradeExactOut = useTradeExactOut(
+    (inputCurrencyInteroperable ?? inputCurrency) ?? undefined,
+    (!isExactIn ? parsedAmount : undefined)
+  )
 
   const v2Trade = isExactIn ? bestTradeExactIn : bestTradeExactOut
 
@@ -151,14 +279,19 @@ export function useDerivedSwapInfo(): {
     [Field.INPUT]: relevantTokenBalances[0],
     [Field.OUTPUT]: relevantTokenBalances[1]
   }
-
   const currencies: { [field in Field]?: Currency } = {
+    [Field.INPUT]: interoperable ? (inputCurrencyInteroperable ?? inputCurrency) : inputCurrency ?? undefined,
+    [Field.OUTPUT]: interoperable ? (outputCurrencyInteroperable ?? outputCurrency) : outputCurrency ?? undefined
+  }
+
+  const originalCurrencyBalances = {
+    [Field.INPUT]: originalRelevantTokenBalances[0],
+    [Field.OUTPUT]: originalRelevantTokenBalances[1]
+  }
+  const originalCurrencies: { [field in Field]?: Currency } = {
     [Field.INPUT]: inputCurrency ?? undefined,
     [Field.OUTPUT]: outputCurrency ?? undefined
   }
-
-  // get link to trade on v1, if a better rate exists
-  const v1Trade = useV1Trade(isExactIn, currencies[Field.INPUT], currencies[Field.OUTPUT], parsedAmount)
 
   let inputError: string | undefined
   if (!account) {
@@ -169,7 +302,7 @@ export function useDerivedSwapInfo(): {
     inputError = inputError ?? 'Enter an amount'
   }
 
-  if (!currencies[Field.INPUT] || !currencies[Field.OUTPUT]) {
+  if (!originalCurrencies[Field.INPUT] || !originalCurrencies[Field.OUTPUT]) {
     inputError = inputError ?? 'Select a token'
   }
 
@@ -190,43 +323,39 @@ export function useDerivedSwapInfo(): {
 
   const slippageAdjustedAmounts = v2Trade && allowedSlippage && computeSlippageAdjustedAmounts(v2Trade, allowedSlippage)
 
-  const slippageAdjustedAmountsV1 =
-    v1Trade && allowedSlippage && computeSlippageAdjustedAmounts(v1Trade, allowedSlippage)
-
-  // compare input balance to max input based on version
+  // compare input balance to max input
   const [balanceIn, amountIn] = [
-    currencyBalances[Field.INPUT],
-    toggledVersion === Version.v1
-      ? slippageAdjustedAmountsV1
-        ? slippageAdjustedAmountsV1[Field.INPUT]
-        : null
-      : slippageAdjustedAmounts
+    originalCurrencyBalances[Field.INPUT],
+    slippageAdjustedAmounts
       ? slippageAdjustedAmounts[Field.INPUT]
       : null
   ]
 
   if (balanceIn && amountIn && balanceIn.lessThan(amountIn)) {
-    inputError = 'Insufficient ' + amountIn.currency.symbol + ' balance'
+    inputError = 'Insufficient ' + originalCurrencies[Field.INPUT]?.symbol + ' balance'
   }
 
   return {
     currencies,
+    originalCurrencies,
     currencyBalances,
+    originalCurrencyBalances,
     parsedAmount,
     v2Trade: v2Trade ?? undefined,
     inputError,
-    v1Trade
   }
 }
 
-function parseCurrencyFromURLParameter(urlParam: any): string {
+function parseCurrencyFromURLParameter(urlParam: any, chainId: ChainId | undefined): string {
+  const defaultCurrency = chainId ? (WUSD[chainId]?.address ?? 'ETH') : 'ETH'
+
   if (typeof urlParam === 'string') {
     const valid = isAddress(urlParam)
     if (valid) return valid
-    if (urlParam.toUpperCase() === 'USD') return 'USD'
-    if (valid === false) return 'USD'
+    if (urlParam.toUpperCase() === 'ETH') return 'ETH'
+    if (valid === false) return defaultCurrency
   }
-  return 'USD' ?? ''
+  return defaultCurrency ?? ''
 }
 
 function parseTokenAmountURLParameter(urlParam: any): string {
@@ -248,9 +377,9 @@ function validatedRecipient(recipient: any): string | null {
   return null
 }
 
-export function queryParametersToSwapState(parsedQs: ParsedQs): SwapState {
-  let inputCurrency = parseCurrencyFromURLParameter(parsedQs.inputCurrency)
-  let outputCurrency = parseCurrencyFromURLParameter(parsedQs.outputCurrency)
+export function queryParametersToSwapState(parsedQs: ParsedQs, chainId: ChainId | undefined): SwapState {
+  let inputCurrency = parseCurrencyFromURLParameter(parsedQs.inputCurrency, chainId)
+  let outputCurrency = parseCurrencyFromURLParameter(parsedQs.outputCurrency, chainId)
   if (inputCurrency === outputCurrency) {
     if (typeof parsedQs.outputCurrency === 'string') {
       inputCurrency = ''
@@ -287,7 +416,7 @@ export function useDefaultsFromURLSearch():
 
   useEffect(() => {
     if (!chainId) return
-    const parsed = queryParametersToSwapState(parsedQs)
+    const parsed = queryParametersToSwapState(parsedQs, chainId)
 
     dispatch(
       replaceSwapState({

@@ -1,95 +1,89 @@
-import React from 'react'
-import { AutoColumn } from '../../components/Column'
-import styled from 'styled-components'
+import React, { useContext, useState } from 'react'
+import { ThemeContext } from 'styled-components'
 import { STAKING_REWARDS_INFO, useStakingInfo } from '../../state/stake/hooks'
-import { TYPE, ExternalLink } from '../../theme'
 import PoolCard from '../../components/earn/PoolCard'
-import { RowBetween } from '../../components/Row'
-import { CardSection, DataCard, CardNoise, CardBGImage } from '../../components/earn/styled'
 import { Countdown } from './Countdown'
 import Loader from '../../components/Loader'
 import { useActiveWeb3React } from '../../hooks'
-
-const PageWrapper = styled(AutoColumn)`
-  max-width: 640px;
-  width: 100%;
-`
-
-const TopSection = styled(AutoColumn)`
-  max-width: 720px;
-  width: 100%;
-`
-
-const PoolSection = styled.div`
-  display: grid;
-  grid-template-columns: 1fr;
-  column-gap: 10px;
-  row-gap: 15px;
-  width: 100%;
-  justify-self: center;
-`
+import AppBody from '../AppBody'
+import { 
+  PageGridContainer,
+  SecondaryPanelBoxContainer,
+  SecondaryPanelBoxContainerExtraDecorator,
+  SimpleTextParagraph,
+  PageItemsContainer,
+  TabsBar,
+  PageContentContainer,
+  DynamicGrid,
+  ExternalLink,
+  PoolSection,
+  ActionButton
+} from '../../theme'
 
 export default function Earn() {
   const { chainId } = useActiveWeb3React()
   const stakingInfos = useStakingInfo()
-
-  const DataRow = styled(RowBetween)`
-    ${({ theme }) => theme.mediaWidth.upToSmall`
-    flex-direction: column;
-  `};
-  `
-
   const stakingRewardsExist = Boolean(typeof chainId === 'number' && (STAKING_REWARDS_INFO[chainId]?.length ?? 0) > 0)
+  const theme = useContext(ThemeContext)
+  const [showMore, setShowMore] = useState(false)
 
   return (
-    <PageWrapper gap="lg" justify="center">
-      <TopSection gap="md">
-        <DataCard>
-          <CardBGImage />
-          <CardNoise />
-          <CardSection>
-            <AutoColumn gap="md">
-              <RowBetween>
-                <TYPE.white fontWeight={600}>Uniswap liquidity mining</TYPE.white>
-              </RowBetween>
-              <RowBetween>
-                <TYPE.white fontSize={14}>
-                  Deposit your Liquidity Provider tokens to receive UNI, the Uniswap protocol governance token.
-                </TYPE.white>
-              </RowBetween>{' '}
-              <ExternalLink
-                style={{ color: 'white', textDecoration: 'underline' }}
-                href="https://uniswap.org/blog/uni/"
-                target="_blank"
-              >
-                <TYPE.white fontSize={14}>Read more about UNI</TYPE.white>
-              </ExternalLink>
-            </AutoColumn>
-          </CardSection>
-          <CardBGImage />
-          <CardNoise />
-        </DataCard>
-      </TopSection>
-
-      <AutoColumn gap="lg" style={{ width: '100%', maxWidth: '720px' }}>
-        <DataRow style={{ alignItems: 'baseline' }}>
-          <TYPE.mediumHeader style={{ marginTop: '0.5rem' }}>Participating pools</TYPE.mediumHeader>
-          <Countdown exactEnd={stakingInfos?.[0]?.periodFinish} />
-        </DataRow>
-
-        <PoolSection>
-          {stakingRewardsExist && stakingInfos?.length === 0 ? (
-            <Loader style={{ margin: 'auto' }} />
-          ) : !stakingRewardsExist ? (
-            'No active rewards'
-          ) : (
-            stakingInfos?.map(stakingInfo => {
-              // need to sort by added liquidity here
-              return <PoolCard key={stakingInfo.stakingRewardAddress} stakingInfo={stakingInfo} />
-            })
-          )}
-        </PoolSection>
-      </AutoColumn>
-    </PageWrapper>
+    <>
+      <AppBody>
+        <PageGridContainer className="liquidity-mining">
+          <div className={`left-column liquidity-mining ${theme.name}`}>
+            <div className="collapsable-title">
+              <div className="pull-right">
+                <ActionButton className={theme.name} onClick={() => { setShowMore(!showMore) }}>
+                  {showMore ? ( 'Hide Rewards Info' ) : ( 'View Rewards Info' )}
+                </ActionButton>
+              </div>
+              <div className="clear-fix"></div>
+            </div>
+            <div className={`collapsable-item ${showMore ? 'opened' : 'collapsed'}`}>
+            <SecondaryPanelBoxContainer className={`${theme.name}`}>
+              <SecondaryPanelBoxContainerExtraDecorator className={`top ${theme.name}`} />
+              <div className="inner-content">
+                <SimpleTextParagraph className={`p15 mt0 mb0 ${theme.name}`}>
+                  <strong>Materia liquidity mining</strong>
+                  <br /><br />
+                  Deposit your Liquidity Provider tokens to receive GIL, the Materia DFO protocol governance token.
+                  <br /><br />
+                  <ExternalLink href="https://www.dfohub.com/" target="_blank">Read more about DFO</ExternalLink>
+                </SimpleTextParagraph>
+              </div>
+              <SecondaryPanelBoxContainerExtraDecorator className={`bottom ${theme.name}`} />
+            </SecondaryPanelBoxContainer>
+            </div>
+          </div>
+          <PageItemsContainer className={theme.name}>
+            <TabsBar className={theme.name}>
+              <DynamicGrid className={theme.name} columns={2}>
+                <div className={ `text-left title ${theme.name}` }>Participating pools</div>
+                <div className="text-right">
+                  <Countdown exactEnd={stakingInfos?.[0]?.periodFinish} />
+                </div>
+              </DynamicGrid>
+            </TabsBar>
+            <div className="clear-fix">
+              <PageContentContainer className={ `one ${theme.name}` }>
+                <PoolSection>
+                  {stakingRewardsExist && stakingInfos?.length === 0 ? ( 
+                    <Loader style={{ margin: 'auto' }} />
+                  ) : !stakingRewardsExist ? (
+                    'No active rewards'
+                  ) : (
+                        stakingInfos?.map(stakingInfo => {
+                          // need to sort by added liquidity here
+                          return <PoolCard key={stakingInfo.stakingRewardAddress} stakingInfo={stakingInfo} />
+                        })
+                      )}
+                </PoolSection>
+              </PageContentContainer>
+            </div>
+          </PageItemsContainer>          
+        </PageGridContainer>
+      </AppBody>
+    </>
   )
 }

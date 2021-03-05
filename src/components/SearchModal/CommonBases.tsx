@@ -1,7 +1,6 @@
 import React from 'react'
 import { Text } from 'rebass'
-import { ChainId, Currency, currencyEquals, Token } from '@uniswap/sdk'
-import { USD } from '../../constants/index'
+import { ChainId, Currency, currencyEquals, ETHER, Token } from '@materia-dex/sdk'
 import styled from 'styled-components'
 
 import { SUGGESTED_BASES } from '../../constants'
@@ -11,19 +10,12 @@ import { AutoRow } from '../Row'
 import CurrencyLogo from '../CurrencyLogo'
 
 const BaseWrapper = styled.div<{ disable?: boolean }>`
-  border: 1px solid ${({ theme, disable }) => (disable ? 'transparent' : theme.bg3)};
-  border-radius: 10px;
   display: flex;
-  padding: 6px;
-
   align-items: center;
-  :hover {
-    cursor: ${({ disable }) => !disable && 'pointer'};
-    background-color: ${({ theme, disable }) => !disable && theme.bg2};
-  }
-
-  background-color: ${({ theme, disable }) => disable && theme.bg3};
+  :hover { cursor: ${({ disable }) => !disable && 'pointer'}; }
   opacity: ${({ disable }) => disable && '0.4'};
+  
+  & img.ethereumLogo, & img.tokenLogo { margin-top: 0px; }
 `
 
 export default function CommonBases({
@@ -46,15 +38,15 @@ export default function CommonBases({
       <AutoRow gap="4px">
         <BaseWrapper
           onClick={() => {
-            if (!selectedCurrency || !currencyEquals(selectedCurrency, USD)) {
-              onSelect(USD)
+            if (!selectedCurrency || !currencyEquals(selectedCurrency, ETHER)) {
+              onSelect(ETHER)
             }
           }}
-          disable={selectedCurrency === USD}
+          disable={selectedCurrency === ETHER}
         >
-          <CurrencyLogo currency={USD} style={{ marginRight: 8 }} />
+          <CurrencyLogo currency={ETHER} style={{ marginRight: 8 }} />
           <Text fontWeight={500} fontSize={16}>
-            USD
+            ETH
           </Text>
         </BaseWrapper>
         {(chainId ? SUGGESTED_BASES[chainId] : []).map((token: Token) => {

@@ -1,10 +1,9 @@
 import { AbstractConnector } from '@web3-react/abstract-connector'
 import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
-import { darken } from 'polished'
 import React, { useMemo } from 'react'
 import { Activity } from 'react-feather'
 import { useTranslation } from 'react-i18next'
-import styled, { css } from 'styled-components'
+import styled from 'styled-components'
 import CoinbaseWalletIcon from '../../assets/images/coinbaseWalletIcon.svg'
 import FortmaticIcon from '../../assets/images/fortmaticIcon.png'
 import PortisIcon from '../../assets/images/portisIcon.png'
@@ -17,7 +16,6 @@ import { useWalletModalToggle } from '../../state/application/hooks'
 import { isTransactionRecent, useAllTransactions } from '../../state/transactions/hooks'
 import { TransactionDetails } from '../../state/transactions/reducer'
 import { shortenAddress } from '../../utils'
-import { ButtonSecondary } from '../Button'
 
 import Identicon from '../Identicon'
 import Loader from '../Loader'
@@ -35,41 +33,48 @@ const IconWrapper = styled.div<{ size?: number }>`
   }
 `
 
-const Web3StatusGeneric = styled(ButtonSecondary)`
+const Web3StatusGeneric = styled.div`
   ${({ theme }) => theme.flexRowNoWrap}
   width: 100%;
-  height: 30px;
-  border: none;
+  align-items: center;
+  user-select: none;
+  &:hover {
+    border: 0;
+    cursor: pointer;
+  }
 `
 const Web3StatusError = styled(Web3StatusGeneric)`
-  background-color: transparent;
-  color: ${({ theme }) => theme.white};
-  font-weight: 500;
-  :focus {
-    background-color: ${({ theme }) => darken(0.1, theme.red1)};
-  }
+  background-color: ${({ theme }) => theme.red1};
+  border: 1px solid ${({ theme }) => theme.red1};
+  color: ${({ theme }) => theme.text1};
+  
 `
 
 const Web3StatusConnect = styled(Web3StatusGeneric)<{ faded?: boolean }>`
-  background-color: transparent;
   border: none;
-  color: ${({ theme }) => theme.primaryText1};
-  font-weight: 500;
-  ${({ faded }) => faded && css``}
+  color: ${({ theme }) => theme.text1};
+  :hover {
+    text-decoration: underline;
+  }
 `
 
 const Web3StatusConnected = styled(Web3StatusGeneric)<{ pending?: boolean }>`
-  background-color: transparent;
-
-  color: #eff1ff;
-  text-shadow: 2px 2px #212421, 1px 1px #212021;
-  font-family: Verdana, sans-serif;
-  font-weight: normal;
+  
+  border: none;
+  color: ${({ theme }) => theme.text1};
+  :hover {
+    text-decoration: underline;
+  }
 `
 
 const Text = styled.p`
   flex: 1 1 auto;
   overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin: 0 0.5rem 0 0.25rem;
+  width: fit-content;
+  font-weight: 500;
 `
 
 const NetworkIcon = styled(Activity)`
@@ -167,7 +172,7 @@ function Web3StatusInner() {
   } else {
     return (
       <Web3StatusConnect id="connect-wallet" onClick={toggleWalletModal} faded={!account}>
-        <Text>{t('Connect to a wallet')}</Text>
+        <Text className="ml10">{t('Connect to a wallet')}</Text>
       </Web3StatusConnect>
     )
   }

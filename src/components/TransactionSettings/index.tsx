@@ -2,11 +2,9 @@ import React, { useState, useRef, useContext } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 
 import QuestionHelper from '../QuestionHelper'
-import { TYPE } from '../../theme'
+import { TYPE, SettingsMenuOption, SettingsMenuCustomOption, SettingsMenuCustomOptionInput } from '../../theme'
 import { AutoColumn } from '../Column'
 import { RowBetween, RowFixed } from '../Row'
-
-import { darken } from 'polished'
 
 enum SlippageError {
   InvalidInput = 'InvalidInput',
@@ -18,71 +16,11 @@ enum DeadlineError {
   InvalidInput = 'InvalidInput'
 }
 
-const FancyButton = styled.button`
-  color: ${({ theme }) => theme.text1};
-  align-items: center;
-  height: 2rem;
-  border-radius: 36px;
-  font-size: 1rem;
-  width: auto;
-  min-width: 3.5rem;
-  border: 1px solid ${({ theme }) => theme.bg3};
-  outline: none;
-  background: ${({ theme }) => theme.bg1};
-  :hover {
-    border: 1px solid ${({ theme }) => theme.bg4};
-  }
-  :focus {
-    border: 1px solid ${({ theme }) => theme.primary1};
-  }
-`
 
-const Option = styled(FancyButton)<{ active: boolean }>`
-  margin-right: 8px;
-  :hover {
-    cursor: pointer;
-  }
-  background-color: ${({ active, theme }) => active && theme.primary1};
-  color: ${({ active, theme }) => (active ? theme.white : theme.text1)};
-`
-
-const Input = styled.input`
-  background: ${({ theme }) => theme.bg1};
-  font-size: 16px;
-  width: auto;
-  outline: none;
-  &::-webkit-outer-spin-button,
-  &::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-  }
-  color: ${({ theme, color }) => (color === 'red' ? theme.red1 : theme.text1)};
-  text-align: right;
-`
-
-const OptionCustom = styled(FancyButton)<{ active?: boolean; warning?: boolean }>`
-  height: 2rem;
-  position: relative;
-  padding: 0 0.75rem;
-  flex: 1;
-  border: ${({ theme, active, warning }) => active && `1px solid ${warning ? theme.red1 : theme.primary1}`};
-  :hover {
-    border: ${({ theme, active, warning }) =>
-      active && `1px solid ${warning ? darken(0.1, theme.red1) : darken(0.1, theme.primary1)}`};
-  }
-
-  input {
-    width: 100%;
-    height: 100%;
-    border: 0px;
-    border-radius: 2rem;
-  }
-`
 
 const SlippageEmojiContainer = styled.span`
   color: #f3841e;
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    display: none;  
-  `}
+  ${({ theme }) => theme.mediaWidth.upToSmall` display: none; `}
 `
 
 export interface SlippageTabsProps {
@@ -148,40 +86,14 @@ export default function SlippageTabs({ rawSlippage, setRawSlippage, deadline, se
     <AutoColumn gap="md">
       <AutoColumn gap="sm">
         <RowFixed>
-          <TYPE.black fontWeight={400} fontSize={14} color={theme.text2}>
-            Slippage tolerance
-          </TYPE.black>
+          <div className="sectionOption">Slippage tolerance</div>
           <QuestionHelper text="Your transaction will revert if the price changes unfavorably by more than this percentage." />
         </RowFixed>
         <RowBetween>
-          <Option
-            onClick={() => {
-              setSlippageInput('')
-              setRawSlippage(10)
-            }}
-            active={rawSlippage === 10}
-          >
-            0.1%
-          </Option>
-          <Option
-            onClick={() => {
-              setSlippageInput('')
-              setRawSlippage(50)
-            }}
-            active={rawSlippage === 50}
-          >
-            0.5%
-          </Option>
-          <Option
-            onClick={() => {
-              setSlippageInput('')
-              setRawSlippage(100)
-            }}
-            active={rawSlippage === 100}
-          >
-            1%
-          </Option>
-          <OptionCustom active={![10, 50, 100].includes(rawSlippage)} warning={!slippageInputIsValid} tabIndex={-1}>
+          <SettingsMenuOption className={theme.name} onClick={() => { setSlippageInput(''); setRawSlippage(10); }} active={rawSlippage === 10} > 0.1% </SettingsMenuOption>
+          <SettingsMenuOption className={theme.name} onClick={() => { setSlippageInput(''); setRawSlippage(50); }} active={rawSlippage === 50} > 0.5% </SettingsMenuOption>
+          <SettingsMenuOption className={theme.name} onClick={() => { setSlippageInput(''); setRawSlippage(100); }} active={rawSlippage === 100} > 1% </SettingsMenuOption>
+          <SettingsMenuCustomOption className={theme.name} active={![10, 50, 100].includes(rawSlippage)} warning={!slippageInputIsValid} tabIndex={-1}>
             <RowBetween>
               {!!slippageInput &&
               (slippageError === SlippageError.RiskyLow || slippageError === SlippageError.RiskyHigh) ? (
@@ -192,19 +104,17 @@ export default function SlippageTabs({ rawSlippage, setRawSlippage, deadline, se
                 </SlippageEmojiContainer>
               ) : null}
               {/* https://github.com/DefinitelyTyped/DefinitelyTyped/issues/30451 */}
-              <Input
+              <SettingsMenuCustomOptionInput
                 ref={inputRef as any}
                 placeholder={(rawSlippage / 100).toFixed(2)}
                 value={slippageInput}
-                onBlur={() => {
-                  parseCustomSlippage((rawSlippage / 100).toFixed(2))
-                }}
+                onBlur={() => { parseCustomSlippage((rawSlippage / 100).toFixed(2)) }}
                 onChange={e => parseCustomSlippage(e.target.value)}
                 color={!slippageInputIsValid ? 'red' : ''}
               />
               %
             </RowBetween>
-          </OptionCustom>
+          </SettingsMenuCustomOption>
         </RowBetween>
         {!!slippageError && (
           <RowBetween
@@ -225,26 +135,20 @@ export default function SlippageTabs({ rawSlippage, setRawSlippage, deadline, se
 
       <AutoColumn gap="sm">
         <RowFixed>
-          <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
-            Transaction deadline
-          </TYPE.black>
+          <div className="sectionOption">Transaction deadline</div>
           <QuestionHelper text="Your transaction will revert if it is pending for more than this long." />
         </RowFixed>
         <RowFixed>
-          <OptionCustom style={{ width: '80px' }} tabIndex={-1}>
-            <Input
+          <SettingsMenuCustomOption className={theme.name} style={{ width: '80px' }} tabIndex={-1}>
+            <SettingsMenuCustomOptionInput
               color={!!deadlineError ? 'red' : undefined}
-              onBlur={() => {
-                parseCustomDeadline((deadline / 60).toString())
-              }}
+              onBlur={() => { parseCustomDeadline((deadline / 60).toString()) }}
               placeholder={(deadline / 60).toString()}
               value={deadlineInput}
               onChange={e => parseCustomDeadline(e.target.value)}
             />
-          </OptionCustom>
-          <TYPE.body style={{ paddingLeft: '8px' }} fontSize={14}>
-            minutes
-          </TYPE.body>
+          </SettingsMenuCustomOption>
+          <div className="minutes">minutes</div>
         </RowFixed>
       </AutoColumn>
     </AutoColumn>

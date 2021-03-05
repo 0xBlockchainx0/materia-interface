@@ -1,12 +1,16 @@
 name: Lint
 
 on:
-  push:
-    branches:
-      - master
-  pull_request_target:
-    branches:
-      - master
+  # push:
+  #   branches:
+  #     - master
+  
+  # pull_request:
+  #   branches:
+  #     - master
+  
+  # manual trigger
+  workflow_dispatch:
 
 jobs:
   run-linters:

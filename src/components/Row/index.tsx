@@ -8,7 +8,11 @@ const Row = styled(Box)<{ align?: string; padding?: string; border?: string; bor
   align-items: ${({ align }) => (align ? align : 'center')};
   padding: ${({ padding }) => padding};
   border: ${({ border }) => border};
-  border-radius: ${({ borderRadius }) => borderRadius};
+`
+
+export const RowCenter = styled(Row)`
+  justify-content: center;
+  display: flex;
 `
 
 export const RowBetween = styled(Row)`

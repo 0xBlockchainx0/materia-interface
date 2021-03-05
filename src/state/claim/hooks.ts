@@ -1,5 +1,5 @@
-import { UNI } from './../../constants/index'
-import { TokenAmount, JSBI, ChainId } from '@uniswap/sdk'
+import { GIL } from './../../constants/index'
+import { TokenAmount, JSBI, ChainId } from '@materia-dex/sdk'
 import { TransactionResponse } from '@ethersproject/providers'
 import { useEffect, useState } from 'react'
 import { useActiveWeb3React } from '../../hooks'
@@ -7,6 +7,12 @@ import { useMerkleDistributorContract } from '../../hooks/useContract'
 import { useSingleCallResult } from '../multicall/hooks'
 import { calculateGasMargin, isAddress } from '../../utils'
 import { useTransactionAdder } from '../transactions/hooks'
+
+interface UserClaimDataResponse {
+  data: UserClaimData
+  message: string
+  status: number
+}
 
 interface UserClaimData {
   index: number
@@ -19,17 +25,17 @@ interface UserClaimData {
   }
 }
 
-const CLAIM_PROMISES: { [key: string]: Promise<UserClaimData | null> } = {}
+const CLAIM_PROMISES: { [key: string]: Promise<UserClaimDataResponse | null> } = {}
 
 // returns the claim for the given address, or null if not valid
-function fetchClaim(account: string, chainId: ChainId): Promise<UserClaimData | null> {
+function fetchClaim(account: string, chainId: ChainId): Promise<UserClaimDataResponse | null> {
   const formatted = isAddress(account)
   if (!formatted) return Promise.reject(new Error('Invalid address'))
   const key = `${chainId}:${account}`
 
   return (CLAIM_PROMISES[key] =
     CLAIM_PROMISES[key] ??
-    fetch(`https://gentle-frost-9e74.uniswap.workers.dev/${chainId}/${formatted}`)
+    fetch(`https://materia-claim-api.vercel.app/api/claim/data/${chainId}/${formatted}`)
       .then(res => {
         if (res.status === 200) {
           return res.json()
@@ -57,7 +63,7 @@ export function useUserClaimData(account: string | null | undefined): UserClaimD
       setClaimInfo(claimInfo => {
         return {
           ...claimInfo,
-          [key]: accountClaimInfo
+          [key]: accountClaimInfo ? accountClaimInfo["data"] ?? null : null
         }
       })
     )
@@ -66,7 +72,7 @@ export function useUserClaimData(account: string | null | undefined): UserClaimD
   return account && chainId ? claimInfo[key] : undefined
 }
 
-// check if user is in blob and has not yet claimed UNI
+// check if user is in blob and has not yet claimed GIL
 export function useUserHasAvailableClaim(account: string | null | undefined): boolean {
   const userClaimData = useUserClaimData(account)
   const distributorContract = useMerkleDistributorContract()
@@ -80,12 +86,12 @@ export function useUserUnclaimedAmount(account: string | null | undefined): Toke
   const userClaimData = useUserClaimData(account)
   const canClaim = useUserHasAvailableClaim(account)
 
-  const uni = chainId ? UNI[chainId] : undefined
-  if (!uni) return undefined
+  const gil = chainId ? GIL[chainId] : undefined
+  if (!gil) return undefined
   if (!canClaim || !userClaimData) {
-    return new TokenAmount(uni, JSBI.BigInt(0))
+    return new TokenAmount(gil, JSBI.BigInt(0))
   }
-  return new TokenAmount(uni, JSBI.BigInt(userClaimData.amount))
+  return new TokenAmount(gil, JSBI.BigInt(userClaimData.amount))
 }
 
 export function useClaimCallback(
@@ -105,14 +111,14 @@ export function useClaimCallback(
   const claimCallback = async function() {
     if (!claimData || !account || !library || !chainId || !distributorContract) return
 
-    const args = [claimData.index, account, claimData.amount, claimData.proof]
+    const args = [claimData.index, account, claimData.amount, claimData.proof]  
 
     return distributorContract.estimateGas['claim'](...args, {}).then(estimatedGasLimit => {
       return distributorContract
         .claim(...args, { value: null, gasLimit: calculateGasMargin(estimatedGasLimit) })
         .then((response: TransactionResponse) => {
           addTransaction(response, {
-            summary: `Claimed ${unClaimedAmount?.toSignificant(4)} UNI`,
+            summary: `Claimed ${unClaimedAmount?.toSignificant(4)} GIL`,
             claim: { recipient: account }
           })
           return response.hash

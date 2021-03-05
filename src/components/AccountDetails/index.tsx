@@ -54,8 +54,8 @@ const UpperSection = styled.div`
 
 const InfoCard = styled.div`
   padding: 1rem;
-  border: 1px solid ${({ theme }) => theme.bg3};
-  border-radius: 20px;
+  border: 1px solid ${({ theme }) => theme.cyan2};
+  // border-radius: 20px;
   position: relative;
   display: grid;
   grid-row-gap: 12px;
@@ -67,7 +67,7 @@ const AccountGroupingRow = styled.div`
   justify-content: space-between;
   align-items: center;
   font-weight: 400;
-  color: ${({ theme }) => theme.text5};
+  color: ${({ theme }) => theme.text1};
 
   div {
     ${({ theme }) => theme.flexRowNoWrap}
@@ -76,7 +76,7 @@ const AccountGroupingRow = styled.div`
 `
 
 const AccountSection = styled.div`
-  background-color: transparent;
+  // background-color: ${({ theme }) => theme.bg1};
   padding: 0rem 1rem;
   ${({ theme }) => theme.mediaWidth.upToMedium`padding: 0rem 1rem 1.5rem 1rem;`};
 `
@@ -98,9 +98,9 @@ const LowerSection = styled.div`
   padding: 1.5rem;
   flex-grow: 1;
   overflow: auto;
-  background-color: ${({ theme }) => theme.bg1};
-  border-bottom-left-radius: 25px;
-  border-bottom-right-radius: 20px;
+  background-color: ${({ theme }) => theme.bg2};
+  // border-bottom-left-radius: 20px;
+  // border-bottom-right-radius: 20px;
 
   h5 {
     margin: 0;
@@ -116,8 +116,6 @@ const AccountControl = styled.div`
   width: 100%;
 
   font-weight: 500;
-  font-size: 1.25rem;
-
   a:hover {
     text-decoration: underline;
   }
@@ -403,7 +401,7 @@ export default function AccountDetails({
         </LowerSection>
       ) : (
         <LowerSection>
-          <TYPE.body color={theme.text5}>Your transactions will appear here...</TYPE.body>
+          <TYPE.body color={theme.text1}>Your transactions will appear here...</TYPE.body>
         </LowerSection>
       )}
     </>

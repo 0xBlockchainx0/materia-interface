@@ -1,11 +1,11 @@
-import { Trade, TradeType } from '@uniswap/sdk'
+import { Currency, Trade, TradeType } from '@materia-dex/sdk'
 import React, { useContext, useMemo } from 'react'
 import { ArrowDown, AlertTriangle } from 'react-feather'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
 import { Field } from '../../state/swap/actions'
 import { TYPE } from '../../theme'
-import { ButtonPrimary } from '../Button'
+import { ButtonMateriaPrimary } from '../Button'
 import { isAddress, shortenAddress } from '../../utils'
 import { computeSlippageAdjustedAmounts, computeTradePriceBreakdown, warningSeverity } from '../../utils/prices'
 import { AutoColumn } from '../Column'
@@ -15,12 +15,14 @@ import { TruncatedText, SwapShowAcceptChanges } from './styleds'
 
 export default function SwapModalHeader({
   trade,
+  originalCurrencies,
   allowedSlippage,
   recipient,
   showAcceptChanges,
   onAcceptChanges
 }: {
   trade: Trade
+  originalCurrencies: { [field in Field]?: Currency }
   allowedSlippage: number
   recipient: string | null
   showAcceptChanges: boolean
@@ -39,7 +41,7 @@ export default function SwapModalHeader({
     <AutoColumn gap={'md'} style={{ marginTop: '20px' }}>
       <RowBetween align="flex-end">
         <RowFixed gap={'0px'}>
-          <CurrencyLogo currency={trade.inputAmount.currency} size={'24px'} style={{ marginRight: '12px' }} />
+          <CurrencyLogo currency={originalCurrencies[Field.INPUT]} size={'24px'} style={{ marginRight: '12px' }} />
           <TruncatedText
             fontSize={24}
             fontWeight={500}
@@ -50,7 +52,7 @@ export default function SwapModalHeader({
         </RowFixed>
         <RowFixed gap={'0px'}>
           <Text fontSize={24} fontWeight={500} style={{ marginLeft: '10px' }}>
-            {trade.inputAmount.currency.symbol}
+            {originalCurrencies[Field.INPUT]?.symbol}
           </Text>
         </RowFixed>
       </RowBetween>
@@ -59,7 +61,7 @@ export default function SwapModalHeader({
       </RowFixed>
       <RowBetween align="flex-end">
         <RowFixed gap={'0px'}>
-          <CurrencyLogo currency={trade.outputAmount.currency} size={'24px'} style={{ marginRight: '12px' }} />
+          <CurrencyLogo currency={originalCurrencies[Field.OUTPUT]} size={'24px'} style={{ marginRight: '12px' }} />
           <TruncatedText
             fontSize={24}
             fontWeight={500}
@@ -76,7 +78,7 @@ export default function SwapModalHeader({
         </RowFixed>
         <RowFixed gap={'0px'}>
           <Text fontSize={24} fontWeight={500} style={{ marginLeft: '10px' }}>
-            {trade.outputAmount.currency.symbol}
+            {originalCurrencies[Field.OUTPUT]?.symbol}
           </Text>
         </RowFixed>
       </RowBetween>
@@ -87,21 +89,21 @@ export default function SwapModalHeader({
               <AlertTriangle size={20} style={{ marginRight: '8px', minWidth: 24 }} />
               <TYPE.main color={theme.primary1}> Price Updated</TYPE.main>
             </RowFixed>
-            <ButtonPrimary
+            <ButtonMateriaPrimary
               style={{ padding: '.5rem', width: 'fit-content', fontSize: '0.825rem', borderRadius: '12px' }}
               onClick={onAcceptChanges}
             >
               Accept
-            </ButtonPrimary>
+            </ButtonMateriaPrimary>
           </RowBetween>
         </SwapShowAcceptChanges>
       ) : null}
-      <AutoColumn justify="flex-start" gap="sm" style={{ padding: '12px 0 0 0px' }}>
+      <AutoColumn justify="flex-start" gap="sm" style={{ padding: '12px 0 0 0px', margin: '0px 0px 20px 0px' }}>
         {trade.tradeType === TradeType.EXACT_INPUT ? (
           <TYPE.italic textAlign="left" style={{ width: '100%' }}>
             {`Output is estimated. You will receive at least `}
             <b>
-              {slippageAdjustedAmounts[Field.OUTPUT]?.toSignificant(6)} {trade.outputAmount.currency.symbol}
+              {slippageAdjustedAmounts[Field.OUTPUT]?.toSignificant(6)} {originalCurrencies[Field.OUTPUT]?.symbol}
             </b>
             {' or the transaction will revert.'}
           </TYPE.italic>
@@ -109,7 +111,7 @@ export default function SwapModalHeader({
           <TYPE.italic textAlign="left" style={{ width: '100%' }}>
             {`Input is estimated. You will sell at most `}
             <b>
-              {slippageAdjustedAmounts[Field.INPUT]?.toSignificant(6)} {trade.inputAmount.currency.symbol}
+              {slippageAdjustedAmounts[Field.INPUT]?.toSignificant(6)} {originalCurrencies[Field.INPUT]?.symbol}
             </b>
             {' or the transaction will revert.'}
           </TYPE.italic>

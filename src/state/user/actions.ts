@@ -14,7 +14,9 @@ export interface SerializedPair {
 }
 
 export const updateMatchesDarkMode = createAction<{ matchesDarkMode: boolean }>('user/updateMatchesDarkMode')
+export const updateMatchesClassicMode = createAction<{ matchesClassicMode: boolean }>('user/updateMatchesClassicMode')
 export const updateUserDarkMode = createAction<{ userDarkMode: boolean }>('user/updateUserDarkMode')
+export const updateUserClassicMode = createAction<{ userClassicMode: boolean }>('user/updateUserClassicMode')
 export const updateUserExpertMode = createAction<{ userExpertMode: boolean }>('user/updateUserExpertMode')
 export const updateUserSlippageTolerance = createAction<{ userSlippageTolerance: number }>(
   'user/updateUserSlippageTolerance'
@@ -25,5 +27,9 @@ export const removeSerializedToken = createAction<{ chainId: number; address: st
 export const addSerializedPair = createAction<{ serializedPair: SerializedPair }>('user/addSerializedPair')
 export const removeSerializedPair = createAction<{ chainId: number; tokenAAddress: string; tokenBAddress: string }>(
   'user/removeSerializedPair'
+)
+export const addInteroperableTokens = createAction<{ chainId: number; interoperableTokens: string[] }>('user/addInteroperableTokens')
+export const removeInteroperableTokens = createAction<{ chainId: number }>(
+  'user/removeInteroperableTokens'
 )
 export const toggleURLWarning = createAction<void>('app/toggleURLWarning')

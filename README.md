@@ -1,40 +1,34 @@
-# Uniswap Interface
+# Materia Interface
 
+UI Interface for Materia, World first, User-Centric DEX governed by On-Chain, Enterprise-Free Organization.
 
-An open source interface for Materia -- a protocol for decentralized exchange of Ethereum tokens.
-
-- Website: [materiadex.com](https://materiadex.com/)
-- Interface: [app.materiadex.org](https://app.materiadex.com)
-- Docs: [materiadex.com/docs/](https://materiadex.com/docs/)
-- Twitter: [@MateriaDex](https://twitter.com/MateriaDex)
-- Reddit: [/r/Materia](https://www.reddit.com/r/Materia/)
-- Email: [contact@materiadex.com](mailto:contact@materiadex.com)
-- Discord: [Materia](https://discord.gg/Y7TF6QA)
+- Website: [materiadex.com](https://materiadex.com)
+- Interface: [materia.exchange](https://materia.exchange)
+- Docs: [materiadex.com/docs](https://materiadex.com/docs/materia)
+- Twitter: [@DexMateria](https://twitter.com/DexMateria)
+- Reddit: [/r/materiadex](https://www.reddit.com/r/materiadex)
+- Discord: [Materia](https://discord.gg/b9UUZzC82d)
 
 ## Accessing the Materia Interface
 
-To access the Mateira Interface, use an IPFS gateway link from the
-[latest release](https://github.com/Materia-dex/materia-interface/releases/latest), 
-or visit [app.materiadex.com](https://app.materiadex.com).
+To access Materia DEX interface visit [materia.exchange](https://materia.exchange).
 
 ## Listing a token
 
-Please see the
-[@materia-dex/default-token-list](https://github.com/materia-dex/default-token-list) 
-repository.
+Please see the [@materia-dex/materia-token-list](https://github.com/materia-dex/materia-token-list) repository.
 
 ## Development
 
 ### Install Dependencies
 
 ```bash
-yarn
+npm install
 ```
 
 ### Run
 
 ```bash
-yarn start
+npm run start
 ```
 
 ### Configuring the environment (optional)
@@ -45,13 +39,5 @@ To have the interface default to a different network when a wallet is not connec
 2. Change `REACT_APP_NETWORK_ID` to `"{YOUR_NETWORK_ID}"`
 3. Change `REACT_APP_NETWORK_URL` to e.g. `"https://{YOUR_NETWORK_ID}.infura.io/v3/{YOUR_INFURA_KEY}"` 
 
-Note that the interface only works on testnets where both 
-[Materia](https://materiadex.com/docs/smart-contracts/factory/) and 
-[multicall](https://github.com/makerdao/multicall) are deployed.
-The interface will not work on other networks.
-
-## Contributions
-
-**Please open all pull requests against the `master` branch.** 
-CI checks will run against all PRs.
-
+Note that the interface only works on testnets where both [Materia](https://materiadex.com/docs/materia/smart-contracts) and 
+[multicall](https://github.com/makerdao/multicall) are deployed. The interface will not work on other networks.
