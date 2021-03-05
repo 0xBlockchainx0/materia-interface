@@ -1,11 +1,15 @@
 name: Tests
 on:
-  push:
-    branches:
-      - master
-  pull_request:
-    branches:
-      - master
+  # push:
+  #   branches:
+  #     - master
+  
+  # pull_request:
+  #   branches:
+  #     - master
+  
+  # manual trigger
+  workflow_dispatch:
 
 jobs:
   integration-tests:
@@ -35,7 +39,7 @@ jobs:
       - run: yarn build
         env:
           CI: false
-          REACT_APP_NETWORK_URL: "https://mainnet.infura.io/v3/4bf032f2d38a4ed6bb975b80d6340847"
+          REACT_APP_NETWORK_URL: "https://mainnet.infura.io/v3/6f6d4794e1f24f37859c06291e8cbd88"
       - run: yarn integration-test
 
   unit-tests:
