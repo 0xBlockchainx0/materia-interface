@@ -71,6 +71,7 @@ import useCheckIsEthItem from '../../hooks/useCheckIsEthItem'
 import { decodeInteroperableValueToERC20TokenAmount } from '../../state/swap/hooks'
 import useUpdateWrappedERC20TokensCallback from '../../hooks/useUpdateWrappedERC20TokensCallback'
 import { Scrollbars } from 'react-custom-scrollbars'
+import AutoSizer from 'react-virtualized-auto-sizer'
 
 export default function AddLiquidity({
   match: {
@@ -515,7 +516,7 @@ export default function AddLiquidity({
                 <SecondaryPanelBoxContainerExtraDecorator className={`bottom ${theme.name}`} />
               </SecondaryPanelBoxContainer>
               <HideSmall>
-                <SectionTitle className={`mt20 ${theme.name}`}>Your liquidity</SectionTitle>
+                <SectionTitle className={`mt10 ${theme.name}`}>Your liquidity</SectionTitle>
               </HideSmall>
               <Scrollbars autoHeight autoHide>
                 {!account ? (
@@ -530,7 +531,7 @@ export default function AddLiquidity({
                   </EmptyProposals>
                 ) : allPairsWithLiquidity?.length > 0 ? (
                   <>
-                    <SimpleTextParagraph className={`text-left ${theme.name}`}>
+                    <SimpleTextParagraph className={`text-left mt0 mb10 ${theme.name}`}>
                       <ExternalLink href={'https://info.materiadex.com/account/' + account}>
                         Account analytics and accrued fees
                         <IconButton className={`hide-classic ${theme.name}`}>

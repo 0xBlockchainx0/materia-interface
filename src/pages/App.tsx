@@ -1,4 +1,5 @@
-import React, { Suspense } from 'react'
+import React, { Suspense, useContext } from 'react'
+import { ThemeContext } from 'styled-components'
 import { Route, Switch } from 'react-router-dom'
 import GoogleAnalyticsReporter from '../components/analytics/GoogleAnalyticsReporter'
 import Footer from '../components/Footer/Footer'
@@ -28,6 +29,8 @@ import { useModalOpen, useToggleModal } from '../state/application/hooks'
 import { ApplicationModal } from '../state/application/actions'
 import AddressClaimModal from '../components/claim/AddressClaimModal'
 
+import spaceVideo from '../assets/images/space.mp4';
+
 function TopLevelModals() {
   const open = useModalOpen(ApplicationModal.ADDRESS_CLAIM)
   const toggle = useToggleModal(ApplicationModal.ADDRESS_CLAIM)
@@ -35,11 +38,18 @@ function TopLevelModals() {
 }
 
 export default function App() {
+  const theme = useContext(ThemeContext)
   return (
     <Suspense fallback={null}>
       <Route component={GoogleAnalyticsReporter} />
       <Route component={DarkModeQueryParamReader} />
       <AppWrapper>
+        <div className={ `appBackground ${theme.name}` }>
+          <video autoPlay muted loop id="myVideo">
+            <source src={spaceVideo} type="video/webm"/>
+          </video>
+          <div className={ `videoOverlay ${theme.name}` }></div>
+        </div>
         <URLWarning />
         <HeaderWrapper>
           <Header />

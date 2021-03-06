@@ -176,7 +176,7 @@ export default function FullPositionCard({ pair, border }: PositionCardProps) {
   const theme = useContext(ThemeContext)
 
   return (
-    <StyledPositionCard bgColor={backgroundColor} className={ `pt15 pb15 ${theme.name}` }>
+    <StyledPositionCard bgColor={backgroundColor} className={ `pl5 pr5 pt15 pb15 mb5 ${theme.name}` }>
       <CardNoise />
       <AutoColumn gap="12px">
         <FixedHeightRow>
@@ -196,7 +196,7 @@ export default function FullPositionCard({ pair, border }: PositionCardProps) {
 
         {showMore && (
           <AutoColumn gap="8px">
-            <SimpleTextParagraph className={theme.name}>
+            <SimpleTextParagraph className={ `${theme.name} mt0 mb0` }>
               <span className="row">
                 <span className="column">Your pool tokens:</span>
                 <span className="column">{userPoolBalance ? userPoolBalance.toSignificant(4) : '-'}</span>
@@ -219,7 +219,7 @@ export default function FullPositionCard({ pair, border }: PositionCardProps) {
                 <span className="column">{poolTokenPercentage ? poolTokenPercentage.toFixed(2) + '%' : '-'}</span>
               </span>
             </SimpleTextParagraph>     
-            <SimpleTextParagraph className={ `text-left ${theme.name}` }>
+            <SimpleTextParagraph className={ `text-left ${theme.name} mt0` }>
               <ExternalLink href={`https://info.materiadex.com/account/${account}`}>
               View accrued fees and analytics
                 <IconButton className={ `hide-classic ${theme.name}` }>

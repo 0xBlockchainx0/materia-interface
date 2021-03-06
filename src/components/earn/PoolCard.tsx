@@ -79,13 +79,13 @@ export default function PoolCard({ stakingInfo }: { stakingInfo: StakingInfo }) 
             </StyledInternalButtonLink>
           </div>
         </DynamicGrid>
-        <DynamicGrid className={`mt20 ${theme.name}`} columns={2}>
+        <DynamicGrid className={`mt10 ${theme.name}`} columns={2}>
           <div className="text-left">Total deposited</div>
           <div className="text-right">
             {`${valueOfTotalStakedAmountInUSD?.toSignificant(4) ?? '-'} WUSD`}
           </div>
         </DynamicGrid>
-        <DynamicGrid className={`mt20 ${theme.name}`} columns={2}>
+        <DynamicGrid className={`mt10 ${theme.name}`} columns={2}>
           <div className="text-left">Pool rate</div>
           <div className="text-right">
             {`${stakingInfo.totalRewardRate ?.multiply(`${60 * 60 * 24}`) ?.toFixed(0)} GIL / day`} 
@@ -93,7 +93,7 @@ export default function PoolCard({ stakingInfo }: { stakingInfo: StakingInfo }) 
         </DynamicGrid>
           {isStaking && (
             <>
-              <Divider className={theme.name}/>
+              <Divider className={`${theme.name} reduced-margins`}/>
               <DynamicGrid className={`${theme.name}`} columns={2}>
                 <div className="text-left">Your rate</div>
                 <div className="text-right">{`${stakingInfo.rewardRate ?.multiply(`${60 * 60 * 24}`) ?.toSignificant(4)} GIL / day`}</div>

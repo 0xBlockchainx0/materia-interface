@@ -25,11 +25,14 @@ import gil from '../assets/images/gil.png'
 import classicSwap from '../assets/images/classic-swap-icon.svg'
 import batchSwap from '../assets/images/batch-swap-icon.svg'
 
+import spaceVideo from '../assets/images/space.mp4';
+
 export const images = {
     backgrounds: {
       dark: darkBackground,
       light: lightBackground,
-      classic: null
+      classic: null,
+      spaceVideo: spaceVideo
     },
     decorators: {
       grid: {
