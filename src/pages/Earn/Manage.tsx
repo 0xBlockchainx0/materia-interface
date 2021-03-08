@@ -18,7 +18,8 @@ import {
   PageContentContainer,
   DynamicGrid,
   ExternalLink,
-  PoolSection
+  PoolSection,
+  SectionContent
 } from '../../theme'
 import { ButtonMateriaPrimary } from '../../components/Button'
 import StakingModal from '../../components/earn/StakingModal'
@@ -121,19 +122,12 @@ export default function Manage({
               <div className="clear-fix"></div>
             </div>
             <div className={`collapsable-item ${showMore ? 'opened' : 'collapsed'}`}>
-              <SecondaryPanelBoxContainer className={`${theme.name}`}>
-                <SecondaryPanelBoxContainerExtraDecorator className={`top ${theme.name}`} />
-                <div className="inner-content">
-                  <SimpleTextParagraph className={`p15 mt0 mb0 ${theme.name}`}>
-                    <strong>Materia liquidity mining</strong>
-                    <br /><br />
-                  Deposit your Liquidity Provider tokens to receive GIL, the Materia DFO protocol governance token.
-                  <br /><br />
-                    <ExternalLink href="https://www.dfohub.com/" target="_blank">Read more about DFO</ExternalLink>
-                  </SimpleTextParagraph>
-                </div>
-                <SecondaryPanelBoxContainerExtraDecorator className={`bottom ${theme.name}`} />
-              </SecondaryPanelBoxContainer>
+              <SimpleTextParagraph className={`p0 mt0 mb0 ${theme.name}`}>
+                <SectionTitle className={`mt10 ${theme.name}`}>Materia liquidity mining</SectionTitle>
+                <SectionContent>Deposit your Liquidity Provider tokens to receive GIL, the Materia DFO protocol governance token.
+                    <ExternalLink href="https://www.dfohub.com/" target="_blank" className="yellow"> Read more about DFO</ExternalLink>
+                </SectionContent>
+              </SimpleTextParagraph>
             </div>
           </div>
           <PageItemsContainer className={theme.name}>

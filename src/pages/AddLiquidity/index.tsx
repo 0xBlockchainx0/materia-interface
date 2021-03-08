@@ -55,7 +55,8 @@ import {
   IconButton,
   MainOperationButton,
   DynamicGrid,
-  ActionButton
+  ActionButton,
+  SectionContent
 } from '../../theme'
 import { Text } from 'rebass'
 import { useActiveWeb3React } from '../../hooks'
@@ -200,12 +201,12 @@ export default function AddLiquidity({
 
   // check whether the user has approved the router on the tokens
   const [approvalA, approveACallback] = useTokenApproveCallback(
-    parsedAmounts[Field.CURRENCY_A], 
+    parsedAmounts[Field.CURRENCY_A],
     wrappedCurrency(currencies[Field.CURRENCY_A], chainId) ?? undefined,
     ORCHESTRATOR_ADDRESS
   )
   const [approvalB, approveBCallback] = useTokenApproveCallback(
-    parsedAmounts[Field.CURRENCY_B], 
+    parsedAmounts[Field.CURRENCY_B],
     wrappedCurrency(currencies[Field.CURRENCY_B], chainId) ?? undefined,
     ORCHESTRATOR_ADDRESS
   )
@@ -232,7 +233,7 @@ export default function AddLiquidity({
 
     const currencyWUSD = WUSD[chainId ?? 1]
     const currencyBIsWUSD = wrappedCurrency(currencyB, chainId)?.address == currencyWUSD.address
-    
+
     const parsedAmountA = currencyBIsWUSD
       ? decodeInteroperableValueToERC20TokenAmount(parsedAmounts[Field.CURRENCY_A], originalParsedAmounts[Field.CURRENCY_A])
       : parsedAmounts[Field.CURRENCY_A]
@@ -324,7 +325,7 @@ export default function AddLiquidity({
         value = null
       }
     }
-    
+
     setAttemptingTxn(true)
     await estimate(...args, value ? { value } : {})
       .then(estimatedGasLimit =>
@@ -498,23 +499,19 @@ export default function AddLiquidity({
             <div className="collapsable-title">
               <div className="pull-right">
                 <ActionButton className={theme.name} onClick={() => { setShowMore(!showMore) }}>
-                  {showMore ? ( 'Hide Pools' ) : ( 'View Pools' )}
+                  {showMore ? ('Hide Pools') : ('View Pools')}
                 </ActionButton>
               </div>
               <div className="clear-fix"></div>
             </div>
             <div className={`collapsable-item ${showMore ? 'opened' : 'collapsed'}`}>
-              <SecondaryPanelBoxContainer className={`${theme.name}`}>
-                <SecondaryPanelBoxContainerExtraDecorator className={`top ${theme.name}`} />
-                <div className="inner-content">
-                  <SimpleTextParagraph className={`p15 mt0 mb0 ${theme.name}`}>
-                    <strong>Liquidity provider rewards</strong>
-                    <br /><br />
-                    Liquidity providers earn a dynamic fee (default 0.30%) on all trades proportional to their share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity.
-                  </SimpleTextParagraph>
-                </div>
-                <SecondaryPanelBoxContainerExtraDecorator className={`bottom ${theme.name}`} />
-              </SecondaryPanelBoxContainer>
+              <div className="inner-content">
+                <SimpleTextParagraph className={`p0 mt0 mb0 ${theme.name}`}>
+                  <SectionTitle className={`mt10 ${theme.name}`}>Liquidity provider rewards</SectionTitle>
+                  <SectionContent>Liquidity providers earn a <a className="yellow">dynamic fee</a> (default 0.30%) on all trades proportional to their share of the pool.
+                    Fees are added to the pool, accrue in real time and can be <a className="yellow">claimed</a> by withdrawing your liquidity.</SectionContent>
+                </SimpleTextParagraph>
+              </div>
               <HideSmall>
                 <SectionTitle className={`mt10 ${theme.name}`}>Your liquidity</SectionTitle>
               </HideSmall>
@@ -642,7 +639,7 @@ export default function AddLiquidity({
                 </>
               )}
             </div>
-            { pair && !noLiquidity && pairState !== PairState.INVALID ? ( <MinimalPositionCard showUnwrapped={oneCurrencyIsIETH} pair={pair} /> ) : null }
+            {pair && !noLiquidity && pairState !== PairState.INVALID ? (<MinimalPositionCard showUnwrapped={oneCurrencyIsIETH} pair={pair} />) : null}
             {!account ? (
               <ColumnCenter>
                 <OperationButton onClick={toggleWalletModal} className={`connect-wallet-button ${theme.name}`} label="Connect Wallet">
@@ -653,52 +650,52 @@ export default function AddLiquidity({
                 <AutoColumn gap={'md'}>
                   <DynamicGrid className={theme.name} columns={
                     (approvalA === ApprovalState.NOT_APPROVED || approvalA === ApprovalState.PENDING) &&
-                    (approvalB === ApprovalState.NOT_APPROVED || approvalB === ApprovalState.PENDING) ? 3 :
-                    (((approvalA === ApprovalState.NOT_APPROVED || approvalA === ApprovalState.PENDING) || 
-                    (approvalB === ApprovalState.NOT_APPROVED || approvalB === ApprovalState.PENDING)) ? 2 : 1)
+                      (approvalB === ApprovalState.NOT_APPROVED || approvalB === ApprovalState.PENDING) ? 3 :
+                      (((approvalA === ApprovalState.NOT_APPROVED || approvalA === ApprovalState.PENDING) ||
+                        (approvalB === ApprovalState.NOT_APPROVED || approvalB === ApprovalState.PENDING)) ? 2 : 1)
                   }>
-                  <>
-                    {(approvalA === ApprovalState.NOT_APPROVED ||
-                      approvalA === ApprovalState.PENDING ||
-                      approvalB === ApprovalState.NOT_APPROVED ||
-                      approvalB === ApprovalState.PENDING) &&
-                      isValid && (
-                        <>
-                          {approvalA !== ApprovalState.APPROVED && (
-                            <div className="text-centered">
-                              <MainOperationButton
-                                className={theme.name}
-                                onClick={approveACallback}
-                                disabled={approvalA === ApprovalState.PENDING}>
-                                {approvalA === ApprovalState.PENDING ? (
-                                  <Dots>Approving {currencies[Field.CURRENCY_A]?.symbol}</Dots>
-                                ) : ('Approve ' + currencies[Field.CURRENCY_A]?.symbol)}
-                              </MainOperationButton>
-                            </div>
-                          )}
-                          {approvalB !== ApprovalState.APPROVED && (
-                            <div className="text-centered">
-                              <MainOperationButton
-                                className={theme.name}
-                                onClick={approveBCallback}
-                                disabled={approvalB === ApprovalState.PENDING}>
-                                {approvalB === ApprovalState.PENDING ? (
-                                  <Dots>Approving {currencies[Field.CURRENCY_B]?.symbol}</Dots>
-                                ) : ('Approve ' + currencies[Field.CURRENCY_B]?.symbol)}
-                              </MainOperationButton>
-                            </div>
-                          )}
-                        </>
-                      )}
-                    <div className="text-centered">
-                      <ButtonMateriaError
-                        onClick={() => { expertMode ? onAdd(checkIsEthItem) : setShowConfirm(true) }}
-                        disabled={!isValid || approvalA !== ApprovalState.APPROVED || approvalB !== ApprovalState.APPROVED}
-                        error={!isValid && !!parsedAmounts[Field.CURRENCY_A] && !!parsedAmounts[Field.CURRENCY_B]} >
-                        {error ?? 'Supply'}
-                      </ButtonMateriaError>
-                    </div>
-                  </>
+                    <>
+                      {(approvalA === ApprovalState.NOT_APPROVED ||
+                        approvalA === ApprovalState.PENDING ||
+                        approvalB === ApprovalState.NOT_APPROVED ||
+                        approvalB === ApprovalState.PENDING) &&
+                        isValid && (
+                          <>
+                            {approvalA !== ApprovalState.APPROVED && (
+                              <div className="text-centered">
+                                <MainOperationButton
+                                  className={theme.name}
+                                  onClick={approveACallback}
+                                  disabled={approvalA === ApprovalState.PENDING}>
+                                  {approvalA === ApprovalState.PENDING ? (
+                                    <Dots>Approving {currencies[Field.CURRENCY_A]?.symbol}</Dots>
+                                  ) : ('Approve ' + currencies[Field.CURRENCY_A]?.symbol)}
+                                </MainOperationButton>
+                              </div>
+                            )}
+                            {approvalB !== ApprovalState.APPROVED && (
+                              <div className="text-centered">
+                                <MainOperationButton
+                                  className={theme.name}
+                                  onClick={approveBCallback}
+                                  disabled={approvalB === ApprovalState.PENDING}>
+                                  {approvalB === ApprovalState.PENDING ? (
+                                    <Dots>Approving {currencies[Field.CURRENCY_B]?.symbol}</Dots>
+                                  ) : ('Approve ' + currencies[Field.CURRENCY_B]?.symbol)}
+                                </MainOperationButton>
+                              </div>
+                            )}
+                          </>
+                        )}
+                      <div className="text-centered">
+                        <ButtonMateriaError
+                          onClick={() => { expertMode ? onAdd(checkIsEthItem) : setShowConfirm(true) }}
+                          disabled={!isValid || approvalA !== ApprovalState.APPROVED || approvalB !== ApprovalState.APPROVED}
+                          error={!isValid && !!parsedAmounts[Field.CURRENCY_A] && !!parsedAmounts[Field.CURRENCY_B]} >
+                          {error ?? 'Supply'}
+                        </ButtonMateriaError>
+                      </div>
+                    </>
                   </DynamicGrid>
                 </AutoColumn>
               )}
