@@ -27,11 +27,14 @@ export default function useGetEthItemTokenInfo(address: string | undefined): Eth
 
   const { result: checkIsEthItem } = useSingleCallResult(contract, 'isEthItem', [address])
 
-  // const rawEthItemObjectId: JSBI | undefined = JSBI.BigInt(useSingleCallResult(erc20Wrapper, 'object', [address ?? ZERO_ADDRESS])?.result?.objectId ?? 0)
-  const rawEthItemObjectId: JSBI | undefined = checkIsEthItem?.itemId ? JSBI.BigInt(checkIsEthItem?.itemId) : undefined
-  const ethItemObjectId = rawEthItemObjectId?.toString() ?? undefined
-  const ethItemCollection = checkIsEthItem?.collection
+  const interoperableObjectId: JSBI | undefined = JSBI.BigInt(useSingleCallResult(erc20Wrapper, 'object', [address ?? ZERO_ADDRESS])?.result?.objectId ?? 0)
+
   const isEthItem = checkIsEthItem?.ethItem ?? false
+  const ethItemCollection = checkIsEthItem?.collection
+  const rawEthItemObjectId: JSBI | undefined = isEthItem && checkIsEthItem?.itemId 
+    ? JSBI.BigInt(checkIsEthItem?.itemId) 
+    : interoperableObjectId ? interoperableObjectId : undefined
+  const ethItemObjectId = rawEthItemObjectId?.toString() ?? undefined
 
   const interoperable = (useSingleCallResult(erc20Wrapper, 'asInteroperable', [ethItemObjectId ?? "0"]).result ?? [])[0] ?? ZERO_ADDRESS
   const result = isETH ? IETH[chainId ?? 1].address : !interoperable || interoperable == ZERO_ADDRESS || isEthItem ? undefined : interoperable
