@@ -66,7 +66,7 @@ export function useEthItemKnowledgeBaseContract(ethItemKnowledgeBaseAddress?: st
   return useContract(ethItemKnowledgeBaseAddress, ETHITEM_KNOWLEDGE_BASE_ABI, withSignerIfPossible)
 }
 
-export function useIETHContract(withSignerIfPossible?: boolean): Contract | null {
+export function useERC20WrapperContract(withSignerIfPossible?: boolean): Contract | null {
   const { chainId } = useActiveWeb3React()
   return useContract(chainId ? ERC20WRAPPER[chainId] : undefined, IERC20WrapperV1_ABI, withSignerIfPossible)
 }

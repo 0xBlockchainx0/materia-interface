@@ -121,6 +121,8 @@ export function useSwapCallback(
   const swapCalls = useSwapCallArguments(trade, allowedSlippage, recipientAddressOrName, tokenIn, tokenOut, etherIn, etherOut)
   const addTransaction = useTransactionAdder()
 
+  console.log('swapCalls: ', swapCalls)
+
   const { address: recipientAddress } = useENS(recipientAddressOrName)
   const recipient = recipientAddressOrName === null ? account : recipientAddress
 

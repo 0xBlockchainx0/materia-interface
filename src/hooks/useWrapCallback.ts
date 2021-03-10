@@ -5,8 +5,8 @@ import { tryParseAmount } from '../state/swap/hooks'
 import { useTransactionAdder } from '../state/transactions/hooks'
 import { useCurrencyBalance } from '../state/wallet/hooks'
 import { useActiveWeb3React } from './index'
-import { useIETHContract } from './useContract'
-import useGetEthItemInteroperable from './useGetEthItemInteroperable'
+import { useERC20WrapperContract } from './useContract'
+import useGetEthItemTokenInfo from './useGetEthItemTokenInfo'
 
 export enum WrapType {
   NOT_APPLICABLE,
@@ -40,30 +40,32 @@ export default function useWrapCallback(
 
   const inputCurrencyAddress = !(inputCurrency instanceof Token) || isETHWrap ? undefined : inputCurrency.address
   const outputCurrencyAddress = !(outputCurrency instanceof Token) || isETHWrap ? undefined : outputCurrency.address
+  
+  const inputCurrencyEthItemInfo = useGetEthItemTokenInfo(inputCurrencyAddress)
+  const outputCurrencyEthItemInfo = useGetEthItemTokenInfo(outputCurrencyAddress)
 
-  const inputCurrencyInteroperable = useGetEthItemInteroperable(inputCurrencyAddress)
-  const outputCurrencyInteroperable = useGetEthItemInteroperable(outputCurrencyAddress)
+  const inputCurrencyInteroperable = inputCurrencyEthItemInfo?.interoperable
+  const outputCurrencyInteroperable = outputCurrencyEthItemInfo?.interoperable
 
-  const inputCurrencyIsEthItem = !inputCurrencyInteroperable && outputCurrencyInteroperable
-  const outputCurrencyIsEthItem = inputCurrencyInteroperable && !outputCurrencyInteroperable
+  const inputCurrencyIsEthItem = inputCurrencyEthItemInfo?.ethItem ?? false
+  const outputCurrencyIsEthItem = outputCurrencyEthItemInfo?.ethItem ?? false
 
   const isEthItemWrap = (inputCurrency && outputCurrency) && !isETHWrap && (
     (inputCurrencyIsEthItem && inputCurrencyAddress === outputCurrencyInteroperable)
     || (outputCurrencyIsEthItem && inputCurrencyInteroperable === outputCurrencyAddress)
   )
-  
+
   const inputAmount = useMemo(() => tryParseAmount(typedValue, inputCurrency), [inputCurrency, typedValue])
 
-  const iethContract = useIETHContract()
+  const erc20WrapperContract = useERC20WrapperContract()
   const addTransaction = useTransactionAdder()
 
   return useMemo(() => {
-    if (!chainId || !inputCurrency || !outputCurrency) return NOT_APPLICABLE
-    if (isETHWrap && !iethContract) return NOT_APPLICABLE
+    if (!chainId || !inputCurrency || !outputCurrency || !erc20WrapperContract) return NOT_APPLICABLE
 
     const sufficientBalance = inputAmount && balance && !balance.lessThan(inputAmount)
 
-    if (isETHWrap && iethContract) {
+    if (isETHWrap && erc20WrapperContract) {
       if (inputCurrency === ETHER && currencyEquals(IETH[chainId], outputCurrency)) {
         return {
           wrapType: WrapType.WRAP,
@@ -71,10 +73,10 @@ export default function useWrapCallback(
             sufficientBalance && inputAmount
               ? async () => {
                 try {
-                  const txReceipt = await iethContract.mintETH({ value: `0x${inputAmount.raw.toString(16)}` })
+                  const txReceipt = await erc20WrapperContract.mintETH({ value: `0x${inputAmount.raw.toString(16)}` })
                   addTransaction(txReceipt, { summary: `Wrap ${inputAmount.toSignificant(6)} ETH to IETH` })
                 } catch (error) {
-                  console.error('Could not deposit', error)
+                  console.error('mintETH failed: ', error)
                 }
               }
               : undefined,
@@ -89,10 +91,10 @@ export default function useWrapCallback(
               ? async () => {
                 try {
                   const objectId = JSBI.BigInt(ETHEREUM_OBJECT_ID)
-                  const txReceipt = await iethContract.burn(`0x${objectId.toString(16)}`, `0x${inputAmount.raw.toString(16)}`)
+                  const txReceipt = await erc20WrapperContract.burn(`0x${objectId.toString(16)}`, `0x${inputAmount.raw.toString(16)}`)
                   addTransaction(txReceipt, { summary: `Unwrap ${inputAmount.toSignificant(6)} IETH to ETH` })
                 } catch (error) {
-                  console.error('Could not withdraw', error)
+                  console.error('burn failed: ', error)
                 }
               }
               : undefined,
@@ -109,6 +111,10 @@ export default function useWrapCallback(
           wrapType: WrapType.WRAP,
           execute: async () => {
             console.log('*** EthItem WRAP ***')
+            console.log(`INPUT: ${inputCurrency.symbol}`)
+            console.log(`OUTPUT: ${outputCurrency.symbol}`)
+            console.log(`OPERATION: ${inputCurrency.symbol} to ${outputCurrency.symbol}`)
+            console.log('********************')
           },
           inputError: undefined
         }
@@ -116,10 +122,27 @@ export default function useWrapCallback(
       else if (inputCurrencyIsEthItem && !outputCurrencyIsEthItem) {
         return {
           wrapType: WrapType.UNWRAP,
-          execute: async () => {
-            console.log('*** EthItem UNWRAP ***')
-          },
-          inputError: undefined
+          execute:
+            sufficientBalance && inputAmount
+              ? async () => {
+                try {
+                  const objectId = inputCurrencyEthItemInfo?.rawObjectId ?? JSBI.BigInt(0)
+                  
+                  console.log('*** EthItem UNWRAP ***')
+                  console.log(`OPERATION: ${inputCurrency.symbol} to ${outputCurrency.symbol}`)
+                  console.log(`OBJECT ID: 0x${objectId.toString(16)}`)
+                  console.log(`INPUT AMOUNT: 0x${inputAmount.raw.toString(16)}`)
+                  console.log('********************')
+
+                  const txReceipt = await erc20WrapperContract.burn(`0x${objectId.toString(16)}`, `0x${inputAmount.raw.toString(16)}`)
+
+                  addTransaction(txReceipt, { summary: `Unwrap ${inputAmount.toSignificant(6)} ${inputCurrency.symbol} to ${outputCurrency.symbol}` })
+                } catch (error) {
+                  console.error('burn failed: ', error)
+                }
+              }
+              : undefined,
+          inputError: sufficientBalance ? undefined : `Insufficient ${inputCurrency.symbol} balance`
         }
       }
       else {
@@ -128,5 +151,5 @@ export default function useWrapCallback(
     }
 
     return NOT_APPLICABLE
-  }, [iethContract, chainId, inputCurrency, outputCurrency, inputAmount, balance, addTransaction])
+  }, [erc20WrapperContract, chainId, inputCurrency, outputCurrency, inputAmount, balance, addTransaction])
 }
