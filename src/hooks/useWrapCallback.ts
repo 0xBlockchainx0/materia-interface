@@ -40,7 +40,7 @@ export default function useWrapCallback(
 
   const inputCurrencyAddress = !(inputCurrency instanceof Token) || isETHWrap ? undefined : inputCurrency.address
   const outputCurrencyAddress = !(outputCurrency instanceof Token) || isETHWrap ? undefined : outputCurrency.address
-  
+
   const inputCurrencyEthItemInfo = useGetEthItemTokenInfo(inputCurrencyAddress)
   const outputCurrencyEthItemInfo = useGetEthItemTokenInfo(outputCurrencyAddress)
 
@@ -65,7 +65,7 @@ export default function useWrapCallback(
 
     const sufficientBalance = inputAmount && balance && !balance.lessThan(inputAmount)
 
-    if (isETHWrap && erc20WrapperContract) {
+    if (isETHWrap) {
       if (inputCurrency === ETHER && currencyEquals(IETH[chainId], outputCurrency)) {
         return {
           wrapType: WrapType.WRAP,
@@ -109,14 +109,18 @@ export default function useWrapCallback(
       if (!inputCurrencyIsEthItem && outputCurrencyIsEthItem) {
         return {
           wrapType: WrapType.WRAP,
-          execute: async () => {
-            console.log('*** EthItem WRAP ***')
-            console.log(`INPUT: ${inputCurrency.symbol}`)
-            console.log(`OUTPUT: ${outputCurrency.symbol}`)
-            console.log(`OPERATION: ${inputCurrency.symbol} to ${outputCurrency.symbol}`)
-            console.log('********************')
-          },
-          inputError: undefined
+          execute:
+            sufficientBalance && inputAmount
+              ? async () => {
+                try {
+                  const txReceipt = await erc20WrapperContract.functions["mint(address,uint256)"](inputCurrencyAddress, `0x${inputAmount.raw.toString(16)}`)
+                  addTransaction(txReceipt, { summary: `Wrap ${inputAmount.toSignificant(6)} ${inputCurrency.symbol} to ${outputCurrency.symbol}` })
+                } catch (error) {
+                  console.error('mint failed: ', error)
+                }
+              }
+              : undefined,
+          inputError: sufficientBalance ? undefined : `Insufficient ${inputCurrency.symbol} balance`
         }
       }
       else if (inputCurrencyIsEthItem && !outputCurrencyIsEthItem) {
@@ -127,13 +131,6 @@ export default function useWrapCallback(
               ? async () => {
                 try {
                   const objectId = inputCurrencyEthItemInfo?.rawObjectId ?? JSBI.BigInt(0)
-                  
-                  console.log('*** EthItem UNWRAP ***')
-                  console.log(`OPERATION: ${inputCurrency.symbol} to ${outputCurrency.symbol}`)
-                  console.log(`OBJECT ID: 0x${objectId.toString(16)}`)
-                  console.log(`INPUT AMOUNT: 0x${inputAmount.raw.toString(16)}`)
-                  console.log('********************')
-
                   const txReceipt = await erc20WrapperContract.burn(`0x${objectId.toString(16)}`, `0x${inputAmount.raw.toString(16)}`)
 
                   addTransaction(txReceipt, { summary: `Unwrap ${inputAmount.toSignificant(6)} ${inputCurrency.symbol} to ${outputCurrency.symbol}` })

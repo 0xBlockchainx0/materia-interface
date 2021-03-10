@@ -193,7 +193,7 @@ export default function Swap() {
 
   // check whether the user has approved the router on the input token
   const [approval, approveCallback] = useApproveCallbackFromTrade(trade, wrappedCurrency(originalCurrencies[Field.INPUT], chainId) ?? undefined, allowedSlippage)
-
+  
   // check if user has gone through approval process, used to show two step buttons, reset on token change
   const [approvalSubmitted, setApprovalSubmitted] = useState<boolean>(false)
 
