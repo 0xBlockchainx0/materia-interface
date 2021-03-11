@@ -308,7 +308,6 @@ export default function AddLiquidity({
         ]
         value = BigNumber.from((tokenBIsETH ? parsedAmountB : parsedAmountA).raw.toString())
       } else {
-
         estimate = router.estimateGas.addLiquidity
         method = router.addLiquidity
         methodName = "addLiquidity"
@@ -325,6 +324,11 @@ export default function AddLiquidity({
         value = null
       }
     }
+
+    console.log('*************************')
+    console.log('methodName: ', methodName)
+    console.log('args: ', args)
+    console.log('*************************')
 
     setAttemptingTxn(true)
     await estimate(...args, value ? { value } : {})
