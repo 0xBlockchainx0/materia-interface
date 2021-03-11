@@ -191,7 +191,19 @@ export default function Swap() {
   )
   const noRoute = !route
 
-  // *** WRAP TOKEN APPROVAL ***
+  // check whether the user has approved the router on the input token
+  const [approval, approveCallback] = useApproveCallbackFromTrade(trade, wrappedCurrency(originalCurrencies[Field.INPUT], chainId) ?? undefined, allowedSlippage)
+
+  // check if user has gone through approval process, used to show two step buttons, reset on token change
+  const [approvalSubmitted, setApprovalSubmitted] = useState<boolean>(false)
+
+  // mark when a user has submitted an approval, reset onTokenSelection for input field
+  useEffect(() => {
+    if (approval === ApprovalState.PENDING) {
+      setApprovalSubmitted(true)
+    }
+  }, [approval, approvalSubmitted])
+
   // check whether the user has approved the erc20wrapper on the input token
   const isWrapValid = !wrapInputError
   const [wrapApproval, wrapApproveCallback] = useTokenApproveCallback(
@@ -209,20 +221,6 @@ export default function Swap() {
       setWrapApprovalSubmitted(true)
     }
   }, [wrapApproval, wrapApprovalSubmitted])
-  // *** WRAP TOKEN APPROVAL ***
-
-  // check whether the user has approved the router on the input token
-  const [approval, approveCallback] = useApproveCallbackFromTrade(trade, wrappedCurrency(originalCurrencies[Field.INPUT], chainId) ?? undefined, allowedSlippage)
-
-  // check if user has gone through approval process, used to show two step buttons, reset on token change
-  const [approvalSubmitted, setApprovalSubmitted] = useState<boolean>(false)
-
-  // mark when a user has submitted an approval, reset onTokenSelection for input field
-  useEffect(() => {
-    if (approval === ApprovalState.PENDING) {
-      setApprovalSubmitted(true)
-    }
-  }, [approval, approvalSubmitted])
 
   const maxAmountInput: CurrencyAmount | undefined = maxAmountSpend(originalCurrencyBalances[Field.INPUT])
   const atMaxAmountInput = Boolean(maxAmountInput && parsedAmounts[Field.INPUT]?.equalTo(maxAmountInput))
