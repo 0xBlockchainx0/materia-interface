@@ -12,8 +12,8 @@ export default function confirmPriceImpactWithoutFee(priceImpactWithoutFee: Perc
       window.prompt(
         `This swap has a price impact of at least ${PRICE_IMPACT_WITHOUT_FEE_CONFIRM_MIN.toFixed(
           0
-        )}%. Please type the word "confirm" to continue with this swap.`
-      ) === 'confirm'
+        )}%. Please type the word "materia" to continue with this swap.`
+      ) === 'materia'
     )
   } else if (!priceImpactWithoutFee.lessThan(ALLOWED_PRICE_IMPACT_HIGH)) {
     return window.confirm(
