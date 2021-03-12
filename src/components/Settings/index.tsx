@@ -18,7 +18,8 @@ import {
   ModalContentWrapper,
   IconButton,
   EvidencedTextParagraph,
-  MainOperationButton
+  MainOperationButton,
+  SettingsFlyout
 } from '../../theme'
 import { ButtonError } from '../Button'
 import { AutoColumn } from '../Column'
@@ -82,7 +83,6 @@ export default function SettingsTab() {
   useOnClickOutside(node, open ? toggle : undefined)
 
   return (
-    // https://github.com/DefinitelyTyped/DefinitelyTyped/issues/30451
     <StyledMenu ref={node as any}>
       <Modal isOpen={showConfirmation} onDismiss={() => setShowConfirmation(false)} maxHeight={100}>
         <ModalContentWrapper>
@@ -113,21 +113,11 @@ export default function SettingsTab() {
       </Modal>
       <IconButton className={`${theme.name} mr10`} onClick={toggle} id="open-settings-dialog-button">
         <Settings className={`footer-icon ${theme.name}`} />
-        {/*
-        {expertMode ? (
-          <EmojiWrapper>
-            <span role="img" aria-label="wizard-icon">
-              🧙
-            </span>
-          </EmojiWrapper>
-        ) : null}
-        */}
       </IconButton>
       <div className={ `custom-label ${theme.name}` } onClick={toggle}>Settings</div>
       {open && (
         <SecondaryPanelBoxContainer className={ `settings-menu-panel ${theme.name}` }>
-          <SecondaryPanelBoxContainerExtraDecorator className={ `top ${theme.name}` }/>
-          <div className="inner-content">
+          <SettingsFlyout className={theme.name}> 
             <AutoColumn gap="md" style={{ padding: '10px' }}>
               <div className={ `sectionHeader ${theme.name}` }>Transaction Settings</div>
               <TransactionSettings rawSlippage={userSlippageTolerance} setRawSlippage={setUserslippageTolerance} deadline={ttl} setDeadline={setTtl} />
@@ -149,8 +139,7 @@ export default function SettingsTab() {
                 <Toggle isActive={classicMode} toggle={toggleClassicMode} />
               </RowBetween> 
             </AutoColumn>
-          </div>
-          <SecondaryPanelBoxContainerExtraDecorator className={ `bottom ${theme.name}` }/>  
+            </SettingsFlyout>
         </SecondaryPanelBoxContainer>
       )}
     </StyledMenu>

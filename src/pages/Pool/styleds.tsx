@@ -12,7 +12,6 @@ export const ClickableText = styled(Text)`
 
   &.classic { 
     color: ${({ theme }) => theme.white};
-    font-size: 11px; 
     text-shadow: 1px 1px 1px ${({ theme }) => theme.black}; 
     line-height: 2em; 
     text-align: center;

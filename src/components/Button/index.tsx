@@ -164,8 +164,6 @@ export const ButtonMateriaPrimary = styled(ButtonPrimary)`
   &.light {}
   &.classic { 
     position: relative; 
-    font-size: 11px !important;
-    font-weight: 300 !important;
     text-shadow: 1px 1px 1px ${({ theme }) => theme.black};
   }
   &.classic.width80:before { left: -15px; }

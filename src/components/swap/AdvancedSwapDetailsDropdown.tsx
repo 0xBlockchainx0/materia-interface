@@ -11,11 +11,9 @@ export default function AdvancedSwapDetailsDropdown({ trade, ...rest }: Advanced
   return (
     <AdvancedDetailsFooter show={booleanTrade}>
       <SecondaryPanelBoxContainer className={theme.name}>
-        <SecondaryPanelBoxContainerExtraDecorator className={ `top ${theme.name}` }/>
         <div className="inner-content">
           <AdvancedSwapDetails {...rest} trade={trade ?? lastTrade ?? undefined} />
         </div>
-        <SecondaryPanelBoxContainerExtraDecorator className={ `bottom ${theme.name}` }/>
       </SecondaryPanelBoxContainer>      
     </AdvancedDetailsFooter>
   )
