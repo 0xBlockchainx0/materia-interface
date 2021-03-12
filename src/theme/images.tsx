@@ -63,7 +63,7 @@ export const images = {
     },
     tokenImageNotFound: {
       dark: tokenImageNotFoundDark,
-      light: tokenImageNotFoundLight,
+      light: tokenImageNotFoundDark,
       classic: tokenImageNotFoundClassic
     },
     icons: {

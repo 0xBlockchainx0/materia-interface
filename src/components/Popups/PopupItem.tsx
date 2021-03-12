@@ -58,7 +58,6 @@ export default function PopupItem({
 
   return (
     <SecondaryPanelBoxContainer className={ `popup ${theme.name}` }>
-      <SecondaryPanelBoxContainerExtraDecorator className={ `top ${theme.name}` }/>
       <IconButton className={ `popup-close-icon ${theme.name}` } onClick={removeThisPopup}>
         <X />
       </IconButton>
@@ -66,7 +65,6 @@ export default function PopupItem({
         {popupContent}
         {removeAfterMs !== null ? <AnimatedFader style={faderStyle} /> : null}
       </div>      
-      <SecondaryPanelBoxContainerExtraDecorator className={ `bottom ${theme.name}` }/>
     </SecondaryPanelBoxContainer>
     
   )
