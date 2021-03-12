@@ -7,7 +7,7 @@ import ReactGA from 'react-ga'
 import styled, { ThemeContext } from 'styled-components'
 import AddressInputPanel from '../../components/AddressInputPanel'
 import { ButtonMateriaConfirmed, ButtonMateriaError } from '../../components/Button'
-import Card, { SwapGreyCard } from '../../components/Card'
+import Card from '../../components/Card'
 import Column, { AutoColumn } from '../../components/Column'
 import ConfirmSwapModal from '../../components/swap/ConfirmSwapModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
@@ -479,12 +479,14 @@ export default function Swap() {
                       <RowCenter>
                         <ButtonMateriaConfirmed
                           onClick={wrapApproveCallback}
-                          disabled={wrapApproval !== ApprovalState.NOT_APPROVED || wrapApprovalSubmitted}
+                          disabled={wrapApproval !== ApprovalState.NOT_APPROVED || wrapApprovalSubmitted || !isWrapValid}
                           hide={wrapApproval !== ApprovalState.NOT_APPROVED && wrapApproval !== ApprovalState.PENDING}
                           altDisabledStyle={wrapApproval === ApprovalState.PENDING} // show solid button while waiting
                           confirmed={wrapApproval === ApprovalState.APPROVED}
                         >
-                          {wrapApproval === ApprovalState.PENDING ? (
+                          {!isWrapValid ? (
+                            wrapInputError ?? ''
+                          ) : wrapApproval === ApprovalState.PENDING ? (
                             <AutoRow gap="6px" justify="center">
                               Approving to ERC20 Wrapper <Loader stroke="white" />
                             </AutoRow>
@@ -505,9 +507,9 @@ export default function Swap() {
                           <MainOperationButton
                             className={`wrap-button ${theme.name}`}
                             hide={
-                              wrapApproval === ApprovalState.NOT_APPROVED 
-                                || wrapApproval === ApprovalState.PENDING 
-                                || isWrapValid
+                              wrapApproval === ApprovalState.NOT_APPROVED
+                              || wrapApproval === ApprovalState.PENDING
+                              || isWrapValid
                             }
                             disabled={!isWrapValid}>
                             {wrapInputError ?? ''}
@@ -515,9 +517,9 @@ export default function Swap() {
                         )}
                       </RowCenter>
                     ) : noRoute && userHasSpecifiedInputOutput ? (
-                      <SwapGreyCard className={theme.name}>
-                        <div>Insufficient liquidity for this trade</div>
-                      </SwapGreyCard>
+                      <MainOperationButton className={theme.name} disabled={true}>
+                        Insufficient liquidity for this trade
+                      </MainOperationButton>
                     ) : showApproveFlow ? (
                       <RowCenter>
                         <ButtonMateriaConfirmed
