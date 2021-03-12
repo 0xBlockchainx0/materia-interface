@@ -113,7 +113,7 @@ export function colors(darkMode: boolean, classicMode: boolean): Colors {
     red3: '#fcdfe1',
     green1: '#27AE60',
     greenEthItem: '#3cfdb3',
-    yellow1: '#FFE270',
+    yellow1: '#f7c400',
     yellow2: '#F3841E',
     grey: '#999999',
     violet1: '#4138bc',
@@ -400,9 +400,8 @@ html {
   background-color: ${({ theme }) => theme.bg2};
 }
 
-${({ theme }) => ((theme.name == 'classic' ? 'html, input, textarea, button { font-family: \'Press Start 2P\', cursive; font-size: 11px; /*font-family: \'VT323\', monospace;*/ /*font-family: \'DavidFens\', sans-serif;*/ }' :
-    'html, input, textarea, button { font-family: \'Cera Pro\', sans-serif; font-display: fallback; }' +
-    '@supports (font-variation-settings: normal) { html, input, textarea, button { font-family: \'Cera Pro\', sans-serif; } }'))}
+html, input, textarea, button { font-family: \'Cera Pro\', sans-serif; font-display: fallback; };
+@supports (font-variation-settings: normal) { html, input, textarea, button { font-family: \'Cera Pro\', sans-serif; } };
 
 body {
   min-height: 100vh;
@@ -803,9 +802,7 @@ MARGIN STYLE MINUS
   svg.simple-icon.classic {}
 
   .token-address { font-size: 12px; font-weight: 500; margin-bottom: 10px; }
-  .token-address.classic { font-size: 7px; font-weight: 500; }
   .token-decimals { font-size: 12px; font-weight: 500; margin-bottom: 10px; }
-  .token-decimals.classic { font-size: 7px; font-weight: 500; }
   .hide-dark { ${({ theme }) => (theme.name == 'dark' ? 'display: none !important;' : '')} }
   .hide-light { ${({ theme }) => (theme.name == 'light' ? 'display: none !important;' : '')} }
   .hide-classic { ${({ theme }) => (theme.name == 'classic' ? 'display: none !important;' : '')} }
@@ -815,7 +812,7 @@ MARGIN STYLE MINUS
   .claim-footer { min-width: 85px !important; }
   .custom-token-added-by-user { 
     font-weight: 500;
-    &.classic, &.classic button { font-size: 9px !important; margin-top: 5px; }
+    &.classic, &.classic button { margin-top: 5px; }
   } 
 
   .token-list-item-text {
@@ -824,7 +821,7 @@ MARGIN STYLE MINUS
     overflow: hidden;
     text-overflow: ellipsis;
   }
-  .token-list-item-text.classic { font-size: 11px; text-shadow: 1px 1px 1px ${({ theme }) => theme.black}; }
+  .token-list-item-text.classic { text-shadow: 1px 1px 1px ${({ theme }) => theme.black}; }
   .token-list-item-text.selected { font-weight: 500; }
 
   @media (max-width: 1050px) { 
@@ -1041,8 +1038,6 @@ export const FeatureTitle = styled.h2`
   &.classic { 
     color: #FFFFFF; 
     left: 0px;
-    font-size: 24px;
-    font-weight: normal;
     text-shadow: 1px 1px 1px ${({ theme }) => theme.black}
   }
 
@@ -1101,7 +1096,6 @@ export const SectionTitle = styled.h6`
   &.light { color: ${({ theme }) => theme.grey3}; }
   &.classic { 
     color: ${({ theme }) => theme.azure1}; 
-    font-size: 14px; 
     text-shadow: 1px 1px 1px ${({ theme }) => theme.black}
   }
 
@@ -1145,7 +1139,6 @@ export const SectionContent = styled.div`
 export const InventoryContainer = styled.div`
   margin-right: 1rem;
   overflow-y: auto;
-  max-height: 580px;
   overflow: hidden;
   
   @media (max-width: 1050px) { 
@@ -1201,11 +1194,9 @@ export const InventoryItemContainer = styled.div`
 
   &.classic { 
     background: linear-gradient(180deg, rgba(0, 27, 49, 0.5) 0%, rgba(0, 27, 49, 0.5) 100%); 
-    font-size: 9px;
   }
 
   & .balanceRow { display: inline-flex; margin: 5px 0px 0px 0px; font-size: 12px; }
-  &.classic .balanceRow { font-size: 7px; margin-top: 10px; }
 
   & .balanceRow > div:first-child { margin-right: 5px; }
 
@@ -1216,7 +1207,6 @@ export const InventoryItemContainer = styled.div`
   &.classic .balanceRow > div:first-child { color: ${({ theme }) => theme.blue1}; }
 
   & .addressRow { display: inline-flex; margin: 5px 0px 0px 0px; font-size: 12px; }
-  &.classic .addressRow { font-size: 7px; }
 
   & .addressRow > div:first-child { margin-right: 5px; }
   
@@ -1227,7 +1217,6 @@ export const InventoryItemContainer = styled.div`
   &.classic .addressRow > div:first-child { color: ${({ theme }) => theme.blue1}; }
 
   & .decimalsRow { display: inline-flex; margin: 5px 0px 0px 0px; font-size: 12px; }
-  &.classic .decimalsRow { font-size: 7px; }
 
   & .decimalsRow > div:first-child { margin-right: 5px; }
   
@@ -1247,7 +1236,6 @@ export const SimpleTextParagraph = styled.p`
   &.dark { font-weight: 500; }
   &.light {}
   &.classic { 
-    font-size: 9px;
     text-shadow: 1px 1px 1px ${({ theme }) => theme.black}; 
     line-height: 2em;
   }
@@ -1272,7 +1260,7 @@ export const SimpleTextParagraph = styled.p`
 export const SimpleInformationsTextParagraph = styled(SimpleTextParagraph)`
   &.dark { color: ${({ theme }) => theme.azure1}; }
   &.light {}
-  &.classic { font-size: 9px; }
+  &.classic {}
 `
 
 export const EvidencedTextParagraph = styled(SimpleTextParagraph)`
@@ -1283,7 +1271,6 @@ export const EvidencedTextParagraph = styled(SimpleTextParagraph)`
   &.light { color: ${({ theme }) => theme.violet1}; }
   &.classic { 
     text-shadow: 1px 1px 1px ${({ theme }) => theme.black}; 
-    font-size: 11px; 
     line-height: 2em;
   }
   &.dark.extreme, &.light.extreme { font-size: 25px; }
@@ -1413,7 +1400,7 @@ export const FooterInfo = styled.div`
 
   &.dark > div.boxFooterCaption { margin: 5px auto 5px auto; }
   &.light > div.boxFooterCaption { margin: 5px auto 5px auto; }
-  &.classic > div.boxFooterCaption { margin: 15px auto 15px auto; font-size: 9px; }
+  &.classic > div.boxFooterCaption { margin: 15px auto 15px auto; }
 
   .advanced-swap-details-container.classic { margin-top: 30px; }
   .advanced-swap-details-container.dark .advaced-swap-details.label,
@@ -1422,11 +1409,11 @@ export const FooterInfo = styled.div`
     font-size: 13px;
   }
   .advanced-swap-details-container.classic .advaced-swap-details.label,
-  .advanced-swap-details-container.classic .advaced-swap-details.value { font-size: 9px; }
+  .advanced-swap-details-container.classic .advaced-swap-details.value {}
 
   @media (max-width: 1050px) { 
     &.dark > div.boxFooterCaption, &.light > div.boxFooterCaption, &.classic > div.boxFooterCaption { font-size: smaller; }
-    &.classic > div.boxFooterCaption { line-height: 1.5em; font-size: 7px; }  
+    &.classic > div.boxFooterCaption { line-height: 1.5em;}  
   }
 `
 export const TabsBar = styled.div`
@@ -1491,7 +1478,7 @@ export const DynamicGrid = styled.div<{ columns: number, columnsDefinitions?: Dy
 
   @media (max-width: 1050px) { 
     & .title, & .text { font-size: small; }
-    &.classic .title, &.classic .text { font-size: 9px; }
+    &.classic .title, &.classic .text {}
   }
 `
 const tabLinkItemActiveClassName = 'active'
@@ -1512,7 +1499,6 @@ export const TabLinkItem = styled(NavLink).attrs({ tabLinkItemActiveClassName })
   &.light { color: ${({ theme }) => theme.grey1}; }
   &.classic { 
     color: ${({ theme }) => theme.white}; 
-    font-size: 14px; 
     text-shadow: 1px 1px 1px ${({ theme }) => theme.black}; 
   }
 
@@ -1534,7 +1520,6 @@ export const TabLinkItem = styled(NavLink).attrs({ tabLinkItemActiveClassName })
 
   @media (max-width: 1050px) { 
     font-size: small !important;
-    &.classic { font-size: 10px !important; }
   }
 `
 export const PageContentContainer = styled.div`
@@ -1616,7 +1601,7 @@ export const CurrencyFormPanel = styled.div<{ hideInput?: boolean }>`
 
   &.dark > .itemsContainer .label { color: ${({ theme }) => theme.azure1}; }
   &.light > .itemsContainer .label { color: ${({ theme }) => theme.violet1}; }
-  &.classic > .itemsContainer .label { color: ${({ theme }) => theme.azure1}; font-size: 9px; }
+  &.classic > .itemsContainer .label { color: ${({ theme }) => theme.azure1}; }
 `
 export const ActionButton = styled(BaseButton) <{ disabled?: boolean, selected?: boolean, useCustomProperties?: boolean }>`
   border-radius: 3px !important;
@@ -1646,7 +1631,6 @@ export const ActionButton = styled(BaseButton) <{ disabled?: boolean, selected?:
 
   &.classic {
     text-shadow: 1px 1px 1px ${({ theme }) => theme.black};
-    font-size: 9px !important;
     padding: 0px 10px 0px 10px !important;
     color: ${({ theme }) => theme.yellowGreen};
     position: relative;
@@ -1850,7 +1834,7 @@ export const SwitchButton = styled(Button) <{ disabled?: boolean }>`
   > * { user-select: none; }
   &.hidden { display: none !important; }
 
-  & > svg { width: 15px; height: 15px; transform: rotate(-45deg); margin-left: -1px; margin-bottom: -1px; }
+  & > svg { width: 15px; height: 15px; transform: rotate(-45deg); margin-left: 0px; margin-bottom: -3px; }
   & > label { display: none; }
 
   &:after, &:before {
@@ -1871,7 +1855,6 @@ export const SwitchButton = styled(Button) <{ disabled?: boolean }>`
     transform: none; 
     text-shadow: 1px 1px 1px ${({ theme }) => theme.black}; 
     color: ${({ theme }) => theme.yellowGreen};
-    font-size: 9px !important;
     width: auto;
     height: auto;
     text-align: center;
@@ -1946,7 +1929,7 @@ export const OperationButton = styled(Button) <{ label?: string, disabled?: bool
   > * { user-select: none; }
   &.hidden { display: none !important; }
 
-  & > svg { width: 15px; height: 15px; transform: rotate(-45deg); margin-left: -1px; margin-bottom: -1px; }
+  & > svg { width: 15px; height: 15px; transform: rotate(-45deg); margin-left: 0px; margin-bottom: -3px; }
   
   &:after, &:before {
     content: "";
@@ -1969,7 +1952,7 @@ export const OperationButton = styled(Button) <{ label?: string, disabled?: bool
     padding: 106px 0px 0px 41px;
   }
 
-  &:before { bottom: 103px; right: -183px;  }
+  &:before { bottom: 104px; right: -184px;  }
 
   &.dark { border: solid 1px ${({ theme }) => theme.azure1}; background-color: ${({ theme }) => theme.black}; }
   &.light { border: solid 1px ${({ theme }) => theme.violet1}; background-color: ${({ theme }) => theme.violet4}; }
@@ -2003,7 +1986,6 @@ export const OperationButton = styled(Button) <{ label?: string, disabled?: bool
     padding: 0px;
     width: 200px;
     height: auto;
-    font-size: 9px !important;
     color: ${({ theme }) => theme.yellowGreen}
     text-shadow: 1px 1px 1px ${({ theme }) => theme.black};
   }
@@ -2067,8 +2049,6 @@ export const MainOperationButton = styled(ActionButton) <{ disabled?: boolean, s
   &.light {}
   &.classic { 
     position: relative; 
-    font-size: 11px !important;
-    font-weight: 300 !important;
     text-shadow: 1px 1px 1px ${({ theme }) => theme.black};
   }
   &.classic:before { 
@@ -2149,8 +2129,6 @@ export const ContainerRow = styled.div<{ error?: boolean }>`
   & > div.input-container > label.aligned-left { float: none; margin-left: 0px; }
 
   & > div.input-container.classic > label, & > div.input-container.classic > a {
-    font-size: 9px;
-    font-weight: 300;
     float: left;
     margin-left: 0px;
   }
@@ -2164,9 +2142,6 @@ export const ContainerRow = styled.div<{ error?: boolean }>`
   &.dark.search-token-container { border-bottom: solid 1px ${({ theme }) => theme.utils.hexToRGB(theme.white, 0.2)}; }
   &.light.search-token-container { border-bottom: solid 1px ${({ theme }) => theme.utils.hexToRGB(theme.white, 0.2)}; }
   &.classic.search-token-container { border-bottom: solid 1px ${({ theme }) => theme.utils.hexToRGB(theme.white, 0.2)}; }
-  &.classic.search-token-container input { font-size: 9px !important; }
-
-  .recipient-address-input.classic { font-size: 8px; margin-top: 10px; }
 `
 export const Input = styled.input<{ error?: boolean }>`
   font-size: 16px;
@@ -2208,8 +2183,8 @@ export const SecondaryPanelBoxContainer = styled.div`
   position: relative;
   z-index: 2;
 
-  &.dark { border: solid 1px ${({ theme }) => theme.utils.hexToRGB(theme.azure4, 1)}; } 
-  &.light { }
+  &.dark {} 
+  &.light {}
   &.classic {}
 
   &.dark > .inner-content, &.light > .inner-content, &.classic > .inner-content {
@@ -2255,15 +2230,12 @@ export const SecondaryPanelBoxContainer = styled.div`
   &.popup > .popup-inner-content h6 + ul { font-size: 13px; }
   &.classic.popup > .popup-inner-content h6 + ul { 
     line-height: 1.5em; 
-    font-weight: 300; 
-    font-size: 11px; 
     text-shadow: 1px 1px 1px ${({ theme }) => theme.black} 
   }
-  &.classic.popup > .popup-inner-content h6 + ul strong { font-weight: 300; }
+  &.classic.popup > .popup-inner-content h6 + ul strong { }
 
   &.modal > .modal-inner-content h6 { font-size: 15px; margin: 0px 0px 15px 0px; }
   &.classic.modal > .modal-inner-content h6, &.classic.popup > .popup-inner-content h6 { 
-    font-size: 11px; 
     text-shadow: 1px 1px 1px ${({ theme }) => theme.black} 
   }
   &.modal > .modal-inner-content h6.with-content-divisor { position:relative; padding-bottom: 15px; }
@@ -2284,7 +2256,7 @@ export const SecondaryPanelBoxContainer = styled.div`
   &.popup > .popup-inner-content .popup-operations-container { /*overflow: hidden;*/ padding-top: 15px; }
   &.popup > .popup-inner-content .popup-operations-container button { font-size: 12px !important; }
   &.popup > .popup-inner-content .popup-operations-container button:last-child { float: right; }
-  &.classic.popup > .popup-inner-content .popup-operations-container button { font-size: 10px !important; }
+  &.classic.popup > .popup-inner-content .popup-operations-container button {}
 
   &.dark.popup > .popup-inner-content h6, &.dark.modal > .modal-inner-content h6 { color: ${({ theme }) => theme.azure1} }
   &.dark.popup > .popup-inner-content h6 svg, &.dark.modal > .modal-inner-content h6 svg  { stroke: ${({ theme }) => theme.azure1} }
@@ -2293,7 +2265,6 @@ export const SecondaryPanelBoxContainer = styled.div`
     color: ${({ theme }) => theme.azure1}; 
     letter-spacing: 0.15em; 
     line-height: 1.4em;
-    font-weight: 300;
   }
   &.classic.popup > .popup-inner-content h6 svg, &.classic.modal > .modal-inner-content h6 svg  { stroke: ${({ theme }) => theme.azure1} }
 
@@ -2306,7 +2277,6 @@ export const SecondaryPanelBoxContainer = styled.div`
   &.modal > .modal-inner-content .modal-content-wrapper > .connect-wallet-terms-and-conditions > label { font-size: 15px; }
   &.modal > .modal-inner-content .modal-content-wrapper > .connect-wallet-terms-and-conditions > label > input { margin-right: 10px; }
   &.modal > .modal-inner-content .modal-content-wrapper > .connect-wallet-terms-and-conditions.classic > label {
-    font-size: 9px;
     text-shadow: 1px 1px 1px ${({ theme }) => theme.black};
   }
 
@@ -2336,14 +2306,12 @@ export const SecondaryPanelBoxContainer = styled.div`
     ${({ theme }) => theme.mediaWidth.upToMedium` min-width: 18.125rem; top: -22rem; right: -2px; @media (max-width: 1050px) { top: -19.5rem; } `};
   }
 
-  &.settings-menu-panel.classic { min-width: 30rem; top: -25.35rem; }
+  &.settings-menu-panel.classic {}
 
   &.settings-menu-panel .sectionHeader { font-weight: 500; font-size: 14px; }
   &.settings-menu-panel .sectionOption { font-weight: 500; font-size: 14px; }
 
   &.settings-menu-panel.classic .sectionHeader.classic { 
-    font-weight: 300; 
-    font-size: 9px; 
     color: ${({ theme }) => theme.azure1}; 
     text-shadow: 1px 1px 1px ${({ theme }) => theme.black};
   }
@@ -2351,8 +2319,6 @@ export const SecondaryPanelBoxContainer = styled.div`
   &.dark.settings-menu-panel .sectionOption { color: ${({ theme }) => theme.grey2}; }
   &.light.settings-menu-panel .sectionOption { color: ${({ theme }) => theme.violet1}; }
   &.classic.settings-menu-panel .sectionOption { 
-    font-weight: 300; 
-    font-size: 9px; 
     text-shadow: 1px 1px 1px ${({ theme }) => theme.black};
   }
 
@@ -2546,7 +2512,6 @@ export const ModalCaption = styled.div`
   font-size: 15px;
 
   &.classic {
-    font-size: 9px;
     text-shadow: 1px 1px 1px ${({ theme }) => theme.black};
   }
 `
@@ -2644,7 +2609,6 @@ export const SettingsMenuCustomOption = styled(SettingsMenuOptionBase) <{ active
 
   & + .minutes { padding-left: 8px; font-size: 14px; }
   &.classic + .minutes { 
-    font-size: 9px;
     text-shadow: 1px 1px 1px ${({ theme }) => theme.black}; 
   }
 `
@@ -2807,9 +2771,9 @@ export const StyledPositionCard = styled(Box) <{ bgColor: any }>`
   position: relative;
   overflow: hidden;
 
-  &.dark { border-top: solid 1px ${({ theme }) => theme.azure1}; border-bottom: solid 1px ${({ theme }) => theme.azure1}; background-color: ${({ theme }) => theme.utils.hexToRGB(theme.black, 0.2)} }
-  &.light {}
-  &.classic {}
+  &.dark { background-color: ${({ theme }) => theme.utils.hexToRGB(theme.black, 0.2)} }
+  &.light { background-color: ${({ theme }) => theme.utils.hexToRGB(theme.violet3, 0.2)} }
+  &.classic { background-color: ${({ theme }) => theme.utils.hexToRGB(theme.black, 0.2)} }
 `
 export const RemoveLiquiditySliderItemContainer = styled.div`
   & .title { margin: 0px; font-weight: 400; font-size: 16px; }
@@ -2965,7 +2929,7 @@ export const FooterControls = styled.div`
     ${({ theme }) => theme.backgroundContainer2}
   `};
 
-  &.classic { font-size: 9px; }
+  &.classic {}
 `
 export const FooterElement = styled.div`
   display: flex;
@@ -3038,7 +3002,7 @@ export const StyledInput = styled.input<{ error?: boolean; fontSize?: string; al
   //   margin-left: -4rem;
   // }
 
-  &.classic { font-size: 16px; text-shadow: 1px 1px 1px ${({ theme }) => theme.black}; }
+  &.classic { text-shadow: 1px 1px 1px ${({ theme }) => theme.black}; }
 `
 export const StyledMenuButton = styled.button`
   width: 100%;
@@ -3070,6 +3034,25 @@ export const StyledMenu = styled.div`
   position: relative;
   border: none;
   text-align: left;
+`
+export const SettingsFlyout = styled.span`
+  background-color: ${({ theme }) => theme.bg2};
+  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),0px 24px 32px rgba(0, 0, 0, 0.01);
+  border-radius: 5px;
+  padding: 0.5rem;
+  z-index: 100;
+
+  ${({ theme }) => theme.mediaWidth.upToMedium` top: -17.25rem; `};
+
+  &.classic { 
+    box-shadow: none; 
+    min-width: 12rem; 
+    background: linear-gradient(0deg, ${({ theme }) => theme.utils.hexToRGB(theme.blue6, 1)} 0%, ${({ theme }) => theme.utils.hexToRGB(theme.blue5, 1)} 100%); 
+    border-radius: 7px;
+    border: solid 2px #424542;
+    box-shadow: 1px 1px #e7dfe7, -1px -1px #e7dfe7, 1px -1px #e7dfe7, -1px 1px #e7dfe7, 0 -2px #9c9a9c, -2px 0 #7b757b,
+      0 2px #424542;  }
+
 `
 export const MenuFlyout = styled.span`
   min-width: 8.125rem;
@@ -3107,7 +3090,7 @@ export const MenuItem = styled(ExternalLink)`
   }
   > svg { margin-right: 8px; width: 14px; height: 14px; }
 
-  &.classic { font-size: 9px; color: ${({ theme }) => theme.white}; }
+  &.classic { color: ${({ theme }) => theme.white}; }
   &.classic:hover { color: ${({ theme }) => theme.yellowGreen}; }
   &.classic:hover > svg { stroke: ${({ theme }) => theme.yellowGreen}; }
 `
@@ -3117,7 +3100,7 @@ export const InfoLink = styled(ExternalLink)`
   font-size: 14px;
   color: ${({ theme }) => theme.text1};
 
-  &.classic { font-size: 11px; margin: 10px auto; }
+  &.classic { margin: 10px auto; }
   &.classic:hover, &.classic:focus { color: ${({ theme }) => theme.yellowGreen}; }
 `
 export const QuestionWrapper = styled.div`
@@ -3179,11 +3162,11 @@ export const CountdownContainer = styled.div`
 
   &.dark { color: ${({ theme }) => theme.white}; }
   &.light { color: ${({ theme }) => theme.grey1}; }
-  &.classic { font-size: 13px; text-shadow: 1px 1px 1px ${({ theme }) => theme.black}; line-height: 1.5em; }
+  &.classic { text-shadow: 1px 1px 1px ${({ theme }) => theme.black}; line-height: 1.5em; }
 
   @media (max-width: 1050px) { 
     font-size: small;
-    &.classic { font-size: 9px; }
+    &.classic {  }
   }
 `
 export const PoolSection = styled.div`

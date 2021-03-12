@@ -27,9 +27,9 @@ import useIsArgentWallet from '../../hooks/useIsArgentWallet'
 import useTransactionDeadline from '../../hooks/useTransactionDeadline'
 
 import { useTransactionAdder } from '../../state/transactions/hooks'
-import { 
-  StyledInternalLink, 
-  TYPE, 
+import {
+  StyledInternalLink,
+  TYPE,
   PageGridContainer,
   SecondaryPanelBoxContainer,
   SecondaryPanelBoxContainerExtraDecorator,
@@ -38,10 +38,13 @@ import {
   PageContentContainer,
   RemoveLiquiditySliderItemContainer,
   DynamicGrid,
-  ActionButton, 
+  ActionButton,
   MainOperationButton,
   RemoveLiquidityCustomText,
-  OperationButton } from '../../theme'
+  OperationButton,
+  SectionTitle,
+  SectionContent
+} from '../../theme'
 import { calculateGasMargin, calculateSlippageAmount, getOrchestratorContract } from '../../utils'
 import { currencyId } from '../../utils/currencyId'
 import useDebouncedChangeHandler from '../../utils/useDebouncedChangeHandler'
@@ -223,9 +226,9 @@ export default function RemoveLiquidity({
     if (!liquidityAmount) throw new Error('missing liquidity amount')
 
     const currencyWUSD = WUSD[chainId ?? 1]
-    const currencyBIsWUSD =  wrappedCurrency(currencyB, chainId)?.address == currencyWUSD.address
+    const currencyBIsWUSD = wrappedCurrency(currencyB, chainId)?.address == currencyWUSD.address
 
-    const currencyBIsETH = currencyB === ETHER    
+    const currencyBIsETH = currencyB === ETHER
     const oneCurrencyIsETH = currencyA === ETHER || currencyBIsETH
 
     if (!tokenA || !tokenB) throw new Error('could not wrap')
@@ -293,7 +296,7 @@ export default function RemoveLiquidity({
     } else {
       throw new Error('Attempting to confirm without approval or a signature. Please contact support.')
     }
-    
+
     const safeGasEstimates: (BigNumber | undefined)[] = await Promise.all(
       methodNames.map(methodName =>
         orchestrator.estimateGas[methodName](...args)
@@ -491,37 +494,33 @@ export default function RemoveLiquidity({
             <div className="collapsable-title">
               <div className="pull-right">
                 <ActionButton className={theme.name} onClick={() => { setShowMore(!showMore) }}>
-                  {showMore ? ( 'Hide Pools' ) : ( 'View Pools' )}
+                  {showMore ? ('Hide Pools') : ('View Pools')}
                 </ActionButton>
               </div>
               <div className="clear-fix"></div>
             </div>
             <div className={`collapsable-item ${showMore ? 'opened' : 'collapsed'}`}>
-            <SecondaryPanelBoxContainer className={ `${theme.name}` }>
-              <SecondaryPanelBoxContainerExtraDecorator className={ `top ${theme.name}` }/>
               <div className="inner-content">
-                <SimpleTextParagraph className={`p15 mt0 mb0 ${theme.name}`}>
-                  <strong>Liquidity provider rewards</strong>
-                  <br/><br/>
-                  Liquidity providers earn a 0.3% fee on all trades proportional to their share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity.
+                <SimpleTextParagraph className={`p0 mt0 mb0 ${theme.name}`}>
+                  <SectionTitle className={`mt10 ${theme.name}`}>Liquidity provider rewards</SectionTitle>
+                  <SectionContent>Liquidity providers earn a <a className="yellow">dynamic fee</a> (default 0.30%) on all trades proportional to their share of the pool.
+                    Fees are added to the pool, accrue in real time and can be <a className="yellow">claimed</a> by withdrawing your liquidity.</SectionContent>
                 </SimpleTextParagraph>
-              </div>      
-              <SecondaryPanelBoxContainerExtraDecorator className={ `bottom ${theme.name}` }/>
-            </SecondaryPanelBoxContainer>
-            <AutoColumn gap="lg" justify="center">
-              {pair ? (
-                <AutoColumn style={{ width: '100%', maxWidth: '400px', marginTop: '1rem' }}>
-                  <MinimalPositionCard showUnwrapped={oneCurrencyIsIETH} pair={pair} />
-                </AutoColumn>
-              ) : null}
-            </AutoColumn>
+              </div>
+              <AutoColumn gap="lg" justify="center">
+                {pair ? (
+                  <AutoColumn style={{ width: '100%', maxWidth: '400px', marginTop: '1rem' }}>
+                    <MinimalPositionCard showUnwrapped={oneCurrencyIsIETH} pair={pair} />
+                  </AutoColumn>
+                ) : null}
+              </AutoColumn>
             </div>
           </div>
           <PageItemsContainer className={theme.name}>
-              <AddRemoveTabs creating={false} adding={false} />
-              <div className="clear-fix">
-                <PageContentContainer className={ `one ${theme.name}` }>
-                  <TransactionConfirmationModal
+            <AddRemoveTabs creating={false} adding={false} />
+            <div className="clear-fix">
+              <PageContentContainer className={`one ${theme.name}`}>
+                <TransactionConfirmationModal
                   isOpen={showConfirm}
                   onDismiss={handleDismissConfirmation}
                   attemptingTxn={attemptingTxn}
@@ -537,18 +536,17 @@ export default function RemoveLiquidity({
                   pendingText={pendingText}
                 />
                 <div className="full-width">
-                <SecondaryPanelBoxContainer className={ ` mb20 ${theme.name}` }>
-                  <SecondaryPanelBoxContainerExtraDecorator className={ `top ${theme.name}` }/>
+                  <SecondaryPanelBoxContainer className={` mb20 ${theme.name}`}>
                     <div className="inner-content p15">
-                      <RemoveLiquiditySliderItemContainer className={ `${theme.name}` }>
+                      <RemoveLiquiditySliderItemContainer className={`${theme.name}`}>
                         <DynamicGrid columns={2}>
                           <div className="text-left">
-                            <h4 className={ ` title ${theme.name}` }>Amount</h4>
+                            <h4 className={` title ${theme.name}`}>Amount</h4>
                           </div>
                           <div className="text-right">
-                            <ActionButton className={theme.name} onClick={() => setShowDetailed(!showDetailed) }>
-                              {showDetailed ? (<><label className={theme.name}>Detailed</label> <ChevronDown/></>) : (<><label className={theme.name}>Simple</label> <ChevronUp/></>)}
-                            </ActionButton> 
+                            <ActionButton className={theme.name} onClick={() => setShowDetailed(!showDetailed)}>
+                              {showDetailed ? (<><label className={theme.name}>Detailed</label> <ChevronDown /></>) : (<><label className={theme.name}>Simple</label> <ChevronUp /></>)}
+                            </ActionButton>
                           </div>
                         </DynamicGrid>
                         <div className="slider-percentage text-left">{formattedAmounts[Field.LIQUIDITY_PERCENT]}%</div>
@@ -556,41 +554,39 @@ export default function RemoveLiquidity({
                           <>
                             <Slider value={innerLiquidityPercentage} onChange={setInnerLiquidityPercentage} />
                             <DynamicGrid columns={4}>
-                              <MainOperationButton className={ `width80 ${theme.name}` } onClick={() => onUserInput(Field.LIQUIDITY_PERCENT, '25')}>25%</MainOperationButton>
-                              <MainOperationButton className={ `width80 ${theme.name}` } onClick={() => onUserInput(Field.LIQUIDITY_PERCENT, '50')}>50%</MainOperationButton>
-                              <MainOperationButton className={ `width80 ${theme.name}` } onClick={() => onUserInput(Field.LIQUIDITY_PERCENT, '75')}>75%</MainOperationButton>
-                              <MainOperationButton className={ `width80 ${theme.name}` } onClick={() => onUserInput(Field.LIQUIDITY_PERCENT, '100')}>Max</MainOperationButton>
+                              <MainOperationButton className={`width80 ${theme.name}`} onClick={() => onUserInput(Field.LIQUIDITY_PERCENT, '25')}>25%</MainOperationButton>
+                              <MainOperationButton className={`width80 ${theme.name}`} onClick={() => onUserInput(Field.LIQUIDITY_PERCENT, '50')}>50%</MainOperationButton>
+                              <MainOperationButton className={`width80 ${theme.name}`} onClick={() => onUserInput(Field.LIQUIDITY_PERCENT, '75')}>75%</MainOperationButton>
+                              <MainOperationButton className={`width80 ${theme.name}`} onClick={() => onUserInput(Field.LIQUIDITY_PERCENT, '100')}>Max</MainOperationButton>
                             </DynamicGrid>
                           </>
                         )}
                       </RemoveLiquiditySliderItemContainer>
-                    </div>      
-                    <SecondaryPanelBoxContainerExtraDecorator className={ `bottom ${theme.name}` }/>
-                  </SecondaryPanelBoxContainer>                  
+                    </div>
+                  </SecondaryPanelBoxContainer>
                   {!showDetailed && (
                     <>
                       <div className="text-center mt20 mb20">
-                        <ArrowDown className={ `simple-icon ${theme.name}` } />
+                        <ArrowDown className={`simple-icon ${theme.name}`} />
                       </div>
-                      <SecondaryPanelBoxContainer className={ ` mb20 ${theme.name}` }>
-                        <SecondaryPanelBoxContainerExtraDecorator className={ `top ${theme.name}` }/>
+                      <SecondaryPanelBoxContainer className={` mb20 ${theme.name}`}>
                         <div className="inner-content p15">
-                          <DynamicGrid className="mb15" columns={2} columnsDefinitions={[{value: 25, location: 2}]}>
+                          <DynamicGrid className="mb15" columns={2} columnsDefinitions={[{ value: 25, location: 2 }]}>
                             <div className="text-left">
                               <RemoveLiquidityCustomText>{formattedAmounts[Field.CURRENCY_A] || '-'}</RemoveLiquidityCustomText>
                             </div>
                             <div className="text-right">
                               <RemoveLiquidityCustomText id="remove-liquidity-tokena-symbol" className="pull-right">{currencyA?.symbol}</RemoveLiquidityCustomText>
-                              <CurrencyLogo currency={currencyA} style={{ float: 'right', marginRight: '15px' }}/>
+                              <CurrencyLogo currency={currencyA} style={{ float: 'right', marginRight: '15px' }} />
                             </div>
                           </DynamicGrid>
-                          <DynamicGrid className="mb15" columns={2} columnsDefinitions={[{value: 25, location: 2}]}>
+                          <DynamicGrid className="mb15" columns={2} columnsDefinitions={[{ value: 25, location: 2 }]}>
                             <div className="text-left">
                               <RemoveLiquidityCustomText>{formattedAmounts[Field.CURRENCY_B] || '-'}</RemoveLiquidityCustomText>
                             </div>
                             <div className="text-right">
                               <RemoveLiquidityCustomText id="remove-liquidity-tokenb-symbol" className="pull-right">{currencyB?.symbol}</RemoveLiquidityCustomText>
-                              <CurrencyLogo currency={currencyB} style={{ float: 'right', marginRight: '15px' }}/>
+                              <CurrencyLogo currency={currencyB} style={{ float: 'right', marginRight: '15px' }} />
                             </div>
                           </DynamicGrid>
                           <AutoColumn gap="10px">
@@ -615,7 +611,6 @@ export default function RemoveLiquidity({
                             ) : null}
                           </AutoColumn>
                         </div>
-                        <SecondaryPanelBoxContainerExtraDecorator className={ `bottom ${theme.name}` }/>
                       </SecondaryPanelBoxContainer>
                     </>
                   )}
@@ -636,7 +631,7 @@ export default function RemoveLiquidity({
                         fatherPage="remove-liquidity"
                       />
                       <div className="text-center mt20 mb20">
-                        <ArrowDown className={ `simple-icon ${theme.name}` } />
+                        <ArrowDown className={`simple-icon ${theme.name}`} />
                       </div>
                       <CurrencyInputPanel
                         hideBalance={true}
@@ -649,9 +644,9 @@ export default function RemoveLiquidity({
                         onCurrencySelect={handleSelectCurrencyA}
                         id="remove-liquidity-tokena"
                         fatherPage="remove-liquidity"
-                      />                      
+                      />
                       <div className="text-center mt20 mb20">
-                        <Plus className={ `simple-icon ${theme.name}` } />
+                        <Plus className={`simple-icon ${theme.name}`} />
                       </div>
                       <CurrencyInputPanel
                         hideBalance={true}
@@ -669,48 +664,48 @@ export default function RemoveLiquidity({
                   )}
                   {pair && (
                     <>
-                    <DynamicGrid className="mb15" columns={2} columnsDefinitions={[{value: 75, location: 2}]}>
-                      <div className="text-left pl15">Price:</div>
-                      <div className="text-right pr15">1 {currencyA?.symbol} = {tokenA ? pair.priceOf(tokenA).toSignificant(6) : '-'} {currencyB?.symbol}</div>
-                    </DynamicGrid>
-                    <DynamicGrid className="mb15" columns={2} columnsDefinitions={[{value: 75, location: 2}]}>
-                      <div className="text-left pl15">&nbsp;</div>
-                      <div className="text-right pr15">1 {currencyB?.symbol} = {tokenB ? pair.priceOf(tokenB).toSignificant(6) : '-'} {currencyA?.symbol}</div>
-                    </DynamicGrid>
+                      <DynamicGrid className="mb15" columns={2} columnsDefinitions={[{ value: 75, location: 2 }]}>
+                        <div className="text-left pl15">Price:</div>
+                        <div className="text-right pr15">1 {currencyA?.symbol} = {tokenA ? pair.priceOf(tokenA).toSignificant(6) : '-'} {currencyB?.symbol}</div>
+                      </DynamicGrid>
+                      <DynamicGrid className="mb15" columns={2} columnsDefinitions={[{ value: 75, location: 2 }]}>
+                        <div className="text-left pl15">&nbsp;</div>
+                        <div className="text-right pr15">1 {currencyB?.symbol} = {tokenB ? pair.priceOf(tokenB).toSignificant(6) : '-'} {currencyA?.symbol}</div>
+                      </DynamicGrid>
                     </>
                   )}
                   <div style={{ position: 'relative' }}>
                     {!account ? (
-                      <OperationButton onClick={toggleWalletModal} className={ `connect-wallet-button ${theme.name}` } label="Connect Wallet">
-                        <Link/>
+                      <OperationButton onClick={toggleWalletModal} className={`connect-wallet-button ${theme.name}`} label="Connect Wallet">
+                        <Link />
                       </OperationButton>
                     ) : (
-                        <DynamicGrid columns={2} className="mt20">
-                          <div className="text-left">
-                            <ButtonMateriaConfirmed className={theme.name}
-                              onClick={onAttemptToApprove}
-                              confirmed={approval === ApprovalState.APPROVED || signatureData !== null}
-                              disabled={approval !== ApprovalState.NOT_APPROVED || signatureData !== null}
-                            >
-                              {approval === ApprovalState.PENDING ? ( <Dots>Approving</Dots>) : 
-                                approval === ApprovalState.APPROVED || signatureData !== null ? ( 'Approved' ) : ( 'Approve' )}
-                            </ButtonMateriaConfirmed>
-                          </div>
-                          <div className="text-right">
-                            <ButtonMateriaError className={theme.name}
-                              onClick={() => { setShowConfirm(true) }}
-                              disabled={!isValid || (signatureData === null && approval !== ApprovalState.APPROVED)}
-                              error={!isValid && !!parsedAmounts[Field.CURRENCY_A] && !!parsedAmounts[Field.CURRENCY_B]}
-                            >
-                              {error || 'Remove'}
-                            </ButtonMateriaError>
-                          </div>
-                        </DynamicGrid>
-                      )}
+                      <DynamicGrid columns={2} className="mt20">
+                        <div className="text-left">
+                          <ButtonMateriaConfirmed className={theme.name}
+                            onClick={onAttemptToApprove}
+                            confirmed={approval === ApprovalState.APPROVED || signatureData !== null}
+                            disabled={approval !== ApprovalState.NOT_APPROVED || signatureData !== null}
+                          >
+                            {approval === ApprovalState.PENDING ? (<Dots>Approving</Dots>) :
+                              approval === ApprovalState.APPROVED || signatureData !== null ? ('Approved') : ('Approve')}
+                          </ButtonMateriaConfirmed>
+                        </div>
+                        <div className="text-right">
+                          <ButtonMateriaError className={theme.name}
+                            onClick={() => { setShowConfirm(true) }}
+                            disabled={!isValid || (signatureData === null && approval !== ApprovalState.APPROVED)}
+                            error={!isValid && !!parsedAmounts[Field.CURRENCY_A] && !!parsedAmounts[Field.CURRENCY_B]}
+                          >
+                            {error || 'Remove'}
+                          </ButtonMateriaError>
+                        </div>
+                      </DynamicGrid>
+                    )}
                   </div>
                 </div>
-                </PageContentContainer>
-              </div>
+              </PageContentContainer>
+            </div>
           </PageItemsContainer>
         </PageGridContainer>
       </AppBody>

@@ -85,9 +85,8 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
     <>
       {userPoolBalance && JSBI.greaterThan(userPoolBalance.raw, JSBI.BigInt(0)) ? (
         <>
-          <SectionTitle className={ `mt20 mb20 ${theme.name}` }>Your position</SectionTitle>
+          <SectionTitle className={ `mt0 mb0 ${theme.name}` }>Your position</SectionTitle>
           <SecondaryPanelBoxContainer className={ `${theme.name} mb20` }>
-            <SecondaryPanelBoxContainerExtraDecorator className={ `top ${theme.name}` }/>
               <div className="inner-content">
                 <AutoColumn gap="12px" className="p15">
                   <FixedHeightRow onClick={() => setShowMore(!showMore)}>
@@ -105,17 +104,17 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
                   </FixedHeightRow>
                   <AutoColumn gap="4px">
                     <SimpleTextParagraph className={ `${theme.name} m0` }>
-                      <span className="row">
+                      <span className="row m0">
                         <span className="column">Your pool share:</span>
-                        <span className="column">{poolTokenPercentage ? poolTokenPercentage.toFixed(6) + '%' : '-'}</span>
+                        <span className="column">{poolTokenPercentage ? ( <span className={ `evidence-text ml5 ${theme.name}` }>{poolTokenPercentage.toFixed(6) + '%'}</span> ) : ( '-' )}</span>
                       </span>
                       <span className="clear-fix"></span>
-                      <span className="row">
+                      <span className="row m0">
                         <span className="column">{currency0.symbol}:</span>
                         <span className="column">{token0Deposited ? ( <span className={ `evidence-text ml5 ${theme.name}` }>{token0Deposited?.toSignificant(6)}</span> ) : ( '-' )}</span>
                       </span>
                       <span className="clear-fix"></span>
-                      <span className="row">
+                      <span className="row m0">
                         <span className="column">{currency1.symbol}:</span>
                         <span className="column">{token1Deposited ? ( <span className={ `evidence-text ml5 ${theme.name}` }>{token1Deposited?.toSignificant(6)}</span> ) : ( '-' )}</span>
                       </span>
@@ -124,12 +123,10 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
                   </AutoColumn>
                 </AutoColumn>
               </div>      
-            <SecondaryPanelBoxContainerExtraDecorator className={ `bottom ${theme.name}` }/>
           </SecondaryPanelBoxContainer>   
         </>
       ) : (
         <SecondaryPanelBoxContainer className={ `${theme.name} mb20` }>
-          <SecondaryPanelBoxContainerExtraDecorator className={ `top ${theme.name}` }/>
             <div className="inner-content">
               <SimpleTextParagraph className={ `p10 ${theme.name}` }>
                 <span role="img" aria-label="wizard-icon"></span>{' '}
@@ -137,7 +134,6 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
                 Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity.
               </SimpleTextParagraph>
             </div>
-          <SecondaryPanelBoxContainerExtraDecorator className={ `bottom ${theme.name}` }/>
         </SecondaryPanelBoxContainer>
       )}
     </>
@@ -219,7 +215,7 @@ export default function FullPositionCard({ pair, border }: PositionCardProps) {
                 <span className="column">{poolTokenPercentage ? poolTokenPercentage.toFixed(2) + '%' : '-'}</span>
               </span>
             </SimpleTextParagraph>     
-            <SimpleTextParagraph className={ `text-left ${theme.name} mt0` }>
+            <SimpleTextParagraph className={ `text-left ${theme.name} m0` }>
               <ExternalLink href={`https://info.materiadex.com/account/${account}`}>
               View accrued fees and analytics
                 <IconButton className={ `hide-classic ${theme.name}` }>

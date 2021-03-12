@@ -515,7 +515,7 @@ export default function AddLiquidity({
               <HideSmall>
                 <SectionTitle className={`mt10 ${theme.name}`}>Your liquidity</SectionTitle>
               </HideSmall>
-              <Scrollbars autoHeight autoHide>
+              <Scrollbars autoHeight autoHeightMax={550} autoHeightMin={400} autoHide>
                 {!account ? (
                   <SimpleTextParagraph className={`p20 text-center ${theme.name}`}>
                     Connect to a wallet to view your liquidity.
@@ -548,7 +548,7 @@ export default function AddLiquidity({
                         </EmptyProposals>
                       )}
               </Scrollbars>
-              <SimpleTextParagraph className={`text-left ${theme.name}`}>
+              <SimpleTextParagraph className={`text-left m0 ${theme.name}`}>
                 Don't see a pool you joined? <StyledInternalLink className={`${theme.name}`} id="refresh-pool-link" to={'#'} onClick={onLiquidityPoolsUpdate}>Refresh</StyledInternalLink> your pools or <StyledInternalLink className={`${theme.name}`} id="import-pool-link" to={'/find'}>import it</StyledInternalLink>.
               </SimpleTextParagraph>
             </div>

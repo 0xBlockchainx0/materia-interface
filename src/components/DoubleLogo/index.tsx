@@ -8,6 +8,7 @@ const Wrapper = styled.div<{ margin: boolean; sizeraw: number }>`
   display: flex;
   flex-direction: row;
   margin-right: ${({ sizeraw, margin }) => margin && (sizeraw / 3 + 8).toString() + 'px'};
+  max-height: 24px;
   &.liquidity-mining-double-token { display: grid; grid-template-columns: 36px 36px; float: right; }
 `
 

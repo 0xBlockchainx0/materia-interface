@@ -31,7 +31,6 @@ const MobileCurrencyLogo = styled.div`
   display: none;
   @media (max-width: 1050px) { display: inline-block; }
 `
-// const tokenBackground = styled.var`${({ theme }) => theme.tokenBackground}`
 
 const TokenImage = styled.div<{ showBackground: boolean }>`
   background: ${props => props.showBackground ? ({ theme }) => theme.tokenBackground : 'unset'}    
@@ -77,7 +76,6 @@ const StyledTokenName = styled.span<{ active?: boolean }>`
   color: ${({ theme }) => theme.text1};
 
   &.classic { 
-    font-size:  ${({ active }) => (active ? '16px' : '12px')};
     text-shadow: 1px 1px 1px ${({ theme }) => theme.black};
   }
 `
