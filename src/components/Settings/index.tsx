@@ -102,7 +102,7 @@ export default function SettingsTab() {
                   id="confirm-expert-mode"
                   className={ `use-custom-properties expert-mode ${theme.name}` } 
                   onClick={() => {
-                  if (window.prompt(`Please type the word "confirm" to enable expert mode.`) === 'confirm') {
+                  if (window.prompt(`Please type the word "materia" to enable expert mode.`) === 'materia') {
                     toggleExpertMode()
                     setShowConfirmation(false)
                   }
