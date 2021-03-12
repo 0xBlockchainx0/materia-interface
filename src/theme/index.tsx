@@ -1292,7 +1292,7 @@ export const EvidencedTextParagraph = styled(SimpleTextParagraph)`
     &.dark.extreme, &.light.extreme { font-size: 20px; }
   }
 `
-const BaseButton = styled(Button) <{ width?: string, borderRadius?: string, selected?: boolean }>`
+const BaseButton = styled(Button) <{ width?: string, borderRadius?: string, selected?: boolean, hide?: boolean }>`
   padding: 0px !important;
   width: ${({ width }) => (width ? width : 'auto')};
   border-radius: ${({ borderRadius }) => (borderRadius ? borderRadius : '0px')};
@@ -1311,6 +1311,7 @@ const BaseButton = styled(Button) <{ width?: string, borderRadius?: string, sele
   &:disabled { cursor: auto; }
   > * { user-select: none; }
   &.hidden { display: none !important; }
+  ${({ hide }) => (hide ? 'display: none !important;' : '')}
 `
 export const IconButton = styled(BaseButton) <{ width?: string, borderRadius?: string, selected?: boolean }>`
   cursor: pointer;

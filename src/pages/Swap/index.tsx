@@ -20,11 +20,11 @@ import TradePrice from '../../components/swap/TradePrice'
 import TokenWarningModal from '../../components/TokenWarningModal'
 import ProgressSteps from '../../components/ProgressSteps'
 
-import { INITIAL_ALLOWED_SLIPPAGE } from '../../constants'
+import { ERC20WRAPPER, INITIAL_ALLOWED_SLIPPAGE } from '../../constants'
 
 import { useActiveWeb3React } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
-import { ApprovalState, useApproveCallbackFromTrade } from '../../hooks/useApproveCallback'
+import { ApprovalState, useApproveCallbackFromTrade, useTokenApproveCallback } from '../../hooks/useApproveCallback'
 import useENSAddress from '../../hooks/useENSAddress'
 import { useSwapCallback } from '../../hooks/useSwapCallback'
 
@@ -193,7 +193,7 @@ export default function Swap() {
 
   // check whether the user has approved the router on the input token
   const [approval, approveCallback] = useApproveCallbackFromTrade(trade, wrappedCurrency(originalCurrencies[Field.INPUT], chainId) ?? undefined, allowedSlippage)
-  
+
   // check if user has gone through approval process, used to show two step buttons, reset on token change
   const [approvalSubmitted, setApprovalSubmitted] = useState<boolean>(false)
 
@@ -203,6 +203,24 @@ export default function Swap() {
       setApprovalSubmitted(true)
     }
   }, [approval, approvalSubmitted])
+
+  // check whether the user has approved the erc20wrapper on the input token
+  const isWrapValid = !wrapInputError
+  const [wrapApproval, wrapApproveCallback] = useTokenApproveCallback(
+    parsedAmount,
+    wrappedCurrency(originalCurrencies[Field.INPUT], chainId) ?? undefined,
+    ERC20WRAPPER[chainId ?? 1]
+  )
+
+  // check if user has gone through approval process, used to show two step buttons, reset on token change
+  const [wrapApprovalSubmitted, setWrapApprovalSubmitted] = useState<boolean>(false)
+
+  // mark when a user has submitted an approval, reset onTokenSelection for input field
+  useEffect(() => {
+    if (wrapApproval === ApprovalState.PENDING) {
+      setWrapApprovalSubmitted(true)
+    }
+  }, [wrapApproval, wrapApprovalSubmitted])
 
   const maxAmountInput: CurrencyAmount | undefined = maxAmountSpend(originalCurrencyBalances[Field.INPUT])
   const atMaxAmountInput = Boolean(maxAmountInput && parsedAmounts[Field.INPUT]?.equalTo(maxAmountInput))
@@ -306,8 +324,8 @@ export default function Swap() {
 
   const alarm = require("../../assets/audio/FF7CursorMove.mp3")
   const [play, { stop }] = useSound(alarm)
-  const classicMode = useIsClassicMode()  
-  
+  const classicMode = useIsClassicMode()
+
   return (
     <>
       {/* <TokenWarningModal
@@ -341,14 +359,14 @@ export default function Swap() {
               <div className="collapsable-title">
                 <div className="pull-right">
                   <ActionButton className={theme.name} onClick={() => { setShowMore(!showMore) }}>
-                    {showMore ? ( 'Hide Inventory' ) : ( 'View Inventory' )}
+                    {showMore ? ('Hide Inventory') : ('View Inventory')}
                   </ActionButton>
                 </div>
                 <div className="clear-fix"></div>
               </div>
               <div className={`collapsable-item ${showMore ? 'opened' : 'collapsed'}`}>
                 <Inventory onCurrencySelect={handleOutputSelect} />
-              </div>              
+              </div>
             </div>
             <PageItemsContainer className={theme.name}>
               <TabsBar className={theme.name}>
@@ -418,7 +436,7 @@ export default function Swap() {
                     )}
                   </TradePriceContainer>
                   <div>
-                    <AutoColumn gap={'lg'}>                      
+                    <AutoColumn gap={'lg'}>
                       <CurrencyInputPanel
                         value={formattedAmounts[Field.OUTPUT]}
                         onUserInput={handleTypeOutput}
@@ -432,7 +450,7 @@ export default function Swap() {
                     </AutoColumn>
                   </div>
                 </PageContentContainer>
-                { isExpertMode && (
+                {isExpertMode && (
                   <DynamicGrid className={`mt20 mb20 ${theme.name}`} columns={1}>
                     <div className="custom-recipient-data-container">
                       {recipient === null && !showWrap && isExpertMode ? (
@@ -450,7 +468,7 @@ export default function Swap() {
                       ) : null}
                     </div>
                   </DynamicGrid>
-                ) }                
+                )}
                 <BottomGrouping>
                   <SwapButtonsContainer className={isExpertMode && swapErrorMessage ? 'has-error' : ''}>
                     {!account ? (
@@ -458,11 +476,44 @@ export default function Swap() {
                         <Link />
                       </OperationButton>
                     ) : showWrap ? (
-                      <MainOperationButton onClick={onWrap}
-                        className={`wrap-button ${theme.name}`}
-                        disabled={Boolean(wrapInputError)}>
-                        {wrapInputError ?? (wrapType === WrapType.WRAP ? 'Wrap' : wrapType === WrapType.UNWRAP ? 'Unwrap' : null)}
-                      </MainOperationButton>
+                      <RowCenter>
+                        <ButtonMateriaConfirmed
+                          onClick={wrapApproveCallback}
+                          disabled={wrapApproval !== ApprovalState.NOT_APPROVED || wrapApprovalSubmitted}
+                          hide={wrapApproval !== ApprovalState.NOT_APPROVED && wrapApproval !== ApprovalState.PENDING}
+                          altDisabledStyle={wrapApproval === ApprovalState.PENDING} // show solid button while waiting
+                          confirmed={wrapApproval === ApprovalState.APPROVED}
+                        >
+                          {wrapApproval === ApprovalState.PENDING ? (
+                            <AutoRow gap="6px" justify="center">
+                              Approving to ERC20 Wrapper <Loader stroke="white" />
+                            </AutoRow>
+                          ) : wrapApprovalSubmitted && wrapApproval === ApprovalState.APPROVED ? (
+                            'Approved'
+                          ) : (
+                            'Approve ' + originalCurrencies[Field.INPUT]?.symbol + ' to ERC20 Wrapper'
+                          )}
+                        </ButtonMateriaConfirmed>
+                        {wrapApproval === ApprovalState.APPROVED ? (
+                          <MainOperationButton
+                            onClick={onWrap}
+                            className={`wrap-button ${theme.name}`}
+                            disabled={!isWrapValid}>
+                            {wrapInputError ?? (wrapType === WrapType.WRAP ? 'Wrap' : wrapType === WrapType.UNWRAP ? 'Unwrap' : null)}
+                          </MainOperationButton>
+                        ) : (
+                          <MainOperationButton
+                            className={`wrap-button ${theme.name}`}
+                            hide={
+                              wrapApproval === ApprovalState.NOT_APPROVED 
+                                || wrapApproval === ApprovalState.PENDING 
+                                || isWrapValid
+                            }
+                            disabled={!isWrapValid}>
+                            {wrapInputError ?? ''}
+                          </MainOperationButton>
+                        )}
+                      </RowCenter>
                     ) : noRoute && userHasSpecifiedInputOutput ? (
                       <SwapGreyCard className={theme.name}>
                         <div>Insufficient liquidity for this trade</div>
@@ -483,8 +534,8 @@ export default function Swap() {
                           ) : approvalSubmitted && approval === ApprovalState.APPROVED ? (
                             'Approved'
                           ) : (
-                                'Approve ' + originalCurrencies[Field.INPUT]?.symbol
-                              )}
+                            'Approve ' + originalCurrencies[Field.INPUT]?.symbol
+                          )}
                         </ButtonMateriaConfirmed>
                         <ButtonMateriaError
                           onClick={() => {
@@ -514,39 +565,39 @@ export default function Swap() {
                         </ButtonMateriaError>
                       </RowCenter>
                     ) : (
-                          <>
-                            {isExpertMode && swapErrorMessage ? <SwapCallbackError error={swapErrorMessage} /> : null}
-                            <ButtonMateriaError
-                                onClick={() => {
-                                  if (isExpertMode) {
-                                    handleSwap()
-                                  } else {
-                                    setSwapState({
-                                      tradeToConfirm: trade,
-                                      attemptingTxn: false,
-                                      swapErrorMessage: undefined,
-                                      showConfirm: true,
-                                      txHash: undefined
-                                    })
-                                  }
-                                }}
-                                id="swap-button"
-                                disabled={!isValid || (priceImpactSeverity > 3 && !isExpertMode) || !!swapCallbackError}
-                                error={isValid && priceImpactSeverity > 2 && !swapCallbackError}
-                                showSwap={!(!isValid || (priceImpactSeverity > 3 && !isExpertMode) || !!swapCallbackError)}
-                                useCustomProperties={priceImpactSeverity > 3 ? true : false}
-                                isExpertModeActive={isExpertMode}
-                                onMouseEnter={() => { setIsShown(true); if (classicMode) { play() } }}
-                                onMouseLeave={() => { setIsShown(false); if (classicMode) { stop() } }}
-                              >
-                                {swapInputError
-                                  ? swapInputError
-                                  : priceImpactSeverity > 3 && !isExpertMode
-                                    ? `Price Impact Too High`
-                                    : `Swap ${priceImpactSeverity > 2 ? 'Anyway' : ''}`}
-                              </ButtonMateriaError>
-                          </>                              
-                            )}                    
+                      <>
+                        {isExpertMode && swapErrorMessage ? <SwapCallbackError error={swapErrorMessage} /> : null}
+                        <ButtonMateriaError
+                          onClick={() => {
+                            if (isExpertMode) {
+                              handleSwap()
+                            } else {
+                              setSwapState({
+                                tradeToConfirm: trade,
+                                attemptingTxn: false,
+                                swapErrorMessage: undefined,
+                                showConfirm: true,
+                                txHash: undefined
+                              })
+                            }
+                          }}
+                          id="swap-button"
+                          disabled={!isValid || (priceImpactSeverity > 3 && !isExpertMode) || !!swapCallbackError}
+                          error={isValid && priceImpactSeverity > 2 && !swapCallbackError}
+                          showSwap={!(!isValid || (priceImpactSeverity > 3 && !isExpertMode) || !!swapCallbackError)}
+                          useCustomProperties={priceImpactSeverity > 3 ? true : false}
+                          isExpertModeActive={isExpertMode}
+                          onMouseEnter={() => { setIsShown(true); if (classicMode) { play() } }}
+                          onMouseLeave={() => { setIsShown(false); if (classicMode) { stop() } }}
+                        >
+                          {swapInputError
+                            ? swapInputError
+                            : priceImpactSeverity > 3 && !isExpertMode
+                              ? `Price Impact Too High`
+                              : `Swap ${priceImpactSeverity > 2 ? 'Anyway' : ''}`}
+                        </ButtonMateriaError>
+                      </>
+                    )}
                   </SwapButtonsContainer>
                 </BottomGrouping>
               </div>
