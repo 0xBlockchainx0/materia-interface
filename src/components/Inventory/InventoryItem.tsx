@@ -11,10 +11,10 @@ import { Field } from '../../state/wrap/actions'
 import { useWrapActionHandlers, useWrapState } from '../../state/wrap/hooks'
 import 'react-dropdown/style.css';
 import { unwrappedToken } from '../../utils/wrappedCurrency'
-import { ChevronUp, ChevronDown, Disc, ExternalLink } from 'react-feather'
+import { ChevronUp, ChevronDown, Disc, ExternalLink, Copy } from 'react-feather'
 import useAddTokenToMetamask from '../../hooks/useAddTokenToMetamask'
 import { getEtherscanLink } from '../../utils'
-import MetamaskIcon from '../../assets/images/metamask.svg'
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 export const FixedHeightRow = styled(RowBetween)`
   height: auto;
@@ -44,8 +44,6 @@ export default function InventoryItem({
   const theme = useContext(ThemeContext)
   const [showMore, setShowMore] = useState(false)
   const [isERC20, setIsERC20] = useState(true)
-  // const [isERC721, setIsERC721] = useState(false)
-  // const [isERC1155, setIsERC1155] = useState(false)
 
   const { account, library, chainId } = useActiveWeb3React()
   const { onUserInput } = useWrapActionHandlers()
@@ -62,14 +60,7 @@ export default function InventoryItem({
     [onUserInput]
   )
 
-  // const {
-  //   parsedAmount,
-  // } = useDerivedWrapInfo()
   const { independentField, typedValue } = useWrapState()
-
-  // const parsedAmounts = {
-  //   [Field.INPUT]: independentField === Field.INPUT ? parsedAmount : balance,
-  // }
 
   const formattedAmounts = {
     [independentField]: typedValue
@@ -85,22 +76,9 @@ export default function InventoryItem({
       switch (value.value) {
         case 'ERC20':
           setIsERC20(true)
-          // setIsERC721(false)
-          // setIsERC1155(false)
           break
-        // case 'ERC721':
-        //   setIsERC20(false)
-        //   setIsERC721(true)
-        //   setIsERC1155(false)
-        //   break
-        // case 'ERC1155':
-        //   setIsERC20(false)
-        //   setIsERC721(false)
-        //   setIsERC1155(true)
-        //   break
       }
     },
-    // [setIsERC20, setIsERC721, setIsERC1155]
     [setIsERC20]
   )
 
@@ -180,6 +158,11 @@ export default function InventoryItem({
                 {tokenAddress && tokenAddress.slice(0, 6) + '...' + tokenAddress?.slice(38, 42)}
               </Text>
             </Link>
+            <CopyToClipboard text={tokenAddress != undefined ? tokenAddress : ''}>
+              <IconButton className={theme.name}>
+                <Copy />
+              </IconButton>
+            </CopyToClipboard>
           </div>
           <div className="decimalsRow">
             <div>Decimals:</div>
@@ -187,34 +170,6 @@ export default function InventoryItem({
               {token && token?.decimals}
             </Text>
           </div>
-          {/* <FixedHeightRow>
-            <>
-              <NumericalInput
-                className="token-amount-input"
-                fontSize={'16px'}
-                value={formattedAmounts[Field.INPUT]}
-                onUserInput={val => {
-                  handleNumericalInput(val)
-                }}
-              />
-              {account && token && (
-                <ActionButton className={theme.name} onClick={handleMaxButton}>MAX</ActionButton>
-              )}
-            </>
-          </FixedHeightRow>
-          {tokenAddress !== '' && (
-            <div className="wrapASBlock">
-              <div>Wrap as</div>
-              <div><Dropdown options={options} onChange={onSelect} value={defaultOption} /></div>
-              <div className="clearfix"></div>
-            </div>
-          )}
-          <RowBetween marginTop="10px">
-            {isERC20 && (
-              <ButtonMateriaPrimary style={{ width: 'inherit', marginRight: '10px' }}>Approve</ButtonMateriaPrimary>
-            )}
-            <ButtonMateriaPrimary style={{ width: 'inherit' }}>Wrap</ButtonMateriaPrimary>
-          </RowBetween> */}
         </AutoColumn>
       )}
     </InventoryItemContainer>
