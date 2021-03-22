@@ -411,12 +411,12 @@ body {
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-position: ${({ theme }) => ((theme.name == 'classic' ? '0% 0%' : 'top center'))};
-  /*background-image: ${({ theme }) => (
+  background-image: ${({ theme }) => (
     (theme.name == 'classic' ? 'none' : (
       theme.name == 'dark' ? 'url(' + images.backgrounds.dark + ')' :
         'url(' + images.backgrounds.light + ')'
     ))
-  )};*/
+  )};
   background-color: ${({ theme }) => (
     (theme.name == 'classic' ? theme.black : (
       theme.name == 'dark' ? 'transparent' :

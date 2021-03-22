@@ -44,12 +44,12 @@ export default function App() {
       <Route component={GoogleAnalyticsReporter} />
       <Route component={DarkModeQueryParamReader} />
       <AppWrapper>
-        <div className={ `appBackground ${theme.name}` }>
+        {/* <div className={ `appBackground ${theme.name}` }>
           <video autoPlay muted loop id="myVideo">
             <source src={spaceVideo} type="video/mp4"/>
           </video>
           <div className={ `videoOverlay ${theme.name}` }></div>
-        </div>
+        </div> */}
         <URLWarning />
         <HeaderWrapper>
           <Header />
