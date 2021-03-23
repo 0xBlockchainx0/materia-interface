@@ -1047,11 +1047,11 @@ export const FeatureTitle = styled.h2`
     content: " ";
     display: block;
     width: 1px;
-    height: 120%;
+    height: 100%;
     position: absolute;
     bottom: 0px;
     left: 3px;
-    background: linear-gradient(0deg, rgba(15,63,115,0) 0%, ${({ theme }) => theme.utils.hexToRGB(theme.azure1, 1)} 100%);
+    background: linear-gradient(0deg, rgba(15,63,115,0) 0%, ${({ theme }) => theme.utils.hexToRGB(theme.azure1, 0.5)} 100%);
   }
 
   &.light:after {

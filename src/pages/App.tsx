@@ -46,7 +46,7 @@ export default function App() {
       <AppWrapper>
         <div className={ `appBackground ${theme.name}` }>
           <video autoPlay muted loop id="myVideo">
-            <source src={spaceVideo} type="video/mp4"/>
+            <source src="https://materiadex.com/static/space-4f6501da9af201ec2ef667bb87db6640.mp4" type="video/mp4"/>
           </video>
           <div className={ `videoOverlay ${theme.name}` }></div>
         </div>
