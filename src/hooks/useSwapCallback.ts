@@ -10,6 +10,7 @@ import { useActiveWeb3React } from './index'
 import useTransactionDeadline from './useTransactionDeadline'
 import useENS from './useENS'
 import useCheckIsEthItem from './useCheckIsEthItem'
+import useGetNativeEthItemTokenInfo from './useGetNativeEthItemTokenInfo'
 
 export enum SwapCallbackState {
   INVALID,
@@ -64,6 +65,11 @@ function useSwapCallArguments(
       ? null
       : getEthItemCollectionContract(chainId, ethItemCollection, library, account)
 
+  // Native EthItem 1155 decimals fix
+  const tokenInNativeEthItemInfo = useGetNativeEthItemTokenInfo(tokenIn?.address)
+  const isNativeItem = tokenInNativeEthItemInfo?.native ?? false
+  const nativeDecimals = tokenInNativeEthItemInfo?.decimals ?? null
+
   return useMemo(() => {
     const swapMethods = []
 
@@ -82,7 +88,9 @@ function useSwapCallArguments(
         etherIn,
         etherOut,
         isEthItem,
-        ethItemObjectId?.toString() ?? "0")
+        isNativeItem,
+        ethItemObjectId?.toString() ?? "0",
+        nativeDecimals)
     )
 
     if (isEthItem) {
@@ -119,6 +127,11 @@ export function useSwapCallback(
   const { account, chainId, library } = useActiveWeb3React()
 
   const swapCalls = useSwapCallArguments(trade, allowedSlippage, recipientAddressOrName, tokenIn, tokenOut, etherIn, etherOut)
+  
+  console.log('***************************')
+  console.log('swapCalls: ', swapCalls)
+  console.log('***************************')
+  
   const addTransaction = useTransactionAdder()
 
   const { address: recipientAddress } = useENS(recipientAddressOrName)
@@ -185,7 +198,7 @@ export function useSwapCallback(
           (el, ix, list): el is SuccessfulCall =>
             'gasEstimate' in el && (ix === list.length - 1 || 'gasEstimate' in list[ix + 1])
         )
-        
+
         if (!successfulEstimation) {
           const errorCalls = estimatedCalls.filter((call): call is FailedCall => 'error' in call)
           if (errorCalls.length > 0) {

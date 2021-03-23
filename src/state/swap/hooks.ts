@@ -150,6 +150,22 @@ export function trySaferParseAmountIncludingZeroValues(value?: string, currency?
   return undefined
 }
 
+export function formatNativeTokenValue(currencyAmount?: CurrencyAmount, decimals?: number): JSBI | undefined {
+  if (!currencyAmount || decimals === null || decimals === undefined || decimals >= 18) {
+    return undefined
+  }
+
+  const value = currencyAmount.toExact()
+
+  try {
+    const nativeValue = JSBI.BigInt(parseUnits(value, decimals))
+    return nativeValue;
+  } catch (error) {
+    // should fail if the user specifies too many decimal places of precision (or maybe exceed max uint?)
+    throw `Token ${currencyAmount?.currency?.symbol} has too much decimals!`
+  }
+}
+
 export function decodeInteroperableValueToERC20TokenAmount(currencyAmount?: CurrencyAmount, erc20CurrencyAmount?: CurrencyAmount): CurrencyAmount | undefined {
   if (!currencyAmount || !erc20CurrencyAmount) {
     return undefined
