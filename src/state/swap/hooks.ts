@@ -150,7 +150,7 @@ export function trySaferParseAmountIncludingZeroValues(value?: string, currency?
   return undefined
 }
 
-export function formatNativeTokenValue(currencyAmount?: CurrencyAmount, decimals?: number): JSBI | undefined {
+export function formatEthItemTokenValue(currencyAmount?: CurrencyAmount, decimals?: number): JSBI | undefined {
   if (!currencyAmount || decimals === null || decimals === undefined || decimals >= 18) {
     return undefined
   }

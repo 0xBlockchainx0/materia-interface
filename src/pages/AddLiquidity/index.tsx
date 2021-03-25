@@ -69,11 +69,9 @@ import { Result } from '../../state/multicall/hooks'
 import { Contract } from 'ethers'
 import Web3 from 'web3'
 import useCheckIsEthItem from '../../hooks/useCheckIsEthItem'
-import { decodeInteroperableValueToERC20TokenAmount, formatNativeTokenValue } from '../../state/swap/hooks'
+import { decodeInteroperableValueToERC20TokenAmount, formatEthItemTokenValue } from '../../state/swap/hooks'
 import useUpdateWrappedERC20TokensCallback from '../../hooks/useUpdateWrappedERC20TokensCallback'
 import { Scrollbars } from 'react-custom-scrollbars'
-import AutoSizer from 'react-virtualized-auto-sizer'
-import useGetNativeEthItemTokenInfo from '../../hooks/useGetNativeEthItemTokenInfo'
 
 export default function AddLiquidity({
   match: {
@@ -216,16 +214,14 @@ export default function AddLiquidity({
   const addInteroperableTokens = useAddInteroperableTokens()
 
   const { execute: onLiquidityPoolsUpdate } = useUpdateWrappedERC20TokensCallback(chainId, library, addInteroperableTokens)
-
-  const nativeEthItemInfoA = useGetNativeEthItemTokenInfo(wrappedCurrency(currencyA ?? undefined, chainId ?? 1)?.address)
-  const nativeEthItemInfoB = useGetNativeEthItemTokenInfo(wrappedCurrency(currencyB ?? undefined, chainId ?? 1)?.address)
-
+  
   async function onAdd(checkIsEthItem: Result | undefined) {
     if (!chainId || !library || !account) return
     const router = getOrchestratorContract(chainId, library, account)
     const isEthItem: boolean = checkIsEthItem?.ethItem
     const ethItemCollection: string = checkIsEthItem?.collection
     const ethItemObjectId: JSBI = JSBI.BigInt(checkIsEthItem?.itemId ?? 0)
+    const mainInterfaceDecimals = checkIsEthItem?.decimals ? (checkIsEthItem?.decimals == 1 ? 0 : undefined) : undefined
     const collectionContract: Contract | null =
       (!library || !account || !chainId || !isEthItem)
         ? null
@@ -270,12 +266,9 @@ export default function AddLiquidity({
       let operation: number = ADD_LIQUIDITY_ACTION_SAFE_TRANSFER_TOKEN
       let ethItemArgs: (any | any[])
 
-      // Native EthItem 1155 decimals fix
-      const needDecimalsAdjustment = (currencyBIsWUSD ? nativeEthItemInfoA?.native : nativeEthItemInfoB?.native) ?? false
-      const nativeTokenAmount: JSBI | undefined = needDecimalsAdjustment ? formatNativeTokenValue(
-        (currencyBIsWUSD ? parsedAmountA : parsedAmountB),
-        (currencyBIsWUSD ? nativeEthItemInfoA?.decimals : nativeEthItemInfoB?.decimals)
-      ) : undefined
+      // Native/Wrapped 721/Wrapped 1155 decimals fix
+      const needDecimalsAdjustment = mainInterfaceDecimals === 0
+      const adjustedEthItemTokenAmount: JSBI | undefined = needDecimalsAdjustment ? formatEthItemTokenValue(parsedAmountB, mainInterfaceDecimals) : undefined
 
       // (address from, address to, uint256 id, uint256 amount, bytes calldata data)
       estimate = collectionContract.estimateGas.safeTransferFrom
@@ -299,11 +292,12 @@ export default function AddLiquidity({
         account,
         ORCHESTRATOR_ADDRESS,
         ethItemObjectId?.toString() ?? "0",
-        nativeTokenAmount?.toString() ?? (currencyBIsWUSD ? parsedAmountA.raw.toString() : parsedAmountB.raw.toString()),
+        adjustedEthItemTokenAmount?.toString() ?? (currencyBIsWUSD ? parsedAmountA.raw.toString() : parsedAmountB.raw.toString()),
         ethItemArgs]
       value = null
 
       console.log('***************************')
+      console.log('isEthItemDecimals: ', checkIsEthItem?.decimals?.toString())
       console.log('method: ', methodName)
       console.log('args: ', args)
       console.log('***************************')

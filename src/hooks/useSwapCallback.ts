@@ -10,7 +10,6 @@ import { useActiveWeb3React } from './index'
 import useTransactionDeadline from './useTransactionDeadline'
 import useENS from './useENS'
 import useCheckIsEthItem from './useCheckIsEthItem'
-import useGetNativeEthItemTokenInfo from './useGetNativeEthItemTokenInfo'
 
 export enum SwapCallbackState {
   INVALID,
@@ -60,16 +59,17 @@ function useSwapCallArguments(
   const isEthItem: boolean = tokenAIsEthItem?.ethItem && !etherIn
   const ethItemCollection: string = tokenAIsEthItem?.collection
   const ethItemObjectId: JSBI = JSBI.BigInt(tokenAIsEthItem?.itemId ?? 0)
+  
+  // Native/Wrapped 721/Wrapped 1155 decimals fix
+  const mainInterfaceDecimals = tokenAIsEthItem?.decimals ? (tokenAIsEthItem?.decimals == 1 ? 0 : undefined) : undefined
+  const needEthItemDecimalsAdjustment = mainInterfaceDecimals === 0
+  const ethItemDecimals = mainInterfaceDecimals ?? null
+
   const collectionContract: Contract | null =
     (!library || !account || !chainId || !isEthItem)
       ? null
       : getEthItemCollectionContract(chainId, ethItemCollection, library, account)
-
-  // Native EthItem 1155 decimals fix
-  const tokenInNativeEthItemInfo = useGetNativeEthItemTokenInfo(tokenIn?.address)
-  const isNativeItem = tokenInNativeEthItemInfo?.native ?? false
-  const nativeDecimals = tokenInNativeEthItemInfo?.decimals ?? null
-
+      
   return useMemo(() => {
     const swapMethods = []
 
@@ -88,9 +88,9 @@ function useSwapCallArguments(
         etherIn,
         etherOut,
         isEthItem,
-        isNativeItem,
+        needEthItemDecimalsAdjustment,
         ethItemObjectId?.toString() ?? "0",
-        nativeDecimals)
+        ethItemDecimals)
     )
 
     if (isEthItem) {
