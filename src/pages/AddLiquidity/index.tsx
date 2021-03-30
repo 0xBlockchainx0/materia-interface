@@ -214,7 +214,7 @@ export default function AddLiquidity({
   const addInteroperableTokens = useAddInteroperableTokens()
 
   const { execute: onLiquidityPoolsUpdate } = useUpdateWrappedERC20TokensCallback(chainId, library, addInteroperableTokens)
-  
+
   async function onAdd(checkIsEthItem: Result | undefined) {
     if (!chainId || !library || !account) return
     const router = getOrchestratorContract(chainId, library, account)
@@ -295,12 +295,6 @@ export default function AddLiquidity({
         adjustedEthItemTokenAmount?.toString() ?? (currencyBIsWUSD ? parsedAmountA.raw.toString() : parsedAmountB.raw.toString()),
         ethItemArgs]
       value = null
-
-      console.log('***************************')
-      console.log('isEthItemDecimals: ', checkIsEthItem?.decimals?.toString())
-      console.log('method: ', methodName)
-      console.log('args: ', args)
-      console.log('***************************')
     }
     else {
       if (currencyA === ETHER || currencyB === ETHER) {
@@ -335,6 +329,11 @@ export default function AddLiquidity({
         value = null
       }
     }
+
+    console.log('***************************')
+    console.log('method: ', methodName)
+    console.log('args: ', args)
+    console.log('***************************')
 
     setAttemptingTxn(true)
     await estimate(...args, value ? { value } : {})
