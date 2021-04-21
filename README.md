@@ -1,6 +1,6 @@
 # Materia Interface
 
-UI Interface for Materia, World first, User-Centric DEX governed by On-Chain, Enterprise-Free Organization.
+UI Interface for Materia, Multi-standard Decentralized Exchange governed by decentralized flexible organization.
 
 - Website: [materiadex.com](https://materiadex.com)
 - Interface: [materia.exchange](https://materia.exchange)
