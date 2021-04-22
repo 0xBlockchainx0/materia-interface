@@ -88,7 +88,7 @@ export default function UnstakingModal({ isOpen, onDismiss, stakingInfo }: Staki
                 <TYPE.body fontWeight={600} fontSize={36}>
                   {<FormattedCurrencyAmount currencyAmount={stakingInfo.stakedAmount} />}
                 </TYPE.body>
-                <TYPE.body>Deposited liquidity:</TYPE.body>
+                <TYPE.body>Deposited liquidity</TYPE.body>
               </AutoColumn>
             )}
             {stakingInfo?.earnedAmount && (

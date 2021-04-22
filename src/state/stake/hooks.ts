@@ -6,9 +6,9 @@ import { useActiveWeb3React } from '../../hooks'
 import { NEVER_RELOAD, useMultipleContractSingleData } from '../multicall/hooks'
 import { tryParseAmount } from '../swap/hooks'
 
-export const STAKING_GENESIS = 1614634200
+export const STAKING_GENESIS = 1618927200
 
-export const REWARDS_DURATION_DAYS = 45
+export const REWARDS_DURATION_DAYS = 60
 
 // TODO add staking rewards addresses here
 export const STAKING_REWARDS_INFO: {
@@ -63,6 +63,34 @@ export const STAKING_REWARDS_INFO: {
   ]
 }
 
+export const STAKING_REWARDS_INFO_SEASON_TWO: {
+  [chainId in ChainId]?: {
+    tokens: [Token, Token]
+    stakingRewardAddress: string
+  }[]
+} = {
+  [ChainId.MAINNET]: [
+    {
+      tokens: [WUSD[ChainId.MAINNET], IETH[ChainId.MAINNET]],
+      stakingRewardAddress: '0x3CC48243bb9E4546E9dEf4a84b7A24cA32aDA299'
+    },
+    {
+      tokens: [WUSD[ChainId.MAINNET], IGIL[ChainId.MAINNET]],
+      stakingRewardAddress: '0x8bab29e8B767F647530A0a61dbe0C13EF1856566'
+    },
+  ],
+  [ChainId.ROPSTEN]: [
+    {
+      tokens: [WUSD[ChainId.ROPSTEN], IETH[ChainId.ROPSTEN]],
+      stakingRewardAddress: '0x2ba8BA3E410E24E4DD50dE36D3730a22E13Bd034'
+    },
+    {
+      tokens: [WUSD[ChainId.ROPSTEN], IGIL[ChainId.ROPSTEN]],
+      stakingRewardAddress: '0xd0172f46880169F30857D301Daac9cB069de69Dc'
+    },
+  ]
+}
+
 export interface StakingInfo {
   // the address of the reward contract
   stakingRewardAddress: string
@@ -81,6 +109,8 @@ export interface StakingInfo {
   rewardRate: TokenAmount
   // when the period ends
   periodFinish: Date | undefined
+  // season enabled or ended
+  isEnabled: Boolean | undefined
   // calculates a hypothetical amount of token distributed to the active account per second.
   getHypotheticalRewardRate: (
     stakedAmount: TokenAmount,
@@ -199,6 +229,133 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
         const periodFinishMs = periodFinishState.result?.[0]?.mul(1000)?.toNumber()
 
         memo.push({
+          isEnabled: false,
+          stakingRewardAddress: rewardsAddress,
+          tokens: info[index].tokens,
+          periodFinish: periodFinishMs > 0 ? new Date(periodFinishMs) : undefined,
+          earnedAmount: new TokenAmount(gil, JSBI.BigInt(earnedAmountState?.result?.[0] ?? 0)),
+          rewardRate: individualRewardRate,
+          totalRewardRate: totalRewardRate,
+          stakedAmount: stakedAmount,
+          totalStakedAmount: totalStakedAmount,
+          getHypotheticalRewardRate
+        })
+      }
+      return memo
+    }, [])
+  }, [balances, chainId, earnedAmounts, info, periodFinishes, rewardRates, rewardsAddresses, totalSupplies, gil])
+}
+
+export function useStakingInfoSecondSeason(pairToFilterBy?: Pair | null): StakingInfo[] {
+  const { chainId, account } = useActiveWeb3React()
+
+  const info = useMemo(
+    () =>
+      chainId
+        ? STAKING_REWARDS_INFO_SEASON_TWO[chainId]?.filter(stakingRewardInfo =>
+            pairToFilterBy === undefined
+              ? true
+              : pairToFilterBy === null
+              ? false
+              : pairToFilterBy.involvesToken(stakingRewardInfo.tokens[0]) &&
+                pairToFilterBy.involvesToken(stakingRewardInfo.tokens[1])
+          ) ?? []
+        : [],
+    [chainId, pairToFilterBy]
+  )
+
+  const gil = chainId ? GIL[chainId] : undefined
+
+  const rewardsAddresses = useMemo(() => info.map(({ stakingRewardAddress }) => stakingRewardAddress), [info])
+
+  const accountArg = useMemo(() => [account ?? undefined], [account])
+
+  // get all the info from the staking rewards contracts
+  const balances = useMultipleContractSingleData(rewardsAddresses, STAKING_REWARDS_INTERFACE, 'balanceOf', accountArg)
+  const earnedAmounts = useMultipleContractSingleData(rewardsAddresses, STAKING_REWARDS_INTERFACE, 'earned', accountArg)
+  const totalSupplies = useMultipleContractSingleData(rewardsAddresses, STAKING_REWARDS_INTERFACE, 'totalSupply')
+
+  // tokens per second, constants
+  const rewardRates = useMultipleContractSingleData(
+    rewardsAddresses,
+    STAKING_REWARDS_INTERFACE,
+    'rewardRate',
+    undefined,
+    NEVER_RELOAD
+  )
+  const periodFinishes = useMultipleContractSingleData(
+    rewardsAddresses,
+    STAKING_REWARDS_INTERFACE,
+    'periodFinish',
+    undefined,
+    NEVER_RELOAD
+  )
+
+  return useMemo(() => {
+    if (!chainId || !gil) return []
+
+    return rewardsAddresses.reduce<StakingInfo[]>((memo, rewardsAddress, index) => {
+      // these two are dependent on account
+      const balanceState = balances[index]
+      const earnedAmountState = earnedAmounts[index]
+
+      // these get fetched regardless of account
+      const totalSupplyState = totalSupplies[index]
+      const rewardRateState = rewardRates[index]
+      const periodFinishState = periodFinishes[index]
+
+      if (
+        // these may be undefined if not logged in
+        !balanceState?.loading &&
+        !earnedAmountState?.loading &&
+        // always need these
+        totalSupplyState &&
+        !totalSupplyState.loading &&
+        rewardRateState &&
+        !rewardRateState.loading &&
+        periodFinishState &&
+        !periodFinishState.loading
+      ) {
+        if (
+          balanceState?.error ||
+          earnedAmountState?.error ||
+          totalSupplyState.error ||
+          rewardRateState.error ||
+          periodFinishState.error
+        ) {
+          console.error('Failed to load staking rewards info')
+          return memo
+        }
+
+        // get the MP token
+        const tokens = info[index].tokens
+        const dummyPair = new Pair(new TokenAmount(tokens[0], '0'), new TokenAmount(tokens[1], '0'))
+
+        // check for account, if no account set to 0
+
+        const stakedAmount = new TokenAmount(dummyPair.liquidityToken, JSBI.BigInt(balanceState?.result?.[0] ?? 0))
+        const totalStakedAmount = new TokenAmount(dummyPair.liquidityToken, JSBI.BigInt(totalSupplyState.result?.[0]))
+        const totalRewardRate = new TokenAmount(gil, JSBI.BigInt(rewardRateState.result?.[0]))
+
+        const getHypotheticalRewardRate = (
+          stakedAmount: TokenAmount,
+          totalStakedAmount: TokenAmount,
+          totalRewardRate: TokenAmount
+        ): TokenAmount => {
+          return new TokenAmount(
+            gil,
+            JSBI.greaterThan(totalStakedAmount.raw, JSBI.BigInt(0))
+              ? JSBI.divide(JSBI.multiply(totalRewardRate.raw, stakedAmount.raw), totalStakedAmount.raw)
+              : JSBI.BigInt(0)
+          )
+        }
+
+        const individualRewardRate = getHypotheticalRewardRate(stakedAmount, totalStakedAmount, totalRewardRate)
+
+        const periodFinishMs = periodFinishState.result?.[0]?.mul(1000)?.toNumber()
+
+        memo.push({
+          isEnabled: true,
           stakingRewardAddress: rewardsAddress,
           tokens: info[index].tokens,
           periodFinish: periodFinishMs > 0 ? new Date(periodFinishMs) : undefined,

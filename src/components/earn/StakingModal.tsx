@@ -223,7 +223,7 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
             />
             <DynamicGrid className={theme.name} columns={2}>
               <div className="text-left text">
-                <div className="mb20">Weekly Rewards</div>
+                <div className="mb20">Rewards</div>
                 <ButtonMateriaConfirmed
                   className={theme.name}
                   onClick={onAttemptToApprove}

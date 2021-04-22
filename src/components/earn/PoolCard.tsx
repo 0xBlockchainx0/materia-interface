@@ -2,12 +2,12 @@ import React, { useContext } from 'react'
 import { AutoColumn } from '../Column'
 import { RowBetween } from '../Row'
 import styled, { ThemeContext } from 'styled-components'
-import { 
+import {
   SecondaryPanelBoxContainer,
   SecondaryPanelBoxContainerExtraDecorator,
   Divider,
   ActionButton,
-  TYPE, 
+  TYPE,
   StyledInternalButtonLink,
   DynamicGrid
 } from '../../theme'
@@ -37,6 +37,7 @@ export default function PoolCard({ stakingInfo }: { stakingInfo: StakingInfo }) 
   const currencyWUSD = unwrappedToken(WUSD[chainId ?? 1])
 
   const isStaking = Boolean(stakingInfo.stakedAmount.greaterThan('0'))
+  const isEnabled = Boolean(stakingInfo.isEnabled)
 
   // get the color of the token
   const token = currency0 === currencyWUSD ? token1 : token0
@@ -62,21 +63,24 @@ export default function PoolCard({ stakingInfo }: { stakingInfo: StakingInfo }) 
       )
     )
   }
-  
+
   return (
     <SecondaryPanelBoxContainer className={`${theme.name}`}>
       <div className="inner-content p10">
-        <DynamicGrid className={theme.name} columns={2} columnsDefinitions={[{value: 25, location: 2}]}>
+        <DynamicGrid className={theme.name} columns={2} columnsDefinitions={[{ value: 25, location: 2 }]}>
           <div className="text-left">
-            <DynamicGrid className={theme.name} columns={2} columnsDefinitions={[{value: 90, location: 2}]}>
+            <DynamicGrid className={theme.name} columns={2} columnsDefinitions={[{ value: 90, location: 2 }]}>
               <DoubleCurrencyLogo currency0={currency0} currency1={currency1} size={24} radius={true} />
               <div className="title ml10 pl-mobile-25">{currency0.symbol}-{currency1.symbol}</div>
-            </DynamicGrid>             
+            </DynamicGrid>
           </div>
           <div className="text-right">
-            <StyledInternalButtonLink to={`/lm/${currencyId(currency0)}/${currencyId(currency1)}`}>
-              <ActionButton className={theme.name}> {isStaking ? 'Manage' : 'Deposit'} </ActionButton>
-            </StyledInternalButtonLink>
+            {isEnabled || isStaking ?
+              (<StyledInternalButtonLink to={`/lm/${currencyId(currency0)}/${currencyId(currency1)}`}>
+                <ActionButton className={theme.name}> {isEnabled && isStaking ? 'Manage' : isEnabled ? 'Deposit' : 'Retrive'} </ActionButton>
+              </StyledInternalButtonLink>)
+
+              : (<></>)}
           </div>
         </DynamicGrid>
         <DynamicGrid className={`mt10 ${theme.name}`} columns={2}>
@@ -85,23 +89,25 @@ export default function PoolCard({ stakingInfo }: { stakingInfo: StakingInfo }) 
             {`${valueOfTotalStakedAmountInUSD?.toSignificant(4) ?? '-'} WUSD`}
           </div>
         </DynamicGrid>
-        <DynamicGrid className={`mt10 ${theme.name}`} columns={2}>
-          <div className="text-left">Pool rate</div>
-          <div className="text-right">
-            {`${stakingInfo.totalRewardRate ?.multiply(`${60 * 60 * 24}`) ?.toFixed(0)} GIL / day`} 
-          </div>
-        </DynamicGrid>
-          {isStaking && (
-            <>
-              <Divider className={`${theme.name} reduced-margins`}/>
-              <DynamicGrid className={`${theme.name}`} columns={2}>
-                <div className="text-left">Your rate</div>
-                <div className="text-right">{`${stakingInfo.rewardRate ?.multiply(`${60 * 60 * 24}`) ?.toSignificant(4)} GIL / day`}</div>
-              </DynamicGrid>
-            </>
-          )}
+        {isEnabled && (
+          <DynamicGrid className={`mt10 ${theme.name}`} columns={2}>
+            <div className="text-left">Pool rate</div>
+            <div className="text-right">
+              {`${stakingInfo.totalRewardRate?.multiply(`${60 * 60 * 24}`)?.toFixed(0)} GIL / day`}
+            </div>
+          </DynamicGrid>
+        )}
+        {isEnabled && isStaking && (
+          <>
+            <Divider className={`${theme.name} reduced-margins`} />
+            <DynamicGrid className={`${theme.name}`} columns={2}>
+              <div className="text-left">Your rate</div>
+              <div className="text-right">{`${stakingInfo.rewardRate?.multiply(`${60 * 60 * 24}`)?.toSignificant(4)} GIL / day`}</div>
+            </DynamicGrid>
+          </>
+        )}
       </div>
     </SecondaryPanelBoxContainer>
-    
+
   )
 }

@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react'
 import { ThemeContext } from 'styled-components'
-import { STAKING_REWARDS_INFO, useStakingInfo } from '../../state/stake/hooks'
+import { STAKING_REWARDS_INFO, STAKING_REWARDS_INFO_SEASON_TWO, useStakingInfo, useStakingInfoSecondSeason } from '../../state/stake/hooks'
 import PoolCard from '../../components/earn/PoolCard'
 import { Countdown } from './Countdown'
 import Loader from '../../components/Loader'
@@ -26,6 +26,10 @@ export default function Earn() {
   const { chainId } = useActiveWeb3React()
   const stakingInfos = useStakingInfo()
   const stakingRewardsExist = Boolean(typeof chainId === 'number' && (STAKING_REWARDS_INFO[chainId]?.length ?? 0) > 0)
+
+  const stakingInfoSeasonTwo = useStakingInfoSecondSeason()
+  const stakingRewardsExistSeasonTwo = Boolean(typeof chainId === 'number' && (STAKING_REWARDS_INFO_SEASON_TWO[chainId]?.length ?? 0) > 0)
+
   const theme = useContext(ThemeContext)
   const [showMore, setShowMore] = useState(false)
 
@@ -56,12 +60,28 @@ export default function Earn() {
               <DynamicGrid className={theme.name} columns={2}>
                 <div className={`text-left title ${theme.name}`}>Participating pools</div>
                 <div className="text-right">
-                  <Countdown exactEnd={stakingInfos?.[0]?.periodFinish} />
+                  <Countdown exactEnd={stakingInfoSeasonTwo?.[0]?.periodFinish} />
                 </div>
               </DynamicGrid>
             </TabsBar>
             <div className="clear-fix">
               <PageContentContainer className={`one ${theme.name}`}>
+              <SectionTitle className={`mt10 ${theme.name}`}>Season two</SectionTitle>
+
+              <PoolSection>
+                  {stakingRewardsExistSeasonTwo && stakingInfoSeasonTwo?.length === 0 ? (
+                    <Loader style={{ margin: 'auto' }} />
+                  ) : !stakingRewardsExistSeasonTwo ? (
+                    'No active rewards'
+                  ) : (
+                    stakingInfoSeasonTwo?.map(stakingInfo => {
+                          // need to sort by added liquidity here
+                          return <PoolCard key={stakingInfo.stakingRewardAddress} stakingInfo={stakingInfo} />
+                        })
+                      )}
+                </PoolSection>
+
+                <SectionTitle className={`mt10 ${theme.name}`}>First Season</SectionTitle>
                 <PoolSection>
                   {stakingRewardsExist && stakingInfos?.length === 0 ? (
                     <Loader style={{ margin: 'auto' }} />
