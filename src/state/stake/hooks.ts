@@ -74,14 +74,14 @@ export const STAKING_REWARDS_INFO_SEASON_TWO: {
   }[]
 } = {
   [ChainId.MAINNET]: [
-    // {
-    //   tokens: [WUSD[ChainId.MAINNET], IETH[ChainId.MAINNET]],
-    //   stakingRewardAddress: '0x3CC48243bb9E4546E9dEf4a84b7A24cA32aDA299'
-    // },
-    // {
-    //   tokens: [WUSD[ChainId.MAINNET], IGIL[ChainId.MAINNET]],
-    //   stakingRewardAddress: '0x8bab29e8B767F647530A0a61dbe0C13EF1856566'
-    // },
+    {
+      tokens: [WUSD[ChainId.MAINNET], IETH[ChainId.MAINNET]],
+      stakingRewardAddress: '0x586f8FE41fB6eF9135513DD2247F5259c624c6AB'
+    },
+    {
+      tokens: [WUSD[ChainId.MAINNET], IGIL[ChainId.MAINNET]],
+      stakingRewardAddress: '0xE5f2B132D0b4d27661788F6d582Bd0436c51153A'
+    },
   ],
   [ChainId.ROPSTEN]: [
     {
