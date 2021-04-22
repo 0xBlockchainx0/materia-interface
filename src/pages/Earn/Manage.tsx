@@ -23,7 +23,7 @@ import {
 } from '../../theme'
 import { ButtonMateriaPrimary } from '../../components/Button'
 import StakingModal from '../../components/earn/StakingModal'
-import { useStakingInfo } from '../../state/stake/hooks'
+import { StakingSeason, useStakingInfo, useStakingInfoSecondSeason } from '../../state/stake/hooks'
 import UnstakingModal from '../../components/earn/UnstakingModal'
 import ClaimRewardModal from '../../components/earn/ClaimRewardModal'
 import { useTokenBalance } from '../../state/wallet/hooks'
@@ -41,9 +41,9 @@ import AppBody from '../AppBody'
 
 export default function Manage({
   match: {
-    params: { currencyIdA, currencyIdB }
+    params: { currencyIdA, currencyIdB, season }
   }
-}: RouteComponentProps<{ currencyIdA: string; currencyIdB: string }>) {
+}: RouteComponentProps<{ currencyIdA: string; currencyIdB: string, season: string }>) {
   const theme = useContext(ThemeContext)
 
   const { account, chainId } = useActiveWeb3React()
@@ -54,7 +54,13 @@ export default function Manage({
   const tokenB = wrappedCurrency(currencyB ?? undefined, chainId)
 
   const [, stakingTokenPair] = usePair(tokenA, tokenB)
-  const stakingInfo = useStakingInfo(stakingTokenPair)?.[0]
+  
+  const stakingInfoSeasonOne = useStakingInfo(stakingTokenPair)?.[0]
+  const stakingInfoSeasonTwo = useStakingInfoSecondSeason(stakingTokenPair)?.[0]
+  const stakingInfo =
+    season == StakingSeason.SEASON_TWO
+      ? stakingInfoSeasonTwo
+      : stakingInfoSeasonOne
 
   // detect existing unstaked MP position to show add button if none found
   const userLiquidityUnstaked = useTokenBalance(account ?? undefined, stakingInfo?.stakedAmount?.token)

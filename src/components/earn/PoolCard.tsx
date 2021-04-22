@@ -14,7 +14,7 @@ import {
 import DoubleCurrencyLogo from '../DoubleLogo'
 import { JSBI, TokenAmount } from '@materia-dex/sdk'
 import { ButtonMateriaPrimary } from '../Button'
-import { StakingInfo } from '../../state/stake/hooks'
+import { StakingInfo, StakingSeason } from '../../state/stake/hooks'
 import { useColor } from '../../hooks/useColor'
 import { currencyId } from '../../utils/currencyId'
 import { Break } from './styled'
@@ -24,7 +24,7 @@ import { usePair } from '../../data/Reserves'
 import { useActiveWeb3React } from '../../hooks'
 import { WUSD } from '../../constants'
 
-export default function PoolCard({ stakingInfo }: { stakingInfo: StakingInfo }) {
+export default function PoolCard({ stakingInfo, stakingSeason }: { stakingInfo: StakingInfo, stakingSeason: StakingSeason }) {
   const theme = useContext(ThemeContext)
 
   const { chainId } = useActiveWeb3React()
@@ -76,7 +76,7 @@ export default function PoolCard({ stakingInfo }: { stakingInfo: StakingInfo }) 
           </div>
           <div className="text-right">
             {isEnabled || isStaking ?
-              (<StyledInternalButtonLink to={`/lm/${currencyId(currency0)}/${currencyId(currency1)}`}>
+              (<StyledInternalButtonLink to={`/lm/${currencyId(currency0)}/${currencyId(currency1)}/${stakingSeason}`}>
                 <ActionButton className={theme.name}> {isEnabled && isStaking ? 'Manage' : isEnabled ? 'Deposit' : 'Retrive'} </ActionButton>
               </StyledInternalButtonLink>)
 

@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react'
 import { ThemeContext } from 'styled-components'
-import { STAKING_REWARDS_INFO, STAKING_REWARDS_INFO_SEASON_TWO, useStakingInfo, useStakingInfoSecondSeason } from '../../state/stake/hooks'
+import { StakingSeason, STAKING_REWARDS_INFO, STAKING_REWARDS_INFO_SEASON_TWO, useStakingInfo, useStakingInfoSecondSeason } from '../../state/stake/hooks'
 import PoolCard from '../../components/earn/PoolCard'
 import { Countdown } from './Countdown'
 import Loader from '../../components/Loader'
@@ -66,19 +66,19 @@ export default function Earn() {
             </TabsBar>
             <div className="clear-fix">
               <PageContentContainer className={`one ${theme.name}`}>
-              <SectionTitle className={`mt10 ${theme.name}`}>Season two</SectionTitle>
+                <SectionTitle className={`mt10 ${theme.name}`}>Season two</SectionTitle>
 
-              <PoolSection>
+                <PoolSection>
                   {stakingRewardsExistSeasonTwo && stakingInfoSeasonTwo?.length === 0 ? (
                     <Loader style={{ margin: 'auto' }} />
                   ) : !stakingRewardsExistSeasonTwo ? (
                     'No active rewards'
                   ) : (
                     stakingInfoSeasonTwo?.map(stakingInfo => {
-                          // need to sort by added liquidity here
-                          return <PoolCard key={stakingInfo.stakingRewardAddress} stakingInfo={stakingInfo} />
-                        })
-                      )}
+                      // need to sort by added liquidity here
+                      return <PoolCard key={stakingInfo.stakingRewardAddress} stakingInfo={stakingInfo} stakingSeason={StakingSeason.SEASON_TWO}/>
+                    })
+                  )}
                 </PoolSection>
 
                 <SectionTitle className={`mt10 ${theme.name}`}>First Season</SectionTitle>
@@ -88,11 +88,11 @@ export default function Earn() {
                   ) : !stakingRewardsExist ? (
                     'No active rewards'
                   ) : (
-                        stakingInfos?.map(stakingInfo => {
-                          // need to sort by added liquidity here
-                          return <PoolCard key={stakingInfo.stakingRewardAddress} stakingInfo={stakingInfo} />
-                        })
-                      )}
+                    stakingInfos?.map(stakingInfo => {
+                      // need to sort by added liquidity here
+                      return <PoolCard key={stakingInfo.stakingRewardAddress} stakingInfo={stakingInfo} stakingSeason={StakingSeason.SEASON_ONE}/>
+                    })
+                  )}
                 </PoolSection>
               </PageContentContainer>
             </div>

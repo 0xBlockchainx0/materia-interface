@@ -6,9 +6,13 @@ import { useActiveWeb3React } from '../../hooks'
 import { NEVER_RELOAD, useMultipleContractSingleData } from '../multicall/hooks'
 import { tryParseAmount } from '../swap/hooks'
 
-export const STAKING_GENESIS = 1618927200
-
+export const STAKING_GENESIS = 1619088600
 export const REWARDS_DURATION_DAYS = 60
+
+export enum StakingSeason {
+  SEASON_ONE = "SEASON_ONE",
+  SEASON_TWO = "SEASON_TWO",
+}
 
 // TODO add staking rewards addresses here
 export const STAKING_REWARDS_INFO: {
@@ -70,23 +74,23 @@ export const STAKING_REWARDS_INFO_SEASON_TWO: {
   }[]
 } = {
   [ChainId.MAINNET]: [
-    {
-      tokens: [WUSD[ChainId.MAINNET], IETH[ChainId.MAINNET]],
-      stakingRewardAddress: '0x3CC48243bb9E4546E9dEf4a84b7A24cA32aDA299'
-    },
-    {
-      tokens: [WUSD[ChainId.MAINNET], IGIL[ChainId.MAINNET]],
-      stakingRewardAddress: '0x8bab29e8B767F647530A0a61dbe0C13EF1856566'
-    },
+    // {
+    //   tokens: [WUSD[ChainId.MAINNET], IETH[ChainId.MAINNET]],
+    //   stakingRewardAddress: '0x3CC48243bb9E4546E9dEf4a84b7A24cA32aDA299'
+    // },
+    // {
+    //   tokens: [WUSD[ChainId.MAINNET], IGIL[ChainId.MAINNET]],
+    //   stakingRewardAddress: '0x8bab29e8B767F647530A0a61dbe0C13EF1856566'
+    // },
   ],
   [ChainId.ROPSTEN]: [
     {
       tokens: [WUSD[ChainId.ROPSTEN], IETH[ChainId.ROPSTEN]],
-      stakingRewardAddress: '0x2ba8BA3E410E24E4DD50dE36D3730a22E13Bd034'
+      stakingRewardAddress: '0x9F60F4056652fd1e7894f0b6fE7278bdbDDcDb62'
     },
     {
       tokens: [WUSD[ChainId.ROPSTEN], IGIL[ChainId.ROPSTEN]],
-      stakingRewardAddress: '0xd0172f46880169F30857D301Daac9cB069de69Dc'
+      stakingRewardAddress: '0x26256f54e4a69062d3e303f28E3Cd9DAD5E79e89'
     },
   ]
 }
@@ -127,13 +131,13 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
     () =>
       chainId
         ? STAKING_REWARDS_INFO[chainId]?.filter(stakingRewardInfo =>
-            pairToFilterBy === undefined
-              ? true
-              : pairToFilterBy === null
+          pairToFilterBy === undefined
+            ? true
+            : pairToFilterBy === null
               ? false
               : pairToFilterBy.involvesToken(stakingRewardInfo.tokens[0]) &&
-                pairToFilterBy.involvesToken(stakingRewardInfo.tokens[1])
-          ) ?? []
+              pairToFilterBy.involvesToken(stakingRewardInfo.tokens[1])
+        ) ?? []
         : [],
     [chainId, pairToFilterBy]
   )
@@ -253,13 +257,13 @@ export function useStakingInfoSecondSeason(pairToFilterBy?: Pair | null): Stakin
     () =>
       chainId
         ? STAKING_REWARDS_INFO_SEASON_TWO[chainId]?.filter(stakingRewardInfo =>
-            pairToFilterBy === undefined
-              ? true
-              : pairToFilterBy === null
+          pairToFilterBy === undefined
+            ? true
+            : pairToFilterBy === null
               ? false
               : pairToFilterBy.involvesToken(stakingRewardInfo.tokens[0]) &&
-                pairToFilterBy.involvesToken(stakingRewardInfo.tokens[1])
-          ) ?? []
+              pairToFilterBy.involvesToken(stakingRewardInfo.tokens[1])
+        ) ?? []
         : [],
     [chainId, pairToFilterBy]
   )
