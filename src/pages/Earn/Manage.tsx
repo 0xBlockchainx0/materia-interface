@@ -234,7 +234,20 @@ export default function Manage({
                     <SimpleTextParagraph className={`text-centered ${theme.name}`}>
                       When you withdraw, the contract will automagically claim GIL on your behalf!
                     </SimpleTextParagraph>
-                    {!showAddLiquidityButton && (
+                    {/* LIQUIDITY MINING SEASON ONE */}
+                    {!showAddLiquidityButton && season == StakingSeason.SEASON_ONE && (
+                      <DynamicGrid className={`${theme.name}`} columns={(stakingInfo?.stakedAmount?.greaterThan(JSBI.BigInt(0)) ? 1 : 0)}>
+                        {stakingInfo?.stakedAmount?.greaterThan(JSBI.BigInt(0)) && (
+                          <div className="text-centered">
+                            <ButtonMateriaPrimary className={theme.name} width={'fit-content'} onClick={() => setShowUnstakingModal(true)}>
+                              Withdraw
+                              </ButtonMateriaPrimary>
+                          </div>
+                        )}
+                      </DynamicGrid>
+                    )}
+                    {/* LIQUIDITY MINING SEASON TWO */}
+                    {!showAddLiquidityButton && season == StakingSeason.SEASON_TWO && (
                       <DynamicGrid className={`${theme.name}`} columns={(stakingInfo?.stakedAmount?.greaterThan(JSBI.BigInt(0)) ? 2 : 1)}>
                         <div className={`${(stakingInfo?.stakedAmount?.greaterThan(JSBI.BigInt(0)) ? 'text-left' : 'text-centered')}`}>
                           <ButtonMateriaPrimary className={theme.name} width={'fit-content'} onClick={handleDepositClick}>
