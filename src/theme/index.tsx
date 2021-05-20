@@ -231,7 +231,7 @@ export function theme(darkMode: boolean, classicMode: boolean): DefaultTheme {
       classicMode ?
         css`
     border: solid 1px #424542;
-    border-radius: 7px;
+    border-radius: 1rem;
     box-shadow: 1px 1px #e7dfe7, -1px -1px #e7dfe7, 1px -1px #e7dfe7, -1px 1px #e7dfe7, 0 -2px #9c9a9c, -2px 0 #7b757b,
       0 2px #424542;
     background: #04009d;
@@ -295,7 +295,7 @@ export function theme(darkMode: boolean, classicMode: boolean): DefaultTheme {
     background: -ms-linear-gradient(top, #700e9c 0%, #6c1237 100%);
     background: linear-gradient(to bottom, #700e9c 0%, #6c1237 100%);
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#700e9c', endColorstr='#6c1237',GradientType=0 );
-    border-radius: 7px;
+    border-radius: 1rem;
     `
       : css`
     -webkit-backface-visibility: hidden;
@@ -865,7 +865,7 @@ MARGIN STYLE MINUS
     min-height: 100%;
   }
 
-  .appBackground .videoOverlay.dark { background-color: ${({ theme }) => theme.utils.hexToRGB(theme.blue2, 0.7)} }
+  .appBackground .videoOverlay.dark { background-color: rgb(3 26 56 / 77%); }
   .appBackground .videoOverlay.light { background-color: ${({ theme }) => theme.utils.hexToRGB(theme.white, 0.9)} }
   .appBackground.classic { display: none; }
   
@@ -913,13 +913,9 @@ export const MainContainer = styled.div`
   width: 100%;
   display: inline-block;
   z-index: 2;
-  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),0px 24px 32px rgba(0, 0, 0, 0.01);
-
-  &.dark { border: solid 1px ${({ theme }) => theme.utils.hexToRGB(theme.azure4, 0.7)}; } 
-  &.light { border: solid 1px ${({ theme }) => theme.utils.hexToRGB(theme.violet1, 0.4)}; }
   &.classic { 
     padding: 0px;
-    border-radius: 7px;
+    border-radius: 1rem;
     border: solid 2px #424542;
     box-shadow: 1px 1px #e7dfe7, -1px -1px #e7dfe7, 1px -1px #e7dfe7, -1px 1px #e7dfe7, 0 -2px #9c9a9c, -2px 0 #7b757b,
       0 2px #424542;
@@ -962,6 +958,7 @@ export const MainContainer = styled.div`
 `
 export const MainContainerExtraDecorator = styled.div`
   position: absolute;
+  display:none;
   width: 100%;
   height: 100%;
   z-index: -1;
@@ -999,12 +996,14 @@ export const MainContainerContentWrapper = styled.div`
   max-width: 1200px;
   min-height: 620px;
   width: 100%;
-  border-radius: 3px;
-  padding: 5px 5px 5px 40px;
+  border-radius: .65rem;
+  padding: 15px 15px 5px 40px;
   background-size: cover;
+  --tw-shadow: 0px 50px 250px -47px rgba(39,176,230,0.29)!important;
+
   &.dark {
     background: rgb(31,121,228);
-    background: linear-gradient(170deg, rgba(31,121,228,0.7) 0%, rgba(2,7,30,0.4) 39%, rgba(10,33,75,0.7) 79%);
+    background-color: rgb(6 31 64)!important
   }
   //&.dark { background: linear-gradient(133deg, ${({ theme }) => theme.utils.hexToRGB(theme.blue2, 0.8)} 60%, ${({ theme }) => theme.utils.hexToRGB(theme.azure3, 0.3)} 100%); }
   &.light { background: linear-gradient(133deg, ${({ theme }) => theme.utils.hexToRGB(theme.violet2, 0.3)} 60%, ${({ theme }) => theme.utils.hexToRGB(theme.violet3, 0.3)} 100%); }
@@ -1022,7 +1021,7 @@ export const FeatureTitle = styled.h2`
   margin:0px;
   position: absolute;
   top: 0px;
-  left: -3px;
+  left: 0px;
   text-transform: capitalize;
   display: inline-block;
   z-index: 10;
@@ -1040,30 +1039,6 @@ export const FeatureTitle = styled.h2`
     left: 0px;
     text-shadow: 1px 1px 1px ${({ theme }) => theme.black}
   }
-
-  &.dark:before { }
-
-  &.dark:after {
-    content: " ";
-    display: block;
-    width: 1px;
-    height: 100%;
-    position: absolute;
-    bottom: 0px;
-    left: 3px;
-    background: linear-gradient(0deg, rgba(15,63,115,0) 0%, ${({ theme }) => theme.utils.hexToRGB(theme.azure1, 0.5)} 100%);
-  }
-
-  &.light:after {
-    content: " ";
-    display: block;
-    width: 1px;
-    height: 120%;
-    position: absolute;
-    bottom: 0px;
-    left: 3px;
-    background: linear-gradient(0deg, rgba(15,63,115,0) 0%, ${({ theme }) => theme.utils.hexToRGB(theme.violet1, 1)} 100%);
-  }
   
   @media (max-width: 1050px) { display: none; }
 `
@@ -1073,7 +1048,11 @@ export const FeatureChildrenContainer = styled.div`
   min-height: 580px;
   padding: 20px 7px;
 
-  &.dark { background: linear-gradient(-60deg, ${({ theme }) => theme.utils.hexToRGB(theme.blue2, 0.24)} 60%, ${({ theme }) => theme.utils.hexToRGB(theme.azure3, 0.59)} 100%); }
+  &.dark { 
+    background: rgb(31,121,228);
+    background-color: rgb(8 44 88)!important
+    //background: linear-gradient(-60deg, ${({ theme }) => theme.utils.hexToRGB(theme.blue2, 0.24)} 60%, ${({ theme }) => theme.utils.hexToRGB(theme.azure3, 0.59)} 100%); 
+  }
   &.light { background: linear-gradient(-60deg, ${({ theme }) => theme.utils.hexToRGB(theme.white, 0.8)} 60%, ${({ theme }) => theme.utils.hexToRGB(theme.white, 0.8)} 100%); }
   &.classic {}
 
@@ -1091,7 +1070,6 @@ export const SectionTitle = styled.h6`
 
   &.dark { 
     color: ${({ theme }) => theme.azure9};
-    text-shadow: 1px 1px 1px ${({ theme }) => theme.black}
   }
   &.light { color: ${({ theme }) => theme.grey3}; }
   &.classic { 
@@ -1124,7 +1102,6 @@ export const SectionTitle = styled.h6`
 export const SectionContent = styled.div`
   font-weight: 400;
   &.dark { 
-    text-shadow: 1px 1px 2px black; 
   }
   &.light {  
     text-shadow: 0px; 
@@ -1604,7 +1581,7 @@ export const CurrencyFormPanel = styled.div<{ hideInput?: boolean }>`
   &.classic > .itemsContainer .label { color: ${({ theme }) => theme.azure1}; }
 `
 export const ActionButton = styled(BaseButton) <{ disabled?: boolean, selected?: boolean, useCustomProperties?: boolean }>`
-  border-radius: 3px !important;
+  border-radius: .65rem !important;
   font-size: 12px !important;
   font-weight: 500;
   text-transform: capitalize;
@@ -1699,7 +1676,7 @@ export const EthItemBadge = styled(ActionButton) <{ disabled?: boolean, selected
   &.classic:hover, &.classic:focus { color: ${({ theme }) => theme.greenEthItem}; }
 `
 const InfoCard = styled.button<{ active?: boolean }>`
-  border-radius: 3px !important;
+  border-radius: .65rem !important;
   font-size: 12px !important;
   font-weight: 500;
   text-transform: capitalize;
@@ -1970,7 +1947,6 @@ export const OperationButton = styled(Button) <{ label?: string, disabled?: bool
     font-weight: 500;
     font-size:14px;
     color: ${({ theme }) => theme.azure1};
-    text-shadow: 1px 1px 2px ${({ theme }) => theme.blue3}; 
   }
 
   &.light:before { background: linear-gradient(to right, ${({ theme }) => theme.violet1} 0%, rgba(15,63,115,0) 100%); }
@@ -2188,7 +2164,7 @@ export const SecondaryPanelBoxContainer = styled.div`
   &.classic {}
 
   &.dark > .inner-content, &.light > .inner-content, &.classic > .inner-content {
-    border-radius: 3px;
+    border-radius: .65rem;
     width: 100%;
     padding: 5px 5px 5px 5px;
     background-size: cover;
@@ -2201,7 +2177,7 @@ export const SecondaryPanelBoxContainer = styled.div`
   }  
   &.classic > .inner-content {
     background: linear-gradient(0deg, ${({ theme }) => theme.utils.hexToRGB(theme.violet6, 1)} 60%, ${({ theme }) => theme.utils.hexToRGB(theme.violet7, 1)} 100%); 
-    border-radius: 7px;
+    border-radius: 1rem;
     border: solid 2px #424542;
     box-shadow: 1px 1px #e7dfe7, -1px -1px #e7dfe7, 1px -1px #e7dfe7, -1px 1px #e7dfe7, 0 -2px #9c9a9c, -2px 0 #7b757b,
       0 2px #424542;
@@ -2475,7 +2451,7 @@ export const SearchTokenFormItems = styled(AutoColumn)`
 
 export const InfoBox = styled.div`
   padding: 10px;
-  border-radius: 3px;
+  border-radius: .65rem;
   margin: 10px auto;
 
   &.dark {}
@@ -2553,7 +2529,7 @@ export const LoadingWrapper = styled.div`
 const SettingsMenuOptionBase = styled.button`
   align-items: center;
   height: 2rem;
-  border-radius: 3px;
+  border-radius: .65rem;
   width: auto;
   min-width: 3.5rem;
   outline: none;
@@ -2628,7 +2604,7 @@ export const ToggleButton = styled(SettingsMenuOptionBase) <{ isActive?: boolean
   &.classic {}
 `
 export const ToggleButtonElement = styled.span<{ isActive?: boolean; isOnSwitch?: boolean }>`
-  border-radius: 3px;
+  border-radius: .65rem;
   padding: 0.35rem 0.6rem;
   background: ${({ theme, isActive, isOnSwitch }) => (isActive ? (isOnSwitch ? theme.bg7 : theme.text4) : 'none')};
   font-weight: 500;
@@ -2674,7 +2650,7 @@ export const SearchTokenListItem = styled(RowBetween)`
   cursor: ${({ disabled }) => !disabled && 'pointer'};
   pointer-events: ${({ disabled }) => disabled && 'none'};
   opacity: ${({ disabled, selected }) => (disabled || selected ? 0.5 : 1)};
-  border-radius: 3px;
+  border-radius: .65rem;
   margin-bottom: 15px;
 
   &.dark { color: ${({ theme }) => theme.azure2} !important; }
@@ -3048,7 +3024,7 @@ export const SettingsFlyout = styled.span`
     box-shadow: none; 
     min-width: 12rem; 
     background: linear-gradient(0deg, ${({ theme }) => theme.utils.hexToRGB(theme.blue6, 1)} 0%, ${({ theme }) => theme.utils.hexToRGB(theme.blue5, 1)} 100%); 
-    border-radius: 7px;
+    border-radius: 1rem;
     border: solid 2px #424542;
     box-shadow: 1px 1px #e7dfe7, -1px -1px #e7dfe7, 1px -1px #e7dfe7, -1px 1px #e7dfe7, 0 -2px #9c9a9c, -2px 0 #7b757b,
       0 2px #424542;  }
@@ -3074,7 +3050,7 @@ export const MenuFlyout = styled.span`
     box-shadow: none; 
     min-width: 12rem; 
     background: linear-gradient(0deg, ${({ theme }) => theme.utils.hexToRGB(theme.blue6, 1)} 0%, ${({ theme }) => theme.utils.hexToRGB(theme.blue5, 1)} 100%); 
-    border-radius: 7px;
+    border-radius: 1rem;
     border: solid 2px #424542;
     box-shadow: 1px 1px #e7dfe7, -1px -1px #e7dfe7, 1px -1px #e7dfe7, -1px 1px #e7dfe7, 0 -2px #9c9a9c, -2px 0 #7b757b,
       0 2px #424542;  }
