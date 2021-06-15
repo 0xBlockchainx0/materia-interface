@@ -1326,10 +1326,12 @@ export const PageGridContainer = styled.div`
   @media (max-width: 1050px) { grid-template-columns: auto !important; }
 
   &.swap {}
+  &.batch-swap {}
   &.pool {}
   &.liquidity-mining {}
 
   &.swap > .left-column { min-height: 580px; }
+  &.batch-swap > .left-column { min-height: 580px; }
   &.pool > .left-column { min-height: 580px; padding: 0 1rem 1rem 1rem; }
   &.pool > .left-column.classic { padding: 0 1rem 1rem 0; }
   &.liquidity-mining > .left-column { padding: 0 1rem 1rem 1rem; }
@@ -1351,6 +1353,7 @@ export const PageGridContainer = styled.div`
     &.pool > .left-column { min-height: auto !important; padding: 0; }
     &.liquidity-mining > .left-column { padding: 0; }
     &.swap > .left-column { min-height: auto !important; }
+    &.batch-swap > .left-column { min-height: auto !important; }
     & > .left-column > .collapsable-title { display: block; }
     & > .left-column > .collapsable-title + .collapsable-item.collapsed { display: none; }
     & > .left-column > .collapsable-title + .collapsable-item.opened { display: block; padding-left: 10px; margin-bottom: 20px; }
@@ -1362,6 +1365,7 @@ export const PageItemsContainer = styled.div`
   &.classic {}
 
   &.swap { min-height: 580px; }
+  &.batch-swap { min-height: 580px; }
 `
 export const FooterInfo = styled.div`
   font-size: small;

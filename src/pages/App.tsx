@@ -22,6 +22,7 @@ import PoolFinder from './PoolFinder'
 import RemoveLiquidity from './RemoveLiquidity'
 import { RedirectOldRemoveLiquidityPathStructure } from './RemoveLiquidity/redirects'
 import Swap from './Swap'
+import BatchSwap from './BatchSwap'
 import { OpenClaimAddressModalAndRedirectToSwap, RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects'
 
 import { AppWrapper, HeaderWrapper, BodyWrapper, Marginer } from '../theme'
@@ -77,6 +78,7 @@ export default function App() {
               <Route exact strict path="/remove/:tokens" component={RedirectOldRemoveLiquidityPathStructure} />
               <Route exact strict path="/remove/:currencyIdA/:currencyIdB" component={RemoveLiquidity} />
               <Route exact strict path="/lm/:currencyIdA/:currencyIdB/:season" component={Manage} />
+              <Route exact strict path="/batch-swap" component={BatchSwap} />
               <Route component={RedirectPathToSwapOnly} />
             </Switch>
           </Web3ReactManager>

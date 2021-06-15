@@ -23,6 +23,9 @@ export default function AppBody({ children }: { children: React.ReactNode }) {
       case 'swap':
         featureTitle = 'swap';
       break;
+      case 'batch-swap':
+        featureTitle = 'batch swap';
+      break;
       case 'lm':
         featureTitle = 'liquidity mining';
       break;

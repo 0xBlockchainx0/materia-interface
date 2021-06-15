@@ -8,6 +8,7 @@ import DoubleCurrencyLogo from '../DoubleLogo'
 import { RowBetween } from '../Row'
 import { CurrencyFormPanel, ActionButton, DropDownButton, Erc20Badge, EthItemBadge } from '../../theme'
 import { Input as NumericalInput } from '../NumericalInput'
+import { Input as PercentageInput } from '../PercentageInput'
 import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
 
 import { useActiveWeb3React } from '../../hooks'
@@ -29,11 +30,18 @@ const Aligner = styled.span`
 const MobileCurrencyLogo = styled.div`
   margin-left: 10px;
   display: none;
-  @media (max-width: 1050px) { display: inline-block; }
+  @media (max-width: 1050px) {
+    display: inline-block;
+  }
+  &.smallTokenImage {
+    @media (min-width: 1050px) {
+      display: inline-block;
+    }
+  }
 `
 
 const TokenImage = styled.div<{ showBackground: boolean }>`
-  background: ${props => props.showBackground ? ({ theme }) => theme.tokenBackground : 'unset'}    
+  background: ${props => (props.showBackground ? ({ theme }) => theme.tokenBackground : 'unset')}    
   background-size: contain;
   height: 300px;
   width: 300px;
@@ -57,17 +65,26 @@ const TokenImage = styled.div<{ showBackground: boolean }>`
 const TokenImageContainer = styled.div`
   float: none;
   margin: 0 auto;
-  @media (max-width: 1050px) { display: none; }
+  @media (max-width: 1050px) {
+    display: none;
+  }
 `
 
-const StyledDropDown = styled(DropDown) <{ selected: boolean }>`
+const StyledDropDown = styled(DropDown)<{ selected: boolean }>`
   margin: 0 0.25rem 0 0.5rem;
   height: 35%;
 
-  & path { stroke-width: 1.5px; }
+  & path {
+    stroke-width: 1.5px;
+  }
 
-  &.dark path, &.classic path { stroke: ${({ selected, theme }) => (selected ? theme.text1 : theme.white)}; }
-  &.light path { stroke: ${({ selected, theme }) => (selected ? theme.black : theme.black)}; }
+  &.dark path,
+  &.classic path {
+    stroke: ${({ selected, theme }) => (selected ? theme.text1 : theme.white)};
+  }
+  &.light path {
+    stroke: ${({ selected, theme }) => (selected ? theme.black : theme.black)};
+  }
 `
 
 const StyledTokenName = styled.span<{ active?: boolean }>`
@@ -95,8 +112,10 @@ interface CurrencyInputPanelProps {
   otherCurrency?: Currency | null
   id: string
   showCommonBases?: boolean
-  customBalanceText?: string,
+  customBalanceText?: string
   fatherPage?: string
+  smallTokenImage?: boolean | undefined
+  percentage?: boolean | undefined
 }
 
 export function roundInput(token: Token, value: string): string {
@@ -126,7 +145,9 @@ export default function CurrencyInputPanel({
   id,
   showCommonBases,
   customBalanceText,
-  fatherPage
+  fatherPage,
+  smallTokenImage = false,
+  percentage = false
 }: CurrencyInputPanelProps) {
   const { t } = useTranslation()
 
@@ -135,13 +156,16 @@ export default function CurrencyInputPanel({
   const selectedCurrencyBalance = useCurrencyBalance(account ?? undefined, currency ?? undefined)
   const theme = useContext(ThemeContext)
 
-  const handleDismissSearch = useCallback(() => { setModalOpen(false) }, [setModalOpen])
-  const customFatherPageCssClass = (fatherPage ? fatherPage : 'default')
+  const handleDismissSearch = useCallback(() => {
+    setModalOpen(false)
+  }, [setModalOpen])
+  const customFatherPageCssClass = fatherPage ? fatherPage : 'default'
 
-  const ethItem = useCheckIsEthItem((currency instanceof Token ? currency?.address : undefined) ?? ZERO_ADDRESS)?.ethItem ?? undefined
-  const showErc20Badge = currency !== ETHER && (ethItem !== undefined && ethItem === false) && pair === null
-  const showEthItemBadge = currency !== ETHER && (ethItem !== undefined && ethItem === true) && pair === null
-  
+  const ethItem =
+    useCheckIsEthItem((currency instanceof Token ? currency?.address : undefined) ?? ZERO_ADDRESS)?.ethItem ?? undefined
+  const showErc20Badge = currency !== ETHER && ethItem !== undefined && ethItem === false && pair === null
+  const showEthItemBadge = currency !== ETHER && ethItem !== undefined && ethItem === true && pair === null
+
   return (
     <>
       <CurrencyFormPanel id={id} className={`${theme.name} ${customFatherPageCssClass}`}>
@@ -152,7 +176,9 @@ export default function CurrencyInputPanel({
                 <div className={'label ' + customFatherPageCssClass}>{label}</div>
                 {account && (
                   <div className={'label link ' + customFatherPageCssClass} onClick={onMax}>
-                    {!hideBalance && !!currency && selectedCurrencyBalance ? (customBalanceText ?? 'Balance: ') + selectedCurrencyBalance?.toSignificant(6) : ' -'}
+                    {!hideBalance && !!currency && selectedCurrencyBalance
+                      ? (customBalanceText ?? 'Balance: ') + selectedCurrencyBalance?.toSignificant(6)
+                      : ' -'}
                   </div>
                 )}
               </RowBetween>
@@ -161,34 +187,65 @@ export default function CurrencyInputPanel({
           <InputRow style={hideInput ? { padding: '0', borderRadius: '8px' } : {}} selected={disableCurrencySelect}>
             {!hideInput && (
               <>
-                <NumericalInput className="token-amount-input" value={value} onUserInput={val => { onUserInput(val) }} />
-                {account && currency && showMaxButton && label !== 'To' && (<ActionButton className={theme.name} onClick={onMax}>MAX</ActionButton>)}
-                {currency && showErc20Badge && (<Erc20Badge className={`${theme.name} ml5`}>ERC20</Erc20Badge>)}
-                {currency && showEthItemBadge && (<EthItemBadge className={`${theme.name} ml5`}>ITEM</EthItemBadge>)}
+                {percentage ? (
+                  <PercentageInput
+                    className="token-amount-input"
+                    value={value}
+                    onUserInput={val => {
+                      onUserInput(val)
+                    }}
+                  />
+                ) : (
+                  <NumericalInput
+                    className="token-amount-input"
+                    value={value}
+                    onUserInput={val => {
+                      onUserInput(val)
+                    }}
+                  />
+                )}
+                {account && currency && showMaxButton && label !== 'To' && (
+                  <ActionButton className={theme.name} onClick={onMax}>
+                    MAX
+                  </ActionButton>
+                )}
+                {currency && showErc20Badge && <Erc20Badge className={`${theme.name} ml5`}>ERC20</Erc20Badge>}
+                {currency && showEthItemBadge && <EthItemBadge className={`${theme.name} ml5`}>ITEM</EthItemBadge>}
               </>
             )}
-            <DropDownButton className={`open-currency-select-button ${theme.name}`} selected={!!currency} onClick={() => { if (!disableCurrencySelect) { setModalOpen(true) } }} >
+            <DropDownButton
+              className={`open-currency-select-button ${theme.name}`}
+              selected={!!currency}
+              onClick={() => {
+                if (!disableCurrencySelect) {
+                  setModalOpen(true)
+                }
+              }}
+            >
               <Aligner>
-                <MobileCurrencyLogo>
+                <MobileCurrencyLogo className={smallTokenImage ? 'smallTokenImage' : ''}>
                   {pair ? (
                     <DoubleCurrencyLogo currency0={pair.token0} currency1={pair.token1} size={24} margin={true} />
                   ) : currency ? (
                     <CurrencyLogo currency={currency} size={'24px'} />
                   ) : null}
-                </MobileCurrencyLogo>                
+                </MobileCurrencyLogo>
                 {pair ? (
                   <StyledTokenName className={`pair-name-container ${theme.name}`}>
                     {pair?.token0.symbol}:{pair?.token1.symbol}
                   </StyledTokenName>
                 ) : (
-                    <StyledTokenName className={`token-symbol-container ${theme.name}`} active={Boolean(currency && currency.symbol)}>
-                      {(currency && currency.symbol && currency.symbol.length > 20
-                        ? currency.symbol.slice(0, 4) +
+                  <StyledTokenName
+                    className={`token-symbol-container ${theme.name}`}
+                    active={Boolean(currency && currency.symbol)}
+                  >
+                    {(currency && currency.symbol && currency.symbol.length > 20
+                      ? currency.symbol.slice(0, 4) +
                         '...' +
                         currency.symbol.slice(currency.symbol.length - 5, currency.symbol.length)
-                        : currency?.symbol) || t('selectToken')}
-                    </StyledTokenName>
-                  )}
+                      : currency?.symbol) || t('selectToken')}
+                  </StyledTokenName>
+                )}
                 {!disableCurrencySelect && <StyledDropDown className={`${theme.name}`} selected={!!currency} />}
               </Aligner>
             </DropDownButton>
@@ -205,15 +262,23 @@ export default function CurrencyInputPanel({
           />
         )}
       </CurrencyFormPanel>
-      <TokenImageContainer>
-        <TokenImage showBackground={true} className={(!pair ? 'single' : 'double') + ' ' + customFatherPageCssClass}>
-          {pair ? (
-            <DoubleCurrencyLogo currency0={pair.token0} currency1={pair.token1} size={110} margin={false} radius={true} />
-          ) : currency ? (
-            <CurrencyLogo currency={currency} size={'110px'} />
-          ) : null}
-        </TokenImage>
-      </TokenImageContainer>
+      {!smallTokenImage && (
+        <TokenImageContainer>
+          <TokenImage showBackground={true} className={(!pair ? 'single' : 'double') + ' ' + customFatherPageCssClass}>
+            {pair ? (
+              <DoubleCurrencyLogo
+                currency0={pair.token0}
+                currency1={pair.token1}
+                size={110}
+                margin={false}
+                radius={true}
+              />
+            ) : currency ? (
+              <CurrencyLogo currency={currency} size={'110px'} />
+            ) : null}
+          </TokenImage>
+        </TokenImageContainer>
+      )}
     </>
   )
 }
