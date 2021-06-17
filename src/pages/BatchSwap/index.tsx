@@ -7,11 +7,7 @@ import AdvancedSwapDetailsDropdown from '../../components/swap/AdvancedSwapDetai
 import { Wrapper } from '../../components/swap/styleds'
 import { useActiveWeb3React } from '../../hooks'
 import { Field } from '../../state/swap/actions'
-import {
-  useDerivedSwapInfo,
-  useSwapActionHandlers,
-  useSwapState
-} from '../../state/swap/hooks'
+import { useDerivedSwapInfo, useSwapActionHandlers, useSwapState } from '../../state/swap/hooks'
 import { useUserSlippageTolerance } from '../../state/user/hooks'
 import AppBody from '../AppBody'
 import {
@@ -47,7 +43,7 @@ export const AddOutputButton = styled(OperationButton)`
 export default function BatchSwap() {
   const { chainId } = useActiveWeb3React()
   const theme = useContext(ThemeContext)
-  
+
   // get custom setting values for user
   const [allowedSlippage] = useUserSlippageTolerance()
 
@@ -102,44 +98,10 @@ export default function BatchSwap() {
 
   const [showMore, setShowMore] = useState(false)
 
-  const initialCurrenciesOutputs = [
-    <>
-      <CurrencyInputPanel
-        value={formattedAmounts[Field.OUTPUT]}
-        onUserInput={handleTypeOutput}
-        label={independentField === Field.INPUT && trade ? 'To (estimated)' : 'To'}
-        showMaxButton={false}
-        currency={originalCurrencies[Field.OUTPUT]}
-        onCurrencySelect={handleOutputSelect}
-        otherCurrency={originalCurrencies[Field.INPUT]}
-        smallTokenImage={true}
-        percentage={true}
-        id="batch-swap-currency-output"
-      />
-      {trade && <AdvancedSwapDetailsDropdown trade={trade} originalCurrencies={originalCurrencies} />}
-    </>
-  ]
+  const initialCurrenciesOutputs = [{ element: 0 }]
   const [currenciesOutputs, setCurrenciesOutputs] = useState(initialCurrenciesOutputs)
   const onAddOutputToken = () => {
-    setCurrenciesOutputs(
-      currenciesOutputs.concat([
-        <>
-          <CurrencyInputPanel
-            value={formattedAmounts[Field.OUTPUT]}
-            onUserInput={handleTypeOutput}
-            label={independentField === Field.INPUT && trade ? 'To (estimated)' : 'To'}
-            showMaxButton={false}
-            currency={originalCurrencies[Field.OUTPUT]}
-            onCurrencySelect={handleOutputSelect}
-            otherCurrency={originalCurrencies[Field.INPUT]}
-            smallTokenImage={true}
-            percentage={true}
-            id="batch-swap-currency-output"
-          />
-          {trade && <AdvancedSwapDetailsDropdown trade={trade} originalCurrencies={originalCurrencies} />}
-        </>
-      ])
-    )
+    setCurrenciesOutputs(currenciesOutputs.concat([{ element: currenciesOutputs.length + 1 }]))
     console.log(currenciesOutputs)
   }
 
@@ -206,7 +168,25 @@ export default function BatchSwap() {
                   </div>
                   <div>
                     <AutoColumn gap={'lg'}>
-                      {currenciesOutputs.map(output => output)}
+                      {currenciesOutputs.map(output => (
+                        <>
+                          <CurrencyInputPanel
+                            value={formattedAmounts[Field.OUTPUT]}
+                            onUserInput={handleTypeOutput}
+                            label={independentField === Field.INPUT && trade ? 'To (estimated)' : 'To'}
+                            showMaxButton={false}
+                            currency={originalCurrencies[Field.OUTPUT]}
+                            onCurrencySelect={handleOutputSelect}
+                            otherCurrency={originalCurrencies[Field.INPUT]}
+                            smallTokenImage={true}
+                            percentage={true}
+                            id="batch-swap-currency-output"
+                          />
+                          {trade && (
+                            <AdvancedSwapDetailsDropdown trade={trade} originalCurrencies={originalCurrencies} />
+                          )}
+                        </>
+                      ))}
                       <AddOutputButton
                         id="add-recipient-button"
                         onClick={() => onAddOutputToken()}
