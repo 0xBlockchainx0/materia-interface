@@ -72,27 +72,12 @@ export interface AdvancedSwapDetailsProps {
 export function AdvancedSwapDetails({ trade, originalCurrencies }: AdvancedSwapDetailsProps) {
   const [allowedSlippage] = useUserSlippageTolerance()
   const theme = useContext(ThemeContext)
-  // const showRoute = Boolean(trade && trade.route.path.length > 2)
 
   return (
     <AutoColumn gap="md">
       {trade && (
         <>
           <TradeSummary trade={trade} originalCurrencies={originalCurrencies} allowedSlippage={allowedSlippage} />
-          {/* {showRoute && (
-            <>
-              <SectionBreak />
-              <AutoColumn style={{ padding: '0 24px' }}>
-                <RowFixed>
-                  <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
-                    Route
-                  </TYPE.black>
-                  <QuestionHelper text="Routing through these tokens resulted in the best price for your trade." />
-                </RowFixed>
-                <SwapRoute trade={trade} />
-              </AutoColumn>
-            </>
-          )} */}
           <AutoColumn style={{ padding: '0 24px' }}>
             <InfoLink 
                 className={theme.name}
