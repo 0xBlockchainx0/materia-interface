@@ -1,4 +1,4 @@
-import { CurrencyAmount } from '@materia-dex/sdk'
+import { Currency, CurrencyAmount } from '@materia-dex/sdk'
 import React, { useCallback, useContext, useState } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 import { AutoColumn } from '../../components/Column'
@@ -39,6 +39,16 @@ export const Center = styled.div`
 export const AddOutputButton = styled(OperationButton)`
   margin: auto 20% !important;
 `
+
+interface BatchSwapCurrencyElement {
+  id: string
+  value: string
+  onUserInput: (value: string) => void
+  label?: string
+  onCurrencySelect?: (currency: Currency) => void
+  currency?: Currency | null
+  otherCurrency?: Currency | null
+}
 
 export default function BatchSwap() {
   const { chainId } = useActiveWeb3React()
@@ -98,12 +108,33 @@ export default function BatchSwap() {
 
   const [showMore, setShowMore] = useState(false)
 
-  const initialCurrenciesOutputs = [{ element: 0 }]
+  const initialCurrenciesOutputs: Array<BatchSwapCurrencyElement> = [
+    {
+      id: '1',
+      value: '0',
+      onUserInput: handleTypeOutput,
+      label: 'To',
+      onCurrencySelect: handleOutputSelect,
+      currency: originalCurrencies[Field.OUTPUT],
+      otherCurrency: originalCurrencies[Field.INPUT]
+    }
+  ]
   const [currenciesOutputs, setCurrenciesOutputs] = useState(initialCurrenciesOutputs)
-  const onAddOutputToken = () => {
-    setCurrenciesOutputs(currenciesOutputs.concat([{ element: currenciesOutputs.length + 1 }]))
-    console.log(currenciesOutputs)
-  }
+  const handleAddOutputToken = useCallback(() => {
+    const elementId = (currenciesOutputs.length + 1).toString()
+    const updatedCurrenciesOutputs = currenciesOutputs.concat([
+      {
+        id: elementId,
+        value: '0',
+        onUserInput: handleTypeOutput,
+        label: 'To',
+        onCurrencySelect: handleOutputSelect,
+        currency: originalCurrencies[Field.OUTPUT],
+        otherCurrency: originalCurrencies[Field.INPUT]
+      }
+    ])
+    setCurrenciesOutputs(updatedCurrenciesOutputs)
+  }, [currenciesOutputs, originalCurrencies, setCurrenciesOutputs, handleTypeOutput, handleOutputSelect])
 
   return (
     <>
@@ -171,16 +202,17 @@ export default function BatchSwap() {
                       {currenciesOutputs.map(output => (
                         <>
                           <CurrencyInputPanel
-                            value={formattedAmounts[Field.OUTPUT]}
-                            onUserInput={handleTypeOutput}
-                            label={independentField === Field.INPUT && trade ? 'To (estimated)' : 'To'}
+                            key={`batch-swap-currency-output-${output.id}`}
+                            id={`batch-swap-currency-output-${output.id}`}
+                            value={output.value}
+                            onUserInput={output.onUserInput}
+                            label={output.label}
                             showMaxButton={false}
-                            currency={originalCurrencies[Field.OUTPUT]}
-                            onCurrencySelect={handleOutputSelect}
-                            otherCurrency={originalCurrencies[Field.INPUT]}
+                            currency={output.currency}
+                            onCurrencySelect={output.onCurrencySelect}
+                            otherCurrency={output.otherCurrency}
                             smallTokenImage={true}
                             percentage={true}
-                            id="batch-swap-currency-output"
                           />
                           {trade && (
                             <AdvancedSwapDetailsDropdown trade={trade} originalCurrencies={originalCurrencies} />
@@ -189,7 +221,7 @@ export default function BatchSwap() {
                       ))}
                       <AddOutputButton
                         id="add-recipient-button"
-                        onClick={() => onAddOutputToken()}
+                        onClick={() => handleAddOutputToken()}
                         className={`add-output-token-batch-swap ${theme.name}`}
                         label="Add a token"
                       >
