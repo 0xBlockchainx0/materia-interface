@@ -1462,8 +1462,8 @@ export const DynamicGrid = styled.div<{ columns: number, columnsDefinitions?: Dy
     &.classic .title, &.classic .text {}
   }
 `
-const tabLinkItemActiveClassName = 'active'
-export const TabLinkItem = styled(NavLink).attrs({ tabLinkItemActiveClassName })`
+const tablinkitemactiveclassname = 'active'
+export const TabLinkItem = styled(NavLink).attrs({ tablinkitemactiveclassname })`
   display: flex;
   flex-flow: row nowrap;
   align-items: left;
@@ -1483,11 +1483,11 @@ export const TabLinkItem = styled(NavLink).attrs({ tabLinkItemActiveClassName })
     text-shadow: 1px 1px 1px ${({ theme }) => theme.black}; 
   }
 
-  &.${tabLinkItemActiveClassName} { }
+  &.${tablinkitemactiveclassname} { }
 
-  &.dark.${tabLinkItemActiveClassName} { color: ${({ theme }) => theme.azure1}; }
-  &.light.${tabLinkItemActiveClassName} { color: ${({ theme }) => theme.violet1}; }
-  &.classic.${tabLinkItemActiveClassName} { color: ${({ theme }) => theme.azure1}; }
+  &.dark.${tablinkitemactiveclassname} { color: ${({ theme }) => theme.azure1}; }
+  &.light.${tablinkitemactiveclassname} { color: ${({ theme }) => theme.violet1}; }
+  &.classic.${tablinkitemactiveclassname} { color: ${({ theme }) => theme.azure1}; }
 
   &.dark:hover, &.dark:focus { color: ${({ theme }) => theme.azure1}; }
   &.light:hover, &.light:focus { color: ${({ theme }) => theme.violet4}; }

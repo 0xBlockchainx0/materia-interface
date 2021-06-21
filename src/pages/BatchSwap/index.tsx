@@ -40,6 +40,10 @@ export const AddOutputButton = styled(OperationButton)`
   margin: auto 20% !important;
 `
 
+export const BatchSwapDetails = styled(AdvancedSwapDetailsDropdown)`
+  display: contents !important;
+`
+
 interface BatchSwapCurrencyElement {
   id: string
   value: string
@@ -200,7 +204,6 @@ export default function BatchSwap() {
                   <div>
                     <AutoColumn gap={'lg'}>
                       {currenciesOutputs.map(output => (
-                        <>
                           <CurrencyInputPanel
                             key={`batch-swap-currency-output-${output.id}`}
                             id={`batch-swap-currency-output-${output.id}`}
@@ -214,11 +217,10 @@ export default function BatchSwap() {
                             smallTokenImage={true}
                             percentage={true}
                           />
-                          {trade && (
-                            <AdvancedSwapDetailsDropdown trade={trade} originalCurrencies={originalCurrencies} />
-                          )}
-                        </>
                       ))}
+                      {/* {trade && (
+                            <BatchSwapDetails trade={trade} originalCurrencies={originalCurrencies} />
+                          )} */}
                       <AddOutputButton
                         id="add-recipient-button"
                         onClick={() => handleAddOutputToken()}
@@ -229,7 +231,7 @@ export default function BatchSwap() {
                       </AddOutputButton>
                     </AutoColumn>
                   </div>
-                </PageContentContainer>
+                </PageContentContainer> 
               </div>
             </PageItemsContainer>
           </PageGridContainer>

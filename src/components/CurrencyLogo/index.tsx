@@ -16,13 +16,13 @@ const StyledEthereumLogo = styled.img<{ size: string }>`
   margin-left: auto;
   margin-right: auto;  
 `
-const StyledLogo = styled(Logo)<{ size: string, radius: boolean }>`
+const StyledLogo = styled(Logo)<{ size: string, rounded: "true" | "false" }>`
   width: ${({ size }) => size};
   height: auto;
   display: block;
   margin-left: auto;
   margin-right: auto;
-  border-radius: ${({ radius }) => radius ? '15px' : 'unset'};
+  border-radius: ${({ rounded }) => rounded == "true" ? '15px' : 'unset'};
 `
 export default function CurrencyLogo({
   currency,
@@ -54,5 +54,5 @@ export default function CurrencyLogo({
     return <StyledEthereumLogo src={EthereumLogo} size={size} style={style} className="ethereumLogo" />
   }
 
-  return <StyledLogo size={size} radius={radius ?? false} srcs={srcs} alt={`${currency?.symbol ?? 'token'} logo`} style={style} className="tokenLogo"/>
+  return <StyledLogo size={size} rounded={radius ? "true" : "false"} srcs={srcs} alt={`${currency?.symbol ?? 'token'} logo`} style={style} className="tokenLogo"/>
 }
