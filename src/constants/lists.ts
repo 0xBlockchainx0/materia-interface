@@ -1,22 +1,13 @@
-// Default token list
-export const DEFAULT_TOKEN_LIST_URL = 'https://list.materia.exchange/materia-default.tokenlist.json'
+const MATERIA_LIST = 'https://list.materia.exchange/materia-default.tokenlist.json'
+const UNISWAP_LIST = 'https://gateway.ipfs.io/ipns/tokens.uniswap.org'
+const SUSHISWAP_LIST = 'https://unpkg.com/@sushiswap/default-token-list@latest/build/sushiswap-default.tokenlist.json'
+const ETHITEM_LIST = 'https://raw.githubusercontent.com/b-u-i-d-l/ITEMswap/master/src/constants/ethItemLists/dist/tokensList.json'
+
+export const DEFAULT_TOKEN_LIST_URL = MATERIA_LIST
 
 export const DEFAULT_LIST_OF_LISTS: string[] = [
   DEFAULT_TOKEN_LIST_URL,
-  'https://raw.githubusercontent.com/b-u-i-d-l/ITEMswap/master/src/constants/ethItemLists/dist/tokensList.json',
-  'tokens.uniswap.eth',
-  't2crtokens.eth',
-  'tokens.1inch.eth',
-  'synths.snx.eth',
-  'tokenlist.dharma.eth',
-  'defi.cmc.eth',
-  'erc20.cmc.eth',
-  'stablecoin.cmc.eth',
-  'tokenlist.zerion.eth',
-  'tokenlist.aave.eth',
-  'https://tokens.coingecko.com/uniswap/all.json',
-  'https://app.tryroll.com/tokens.json',
-  'https://raw.githubusercontent.com/compound-finance/token-list/master/compound.tokenlist.json',
-  'https://defiprime.com/defiprime.tokenlist.json',
-  'https://umaproject.org/uma.tokenlist.json'
+  UNISWAP_LIST,
+  SUSHISWAP_LIST,
+  // ETHITEM_LIST
 ]
