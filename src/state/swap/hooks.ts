@@ -187,7 +187,7 @@ export function decodeInteroperableValueToERC20TokenAmount(currencyAmount?: Curr
   return undefined
 }
 
-const BAD_RECIPIENT_ADDRESSES: string[] = [
+export const BAD_RECIPIENT_ADDRESSES: string[] = [
   FACTORY_ADDRESS,
   ORCHESTRATOR_ADDRESS,
   MATERIA_DFO_ADDRESS,
@@ -200,7 +200,7 @@ const BAD_RECIPIENT_ADDRESSES: string[] = [
  * @param trade to check for the given address
  * @param checksummedAddress address to check in the pairs and tokens
  */
-function involvesAddress(trade: Trade, checksummedAddress: string): boolean {
+export function involvesAddress(trade: Trade, checksummedAddress: string): boolean {
   return (
     trade.route.path.some(token => token.address === checksummedAddress) ||
     trade.route.pairs.some(pair => pair.liquidityToken.address === checksummedAddress)
