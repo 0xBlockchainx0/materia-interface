@@ -144,7 +144,14 @@ export default function Header() {
           </MateriaIcon>
         </Title>
         <HeaderLinks>
-          <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
+          <StyledNavLink 
+            id={`swap-nav-link`} 
+            to={'/swap'} 
+            isActive={(match, { pathname }) =>
+              Boolean(match) ||
+              pathname.startsWith('/swap') ||
+              pathname.startsWith('/batch-swap')
+            }>
             Swap
           </StyledNavLink>
           <StyledNavLink
