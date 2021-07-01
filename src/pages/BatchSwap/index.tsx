@@ -204,19 +204,19 @@ export default function BatchSwap() {
                   <div>
                     <AutoColumn gap={'lg'}>
                       {currenciesOutputs.map(output => (
-                          <CurrencyInputPanel
-                            key={`batch-swap-currency-output-${output.id}`}
-                            id={`batch-swap-currency-output-${output.id}`}
-                            value={output.value}
-                            onUserInput={output.onUserInput}
-                            label={output.label}
-                            showMaxButton={false}
-                            currency={output.currency}
-                            onCurrencySelect={output.onCurrencySelect}
-                            otherCurrency={output.otherCurrency}
-                            smallTokenImage={true}
-                            percentage={true}
-                          />
+                        <CurrencyInputPanel
+                          key={`batch-swap-currency-output-${output.id}`}
+                          id={`batch-swap-currency-output-${output.id}`}
+                          value={output.value}
+                          onUserInput={output.onUserInput}
+                          label={output.label}
+                          showMaxButton={false}
+                          currency={output.currency}
+                          onCurrencySelect={output.onCurrencySelect}
+                          otherCurrency={output.otherCurrency}
+                          smallTokenImage={true}
+                          percentage={true}
+                        />
                       ))}
                       {/* {trade && (
                             <BatchSwapDetails trade={trade} originalCurrencies={originalCurrencies} />
@@ -231,7 +231,7 @@ export default function BatchSwap() {
                       </AddOutputButton>
                     </AutoColumn>
                   </div>
-                </PageContentContainer> 
+                </PageContentContainer>
               </div>
             </PageItemsContainer>
           </PageGridContainer>
