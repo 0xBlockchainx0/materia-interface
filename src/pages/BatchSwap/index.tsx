@@ -47,19 +47,19 @@ export default function BatchSwap() {
   const theme = useContext(ThemeContext)
 
   // swap state
-  const { independentField, typedValue } = useBatchSwapState()
+  const { [Field.INPUT]: typedField } = useBatchSwapState()
+  const typedValue = typedField.typedValue
   const { v2Trade, originalCurrencyBalances, parsedAmount, originalCurrencies } = useDerivedBatchSwapInfo(
     Field.OUTPUT_1,
     true
   )
 
-  const trade = v2Trade
   const parsedAmounts = {
-    [Field.INPUT]: independentField === Field.INPUT ? parsedAmount : trade?.inputAmount
+    [Field.INPUT]: parsedAmount
   }
 
   const formattedAmounts = {
-    [independentField]: typedValue
+    [Field.INPUT]: typedValue
   }
 
   const maxAmountInput: CurrencyAmount | undefined = maxAmountSpend(originalCurrencyBalances[Field.INPUT])

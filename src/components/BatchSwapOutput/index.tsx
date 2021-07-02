@@ -19,24 +19,15 @@ interface BatchSwapOutputProps {
 
 export default function BatchSwapOutput({ outputField }: BatchSwapOutputProps) {
   // batch swap state
-  const { independentField, typedValue, recipient } = useBatchSwapState()
+  const { independentField, [outputField]: typedField, recipient } = useBatchSwapState()
+  const typedValue = typedField.typedValue
   const {
     v2Trade,
-    originalCurrencyBalances,
     parsedAmount,
-    currencies,
     originalCurrencies,
   } = useDerivedBatchSwapInfo(outputField, true)
-
-  const trade = v2Trade
-
-  const parsedAmounts = {
-    [Field.INPUT]: independentField === Field.INPUT ? parsedAmount : trade?.inputAmount,
-    [outputField]: independentField === outputField ? parsedAmount : trade?.outputAmount
-  }
-
+  
   const { onCurrencySelection, onUserInput } = useBatchSwapActionHandlers()
-  const dependentField: Field = independentField === Field.INPUT ? outputField : Field.INPUT
 
   const handleTypeOutput = useCallback(
     (value: string) => {
@@ -46,8 +37,7 @@ export default function BatchSwapOutput({ outputField }: BatchSwapOutputProps) {
   )
 
   const formattedAmounts = {
-    [independentField]: typedValue,
-    [dependentField]: parsedAmounts[dependentField]?.toSignificant(6) ?? ''
+    [outputField]: typedValue
   }
 
   const handleOutputSelect = useCallback(
@@ -69,9 +59,11 @@ export default function BatchSwapOutput({ outputField }: BatchSwapOutputProps) {
         percentage={true}
         id="swap-currency-output"
       />
-      {/* <div className={`advanced-swap-details-container ${theme.name}`}>
+      {/* 
+        <div className={`advanced-swap-details-container ${theme.name}`}>
           <AdvancedSwapDetailsDropdown trade={trade} originalCurrencies={originalCurrencies} />
-        </div> */}
+        </div> 
+      */}
     </AutoColumn>
   )
 }

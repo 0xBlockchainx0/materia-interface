@@ -6,39 +6,51 @@ export interface BatchSwapState {
   readonly typedValue: string
   readonly [Field.INPUT]: {
     readonly currencyId: string | undefined
+    readonly typedValue: string
   }
   readonly [Field.OUTPUT]: {
     readonly currencyId: string | undefined
+    readonly typedValue: string
   }
   readonly [Field.OUTPUT_1]: {
     readonly currencyId: string | undefined
+    readonly typedValue: string
   }
   readonly [Field.OUTPUT_2]: {
     readonly currencyId: string | undefined
+    readonly typedValue: string
   }
   readonly [Field.OUTPUT_3]: {
     readonly currencyId: string | undefined
+    readonly typedValue: string
   }
   readonly [Field.OUTPUT_4]: {
     readonly currencyId: string | undefined
+    readonly typedValue: string
   }
   readonly [Field.OUTPUT_5]: {
     readonly currencyId: string | undefined
+    readonly typedValue: string
   }
   readonly [Field.OUTPUT_6]: {
     readonly currencyId: string | undefined
+    readonly typedValue: string
   }
   readonly [Field.OUTPUT_7]: {
     readonly currencyId: string | undefined
+    readonly typedValue: string
   }
   readonly [Field.OUTPUT_8]: {
     readonly currencyId: string | undefined
+    readonly typedValue: string
   }
   readonly [Field.OUTPUT_9]: {
     readonly currencyId: string | undefined
+    readonly typedValue: string
   }
   readonly [Field.OUTPUT_10]: {
     readonly currencyId: string | undefined
+    readonly typedValue: string
   }
   // the typed recipient address or ENS name, or null if swap should go to sender
   readonly recipient: string | null
@@ -48,40 +60,52 @@ const initialState: BatchSwapState = {
   independentField: Field.INPUT,
   typedValue: '',
   [Field.INPUT]: {
-    currencyId: ''
+    currencyId: '',
+    typedValue: ''
   },
   [Field.OUTPUT]: {
-    currencyId: ''
+    currencyId: '',
+    typedValue: ''
   },
   [Field.OUTPUT_1]: {
-    currencyId: ''
+    currencyId: '',
+    typedValue: ''
   },
   [Field.OUTPUT_2]: {
-    currencyId: ''
+    currencyId: '',
+    typedValue: ''
   },
   [Field.OUTPUT_3]: {
-    currencyId: ''
+    currencyId: '',
+    typedValue: ''
   },
   [Field.OUTPUT_4]: {
-    currencyId: ''
+    currencyId: '',
+    typedValue: ''
   },
   [Field.OUTPUT_5]: {
-    currencyId: ''
+    currencyId: '',
+    typedValue: ''
   },
   [Field.OUTPUT_6]: {
-    currencyId: ''
+    currencyId: '',
+    typedValue: ''
   },
   [Field.OUTPUT_7]: {
-    currencyId: ''
+    currencyId: '',
+    typedValue: ''
   },
   [Field.OUTPUT_8]: {
-    currencyId: ''
+    currencyId: '',
+    typedValue: ''
   },
   [Field.OUTPUT_9]: {
-    currencyId: ''
+    currencyId: '',
+    typedValue: ''
   },
   [Field.OUTPUT_10]: {
-    currencyId: ''
+    currencyId: '',
+    typedValue: ''
   },
   recipient: null
 }
@@ -109,7 +133,10 @@ export default createReducer<BatchSwapState>(initialState, builder =>
       return {
         ...state,
         independentField: Field.INPUT,
-        typedValue
+        [field]: {
+          ...state[field],
+          typedValue
+        }
       }
     })
 )
