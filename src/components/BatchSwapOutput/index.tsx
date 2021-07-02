@@ -1,10 +1,7 @@
 import React, { useCallback } from 'react'
 import styled from 'styled-components'
-import Card from '../Card'
 import { AutoColumn } from '../Column'
 import CurrencyInputPanel from '../CurrencyInputPanel'
-import useENSAddress from '../../hooks/useENSAddress'
-import useWrapCallback, { WrapType } from '../../hooks/useWrapCallback'
 import { Field } from '../../state/batchswap/actions'
 import { useDerivedBatchSwapInfo, useBatchSwapState, useBatchSwapActionHandlers } from '../../state/batchswap/hooks'
 
@@ -68,6 +65,8 @@ export default function BatchSwapOutput({ outputField }: BatchSwapOutputProps) {
         currency={originalCurrencies[outputField]}
         onCurrencySelect={handleOutputSelect}
         otherCurrency={originalCurrencies[Field.INPUT]}
+        smallTokenImage={true}
+        percentage={true}
         id="swap-currency-output"
       />
       {/* <div className={`advanced-swap-details-container ${theme.name}`}>
