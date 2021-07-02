@@ -20,6 +20,7 @@ import {
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import Inventory from '../../components/Inventory'
 import { Plus } from 'react-feather'
+import { Minus } from 'react-feather'
 import BatchSwapOutput from '../../components/BatchSwapOutput'
 
 export const ButtonBgItem = styled.img`
@@ -36,7 +37,22 @@ export const Center = styled.div`
 `
 
 export const AddOutputButton = styled(OperationButton)`
-  margin: auto 20% !important;
+  display: inline-block;
+  margin: 0 0 0 10% !important;
+  position: unset;
+`
+
+export const RemoveOutputButton = styled(OperationButton)`
+  display: inline-block;
+  margin: 0 0 0 80% !important;
+  position: unset;
+  transform: rotate(-45deg) scaleX(-1);
+
+  &::after {
+    text-align: unset;
+    padding: 106px 0px 0px 41px;
+    transform: scaleX(-1) rotate(45deg);
+  }
 `
 
 export const BatchSwapDetails = styled(AdvancedSwapDetailsDropdown)`
@@ -49,10 +65,7 @@ export default function BatchSwap() {
   // swap state
   const { [Field.INPUT]: typedField } = useBatchSwapState()
   const typedValue = typedField.typedValue
-  const { v2Trade, originalCurrencyBalances, parsedAmount, originalCurrencies } = useDerivedBatchSwapInfo(
-    Field.OUTPUT_1,
-    true
-  )
+  const { originalCurrencyBalances, parsedAmount, originalCurrencies } = useDerivedBatchSwapInfo(Field.OUTPUT_1, true)
 
   const parsedAmounts = {
     [Field.INPUT]: parsedAmount
@@ -86,6 +99,8 @@ export default function BatchSwap() {
   }, [maxAmountInput, onUserInput])
 
   const handleAddOutputToken = useCallback(() => {}, [])
+
+  const handleRemoveOutputToken = useCallback(() => {}, [])
 
   const [showMore, setShowMore] = useState(false)
 
@@ -155,13 +170,21 @@ export default function BatchSwap() {
                       <BatchSwapOutput outputField={Field.OUTPUT_1} />
                       <BatchSwapOutput outputField={Field.OUTPUT_2} />
                       <AddOutputButton
-                        id="add-recipient-button"
+                        id="add-output-token-batch-swap"
                         onClick={() => handleAddOutputToken()}
                         className={`add-output-token-batch-swap ${theme.name}`}
                         label="Add a token"
                       >
                         <Plus />
                       </AddOutputButton>
+                      <RemoveOutputButton
+                        id="remove-output-token-batch-swap"
+                        onClick={() => handleRemoveOutputToken()}
+                        className={`remove-output-token-batch-swap ${theme.name}`}
+                        label="Remove a token"
+                      >
+                        <Minus />
+                      </RemoveOutputButton>
                     </AutoColumn>
                   </div>
                 </PageContentContainer>
