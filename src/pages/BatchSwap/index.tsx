@@ -1,5 +1,5 @@
 import { CurrencyAmount } from '@materia-dex/sdk'
-import React, { useCallback, useContext, useState } from 'react'
+import React, { useCallback, useContext, useEffect, useState } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 import { AutoColumn } from '../../components/Column'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
@@ -15,13 +15,14 @@ import {
   TabLinkItem,
   PageContentContainer,
   ActionButton,
-  OperationButton
+  SmallOperationButton
 } from '../../theme'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import Inventory from '../../components/Inventory'
 import { Plus } from 'react-feather'
 import { Minus } from 'react-feather'
 import BatchSwapOutput from '../../components/BatchSwapOutput'
+import typedKeys from '../../utils/typesKeys'
 
 export const ButtonBgItem = styled.img`
   height: 3ch;
@@ -36,23 +37,16 @@ export const Center = styled.div`
   padding-bottom: 5px;
 `
 
-export const AddOutputButton = styled(OperationButton)`
-  display: inline-block;
-  margin: 0 0 0 10% !important;
-  position: unset;
+export const AddOutputButton = styled(SmallOperationButton)`
+  margin: 0 1.5rem 0 1.5rem !important;
 `
 
-export const RemoveOutputButton = styled(OperationButton)`
-  display: inline-block;
-  margin: 0 0 0 80% !important;
-  position: unset;
-  transform: rotate(-45deg) scaleX(-1);
+export const RemoveOutputButton = styled(SmallOperationButton)`
+  margin: 0 1.5rem 0 1.5rem !important;
+`
 
-  &::after {
-    text-align: unset;
-    padding: 106px 0px 0px 41px;
-    transform: scaleX(-1) rotate(45deg);
-  }
+export const OutputButtonContainer = styled.div`
+  margin: auto;
 `
 
 export const BatchSwapDetails = styled(AdvancedSwapDetailsDropdown)`
@@ -60,6 +54,9 @@ export const BatchSwapDetails = styled(AdvancedSwapDetailsDropdown)`
 `
 
 export default function BatchSwap() {
+  const MIN_BATCH_SWAP_OUTPUTS = 1
+  const MAX_BATCH_SWAP_OUTPUTS = 10
+
   const theme = useContext(ThemeContext)
 
   // swap state
@@ -98,11 +95,38 @@ export default function BatchSwap() {
     maxAmountInput && onUserInput(Field.INPUT, maxAmountInput.toExact())
   }, [maxAmountInput, onUserInput])
 
-  const handleAddOutputToken = useCallback(() => {}, [])
+  const [currentOutputs, setCurrentOutputs] = useState([Field.OUTPUT_1])
 
-  const handleRemoveOutputToken = useCallback(() => {}, [])
+  const handleAddOutputToken = useCallback(() => {
+    if (currentOutputs.length < MAX_BATCH_SWAP_OUTPUTS) {
+      const key = `OUTPUT_${currentOutputs.length + 1}`
+      const field = typedKeys(Field).find(x => x === key)
+
+      if (field) {
+        setCurrentOutputs([...currentOutputs, Field[field]])
+      }
+    }
+  }, [currentOutputs, setCurrentOutputs])
+
+  const handleRemoveOutputToken = useCallback(() => {
+    if (currentOutputs.length > MIN_BATCH_SWAP_OUTPUTS) {
+      const outputs = [...currentOutputs]
+      outputs.pop()
+      setCurrentOutputs(outputs)
+    }
+  }, [currentOutputs, setCurrentOutputs])
 
   const [showMore, setShowMore] = useState(false)
+
+  const [addOutputTokenDisabled, setAddOutputTokenDisabled] = useState(false)
+  const [removeOutputTokenDisabled, setRemoveOutputTokenDisabled] = useState(false)
+
+  useEffect(() => {
+    const outputs = currentOutputs.length
+
+    setRemoveOutputTokenDisabled(outputs <= MIN_BATCH_SWAP_OUTPUTS)
+    setAddOutputTokenDisabled(outputs >= MAX_BATCH_SWAP_OUTPUTS)
+  }, [currentOutputs, setAddOutputTokenDisabled, setRemoveOutputTokenDisabled])
 
   return (
     <>
@@ -167,24 +191,29 @@ export default function BatchSwap() {
                   </div>
                   <div>
                     <AutoColumn gap={'lg'}>
-                      <BatchSwapOutput outputField={Field.OUTPUT_1} />
-                      <BatchSwapOutput outputField={Field.OUTPUT_2} />
-                      <AddOutputButton
-                        id="add-output-token-batch-swap"
-                        onClick={() => handleAddOutputToken()}
-                        className={`add-output-token-batch-swap ${theme.name}`}
-                        label="Add a token"
-                      >
-                        <Plus />
-                      </AddOutputButton>
-                      <RemoveOutputButton
-                        id="remove-output-token-batch-swap"
-                        onClick={() => handleRemoveOutputToken()}
-                        className={`remove-output-token-batch-swap ${theme.name}`}
-                        label="Remove a token"
-                      >
-                        <Minus />
-                      </RemoveOutputButton>
+                      {currentOutputs.map((output, index) => (
+                        <BatchSwapOutput key={index} outputField={output} />
+                      ))}
+                      <OutputButtonContainer>
+                        <AddOutputButton
+                          id="add-output-token-batch-swap"
+                          onClick={() => handleAddOutputToken()}
+                          className={`add-output-token-batch-swap ${theme.name}`}
+                          label="Add a token"
+                          disabled={addOutputTokenDisabled}
+                        >
+                          <Plus />
+                        </AddOutputButton>
+                        <RemoveOutputButton
+                          id="remove-output-token-batch-swap"
+                          onClick={() => handleRemoveOutputToken()}
+                          className={`remove-output-token-batch-swap ${theme.name}`}
+                          label="Remove a token"
+                          disabled={removeOutputTokenDisabled}
+                        >
+                          <Minus />
+                        </RemoveOutputButton>
+                      </OutputButtonContainer>
                     </AutoColumn>
                   </div>
                 </PageContentContainer>

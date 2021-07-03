@@ -31,7 +31,7 @@ const MEDIA_WIDTHS = {
 
 const mediaWidthTemplates: { [width in keyof typeof MEDIA_WIDTHS]: typeof css } = Object.keys(MEDIA_WIDTHS).reduce(
   (accumulator, size) => {
-    ; (accumulator as any)[size] = (a: any, b: any, c: any) => css`
+    ;(accumulator as any)[size] = (a: any, b: any, c: any) => css`
       @media (max-width: ${(MEDIA_WIDTHS as any)[size]}px) {
         ${css(a, b, c)}
       }
@@ -42,37 +42,42 @@ const mediaWidthTemplates: { [width in keyof typeof MEDIA_WIDTHS]: typeof css } 
 ) as any
 
 const hexToRGB = (hexColor: string, alpha: number = 1) => {
-  var parts = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hexColor);
-  var result = parts ? {
-    r: parseInt(parts[1], 16),
-    g: parseInt(parts[2], 16),
-    b: parseInt(parts[3], 16)
-  } : null;
+  var parts = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hexColor)
+  var result = parts
+    ? {
+        r: parseInt(parts[1], 16),
+        g: parseInt(parts[2], 16),
+        b: parseInt(parts[3], 16)
+      }
+    : null
 
-  return (!result ? colors(false, false).black : 'rgba(' + result.r + ', ' + result.g + ', ' + result.b + ', ' + alpha.toString() + ')');
+  return !result
+    ? colors(false, false).black
+    : 'rgba(' + result.r + ', ' + result.g + ', ' + result.b + ', ' + alpha.toString() + ')'
 }
 
 const gridColumsWidth = (columns: number = 1, columnsDefinitions?: DynamicGridColumnsDefinition[]) => {
-  var value = (columns > 1 ? Math.round((100 / columns)) : 100);
-  var result = [];
+  var value = columns > 1 ? Math.round(100 / columns) : 100
+  var result = []
 
   if (columnsDefinitions) {
-    var definedConstraintValue = 0;
-    columns = (columns > columnsDefinitions.length ? (columns - columnsDefinitions.length) : 0);
-    columnsDefinitions.map((item) => { definedConstraintValue += item.value });
-    value = (columns > 1 ? Math.round(((100 - definedConstraintValue) / columns)) : (100 - definedConstraintValue));
+    var definedConstraintValue = 0
+    columns = columns > columnsDefinitions.length ? columns - columnsDefinitions.length : 0
+    columnsDefinitions.map(item => {
+      definedConstraintValue += item.value
+    })
+    value = columns > 1 ? Math.round((100 - definedConstraintValue) / columns) : 100 - definedConstraintValue
 
     for (var i = 1; i <= columns; i++) {
-      result.push((value.toString() + '%'));
+      result.push(value.toString() + '%')
     }
 
     for (var i = 0; i < columnsDefinitions.length; i++) {
-      result[(columnsDefinitions[i].location - 1)] = (columnsDefinitions[i].value.toString() + '%');
+      result[columnsDefinitions[i].location - 1] = columnsDefinitions[i].value.toString() + '%'
     }
-  }
-  else {
+  } else {
     for (var i = 1; i <= columns; i++) {
-      result.push((value.toString() + '%'));
+      result.push(value.toString() + '%')
     }
   }
 
@@ -138,9 +143,9 @@ export function colors(darkMode: boolean, classicMode: boolean): Colors {
     bg3: classicMode ? '#40444F' : darkMode ? '#40444F' : '#EDEEF2',
     bg4: classicMode ? '#565A69' : darkMode ? '#565A69' : '#CED0D9',
     bg5: classicMode ? '#6C7284' : darkMode ? '#6C7284' : '#888D9B',
-    bg6: classicMode ? '#1a1a1a' : darkMode ? "#1a1a1a" : "#1a1a1a",
-    bg7: classicMode ? '#002852' : darkMode ? "#002852" : "#002852",
-    bg8: classicMode ? 'rgb(0, 0, 0, 0.5)' : darkMode ? "rgb(0, 0, 0, 0.8)" : "rgb(255, 255, 255, 0.5)",
+    bg6: classicMode ? '#1a1a1a' : darkMode ? '#1a1a1a' : '#1a1a1a',
+    bg7: classicMode ? '#002852' : darkMode ? '#002852' : '#002852',
+    bg8: classicMode ? 'rgb(0, 0, 0, 0.5)' : darkMode ? 'rgb(0, 0, 0, 0.8)' : 'rgb(255, 255, 255, 0.5)',
 
     //specialty colors
     modalBG: classicMode ? 'rgba(0,0,0,.425)' : darkMode ? 'rgba(0,0,0,.425)' : 'rgba(0,0,0,0.3)',
@@ -165,29 +170,58 @@ export function colors(darkMode: boolean, classicMode: boolean): Colors {
     secondary3: classicMode ? '#17000b26' : darkMode ? '#17000b26' : '#FDEAF1',
 
     // custom
-    buttonMateriaPrimaryBackgroundFirstColor: classicMode ? 'rgba(1, 0, 6, 0.8)' : darkMode ? 'rgba(1, 0, 6, 0.8)' : 'rgba(1, 0, 6, 0.8)',
-    buttonMateriaPrimaryBackgroundSecondColor: classicMode ? 'rgba(0, 23, 67, 0.5)' : darkMode ? 'rgba(0, 23, 67, 0.5)' : 'rgba(0, 23, 67, 0.5)',
-    buttonMateriaPrimaryBackgroundHoverFirstColor: classicMode ? 'rgba(28, 155, 224, 0.8)' : darkMode ? 'rgba(28, 155, 224, 0.8)' : 'rgba(28, 155, 224, 0.8)',
-    buttonMateriaPrimaryBackgroundHoverSecondColor: classicMode ? 'rgba(28, 155, 224, 0.8)' : darkMode ? 'rgba(28, 155, 224, 0.8)' : 'rgba(28, 155, 224, 0.8)',
+    buttonMateriaPrimaryBackgroundFirstColor: classicMode
+      ? 'rgba(1, 0, 6, 0.8)'
+      : darkMode
+      ? 'rgba(1, 0, 6, 0.8)'
+      : 'rgba(1, 0, 6, 0.8)',
+    buttonMateriaPrimaryBackgroundSecondColor: classicMode
+      ? 'rgba(0, 23, 67, 0.5)'
+      : darkMode
+      ? 'rgba(0, 23, 67, 0.5)'
+      : 'rgba(0, 23, 67, 0.5)',
+    buttonMateriaPrimaryBackgroundHoverFirstColor: classicMode
+      ? 'rgba(28, 155, 224, 0.8)'
+      : darkMode
+      ? 'rgba(28, 155, 224, 0.8)'
+      : 'rgba(28, 155, 224, 0.8)',
+    buttonMateriaPrimaryBackgroundHoverSecondColor: classicMode
+      ? 'rgba(28, 155, 224, 0.8)'
+      : darkMode
+      ? 'rgba(28, 155, 224, 0.8)'
+      : 'rgba(28, 155, 224, 0.8)',
     buttonMateriaPrimaryBorderColor: classicMode ? '#054fa4' : darkMode ? '#054fa4' : '#054fa4',
     buttonMateriaPrimaryHoverBorderColor: classicMode ? '#26aff3' : darkMode ? '#26aff3' : '#26aff3',
     buttonMateriaPrimaryTextColor: classicMode ? '#ffffff' : darkMode ? '#ffffff' : '#ffffff',
-    buttonMateriaErrorBackgroundFirstColor: classicMode ? 'rgba(251, 62, 73, 0.8)' : darkMode ? 'rgba(251, 62, 73, 0.8)' : 'rgba(251, 62, 73, 0.8)',
-    buttonMateriaErrorBackgroundSecondColor: classicMode ? 'rgba(226, 9, 22, 0.8)' : darkMode ? 'rgba(226, 9, 22, 0.8)' : 'rgba(226, 9, 22, 0.8)',
-    buttonMateriaErrorBackgroundHoverFirstColor: classicMode ? 'rgba(247, 97, 106, 0.8)' : darkMode ? 'rgba(247, 97, 106, 0.8)' : 'rgba(247, 97, 106, 0.8)',
-    buttonMateriaErrorBackgroundHoverSecondColor: classicMode ? 'rgba(247, 44, 56, 0.8)' : darkMode ? 'rgba(247, 44, 56, 0.8)' : 'rgba(247, 44, 56, 0.8)',
+    buttonMateriaErrorBackgroundFirstColor: classicMode
+      ? 'rgba(251, 62, 73, 0.8)'
+      : darkMode
+      ? 'rgba(251, 62, 73, 0.8)'
+      : 'rgba(251, 62, 73, 0.8)',
+    buttonMateriaErrorBackgroundSecondColor: classicMode
+      ? 'rgba(226, 9, 22, 0.8)'
+      : darkMode
+      ? 'rgba(226, 9, 22, 0.8)'
+      : 'rgba(226, 9, 22, 0.8)',
+    buttonMateriaErrorBackgroundHoverFirstColor: classicMode
+      ? 'rgba(247, 97, 106, 0.8)'
+      : darkMode
+      ? 'rgba(247, 97, 106, 0.8)'
+      : 'rgba(247, 97, 106, 0.8)',
+    buttonMateriaErrorBackgroundHoverSecondColor: classicMode
+      ? 'rgba(247, 44, 56, 0.8)'
+      : darkMode
+      ? 'rgba(247, 44, 56, 0.8)'
+      : 'rgba(247, 44, 56, 0.8)',
     buttonMateriaErrorBorderColor: classicMode ? '#e43843' : darkMode ? '#e43843' : '#e43843',
     buttonMateriaErrorHoverBorderColor: classicMode ? '#f9c4c7' : darkMode ? '#f9c4c7' : '#f9c4c7',
 
     // other
 
-
     //blue1: '#2172E5',
     //blue2: '#1671BB',
     cyan1: '#2f9ab8',
     cyan2: '#1992d3'
-
-
 
     // dont wanna forget these blue yet
     // blue4: darkMode ? '#153d6f70' : '#C4D9F8',
@@ -212,95 +246,120 @@ export function theme(darkMode: boolean, classicMode: boolean): DefaultTheme {
     mediaWidth: mediaWidthTemplates,
 
     // css snippets
-    flexColumnNoWrap: css` display: flex; flex-flow: column nowrap; `,
-    flexRowNoWrap: css` display: flex; flex-flow: row nowrap;`,
-
-    styledBoxBorder:
-      classicMode ?
-        css`
-      border: 0px;
-    `:
-        darkMode ? css`
-      border: 1px solid #1e9de3;
-    `:
-          css`
-      border: 1px solid #9cd0f5;
+    flexColumnNoWrap: css`
+      display: flex;
+      flex-flow: column nowrap;
+    `,
+    flexRowNoWrap: css`
+      display: flex;
+      flex-flow: row nowrap;
     `,
 
-    backgroundContainer:
-      classicMode ?
-        css`
-    border: solid 1px #424542;
-    border-radius: 1rem;
-    box-shadow: 1px 1px #e7dfe7, -1px -1px #e7dfe7, 1px -1px #e7dfe7, -1px 1px #e7dfe7, 0 -2px #9c9a9c, -2px 0 #7b757b,
-      0 2px #424542;
-    background: #04009d;
-    background: -moz-linear-gradient(top, #04009d 0%, #06004d 100%);
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #04009d), color-stop(100%, #06004d));
-    background: -webkit-linear-gradient(top, #04009d 0%, #06004d 100%);
-    background: -o-linear-gradient(top, #04009d 0%, #06004d 100%);
-    background: -ms-linear-gradient(top, #04009d 0%, #06004d 100%);
-    background: linear-gradient(to bottom, #04009d 0%, #06004d 100%);
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#04009d', endColorstr='#06004d',GradientType=0 );
-    `:
-        darkMode ? css`
-    background: linear-gradient(180deg, rgba(35, 102, 180, 0.8), rgba(14, 22, 42, 0.4));
-    `:
-          css`
-        background: linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 100%);
-    `,
+    styledBoxBorder: classicMode
+      ? css`
+          border: 0px;
+        `
+      : darkMode
+      ? css`
+          border: 1px solid #1e9de3;
+        `
+      : css`
+          border: 1px solid #9cd0f5;
+        `,
 
-    backgroundContainer2:
-      classicMode ? css`
-    background: linear-gradient(180deg, rgba(0, 27, 49, 0.5) 0%, rgba(0, 27, 49, 0.5) 100%);
-    `:
-        darkMode ? css`
-    background: linear-gradient(90deg, rgba(0, 27, 49, 0.3) 0%, rgba(0, 27, 49, 0.5) 100%);
-    `:
-          css`
-        background: linear-gradient(180deg, rgba(211,221,250) 0%, rgba(211,221,250) 100%);
-    `,
-    backgroundContainer3:
-      classicMode ? css`
-    background: linear-gradient(180deg, rgba(0,77,161,1) 0%, rgba(5,30,64,1) 100%);
-    `:
-        darkMode ? css`
-    background: linear-gradient(180deg, rgba(0,77,161,1) 0%, rgba(5,30,64,1) 100%);
-    `:
-          css`
-        background: linear-gradient(180deg, rgba(239,241,244) 0%, rgba(239,241,244) 100%);
-    `,
-    tokenBackground:
-      classicMode ?
-        'url(' + images.token.classic + ') no-repeat' :
-        darkMode ? 'url(' + images.token.dark + ') no-repeat' : 'url(' + images.token.light + ') no-repeat',
+    backgroundContainer: classicMode
+      ? css`
+          border: solid 1px #424542;
+          border-radius: 1rem;
+          box-shadow: 1px 1px #e7dfe7, -1px -1px #e7dfe7, 1px -1px #e7dfe7, -1px 1px #e7dfe7, 0 -2px #9c9a9c,
+            -2px 0 #7b757b, 0 2px #424542;
+          background: #04009d;
+          background: -moz-linear-gradient(top, #04009d 0%, #06004d 100%);
+          background: -webkit-gradient(
+            linear,
+            left top,
+            left bottom,
+            color-stop(0%, #04009d),
+            color-stop(100%, #06004d)
+          );
+          background: -webkit-linear-gradient(top, #04009d 0%, #06004d 100%);
+          background: -o-linear-gradient(top, #04009d 0%, #06004d 100%);
+          background: -ms-linear-gradient(top, #04009d 0%, #06004d 100%);
+          background: linear-gradient(to bottom, #04009d 0%, #06004d 100%);
+          filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#04009d', endColorstr='#06004d',GradientType=0 );
+        `
+      : darkMode
+      ? css`
+          background: linear-gradient(180deg, rgba(35, 102, 180, 0.8), rgba(14, 22, 42, 0.4));
+        `
+      : css`
+          background: linear-gradient(180deg, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 1) 100%);
+        `,
 
-    swapButtonBg:
-      darkMode ?
-        css`background-image:url(${images.swap.dark})` :
-        css`background-image:url(${images.swap.light})`,
+    backgroundContainer2: classicMode
+      ? css`
+          background: linear-gradient(180deg, rgba(0, 27, 49, 0.5) 0%, rgba(0, 27, 49, 0.5) 100%);
+        `
+      : darkMode
+      ? css`
+          background: linear-gradient(90deg, rgba(0, 27, 49, 0.3) 0%, rgba(0, 27, 49, 0.5) 100%);
+        `
+      : css`
+          background: linear-gradient(180deg, rgba(211, 221, 250) 0%, rgba(211, 221, 250) 100%);
+        `,
+    backgroundContainer3: classicMode
+      ? css`
+          background: linear-gradient(180deg, rgba(0, 77, 161, 1) 0%, rgba(5, 30, 64, 1) 100%);
+        `
+      : darkMode
+      ? css`
+          background: linear-gradient(180deg, rgba(0, 77, 161, 1) 0%, rgba(5, 30, 64, 1) 100%);
+        `
+      : css`
+          background: linear-gradient(180deg, rgba(239, 241, 244) 0%, rgba(239, 241, 244) 100%);
+        `,
+    tokenBackground: classicMode
+      ? 'url(' + images.token.classic + ') no-repeat'
+      : darkMode
+      ? 'url(' + images.token.dark + ') no-repeat'
+      : 'url(' + images.token.light + ') no-repeat',
+
+    swapButtonBg: darkMode
+      ? css`
+          background-image: url(${images.swap.dark});
+        `
+      : css`
+          background-image: url(${images.swap.light});
+        `,
 
     swapButtonSrc: darkMode ? images.swap.dark : images.swap.light,
 
-    advancedDetailsFooter: classicMode ? css`
-    border: solid 1px #424542;
-    box-shadow: 1px 1px #e7dfe7, -1px -1px #e7dfe7, 1px -1px #e7dfe7, -1px 1px #e7dfe7, 0 -2px #9c9a9c, -2px 0 #7b757b,
-      0 2px #424542;
-    padding: 1rem;
-    background: #700e9c;
-    background: -moz-linear-gradient(top, #700e9c 0%, #6c1237 100%);
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #700e9c), color-stop(100%, #6c1237));
-    background: -webkit-linear-gradient(top, #700e9c 0%, #6c1237 100%);
-    background: -o-linear-gradient(top, #700e9c 0%, #6c1237 100%);
-    background: -ms-linear-gradient(top, #700e9c 0%, #6c1237 100%);
-    background: linear-gradient(to bottom, #700e9c 0%, #6c1237 100%);
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#700e9c', endColorstr='#6c1237',GradientType=0 );
-    border-radius: 1rem;
-    `
+    advancedDetailsFooter: classicMode
+      ? css`
+          border: solid 1px #424542;
+          box-shadow: 1px 1px #e7dfe7, -1px -1px #e7dfe7, 1px -1px #e7dfe7, -1px 1px #e7dfe7, 0 -2px #9c9a9c,
+            -2px 0 #7b757b, 0 2px #424542;
+          padding: 1rem;
+          background: #700e9c;
+          background: -moz-linear-gradient(top, #700e9c 0%, #6c1237 100%);
+          background: -webkit-gradient(
+            linear,
+            left top,
+            left bottom,
+            color-stop(0%, #700e9c),
+            color-stop(100%, #6c1237)
+          );
+          background: -webkit-linear-gradient(top, #700e9c 0%, #6c1237 100%);
+          background: -o-linear-gradient(top, #700e9c 0%, #6c1237 100%);
+          background: -ms-linear-gradient(top, #700e9c 0%, #6c1237 100%);
+          background: linear-gradient(to bottom, #700e9c 0%, #6c1237 100%);
+          filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#700e9c', endColorstr='#6c1237',GradientType=0 );
+          border-radius: 1rem;
+        `
       : css`
-    -webkit-backface-visibility: hidden;
-    backface-visibility: hidden; 
-    `,
+          -webkit-backface-visibility: hidden;
+          backface-visibility: hidden;
+        `,
 
     utils: {
       hexToRGB: hexToRGB,
@@ -318,7 +377,7 @@ export default function ThemeProvider({ children }: { children: React.ReactNode 
   return <StyledComponentsThemeProvider theme={themeObject}>{children}</StyledComponentsThemeProvider>
 }
 
-const TextWrapper = styled(Text) <{ color: keyof Colors }>`
+const TextWrapper = styled(Text)<{ color: keyof Colors }>`
   color: ${({ color, theme }) => (theme as any)[color]};
 `
 export const TYPE = {
@@ -410,19 +469,19 @@ body {
   background-size: cover;
   background-repeat: no-repeat;
   background-attachment: fixed;
-  background-position: ${({ theme }) => ((theme.name == 'classic' ? '0% 0%' : 'top center'))};
-  /*background-image: ${({ theme }) => (
-    (theme.name == 'classic' ? 'none' : (
-      theme.name == 'dark' ? 'url(' + images.backgrounds.dark + ')' :
-        'url(' + images.backgrounds.light + ')'
-    ))
-  )};*/
-  background-color: ${({ theme }) => (
-    (theme.name == 'classic' ? theme.black : (
-      theme.name == 'dark' ? 'transparent' :
-        'linear-gradient(rgba(255,255,255,.1), rgba(255,255,255,.1))'
-    ))
-  )};
+  background-position: ${({ theme }) => (theme.name == 'classic' ? '0% 0%' : 'top center')};
+  /*background-image: ${({ theme }) =>
+    theme.name == 'classic'
+      ? 'none'
+      : theme.name == 'dark'
+      ? 'url(' + images.backgrounds.dark + ')'
+      : 'url(' + images.backgrounds.light + ')'};*/
+  background-color: ${({ theme }) =>
+    theme.name == 'classic'
+      ? theme.black
+      : theme.name == 'dark'
+      ? 'transparent'
+      : 'linear-gradient(rgba(255,255,255,.1), rgba(255,255,255,.1))'};
 }
 
 ::placeholder { color: ${({ theme }) => theme.placeholderColor}; }
@@ -770,14 +829,12 @@ MARGIN STYLE MINUS
   margin-left: auto;
   margin-right: auto;
   border-radius: unset;
-  box-shadow: ${({ theme }) => (
-    (theme.name == 'classic' ?
-      '0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),0px 24px 32px rgba(0, 0, 0, 0.01)' : (
-        theme.name == 'dark' ?
-          '0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),0px 24px 32px rgba(0, 0, 0, 0.01)' :
-          'none'
-      ))
-  )};
+  box-shadow: ${({ theme }) =>
+    theme.name == 'classic'
+      ? '0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),0px 24px 32px rgba(0, 0, 0, 0.01)'
+      : theme.name == 'dark'
+      ? '0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),0px 24px 32px rgba(0, 0, 0, 0.01)'
+      : 'none'};
   }
 
   .evidence-text { font-weight: 500; font-size: 14px; }
@@ -878,7 +935,7 @@ export const AppWrapper = styled.div`
   overflow-x: hidden;
 `
 export const HeaderWrapper = styled.div`
-${({ theme }) => theme.flexRowNoWrap}
+  ${({ theme }) => theme.flexRowNoWrap}
   width: 100%;
   justify-content: space-between;
 `
@@ -891,7 +948,7 @@ export const BodyWrapper = styled.div`
   flex: 1;
   overflow-y: auto;
   overflow-x: hidden;
-  z-index: 10;  
+  z-index: 10;
   ${({ theme }) => theme.mediaWidth.upToSmall`
     padding-left: 16px;
     padding-right: 16px;
@@ -913,7 +970,7 @@ export const MainContainer = styled.div`
   width: 100%;
   display: inline-block;
   z-index: 2;
-  &.classic { 
+  &.classic {
     padding: 0px;
     border-radius: 1rem;
     border: solid 2px #424542;
@@ -921,22 +978,28 @@ export const MainContainer = styled.div`
       0 2px #424542;
   }
 
-  @media (max-width: 1050px) { 
+  @media (max-width: 1050px) {
     width: 375px;
     margin: 0px auto 10px auto;
     max-width: 100% !important;
     min-height: auto !important;
-    border: none !important; 
-    padding: 10px 0px 0px 0px; 
-    &:before, &:after { display: none; }
-    &.classic { margin-top: 30px; }
+    border: none !important;
+    padding: 10px 0px 0px 0px;
+    &:before,
+    &:after {
+      display: none;
+    }
+    &.classic {
+      margin-top: 30px;
+    }
   }
 
-  &:before, &:after {
-    content: "";
-    position:absolute;
-    width:305px;
-    height:265px;
+  &:before,
+  &:after {
+    content: '';
+    position: absolute;
+    width: 305px;
+    height: 265px;
     background-position: center center;
     background-repeat: no-repeat;
     z-index: -41;
@@ -944,52 +1007,102 @@ export const MainContainer = styled.div`
     background-size: 100% 100%;
   }
 
-  &:before { bottom: -100px; left: -112px; }
-  &:after { bottom: -100px; right: -112px; }
+  &:before {
+    bottom: -100px;
+    left: -112px;
+  }
+  &:after {
+    bottom: -100px;
+    right: -112px;
+  }
 
-  &.dark:before { background-image: url(${(images.decorators.grid.dark)}); }
-  &.dark:after { background-image: url(${(images.decorators.grid.dark)}); }
+  &.dark:before {
+    background-image: url(${images.decorators.grid.dark});
+  }
+  &.dark:after {
+    background-image: url(${images.decorators.grid.dark});
+  }
 
-  &.light:before { background-image: url(${(images.decorators.grid.light)}); }
-  &.light:after { background-image: url(${(images.decorators.grid.light)}); }
-  &.classic:after, &.classic:before,
-  &.dark:after, &.dark:before,
-  &.light:after, &.light:before { display: none; }
+  &.light:before {
+    background-image: url(${images.decorators.grid.light});
+  }
+  &.light:after {
+    background-image: url(${images.decorators.grid.light});
+  }
+  &.classic:after,
+  &.classic:before,
+  &.dark:after,
+  &.dark:before,
+  &.light:after,
+  &.light:before {
+    display: none;
+  }
 `
 export const MainContainerExtraDecorator = styled.div`
   position: absolute;
-  display:none;
+  display: none;
   width: 100%;
   height: 100%;
   z-index: -1;
 
-  &.top { top:0px; left:0px; }
-  &.bottom { bottom: 0px; left: 0px; transform: scaleX(-1); }
+  &.top {
+    top: 0px;
+    left: 0px;
+  }
+  &.bottom {
+    bottom: 0px;
+    left: 0px;
+    transform: scaleX(-1);
+  }
 
-  &:before, &:after {
+  &:before,
+  &:after {
     position: absolute;
-    content: " ";
+    content: ' ';
     display: block;
     width: 52px;
-    height: 55px; 
-    background-color: transparent; 
-    background-size: 80% 80%;  
+    height: 55px;
+    background-color: transparent;
+    background-size: 80% 80%;
     opacity: 0.6;
   }
 
-  &:before { top: -29px; left: -29px; background-position: left top; background-repeat: no-repeat; }
-  &:after { bottom: -29px; right: -29px; transform: rotate(180deg); background-position: left top; background-repeat: no-repeat; }
+  &:before {
+    top: -29px;
+    left: -29px;
+    background-position: left top;
+    background-repeat: no-repeat;
+  }
+  &:after {
+    bottom: -29px;
+    right: -29px;
+    transform: rotate(180deg);
+    background-position: left top;
+    background-repeat: no-repeat;
+  }
 
-  &.dark:before { background-image: url(${(images.decorators.largeBoxes.dark)}); }
-  &.dark:after { background-image: url(${(images.decorators.largeBoxes.dark)}); }
+  &.dark:before {
+    background-image: url(${images.decorators.largeBoxes.dark});
+  }
+  &.dark:after {
+    background-image: url(${images.decorators.largeBoxes.dark});
+  }
 
-  &.light:before { background-image: url(${(images.decorators.largeBoxes.light)}); }
-  &.light:after { background-image: url(${(images.decorators.largeBoxes.light)}); }
+  &.light:before {
+    background-image: url(${images.decorators.largeBoxes.light});
+  }
+  &.light:after {
+    background-image: url(${images.decorators.largeBoxes.light});
+  }
 
-  &.classic:before {}
-  &.classic:after {}
+  &.classic:before {
+  }
+  &.classic:after {
+  }
 
-  @media (max-width: 1050px) { display: none !important; }
+  @media (max-width: 1050px) {
+    display: none !important;
+  }
 `
 export const MainContainerContentWrapper = styled.div`
   position: relative;
@@ -1005,11 +1118,16 @@ export const MainContainerContentWrapper = styled.div`
     background: rgb(31,121,228);
     background-color: rgb(6 31 64)!important
   }
-  //&.dark { background: linear-gradient(133deg, ${({ theme }) => theme.utils.hexToRGB(theme.blue2, 0.8)} 60%, ${({ theme }) => theme.utils.hexToRGB(theme.azure3, 0.3)} 100%); }
-  &.light { background: linear-gradient(133deg, ${({ theme }) => theme.utils.hexToRGB(theme.violet2, 0.3)} 60%, ${({ theme }) => theme.utils.hexToRGB(theme.violet3, 0.3)} 100%); }
+  //&.dark { background: linear-gradient(133deg, ${({ theme }) => theme.utils.hexToRGB(theme.blue2, 0.8)} 60%, ${({
+  theme
+}) => theme.utils.hexToRGB(theme.azure3, 0.3)} 100%); }
+  &.light { background: linear-gradient(133deg, ${({ theme }) => theme.utils.hexToRGB(theme.violet2, 0.3)} 60%, ${({
+  theme
+}) => theme.utils.hexToRGB(theme.violet3, 0.3)} 100%); }
   &.classic { 
     padding: 5px 5px 5px 35px;
-    background: linear-gradient(0deg, ${({ theme }) => theme.utils.hexToRGB(theme.blue6, 1)} 0%, ${({ theme }) => theme.utils.hexToRGB(theme.blue5, 1)} 100%); 
+    background: linear-gradient(0deg, ${({ theme }) => theme.utils.hexToRGB(theme.blue6, 1)} 0%, ${({ theme }) =>
+  theme.utils.hexToRGB(theme.blue5, 1)} 100%); 
   }
 
   @media (max-width: 1050px) { padding: 5px 5px 5px 5px !important; min-height: auto; }
@@ -1017,8 +1135,8 @@ export const MainContainerContentWrapper = styled.div`
 export const FeatureTitle = styled.h2`
   writing-mode: vertical-rl;
   text-orientation: mixed;
-  padding:0px;
-  margin:0px;
+  padding: 0px;
+  margin: 0px;
   position: absolute;
   top: 0px;
   left: 0px;
@@ -1030,17 +1148,23 @@ export const FeatureTitle = styled.h2`
   padding-top: 15px;
   padding-bottom: 170px;
   overflow: hidden;
-  text-shadow: 3px 3px 3px 0px rgba(40,39,40, 1);
+  text-shadow: 3px 3px 3px 0px rgba(40, 39, 40, 1);
 
-  &.dark { color: ${({ theme }) => theme.azure5}; }
-  &.light { color: ${({ theme }) => theme.violet1}; }
-  &.classic { 
-    color: #FFFFFF; 
-    left: 0px;
-    text-shadow: 1px 1px 1px ${({ theme }) => theme.black}
+  &.dark {
+    color: ${({ theme }) => theme.azure5};
   }
-  
-  @media (max-width: 1050px) { display: none; }
+  &.light {
+    color: ${({ theme }) => theme.violet1};
+  }
+  &.classic {
+    color: #ffffff;
+    left: 0px;
+    text-shadow: 1px 1px 1px ${({ theme }) => theme.black};
+  }
+
+  @media (max-width: 1050px) {
+    display: none;
+  }
 `
 export const FeatureChildrenContainer = styled.div`
   border-radius:3px;
@@ -1051,9 +1175,13 @@ export const FeatureChildrenContainer = styled.div`
   &.dark { 
     background: rgb(31,121,228);
     background-color: rgb(8 44 88)!important
-    //background: linear-gradient(-60deg, ${({ theme }) => theme.utils.hexToRGB(theme.blue2, 0.24)} 60%, ${({ theme }) => theme.utils.hexToRGB(theme.azure3, 0.59)} 100%); 
+    //background: linear-gradient(-60deg, ${({ theme }) => theme.utils.hexToRGB(theme.blue2, 0.24)} 60%, ${({
+  theme
+}) => theme.utils.hexToRGB(theme.azure3, 0.59)} 100%); 
   }
-  &.light { background: linear-gradient(-60deg, ${({ theme }) => theme.utils.hexToRGB(theme.white, 0.8)} 60%, ${({ theme }) => theme.utils.hexToRGB(theme.white, 0.8)} 100%); }
+  &.light { background: linear-gradient(-60deg, ${({ theme }) => theme.utils.hexToRGB(theme.white, 0.8)} 60%, ${({
+  theme
+}) => theme.utils.hexToRGB(theme.white, 0.8)} 100%); }
   &.classic {}
 
   @media (max-width: 1050px) { min-height: auto; }
@@ -1068,19 +1196,24 @@ export const SectionTitle = styled.h6`
   padding: 0px;
   width: 80%;
 
-  &.dark { 
+  &.dark {
     color: ${({ theme }) => theme.azure9};
   }
-  &.light { color: ${({ theme }) => theme.grey3}; }
-  &.classic { 
-    color: ${({ theme }) => theme.azure1}; 
-    text-shadow: 1px 1px 1px ${({ theme }) => theme.black}
+  &.light {
+    color: ${({ theme }) => theme.grey3};
+  }
+  &.classic {
+    color: ${({ theme }) => theme.azure1};
+    text-shadow: 1px 1px 1px ${({ theme }) => theme.black};
   }
 
-  &.dark:before, &.light:before { }
+  &.dark:before,
+  &.light:before {
+  }
 
-  &.dark:after, &.light:after {
-    content: " ";
+  &.dark:after,
+  &.light:after {
+    content: ' ';
     display: block;
     width: 100%;
     height: 1px;
@@ -1089,26 +1222,30 @@ export const SectionTitle = styled.h6`
     left: 0px;
   }
 
-  &.dark:after { background: linear-gradient(to right, ${({ theme }) => theme.azure1} 0%, rgba(15,63,115,0) 100%); }
-  &.light:after { background: linear-gradient(to right, ${({ theme }) => theme.violet1} 0%, rgba(15,63,115,0) 100%); }
+  &.dark:after {
+    background: linear-gradient(to right, ${({ theme }) => theme.azure1} 0%, rgba(15, 63, 115, 0) 100%);
+  }
+  &.light:after {
+    background: linear-gradient(to right, ${({ theme }) => theme.violet1} 0%, rgba(15, 63, 115, 0) 100%);
+  }
 
-  &.classic.add-liquidity-section-title { 
+  &.classic.add-liquidity-section-title {
     width: 100%;
-    text-align:center;
+    text-align: center;
     text-shadow: 1px 1px 1px ${({ theme }) => theme.black};
   }
 `
 
 export const SectionContent = styled.div`
   font-weight: 400;
-  &.dark { 
+  &.dark {
   }
-  &.light {  
-    text-shadow: 0px; 
+  &.light {
+    text-shadow: 0px;
   }
-  &.classic { 
+  &.classic {
   }
-  & .yellow{
+  & .yellow {
     color: ${({ theme }) => theme.yellow1};
   }
 `
@@ -1117,13 +1254,13 @@ export const InventoryContainer = styled.div`
   margin-right: 1rem;
   overflow-y: auto;
   overflow: hidden;
-  
-  @media (max-width: 1050px) { 
+
+  @media (max-width: 1050px) {
     max-height: auto;
   }
 `
 export const InventoryItemContainer = styled.div`
-  padding: 10px 15px 10px 15px; 
+  padding: 10px 15px 10px 15px;
   margin-left: 3px;
   margin-bottom: 1px;
   height: auto;
@@ -1134,18 +1271,27 @@ export const InventoryItemContainer = styled.div`
   color: ${({ theme }) => theme.text6};
 
   &.dark {
-    background: linear-gradient(90deg, ${({ theme }) => theme.utils.hexToRGB(theme.black, 1)} 0%, ${({ theme }) => theme.utils.hexToRGB(theme.black, 0)} 100%);
+    background: linear-gradient(
+      90deg,
+      ${({ theme }) => theme.utils.hexToRGB(theme.black, 1)} 0%,
+      ${({ theme }) => theme.utils.hexToRGB(theme.black, 0)} 100%
+    );
   }
   &.dark:hover {
-    background: linear-gradient(90deg, ${({ theme }) => theme.utils.hexToRGB(theme.azure8, 1)} 0%, ${({ theme }) => theme.utils.hexToRGB(theme.azure8, 0)} 100%);
+    background: linear-gradient(
+      90deg,
+      ${({ theme }) => theme.utils.hexToRGB(theme.azure8, 1)} 0%,
+      ${({ theme }) => theme.utils.hexToRGB(theme.azure8, 0)} 100%
+    );
     color: ${({ theme }) => theme.text1};
-    &.dark:after{
-      background-color: ${({ theme }) => theme.azure7}
+    &.dark:after {
+      background-color: ${({ theme }) => theme.azure7};
     }
   }
 
-  &.dark:after, &.light:after {
-    content: " ";
+  &.dark:after,
+  &.light:after {
+    content: ' ';
     display: block;
     position: absolute;
     width: 2px;
@@ -1154,109 +1300,201 @@ export const InventoryItemContainer = styled.div`
     left: -3px;
   }
 
-  &.dark:after { background-color: ${({ theme }) => theme.black}; }
-  &.light:after { background-color: rgba(211,221,250,1); }
+  &.dark:after {
+    background-color: ${({ theme }) => theme.black};
+  }
+  &.light:after {
+    background-color: rgba(211, 221, 250, 1);
+  }
 
-  &.light { 
-    background: linear-gradient(90deg, rgba(211,221,250,1) 0%, rgba(211,221,250,0) 100%);
+  &.light {
+    background: linear-gradient(90deg, rgba(211, 221, 250, 1) 0%, rgba(211, 221, 250, 0) 100%);
     color: ${({ theme }) => theme.text2};
   }
   &.light:hover {
-    background: linear-gradient(90deg, ${({ theme }) => theme.utils.hexToRGB(theme.violet3, 1)} 0%, ${({ theme }) => theme.utils.hexToRGB(theme.violet3, 0)} 100%);
+    background: linear-gradient(
+      90deg,
+      ${({ theme }) => theme.utils.hexToRGB(theme.violet3, 1)} 0%,
+      ${({ theme }) => theme.utils.hexToRGB(theme.violet3, 0)} 100%
+    );
     color: ${({ theme }) => theme.text1};
-    &.light:after{
-      background-color: ${({ theme }) => theme.violet1}
+    &.light:after {
+      background-color: ${({ theme }) => theme.violet1};
     }
   }
 
-  &.classic { 
-    background: linear-gradient(180deg, rgba(0, 27, 49, 0.5) 0%, rgba(0, 27, 49, 0.5) 100%); 
+  &.classic {
+    background: linear-gradient(180deg, rgba(0, 27, 49, 0.5) 0%, rgba(0, 27, 49, 0.5) 100%);
   }
 
-  & .balanceRow { display: inline-flex; margin: 5px 0px 0px 0px; font-size: 12px; }
+  & .balanceRow {
+    display: inline-flex;
+    margin: 5px 0px 0px 0px;
+    font-size: 12px;
+  }
 
-  & .balanceRow > div:first-child { margin-right: 5px; }
+  & .balanceRow > div:first-child {
+    margin-right: 5px;
+  }
 
-  &.dark .balanceRow > div:first-child { color: ${({ theme }) => theme.azure2}; }
+  &.dark .balanceRow > div:first-child {
+    color: ${({ theme }) => theme.azure2};
+  }
 
-  &.light .balanceRow > div:first-child { color: ${({ theme }) => theme.violet1}; }
+  &.light .balanceRow > div:first-child {
+    color: ${({ theme }) => theme.violet1};
+  }
 
-  &.classic .balanceRow > div:first-child { color: ${({ theme }) => theme.blue1}; }
+  &.classic .balanceRow > div:first-child {
+    color: ${({ theme }) => theme.blue1};
+  }
 
-  & .addressRow { display: inline-flex; margin: 5px 0px 0px 0px; font-size: 12px; }
+  & .addressRow {
+    display: inline-flex;
+    margin: 5px 0px 0px 0px;
+    font-size: 12px;
+  }
 
-  & .addressRow > div:first-child { margin-right: 5px; }
-  
-  &.dark .addressRow > div:first-child { color: ${({ theme }) => theme.azure2}; }
+  & .addressRow > div:first-child {
+    margin-right: 5px;
+  }
 
-  &.light .addressRow > div:first-child { color: ${({ theme }) => theme.violet1}; }
+  &.dark .addressRow > div:first-child {
+    color: ${({ theme }) => theme.azure2};
+  }
 
-  &.classic .addressRow > div:first-child { color: ${({ theme }) => theme.blue1}; }
+  &.light .addressRow > div:first-child {
+    color: ${({ theme }) => theme.violet1};
+  }
 
-  & .decimalsRow { display: inline-flex; margin: 5px 0px 0px 0px; font-size: 12px; }
+  &.classic .addressRow > div:first-child {
+    color: ${({ theme }) => theme.blue1};
+  }
 
-  & .decimalsRow > div:first-child { margin-right: 5px; }
-  
-  &.dark .decimalsRow > div:first-child { color: ${({ theme }) => theme.azure2}; }
+  & .decimalsRow {
+    display: inline-flex;
+    margin: 5px 0px 0px 0px;
+    font-size: 12px;
+  }
 
-  &.light .decimalsRow > div:first-child { color: ${({ theme }) => theme.violet1}; }
+  & .decimalsRow > div:first-child {
+    margin-right: 5px;
+  }
 
-  &.classic .decimalsRow > div:first-child { color: ${({ theme }) => theme.blue1}; }
+  &.dark .decimalsRow > div:first-child {
+    color: ${({ theme }) => theme.azure2};
+  }
 
-  & .tokenType { margin: 5px 0px 5px 10px; display: inline-block; }
+  &.light .decimalsRow > div:first-child {
+    color: ${({ theme }) => theme.violet1};
+  }
+
+  &.classic .decimalsRow > div:first-child {
+    color: ${({ theme }) => theme.blue1};
+  }
+
+  & .tokenType {
+    margin: 5px 0px 5px 10px;
+    display: inline-block;
+  }
 `
 export const SimpleTextParagraph = styled.p`
   font-size: 13px;
   margin: 20px 0px;
   text-align: left;
 
-  &.dark { font-weight: 500; }
-  &.light {}
-  &.classic { 
-    text-shadow: 1px 1px 1px ${({ theme }) => theme.black}; 
+  &.dark {
+    font-weight: 500;
+  }
+  &.light {
+  }
+  &.classic {
+    text-shadow: 1px 1px 1px ${({ theme }) => theme.black};
     line-height: 2em;
   }
-  &.classic strong { font-weight: normal; }
+  &.classic strong {
+    font-weight: normal;
+  }
 
-  &.dark > a { color: ${({ theme }) => theme.azure1}; }
-  &.light > a { color: ${({ theme }) => theme.violet1}; }
-  &.light > a {}
+  &.dark > a {
+    color: ${({ theme }) => theme.azure1};
+  }
+  &.light > a {
+    color: ${({ theme }) => theme.violet1};
+  }
+  &.light > a {
+  }
 
-  & span.row { display: inline-block; width: 100%; margin-bottom: 10px; }
-  & span.row span.column { display: inline-block; float: left; }
-  & span.row span.column:last-child { float: right; }
-  & span.row span.column img { display: inline-block !important; vertical-align: middle; }
+  & span.row {
+    display: inline-block;
+    width: 100%;
+    margin-bottom: 10px;
+  }
+  & span.row span.column {
+    display: inline-block;
+    float: left;
+  }
+  & span.row span.column:last-child {
+    float: right;
+  }
+  & span.row span.column img {
+    display: inline-block !important;
+    vertical-align: middle;
+  }
 
-  & img.ethereumLogo, & img.tokenLogo { margin-top: 0px; }
-  &.dark.extreme, &.light.extreme { font-size: 25px; }
+  & img.ethereumLogo,
+  & img.tokenLogo {
+    margin-top: 0px;
+  }
+  &.dark.extreme,
+  &.light.extreme {
+    font-size: 25px;
+  }
 
-  @media (max-width: 1050px) { 
-    &.dark.extreme, &.light.extreme { font-size: 20px; }
+  @media (max-width: 1050px) {
+    &.dark.extreme,
+    &.light.extreme {
+      font-size: 20px;
+    }
   }
 `
 export const SimpleInformationsTextParagraph = styled(SimpleTextParagraph)`
-  &.dark { color: ${({ theme }) => theme.azure1}; }
-  &.light {}
-  &.classic {}
+  &.dark {
+    color: ${({ theme }) => theme.azure1};
+  }
+  &.light {
+  }
+  &.classic {
+  }
 `
 
 export const EvidencedTextParagraph = styled(SimpleTextParagraph)`
   font-size: 16px;
   font-weight: 400;
-  
-  &.dark { color: ${({ theme }) => theme.azure1}; }
-  &.light { color: ${({ theme }) => theme.violet1}; }
-  &.classic { 
-    text-shadow: 1px 1px 1px ${({ theme }) => theme.black}; 
+
+  &.dark {
+    color: ${({ theme }) => theme.azure1};
+  }
+  &.light {
+    color: ${({ theme }) => theme.violet1};
+  }
+  &.classic {
+    text-shadow: 1px 1px 1px ${({ theme }) => theme.black};
     line-height: 2em;
   }
-  &.dark.extreme, &.light.extreme { font-size: 25px; }
+  &.dark.extreme,
+  &.light.extreme {
+    font-size: 25px;
+  }
 
-  @media (max-width: 1050px) { 
-    &.dark.extreme, &.light.extreme { font-size: 20px; }
+  @media (max-width: 1050px) {
+    &.dark.extreme,
+    &.light.extreme {
+      font-size: 20px;
+    }
   }
 `
-const BaseButton = styled(Button) <{ width?: string, borderRadius?: string, selected?: boolean, hide?: boolean }>`
+const BaseButton = styled(Button)<{ width?: string; borderRadius?: string; selected?: boolean; hide?: boolean }>`
   padding: 0px !important;
   width: ${({ width }) => (width ? width : 'auto')};
   border-radius: ${({ borderRadius }) => (borderRadius ? borderRadius : '0px')};
@@ -1272,44 +1510,107 @@ const BaseButton = styled(Button) <{ width?: string, borderRadius?: string, sele
   position: relative;
   background: none;
 
-  &:disabled { cursor: auto; }
-  > * { user-select: none; }
-  &.hidden { display: none !important; }
+  &:disabled {
+    cursor: auto;
+  }
+  > * {
+    user-select: none;
+  }
+  &.hidden {
+    display: none !important;
+  }
   ${({ hide }) => (hide ? 'display: none !important;' : '')}
 `
-export const IconButton = styled(BaseButton) <{ width?: string, borderRadius?: string, selected?: boolean }>`
+export const IconButton = styled(BaseButton)<{ width?: string; borderRadius?: string; selected?: boolean }>`
   cursor: pointer;
   width: fit-content;
   margin-left: 10px !important;
 
-  & > svg, & > span.icon-symbol { width: 14px; height: 14px; }
-  & > span.icon-symbol { display: inline-block; margin-right: 10px; }
+  & > svg,
+  & > span.icon-symbol {
+    width: 14px;
+    height: 14px;
+  }
+  & > span.icon-symbol {
+    display: inline-block;
+    margin-right: 10px;
+  }
 
-  &.dark > svg, &.dark > span.icon-symbol { stroke: ${({ theme }) => theme.azure7}; color: ${({ theme }) => theme.azure7}; }
-  &.light > svg, &.light > span.icon-symbol { stroke: ${({ theme }) => theme.violet2}; color: ${({ theme }) => theme.violet2}; }
-  &.light > svg.footer-icon { stroke: ${({ theme }) => theme.violet1}; color: ${({ theme }) => theme.violet1}; }
-  &.classic > svg, &.classic > span.icon-symbol {}
+  &.dark > svg,
+  &.dark > span.icon-symbol {
+    stroke: ${({ theme }) => theme.azure7};
+    color: ${({ theme }) => theme.azure7};
+  }
+  &.light > svg,
+  &.light > span.icon-symbol {
+    stroke: ${({ theme }) => theme.violet2};
+    color: ${({ theme }) => theme.violet2};
+  }
+  &.light > svg.footer-icon {
+    stroke: ${({ theme }) => theme.violet1};
+    color: ${({ theme }) => theme.violet1};
+  }
+  &.classic > svg,
+  &.classic > span.icon-symbol {
+  }
 
-  &.dark:hover > svg, &.dark:focus > svg { filter: drop-shadow(0px 0px 3px ${({ theme }) => theme.yellowLight}); }
-  &.dark:hover > span.icon-symbol, &.dark:focus > span.icon-symbol { text-shadow: 0px 0px 3px ${({ theme }) => theme.yellowLight}; }
+  &.dark:hover > svg,
+  &.dark:focus > svg {
+    filter: drop-shadow(0px 0px 3px ${({ theme }) => theme.yellowLight});
+  }
+  &.dark:hover > span.icon-symbol,
+  &.dark:focus > span.icon-symbol {
+    text-shadow: 0px 0px 3px ${({ theme }) => theme.yellowLight};
+  }
 
-  &.light:hover > svg, &.light:focus > svg { stroke: ${({ theme }) => theme.azure6}; color: ${({ theme }) => theme.azure6}; filter: drop-shadow(0px 0px 3px ${({ theme }) => theme.utils.hexToRGB(theme.violet1, 0.9)}); }
-  &.light:hover > span.icon-symbol, &.light:focus > span.icon-symbol { color: ${({ theme }) => theme.azure6}; text-shadow: 0px 0px 3px ${({ theme }) => theme.utils.hexToRGB(theme.violet1, 0.9)}; }
+  &.light:hover > svg,
+  &.light:focus > svg {
+    stroke: ${({ theme }) => theme.azure6};
+    color: ${({ theme }) => theme.azure6};
+    filter: drop-shadow(0px 0px 3px ${({ theme }) => theme.utils.hexToRGB(theme.violet1, 0.9)});
+  }
+  &.light:hover > span.icon-symbol,
+  &.light:focus > span.icon-symbol {
+    color: ${({ theme }) => theme.azure6};
+    text-shadow: 0px 0px 3px ${({ theme }) => theme.utils.hexToRGB(theme.violet1, 0.9)};
+  }
 
-  &.light:classic > svg, &.light:classic > svg {  }
+  &.light:classic > svg,
+  &.light:classic > svg {
+  }
 
-  &.popup-close-icon, &.modal-close-icon  { position: absolute; right: 10px; top: 10px; }
+  &.popup-close-icon,
+  &.modal-close-icon {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+  }
 
-  &.menuIcon > svg { width: 24px; height: 24px; margin-right: 10px; } 
+  &.menuIcon > svg {
+    width: 24px;
+    height: 24px;
+    margin-right: 10px;
+  }
 
-  & + .custom-label { cursor: pointer; margin-top: -0.3rem; font-weight: 600; }
-  & + .custom-label.dark {}
-  & + .custom-label.light {}
-  & + .custom-label.classic {}
+  & + .custom-label {
+    cursor: pointer;
+    margin-top: -0.3rem;
+    font-weight: 600;
+  }
+  & + .custom-label.dark {
+  }
+  & + .custom-label.light {
+  }
+  & + .custom-label.classic {
+  }
 
-  @media (max-width: 1050px) { 
-    & + .custom-label { display: none; }
-    &.classic.menuIcon > svg { stroke: ${({ theme }) => theme.white}; }
+  @media (max-width: 1050px) {
+    & + .custom-label {
+      display: none;
+    }
+    &.classic.menuIcon > svg {
+      stroke: ${({ theme }) => theme.white};
+    }
   }
 `
 export const InventoryGridContainer = styled.div`
@@ -1323,21 +1624,40 @@ export const GridContainer = styled.div`
 export const PageGridContainer = styled.div`
   display: grid;
   grid-template-columns: 30% auto;
-  @media (max-width: 1050px) { grid-template-columns: auto !important; }
+  @media (max-width: 1050px) {
+    grid-template-columns: auto !important;
+  }
 
-  &.swap {}
-  &.batch-swap {}
-  &.pool {}
-  &.liquidity-mining {}
+  &.swap {
+  }
+  &.batch-swap {
+  }
+  &.pool {
+  }
+  &.liquidity-mining {
+  }
 
-  &.swap > .left-column { min-height: 580px; }
-  &.batch-swap > .left-column { min-height: 580px; }
-  &.pool > .left-column { min-height: 580px; padding: 0 1rem 1rem 1rem; }
-  &.pool > .left-column.classic { padding: 0 1rem 1rem 0; }
-  &.liquidity-mining > .left-column { padding: 0 1rem 1rem 1rem; }
-  &.liquidity-mining > .left-column.classic { padding: 0 1rem 1rem 0; }
+  &.swap > .left-column {
+    min-height: 580px;
+  }
+  &.batch-swap > .left-column {
+    min-height: 580px;
+  }
+  &.pool > .left-column {
+    min-height: 580px;
+    padding: 0 1rem 1rem 1rem;
+  }
+  &.pool > .left-column.classic {
+    padding: 0 1rem 1rem 0;
+  }
+  &.liquidity-mining > .left-column {
+    padding: 0 1rem 1rem 1rem;
+  }
+  &.liquidity-mining > .left-column.classic {
+    padding: 0 1rem 1rem 0;
+  }
 
-  & > .left-column > .collapsable-title { 
+  & > .left-column > .collapsable-title {
     font-weight: 400;
     font-size: 14px;
     margin-bottom: 15px;
@@ -1345,27 +1665,57 @@ export const PageGridContainer = styled.div`
     padding-left: 10px;
   }
 
-  & > .left-column.dark > .collapsable-title { color: ${({ theme }) => theme.azure1}; }
-  & > .left-column.light > .collapsable-title { color: ${({ theme }) => theme.grey3}; }
-  & > .left-column.classic > .collapsable-title { color: ${({ theme }) => theme.azure1}; }
+  & > .left-column.dark > .collapsable-title {
+    color: ${({ theme }) => theme.azure1};
+  }
+  & > .left-column.light > .collapsable-title {
+    color: ${({ theme }) => theme.grey3};
+  }
+  & > .left-column.classic > .collapsable-title {
+    color: ${({ theme }) => theme.azure1};
+  }
 
-  @media (max-width: 1050px) { 
-    &.pool > .left-column { min-height: auto !important; padding: 0; }
-    &.liquidity-mining > .left-column { padding: 0; }
-    &.swap > .left-column { min-height: auto !important; }
-    &.batch-swap > .left-column { min-height: auto !important; }
-    & > .left-column > .collapsable-title { display: block; }
-    & > .left-column > .collapsable-title + .collapsable-item.collapsed { display: none; }
-    & > .left-column > .collapsable-title + .collapsable-item.opened { display: block; padding-left: 10px; margin-bottom: 20px; }
+  @media (max-width: 1050px) {
+    &.pool > .left-column {
+      min-height: auto !important;
+      padding: 0;
+    }
+    &.liquidity-mining > .left-column {
+      padding: 0;
+    }
+    &.swap > .left-column {
+      min-height: auto !important;
+    }
+    &.batch-swap > .left-column {
+      min-height: auto !important;
+    }
+    & > .left-column > .collapsable-title {
+      display: block;
+    }
+    & > .left-column > .collapsable-title + .collapsable-item.collapsed {
+      display: none;
+    }
+    & > .left-column > .collapsable-title + .collapsable-item.opened {
+      display: block;
+      padding-left: 10px;
+      margin-bottom: 20px;
+    }
   }
 `
 export const PageItemsContainer = styled.div`
-  &.dark {}
-  &.light {}
-  &.classic {}
+  &.dark {
+  }
+  &.light {
+  }
+  &.classic {
+  }
 
-  &.swap { min-height: 580px; }
-  &.batch-swap { min-height: 580px; }
+  &.swap {
+    min-height: 580px;
+  }
+  &.batch-swap {
+    min-height: 580px;
+  }
 `
 export const FooterInfo = styled.div`
   font-size: small;
@@ -1375,35 +1725,57 @@ export const FooterInfo = styled.div`
   /*display: grid;
   grid-template-columns: 30% auto; */
 
-  &.dark {}
-  &.light {}
-  &.classic {}
+  &.dark {
+  }
+  &.light {
+  }
+  &.classic {
+  }
 
-  &.dark > div.boxFooterCaption { margin: 5px auto 5px auto; }
-  &.light > div.boxFooterCaption { margin: 5px auto 5px auto; }
-  &.classic > div.boxFooterCaption { margin: 15px auto 15px auto; }
+  &.dark > div.boxFooterCaption {
+    margin: 5px auto 5px auto;
+  }
+  &.light > div.boxFooterCaption {
+    margin: 5px auto 5px auto;
+  }
+  &.classic > div.boxFooterCaption {
+    margin: 15px auto 15px auto;
+  }
 
-  .advanced-swap-details-container.classic { margin-top: 30px; }
+  .advanced-swap-details-container.classic {
+    margin-top: 30px;
+  }
   .advanced-swap-details-container.dark .advaced-swap-details.label,
-  .advanced-swap-details-container.light .advaced-swap-details.label { 
+  .advanced-swap-details-container.light .advaced-swap-details.label {
     color: ${({ theme }) => theme.cyan1};
     font-size: 13px;
   }
   .advanced-swap-details-container.classic .advaced-swap-details.label,
-  .advanced-swap-details-container.classic .advaced-swap-details.value {}
+  .advanced-swap-details-container.classic .advaced-swap-details.value {
+  }
 
-  @media (max-width: 1050px) { 
-    &.dark > div.boxFooterCaption, &.light > div.boxFooterCaption, &.classic > div.boxFooterCaption { font-size: smaller; }
-    &.classic > div.boxFooterCaption { line-height: 1.5em;}  
+  @media (max-width: 1050px) {
+    &.dark > div.boxFooterCaption,
+    &.light > div.boxFooterCaption,
+    &.classic > div.boxFooterCaption {
+      font-size: smaller;
+    }
+    &.classic > div.boxFooterCaption {
+      line-height: 1.5em;
+    }
   }
 `
 export const TabsBar = styled.div`
-  &.dark { }
-  &.light {}
-  &.classic {}
+  &.dark {
+  }
+  &.light {
+  }
+  &.classic {
+  }
 
-  &.dark:before, &.light:before {    
-    content: "";
+  &.dark:before,
+  &.light:before {
+    content: '';
     width: 100%;
     display: block;
     left: 0;
@@ -1412,8 +1784,9 @@ export const TabsBar = styled.div`
     bottom: -29px;
   }
 
-  &.classic:after, &.classic:before {
-    content: "";
+  &.classic:after,
+  &.classic:before {
+    content: '';
     width: 100%;
     height: 1px;
     display: block;
@@ -1422,44 +1795,108 @@ export const TabsBar = styled.div`
     position: relative;
   }
 
-  &.classic:after { background: #c8c8d2; }
-  &.classic:before { background: #9899ae; }
+  &.classic:after {
+    background: #c8c8d2;
+  }
+  &.classic:before {
+    background: #9899ae;
+  }
 
-  &.dark:before { background: linear-gradient(90deg,rgba(129,205,243,0) 0,#81cdf3 5%, #81cdf3 95%, rgba(129,205,243,0)); }
-  &.light:before { background: linear-gradient(90deg,rgba(129,205,243,0) 0, ${({ theme }) => theme.utils.hexToRGB(theme.violet1, 1)} 5%, ${({ theme }) => theme.utils.hexToRGB(theme.violet1, 1)} 95%, rgba(129,205,243,0)); }
+  &.dark:before {
+    background: linear-gradient(90deg, rgba(129, 205, 243, 0) 0, #81cdf3 5%, #81cdf3 95%, rgba(129, 205, 243, 0));
+  }
+  &.light:before {
+    background: linear-gradient(
+      90deg,
+      rgba(129, 205, 243, 0) 0,
+      ${({ theme }) => theme.utils.hexToRGB(theme.violet1, 1)} 5%,
+      ${({ theme }) => theme.utils.hexToRGB(theme.violet1, 1)} 95%,
+      rgba(129, 205, 243, 0)
+    );
+  }
 
-  &.dark:after, &.light:after { }
+  &.dark:after,
+  &.light:after {
+  }
 
-  & .navigation-link > svg { width: 18px; }
-  &.dark .navigation-link > svg { stroke: ${({ theme }) => theme.azure1}; color: ${({ theme }) => theme.azure1}; }
-  &.dark .navigation-link:hover, &.dark .navigation-link:focus > svg { filter: drop-shadow(0px 0px 3px ${({ theme }) => theme.yellowLight}); }
-  &.light .navigation-link > svg { stroke: ${({ theme }) => theme.violet1}; color: ${({ theme }) => theme.violet1} }
-  &.light .navigation-link:hover, &.light .navigation-link:focus > svg { filter: drop-shadow(0px 0px 3px ${({ theme }) => theme.yellowLight}); }
-  &.classic .navigation-link > svg { stroke: ${({ theme }) => theme.azure1}; color: ${({ theme }) => theme.azure1}; }
-  &.classic .navigation-link:hover, &.classic .navigation-link:focus > svg { filter: drop-shadow(0px 0px 3px ${({ theme }) => theme.yellowLight}); }
+  & .navigation-link > svg {
+    width: 18px;
+  }
+  &.dark .navigation-link > svg {
+    stroke: ${({ theme }) => theme.azure1};
+    color: ${({ theme }) => theme.azure1};
+  }
+  &.dark .navigation-link:hover,
+  &.dark .navigation-link:focus > svg {
+    filter: drop-shadow(0px 0px 3px ${({ theme }) => theme.yellowLight});
+  }
+  &.light .navigation-link > svg {
+    stroke: ${({ theme }) => theme.violet1};
+    color: ${({ theme }) => theme.violet1};
+  }
+  &.light .navigation-link:hover,
+  &.light .navigation-link:focus > svg {
+    filter: drop-shadow(0px 0px 3px ${({ theme }) => theme.yellowLight});
+  }
+  &.classic .navigation-link > svg {
+    stroke: ${({ theme }) => theme.azure1};
+    color: ${({ theme }) => theme.azure1};
+  }
+  &.classic .navigation-link:hover,
+  &.classic .navigation-link:focus > svg {
+    filter: drop-shadow(0px 0px 3px ${({ theme }) => theme.yellowLight});
+  }
 
-  & > .tabLinkItem > svg { display: none; }
+  & > .tabLinkItem > svg {
+    display: none;
+  }
 
-  @media (max-width: 1050px) { 
-    & > .tabLinkItem > svg { display: block; }
+  @media (max-width: 1050px) {
+    & > .tabLinkItem > svg {
+      display: block;
+    }
     /*& > .tabLinkItem > span { display: none; }*/
-    &.dark:before, &.light:before,
-    &.classic:after, &.classic:before { bottom: -37px; }
+    &.dark:before,
+    &.light:before,
+    &.classic:after,
+    &.classic:before {
+      bottom: -37px;
+    }
   }
 `
-export const DynamicGrid = styled.div<{ columns: number, columnsDefinitions?: DynamicGridColumnsDefinition[] }>`
+export const DynamicGrid = styled.div<{ columns: number; columnsDefinitions?: DynamicGridColumnsDefinition[] }>`
   display: grid;
-  grid-template-columns: ${({ theme, columns, columnsDefinitions }) => theme.utils.gridColumsWidth(columns, columnsDefinitions)};
+  grid-template-columns: ${({ theme, columns, columnsDefinitions }) =>
+    theme.utils.gridColumsWidth(columns, columnsDefinitions)};
 
-  & .title { font-size: 18px; font-weight: 500; }
+  & .title {
+    font-size: 18px;
+    font-weight: 500;
+  }
 
-  &.dark .title, &.dark .text { color: ${({ theme }) => theme.white}; }
-  &.light .title, &.light .text { color: ${({ theme }) => theme.grey1}; }
-  &.classic .title, &.classic .text { font-size: 13px; text-shadow: 1px 1px 1px ${({ theme }) => theme.black}; line-height: 1.5em; }
+  &.dark .title,
+  &.dark .text {
+    color: ${({ theme }) => theme.white};
+  }
+  &.light .title,
+  &.light .text {
+    color: ${({ theme }) => theme.grey1};
+  }
+  &.classic .title,
+  &.classic .text {
+    font-size: 13px;
+    text-shadow: 1px 1px 1px ${({ theme }) => theme.black};
+    line-height: 1.5em;
+  }
 
-  @media (max-width: 1050px) { 
-    & .title, & .text { font-size: small; }
-    &.classic .title, &.classic .text {}
+  @media (max-width: 1050px) {
+    & .title,
+    & .text {
+      font-size: small;
+    }
+    &.classic .title,
+    &.classic .text {
+    }
   }
 `
 const tablinkitemactiveclassname = 'active'
@@ -1475,42 +1912,76 @@ export const TabLinkItem = styled(NavLink).attrs({ tablinkitemactiveclassname })
   margin: 0 12px;
   font-weight: 500;
   float: right;
-  
-  &.dark { color: ${({ theme }) => theme.white}; }
-  &.light { color: ${({ theme }) => theme.grey1}; }
-  &.classic { 
-    color: ${({ theme }) => theme.white}; 
-    text-shadow: 1px 1px 1px ${({ theme }) => theme.black}; 
+
+  &.dark {
+    color: ${({ theme }) => theme.white};
+  }
+  &.light {
+    color: ${({ theme }) => theme.grey1};
+  }
+  &.classic {
+    color: ${({ theme }) => theme.white};
+    text-shadow: 1px 1px 1px ${({ theme }) => theme.black};
   }
 
-  &.${tablinkitemactiveclassname} { }
+  &.${tablinkitemactiveclassname} {
+  }
 
-  &.dark.${tablinkitemactiveclassname} { color: ${({ theme }) => theme.azure1}; }
-  &.light.${tablinkitemactiveclassname} { color: ${({ theme }) => theme.violet1}; }
-  &.classic.${tablinkitemactiveclassname} { color: ${({ theme }) => theme.azure1}; }
+  &.dark.${tablinkitemactiveclassname} {
+    color: ${({ theme }) => theme.azure1};
+  }
+  &.light.${tablinkitemactiveclassname} {
+    color: ${({ theme }) => theme.violet1};
+  }
+  &.classic.${tablinkitemactiveclassname} {
+    color: ${({ theme }) => theme.azure1};
+  }
 
-  &.dark:hover, &.dark:focus { color: ${({ theme }) => theme.azure1}; }
-  &.light:hover, &.light:focus { color: ${({ theme }) => theme.violet4}; }
-  &.classic:hover, &.classic:focus { color: ${({ theme }) => theme.azure1}; }
+  &.dark:hover,
+  &.dark:focus {
+    color: ${({ theme }) => theme.azure1};
+  }
+  &.light:hover,
+  &.light:focus {
+    color: ${({ theme }) => theme.violet4};
+  }
+  &.classic:hover,
+  &.classic:focus {
+    color: ${({ theme }) => theme.azure1};
+  }
 
-  &.dark.disabled, &.light.disabled, &.classic.disabled { opacity: 0.7; color: ${({ theme }) => theme.grey1}; }
+  &.dark.disabled,
+  &.light.disabled,
+  &.classic.disabled {
+    opacity: 0.7;
+    color: ${({ theme }) => theme.grey1};
+  }
 
-  &.dark.disabled:hover, &.dark.disabled:focus,
-  &.light.disabled:hover, &.light.disabled:focus,
-  &.classic.disabled:hover, &.classic.disabled:focus { opacity: 1; }
+  &.dark.disabled:hover,
+  &.dark.disabled:focus,
+  &.light.disabled:hover,
+  &.light.disabled:focus,
+  &.classic.disabled:hover,
+  &.classic.disabled:focus {
+    opacity: 1;
+  }
 
-  @media (max-width: 1050px) { 
+  @media (max-width: 1050px) {
     font-size: small !important;
   }
 `
 export const PageContentContainer = styled.div`
-  margin-top:40px;
+  margin-top: 40px;
   @media (min-width: 1051px) {
     display: grid;
     grid-template-columns: 42.5% 15% 42.5%;
 
-    &.one { grid-template-columns: 100% }
-    &.two { grid-template-columns: 50% 50% }
+    &.one {
+      grid-template-columns: 100%;
+    }
+    &.two {
+      grid-template-columns: 50% 50%;
+    }
   }
 `
 export const StyledNavLinkActiveClassName = 'active'
@@ -1527,25 +1998,56 @@ export const StyledNavLink = styled(NavLink).attrs({ StyledNavLinkActiveClassNam
   margin: 0 12px;
   font-weight: 500;
 
-  &.dark { color: ${({ theme }) => theme.azure1}; }
-  &.light { color: #565A69 }
-  &.classic { color: #C3C5CB; }
+  &.dark {
+    color: ${({ theme }) => theme.azure1};
+  }
+  &.light {
+    color: #565a69;
+  }
+  &.classic {
+    color: #c3c5cb;
+  }
 
-  &.${StyledNavLinkActiveClassName} { font-weight: 600; }
+  &.${StyledNavLinkActiveClassName} {
+    font-weight: 600;
+  }
 
-  &.dark.${StyledNavLinkActiveClassName} { color: ${({ theme }) => theme.azure1}; }
-  &.light.${StyledNavLinkActiveClassName} { color: #2f9ab8; }
-  &.classic.${StyledNavLinkActiveClassName} { color: #2f9ab8; }
+  &.dark.${StyledNavLinkActiveClassName} {
+    color: ${({ theme }) => theme.azure1};
+  }
+  &.light.${StyledNavLinkActiveClassName} {
+    color: #2f9ab8;
+  }
+  &.classic.${StyledNavLinkActiveClassName} {
+    color: #2f9ab8;
+  }
 
-  &.dark:hover, &.dark:focus { color: #e6f2f7; }
-  &.light:hover, &.light:focus { }
-  &.classic:hover, &.classic:focus { }
+  &.dark:hover,
+  &.dark:focus {
+    color: #e6f2f7;
+  }
+  &.light:hover,
+  &.light:focus {
+  }
+  &.classic:hover,
+  &.classic:focus {
+  }
 
-  &.dark.disabled, &.light.disabled, &.classic.disabled { opacity: 0.5; color: #C3C5CB; }
+  &.dark.disabled,
+  &.light.disabled,
+  &.classic.disabled {
+    opacity: 0.5;
+    color: #c3c5cb;
+  }
 
-  &.dark.disabled:hover, &.dark.disabled:focus,
-  &.light.disabled:hover, &.light.disabled:focus,
-  &.classic.disabled:hover, &.classic.disabled:focus { opacity: 0.7; }
+  &.dark.disabled:hover,
+  &.dark.disabled:focus,
+  &.light.disabled:hover,
+  &.light.disabled:focus,
+  &.classic.disabled:hover,
+  &.classic.disabled:focus {
+    opacity: 0.7;
+  }
 `
 export const CurrencyFormPanel = styled.div<{ hideInput?: boolean }>`
   display: flex;
@@ -1553,9 +2055,13 @@ export const CurrencyFormPanel = styled.div<{ hideInput?: boolean }>`
   position: relative;
   z-index: 1;
 
-  &.remove-liquidity { margin: 0 auto -7% auto; }
+  &.remove-liquidity {
+    margin: 0 auto -7% auto;
+  }
 
-  & > .itemsContainer { border-radius: ${({ hideInput }) => (hideInput ? '8px' : '20px')}; }
+  & > .itemsContainer {
+    border-radius: ${({ hideInput }) => (hideInput ? '8px' : '20px')};
+  }
 
   & > .itemsContainer .labelRow {
     display: flex;
@@ -1564,28 +2070,56 @@ export const CurrencyFormPanel = styled.div<{ hideInput?: boolean }>`
     color: ${({ theme }) => theme.text1};
     font-size: 0.75rem;
     line-height: 1rem;
-    padding: 0rem 1rem 0 1rem;    
+    padding: 0rem 1rem 0 1rem;
   }
 
-  & > .itemsContainer .labelRow.stake-liquidity-token { padding: 0rem; }
-  & > .itemsContainer .labelRow.stake-liquidity-token + div { padding: 0.75rem 0rem 0.75rem 0rem; }
+  & > .itemsContainer .labelRow.stake-liquidity-token {
+    padding: 0rem;
+  }
+  & > .itemsContainer .labelRow.stake-liquidity-token + div {
+    padding: 0.75rem 0rem 0.75rem 0rem;
+  }
 
-  & > .itemsContainer .labelRow.stake-liquidity-token + div > input + button { margin-right: 10px; }
+  & > .itemsContainer .labelRow.stake-liquidity-token + div > input + button {
+    margin-right: 10px;
+  }
 
-  & > .itemsContainer .labelRow span:hover { cursor: pointer; }
+  & > .itemsContainer .labelRow span:hover {
+    cursor: pointer;
+  }
 
-  & > .itemsContainer .label { font-weight: 500; font-size: 14px; display: inline; }
-  & > .itemsContainer .label.link { cursor: pointer; }
+  & > .itemsContainer .label {
+    font-weight: 500;
+    font-size: 14px;
+    display: inline;
+  }
+  & > .itemsContainer .label.link {
+    cursor: pointer;
+  }
 
-  & > .itemsContainer .label.stake-liquidity-token { display: none; }
-  & > .itemsContainer .label.link.stake-liquidity-token { display: block; }
+  & > .itemsContainer .label.stake-liquidity-token {
+    display: none;
+  }
+  & > .itemsContainer .label.link.stake-liquidity-token {
+    display: block;
+  }
 
-  &.dark > .itemsContainer .label { color: ${({ theme }) => theme.azure1}; }
-  &.light > .itemsContainer .label { color: ${({ theme }) => theme.violet1}; }
-  &.classic > .itemsContainer .label { color: ${({ theme }) => theme.azure1}; }
+  &.dark > .itemsContainer .label {
+    color: ${({ theme }) => theme.azure1};
+  }
+  &.light > .itemsContainer .label {
+    color: ${({ theme }) => theme.violet1};
+  }
+  &.classic > .itemsContainer .label {
+    color: ${({ theme }) => theme.azure1};
+  }
 `
-export const ActionButton = styled(BaseButton) <{ disabled?: boolean, selected?: boolean, useCustomProperties?: boolean }>`
-  border-radius: .65rem !important;
+export const ActionButton = styled(BaseButton)<{
+  disabled?: boolean
+  selected?: boolean
+  useCustomProperties?: boolean
+}>`
+  border-radius: 0.65rem !important;
   font-size: 12px !important;
   font-weight: 500;
   text-transform: capitalize;
@@ -1593,10 +2127,21 @@ export const ActionButton = styled(BaseButton) <{ disabled?: boolean, selected?:
   letter-spacing: 0.1em;
   padding: 3px 7px !important;
 
-  & > label, & > label + svg { display: block; float: left; }
-  & > label + svg { width: 15px; }
-  & > label { margin-top: 3px; margin-right: 5px; }
-  & > label.classic { margin-top: 7px; }
+  & > label,
+  & > label + svg {
+    display: block;
+    float: left;
+  }
+  & > label + svg {
+    width: 15px;
+  }
+  & > label {
+    margin-top: 3px;
+    margin-right: 5px;
+  }
+  & > label.classic {
+    margin-top: 7px;
+  }
 
   &.dark {
     color: ${({ theme }) => theme.yellowGreen} !important;
@@ -1616,10 +2161,10 @@ export const ActionButton = styled(BaseButton) <{ disabled?: boolean, selected?:
     color: ${({ theme }) => theme.yellowGreen};
     position: relative;
   }
-  &.classic:before { 
+  &.classic:before {
     position: absolute;
-    content: " ";
-    display: none; 
+    content: ' ';
+    display: none;
     width: 57px;
     height: 35px;
     background-image: url(${images.icons.FF7Cursor});
@@ -1630,12 +2175,28 @@ export const ActionButton = styled(BaseButton) <{ disabled?: boolean, selected?:
     z-index: 1;
   }
 
-  &.dark:hover, &.dark:focus { box-shadow: 0px 0px 4px ${({ theme }) => theme.yellowGreen}; }
-  &.light:hover, &.light:focus { box-shadow: 0px 0px 4px ${({ theme }) => theme.utils.hexToRGB(theme.black, 0.4)}; }
-  &.classic:hover, &.classic:focus { color: ${({ theme }) => theme.azure2}; }
-  &.classic:hover:before, &.classic:focus:before { display: block; }
+  &.dark:hover,
+  &.dark:focus {
+    box-shadow: 0px 0px 4px ${({ theme }) => theme.yellowGreen};
+  }
+  &.light:hover,
+  &.light:focus {
+    box-shadow: 0px 0px 4px ${({ theme }) => theme.utils.hexToRGB(theme.black, 0.4)};
+  }
+  &.classic:hover,
+  &.classic:focus {
+    color: ${({ theme }) => theme.azure2};
+  }
+  &.classic:hover:before,
+  &.classic:focus:before {
+    display: block;
+  }
 `
-export const Erc20Badge = styled(ActionButton) <{ disabled?: boolean, selected?: boolean, useCustomProperties?: boolean }>`
+export const Erc20Badge = styled(ActionButton)<{
+  disabled?: boolean
+  selected?: boolean
+  useCustomProperties?: boolean
+}>`
   &.dark {
     color: ${({ theme }) => theme.yellow2} !important;
     border: 1px solid ${({ theme }) => theme.yellow2} !important;
@@ -1652,12 +2213,25 @@ export const Erc20Badge = styled(ActionButton) <{ disabled?: boolean, selected?:
     color: ${({ theme }) => theme.yellow2};
     pointer-events: none;
   }
-  
-  &.dark:hover, &.dark:focus { box-shadow: 0px 0px 4px ${({ theme }) => theme.yellow2}; }
-  &.light:hover, &.light:focus { box-shadow: 0px 0px 4px ${({ theme }) => theme.utils.hexToRGB(theme.black, 0.4)}; }
-  &.classic:hover, &.classic:focus { color: ${({ theme }) => theme.yellow2}; }
+
+  &.dark:hover,
+  &.dark:focus {
+    box-shadow: 0px 0px 4px ${({ theme }) => theme.yellow2};
+  }
+  &.light:hover,
+  &.light:focus {
+    box-shadow: 0px 0px 4px ${({ theme }) => theme.utils.hexToRGB(theme.black, 0.4)};
+  }
+  &.classic:hover,
+  &.classic:focus {
+    color: ${({ theme }) => theme.yellow2};
+  }
 `
-export const EthItemBadge = styled(ActionButton) <{ disabled?: boolean, selected?: boolean, useCustomProperties?: boolean }>`
+export const EthItemBadge = styled(ActionButton)<{
+  disabled?: boolean
+  selected?: boolean
+  useCustomProperties?: boolean
+}>`
   &.dark {
     color: ${({ theme }) => theme.greenEthItem} !important;
     border: 1px solid ${({ theme }) => theme.greenEthItem} !important;
@@ -1674,13 +2248,22 @@ export const EthItemBadge = styled(ActionButton) <{ disabled?: boolean, selected
     color: ${({ theme }) => theme.greenEthItem};
     pointer-events: none;
   }
-  
-  &.dark:hover, &.dark:focus { box-shadow: 0px 0px 4px ${({ theme }) => theme.greenEthItem}; }
-  &.light:hover, &.light:focus { box-shadow: 0px 0px 4px ${({ theme }) => theme.utils.hexToRGB(theme.black, 0.4)}; }
-  &.classic:hover, &.classic:focus { color: ${({ theme }) => theme.greenEthItem}; }
+
+  &.dark:hover,
+  &.dark:focus {
+    box-shadow: 0px 0px 4px ${({ theme }) => theme.greenEthItem};
+  }
+  &.light:hover,
+  &.light:focus {
+    box-shadow: 0px 0px 4px ${({ theme }) => theme.utils.hexToRGB(theme.black, 0.4)};
+  }
+  &.classic:hover,
+  &.classic:focus {
+    color: ${({ theme }) => theme.greenEthItem};
+  }
 `
 const InfoCard = styled.button<{ active?: boolean }>`
-  border-radius: .65rem !important;
+  border-radius: 0.65rem !important;
   font-size: 12px !important;
   font-weight: 500;
   text-transform: capitalize;
@@ -1699,11 +2282,20 @@ const InfoCard = styled.button<{ active?: boolean }>`
     border: 1px solid ${({ theme }) => theme.violet1} !important;
     background-color: ${({ theme }) => theme.violet3};
   }
-  &.classic {}
+  &.classic {
+  }
 
-  &.dark:hover, &.dark:focus { box-shadow: 0px 0px 4px ${({ theme }) => theme.azure1}; }
-  &.light:hover, &.light:focus { box-shadow: 0px 0px 4px ${({ theme }) => theme.utils.hexToRGB(theme.grey3, 0.5)}; }
-  &.classic:hover, &.classic:focus { }
+  &.dark:hover,
+  &.dark:focus {
+    box-shadow: 0px 0px 4px ${({ theme }) => theme.azure1};
+  }
+  &.light:hover,
+  &.light:focus {
+    box-shadow: 0px 0px 4px ${({ theme }) => theme.utils.hexToRGB(theme.grey3, 0.5)};
+  }
+  &.classic:hover,
+  &.classic:focus {
+  }
 `
 const OptionCard = styled(InfoCard as any)`
   display: flex;
@@ -1713,21 +2305,23 @@ const OptionCard = styled(InfoCard as any)`
   margin-top: 2rem;
   padding: 1rem;
 `
-export const OptionCardClickable = styled(OptionCard as any) <{ clickable?: boolean }>`
+export const OptionCardClickable = styled(OptionCard as any)<{ clickable?: boolean }>`
   margin-top: 0;
-  &:hover { cursor: ${({ clickable }) => (clickable ? 'pointer' : '')}; }
+  &:hover {
+    cursor: ${({ clickable }) => (clickable ? 'pointer' : '')};
+  }
   opacity: ${({ disabled }) => (disabled ? '0.5' : '1')};
-  &.classic { 
-    position: relative; 
+  &.classic {
+    position: relative;
     color: ${({ theme }) => theme.yellowGreen};
     border: none;
-    background: transparent; 
+    background: transparent;
     text-shadow: 1px 1px 1px ${({ theme }) => theme.black};
   }
-  &.classic:before { 
+  &.classic:before {
     position: absolute;
-    content: " ";
-    display: none; 
+    content: ' ';
+    display: none;
     width: 57px;
     height: 35px;
     background-image: url(${images.icons.FF7Cursor});
@@ -1737,23 +2331,34 @@ export const OptionCardClickable = styled(OptionCard as any) <{ clickable?: bool
     top: 25%;
     z-index: 1;
   }
-  &.classic:hover, &.classic:focus { 
-    color: ${({ theme }) => theme.azure2}; 
-    outline: none; 
+  &.classic:hover,
+  &.classic:focus {
+    color: ${({ theme }) => theme.azure2};
+    outline: none;
   }
-  &.classic:hover .header-text, &.classic:focus .header-text { padding-left: 57px; } 
-  &.classic:hover:before, &.classic:focus:before { display: ${({ clickable }) => (clickable ? 'block' : 'none')}; }
+  &.classic:hover .header-text,
+  &.classic:focus .header-text {
+    padding-left: 57px;
+  }
+  &.classic:hover:before,
+  &.classic:focus:before {
+    display: ${({ clickable }) => (clickable ? 'block' : 'none')};
+  }
 `
 export const OptionCardLeft = styled.div`
   ${({ theme }) => theme.flexColumnNoWrap};
   justify-content: center;
   height: 100%;
 
-  & > .header-text { position: relative; }
-  & > .header-text.active { padding: 12px 0px 12px 25px; }
+  & > .header-text {
+    position: relative;
+  }
+  & > .header-text.active {
+    padding: 12px 0px 12px 25px;
+  }
   & > .header-text.active:before {
-    content: "";
-    position:absolute;
+    content: '';
+    position: absolute;
     top: 50%;
     left: 10px;
     border-radius: 50%;
@@ -1767,10 +2372,14 @@ export const OptionCardIconWrapper = styled.div<{ size?: number | null }>`
   ${({ theme }) => theme.flexColumnNoWrap};
   align-items: center;
   justify-content: center;
-  & > img, span { height: ${({ size }) => (size ? size + 'px' : '24px')}; width: ${({ size }) => (size ? size + 'px' : '24px')}; }
+  & > img,
+  span {
+    height: ${({ size }) => (size ? size + 'px' : '24px')};
+    width: ${({ size }) => (size ? size + 'px' : '24px')};
+  }
   ${({ theme }) => theme.mediaWidth.upToMedium` align-items: flex-end; `};
 `
-export const DropDownButton = styled(BaseButton) <{ width?: string, borderRadius?: string, selected?: boolean }>`
+export const DropDownButton = styled(BaseButton)<{ width?: string; borderRadius?: string; selected?: boolean }>`
   align-items: center;
   height: 2.2rem;
   font-size: 20px;
@@ -1781,15 +2390,25 @@ export const DropDownButton = styled(BaseButton) <{ width?: string, borderRadius
   user-select: none;
   border: none;
 
-  &.dark { color: ${({ theme }) => theme.azure1}; }
-  &.light {}
-  &.classic { color: ${({ theme }) => theme.azure1}; }
+  &.dark {
+    color: ${({ theme }) => theme.azure1};
+  }
+  &.light {
+  }
+  &.classic {
+    color: ${({ theme }) => theme.azure1};
+  }
 
-  &.dark > svg { filter: drop-shadow(1px 2px 3px ${({ theme }) => theme.blue3}); }
-  &.light > svg {}
-  &.classic > svg { filter: drop-shadow(1px 2px 3px ${({ theme }) => theme.blue3}); }
+  &.dark > svg {
+    filter: drop-shadow(1px 2px 3px ${({ theme }) => theme.blue3});
+  }
+  &.light > svg {
+  }
+  &.classic > svg {
+    filter: drop-shadow(1px 2px 3px ${({ theme }) => theme.blue3});
+  }
 `
-export const SwitchButton = styled(Button) <{ disabled?: boolean }>`
+export const SwitchButton = styled(Button)<{ disabled?: boolean }>`
   padding: 0px !important;
   border-radius: 0px !important;
   display: inline-block;
@@ -1808,33 +2427,69 @@ export const SwitchButton = styled(Button) <{ disabled?: boolean }>`
   height: 30px;
   cursor: pointer;
 
-  &:disabled, &.disabled, &.dark.disabled, &.light.disabled, &.classic.disabled,
-  &.dark.disabled:hover, &.dark.disabled:focus,
-  &.light.disabled:hover, &.light.disabled:focus,
-  &.classic.disabled:hover, &.classic.disabled:focus { cursor: auto; opacity: 0.4; box-shadow: none; }
-  > * { user-select: none; }
-  &.hidden { display: none !important; }
+  &:disabled,
+  &.disabled,
+  &.dark.disabled,
+  &.light.disabled,
+  &.classic.disabled,
+  &.dark.disabled:hover,
+  &.dark.disabled:focus,
+  &.light.disabled:hover,
+  &.light.disabled:focus,
+  &.classic.disabled:hover,
+  &.classic.disabled:focus {
+    cursor: auto;
+    opacity: 0.4;
+    box-shadow: none;
+  }
+  > * {
+    user-select: none;
+  }
+  &.hidden {
+    display: none !important;
+  }
 
-  & > svg { width: 15px; height: 15px; transform: rotate(-45deg); margin-left: 0px; margin-bottom: -3px; }
-  & > label { display: none; }
+  & > svg {
+    width: 15px;
+    height: 15px;
+    transform: rotate(-45deg);
+    margin-left: 0px;
+    margin-bottom: -3px;
+  }
+  & > label {
+    display: none;
+  }
 
-  &:after, &:before {
-    content: "";
-    display:block;
-    position:absolute;
+  &:after,
+  &:before {
+    content: '';
+    display: block;
+    position: absolute;
     width: 46px;
     height: 1px;
     transform: rotate(-45deg);
   }
 
-  &:after { bottom: 44px; right: -39px; }
-  &:before { top: 44px; left: -39px; }
+  &:after {
+    bottom: 44px;
+    right: -39px;
+  }
+  &:before {
+    top: 44px;
+    left: -39px;
+  }
 
-  &.dark { border: solid 1px ${({ theme }) => theme.azure1}; background-color: ${({ theme }) => theme.black}; }
-  &.light { border: solid 1px ${({ theme }) => theme.violet1}; background-color: ${({ theme }) => theme.violet4}; }
-  &.classic { 
-    transform: none; 
-    text-shadow: 1px 1px 1px ${({ theme }) => theme.black}; 
+  &.dark {
+    border: solid 1px ${({ theme }) => theme.azure1};
+    background-color: ${({ theme }) => theme.black};
+  }
+  &.light {
+    border: solid 1px ${({ theme }) => theme.violet1};
+    background-color: ${({ theme }) => theme.violet4};
+  }
+  &.classic {
+    transform: none;
+    text-shadow: 1px 1px 1px ${({ theme }) => theme.black};
     color: ${({ theme }) => theme.yellowGreen};
     width: auto;
     height: auto;
@@ -1842,12 +2497,19 @@ export const SwitchButton = styled(Button) <{ disabled?: boolean }>`
     margin: 0px auto;
     position: relative;
   }
-  &.classic:after, &.classic:before, &.classic > svg { transform: none; display: none; }  
-  &.classic > label { display: block; }
-  &.classic:before { 
+  &.classic:after,
+  &.classic:before,
+  &.classic > svg {
+    transform: none;
+    display: none;
+  }
+  &.classic > label {
+    display: block;
+  }
+  &.classic:before {
     position: absolute;
-    content: " ";
-    display: none; 
+    content: ' ';
+    display: none;
     width: 57px;
     height: 35px;
     background-image: url(${images.icons.FF7Cursor});
@@ -1858,33 +2520,70 @@ export const SwitchButton = styled(Button) <{ disabled?: boolean }>`
     z-index: 1;
   }
 
-  &.dark:hover, &.dark:focus { box-shadow: 0px 0px 12px ${({ theme }) => theme.azure1}; }
-  &.light:hover, &.light:focus { box-shadow: 0px 0px 12px ${({ theme }) => theme.violet1}; }
-  &.classic:hover, &.classic:focus { color: ${({ theme }) => theme.azure2}; }
-  &.classic:hover:before, &.classic:focus:before { display: block; }
-
-  &.dark:after { background: linear-gradient(to right, ${({ theme }) => theme.azure1} 0%, rgba(15,63,115,0)); }
-  &.dark:before { background: linear-gradient(to right, rgba(15,63,115,0) 0%, ${({ theme }) => theme.azure1} 100%); }
-
-  &.light:after { background: linear-gradient(to right, ${({ theme }) => theme.violet1} 0%, rgba(15,63,115,0)); }
-  &.light:before { background: linear-gradient(to right, rgba(15,63,115,0) 0%, ${({ theme }) => theme.violet1} 100%); }
-
-  &.classic:after {}
-  &.classic:before {}
-
-  &.dark.expert-mode { margin-left: 30px; }
-  &.light.expert-mode { margin-left: 30px; }
-  
-  @media (max-width: 1050px) {
-    &.dark.expert-mode, &.light.expert-mode { margin-left: 146px; margin-bottom: 15px; }
-    &.classic { margin-top: 20px; margin-bottom: 20px; }
+  &.dark:hover,
+  &.dark:focus {
+    box-shadow: 0px 0px 12px ${({ theme }) => theme.azure1};
+  }
+  &.light:hover,
+  &.light:focus {
+    box-shadow: 0px 0px 12px ${({ theme }) => theme.violet1};
+  }
+  &.classic:hover,
+  &.classic:focus {
+    color: ${({ theme }) => theme.azure2};
+  }
+  &.classic:hover:before,
+  &.classic:focus:before {
+    display: block;
   }
 
-  @media (max-width: 600px) { 
-    &.dark.expert-mode, &.light.expert-mode { margin-left: 130px; margin-bottom: 15px; }
+  &.dark:after {
+    background: linear-gradient(to right, ${({ theme }) => theme.azure1} 0%, rgba(15, 63, 115, 0));
+  }
+  &.dark:before {
+    background: linear-gradient(to right, rgba(15, 63, 115, 0) 0%, ${({ theme }) => theme.azure1} 100%);
+  }
+
+  &.light:after {
+    background: linear-gradient(to right, ${({ theme }) => theme.violet1} 0%, rgba(15, 63, 115, 0));
+  }
+  &.light:before {
+    background: linear-gradient(to right, rgba(15, 63, 115, 0) 0%, ${({ theme }) => theme.violet1} 100%);
+  }
+
+  &.classic:after {
+  }
+  &.classic:before {
+  }
+
+  &.dark.expert-mode {
+    margin-left: 30px;
+  }
+  &.light.expert-mode {
+    margin-left: 30px;
+  }
+
+  @media (max-width: 1050px) {
+    &.dark.expert-mode,
+    &.light.expert-mode {
+      margin-left: 146px;
+      margin-bottom: 15px;
+    }
+    &.classic {
+      margin-top: 20px;
+      margin-bottom: 20px;
+    }
+  }
+
+  @media (max-width: 600px) {
+    &.dark.expert-mode,
+    &.light.expert-mode {
+      margin-left: 130px;
+      margin-bottom: 15px;
+    }
   }
 `
-export const OperationButton = styled(Button) <{ label?: string, disabled?: boolean }>`
+export const OperationButton = styled(Button)<{ label?: string; disabled?: boolean }>`
   padding: 0px !important;
   border-radius: 0px !important;
   display: inline-block;
@@ -1925,7 +2624,7 @@ export const OperationButton = styled(Button) <{ label?: string, disabled?: bool
   &.classic > svg { display: none; }
 
   &:after { 
-    content: ${({ label }) => (label ? "\"" + label + "\"" : "\"" + + "\"")}; 
+    content: ${({ label }) => (label ? '"' + label + '"' : '"' + +'"')}; 
     bottom: 94px; 
     right: -144px;
     background: transparent;
@@ -1989,52 +2688,174 @@ export const OperationButton = styled(Button) <{ label?: string, disabled?: bool
   &.connect-wallet-button { margin-left: -170px; }
   &.wrap-button { margin-left: -190px; }
 `
-export const MainOperationButton = styled(ActionButton) <{ disabled?: boolean, selected?: boolean, useCustomProperties?: boolean }>`
+
+export const SmallOperationButton = styled(Button)<{ disabled?: boolean }>`
+  padding: 0px !important;
+  border-radius: 0px !important;
+  display: inline-block;
+  text-align: center;
+  border-color: transparent;
+  outline: none;
+  text-decoration: none;
+  display: flex;
+  justify-content: center;
+  flex-wrap: nowrap;
+  align-items: center;
+  position: relative;
+  background: none;
+  transform: rotate(45deg);
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+
+  &:disabled, &.disabled, &.dark.disabled, &.light.disabled, &.classic.disabled,
+  &.dark.disabled:hover, &.dark.disabled:focus,
+  &.light.disabled:hover, &.light.disabled:focus,
+  &.classic.disabled:hover, &.classic.disabled:focus { cursor: auto; opacity: 0.4; box-shadow: none; }
+  > * { user-select: none; }
+  &.hidden { display: none !important; }
+
+  & > svg { width: 15px; height: 15px; transform: rotate(-45deg); margin-left: 0px; margin-bottom: -3px; }
+  
+  &:after, &:before {
+    content: "";
+    display:block;
+    position:absolute;
+    width: 216px;
+    height: 1px;
+    transform: rotate(-45deg);    
+  }
+
+  &.classic, &.classic:after, &.classic:before, &.classic > svg { transform: none; }
+  &.classic > svg { display: none; }
+
+  &:before { bottom: 104px; right: -184px;  }
+
+  &.dark { border: solid 1px ${({ theme }) => theme.azure1}; background-color: ${({ theme }) => theme.black}; }
+  &.light { border: solid 1px ${({ theme }) => theme.violet1}; background-color: ${({ theme }) => theme.violet4}; }
+  &.classic {}
+
+  &.dark:hover, &.dark:focus { box-shadow: 0px 0px 12px ${({ theme }) => theme.azure1}; }
+  &.dark:hover::after { text-shadow: 0px 0px 12px ${({ theme }) => theme.azure1}; }
+  &.light:hover, &.light:focus { box-shadow: 0px 0px 12px ${({ theme }) => theme.violet1}; }
+  &.light:hover::after { text-shadow: 0px 0px 12px ${({ theme }) => theme.violet1}; }
+  &.classic:hover, &.classic:focus { }
+  &.classic:hover::after { }
+
+  &.dark:after {
+    font-weight: 500;
+    font-size:14px;
+    color: ${({ theme }) => theme.azure1};
+    width: auto;
+  }
+
+  &.light:after {
+    font-weight: 500;
+    font-size:14px;
+    color: ${({ theme }) => theme.violet1};
+    width: auto;
+  }  
+
+  &.classic:after {
+    top: 0px;
+    left: 0px;
+    padding: 0px;
+    width: 200px;
+    height: auto;
+    color: ${({ theme }) => theme.yellowGreen}
+    text-shadow: 1px 1px 1px ${({ theme }) => theme.black};
+  }
+  &.classic:before {
+    position: absolute;
+    content: " ";
+    display: none; 
+    width: 57px;
+    height: 35px;
+    background-image: url(${images.icons.FF7Cursor});
+    background-repeat: no-repeat;
+    background-position: center center;
+    left: -65px;
+    top: -3px;
+    z-index: 1;
+  }
+  &.classic:hover:after { color: ${({ theme }) => theme.azure2}; }
+  &.classic:hover:before, &.classic:focus:before { display: block; }
+
+  &.add-a-send-button { /*position: absolute; top: 330px; left: 70px;*/ }  
+  &.connect-wallet-button { margin-left: -170px; }
+  &.wrap-button { margin-left: -190px; }
+`
+
+export const MainOperationButton = styled(ActionButton)<{
+  disabled?: boolean
+  selected?: boolean
+  useCustomProperties?: boolean
+}>`
   font-size: 16px !important;
   padding: 5px 10px !important;
 
-  &:disabled { opacity: 0.5; }
+  &:disabled {
+    opacity: 0.5;
+  }
 
   &.dark.use-custom-properties.expert-mode:not([disabled]),
   &.dark.popup-button.dismiss,
   &.light.use-custom-properties.expert-mode:not([disabled]),
-  &.light.popup-button.dismiss { 
+  &.light.popup-button.dismiss {
     border: 1px solid ${({ theme }) => theme.red1} !important;
     color: ${({ theme }) => theme.red1} !important;
   }
 
-  &.dark, &.dark:disabled {
+  &.dark,
+  &.dark:disabled {
     color: ${({ theme }) => theme.azure2} !important;
     border: 1px solid ${({ theme }) => theme.azure2} !important;
     background-color: ${({ theme }) => theme.blue3};
   }
 
-  &.light, &.light:disabled {
+  &.light,
+  &.light:disabled {
     color: ${({ theme }) => theme.violet1} !important;
     border: 1px solid ${({ theme }) => theme.violet1} !important;
     background-color: ${({ theme }) => theme.violet3};
   }
 
-  &.light:disabled, &.light.popup-button.dismiss { background-color: ${({ theme }) => theme.red3}; }
+  &.light:disabled,
+  &.light.popup-button.dismiss {
+    background-color: ${({ theme }) => theme.red3};
+  }
 
-  &.dark:hover, &.dark:focus { box-shadow: 0px 0px 4px ${({ theme }) => theme.azure2}; }
-  &.light:hover, &.light:focus { box-shadow: 0px 0px 4px ${({ theme }) => theme.utils.hexToRGB(theme.grey3, 0.4)}; }
-  &.dark.use-custom-properties.expert-mode:hover, 
-  &.dark.use-custom-properties.expert-mode:focus, 
-  &.light.use-custom-properties.expert-mode:hover, 
-  &.light.use-custom-properties.expert-mode:focus { box-shadow: 0px 0px 4px ${({ theme }) => theme.red2}; }
-  &:disabled.dark:hover, &:disabled.dark:focus,
-  &:disabled.light:hover, &:disabled.light:focus, { box-shadow: none; } 
+  &.dark:hover,
+  &.dark:focus {
+    box-shadow: 0px 0px 4px ${({ theme }) => theme.azure2};
+  }
+  &.light:hover,
+  &.light:focus {
+    box-shadow: 0px 0px 4px ${({ theme }) => theme.utils.hexToRGB(theme.grey3, 0.4)};
+  }
+  &.dark.use-custom-properties.expert-mode:hover,
+  &.dark.use-custom-properties.expert-mode:focus,
+  &.light.use-custom-properties.expert-mode:hover,
+  &.light.use-custom-properties.expert-mode:focus {
+    box-shadow: 0px 0px 4px ${({ theme }) => theme.red2};
+  }
+  &:disabled.dark:hover,
+  &:disabled.dark:focus,
+  &:disabled.light:hover,
+  &:disabled.light:focus {
+    box-shadow: none;
+  }
 
-  &.light {}
-  &.classic { 
-    position: relative; 
+  &.light {
+  }
+  &.classic {
+    position: relative;
     text-shadow: 1px 1px 1px ${({ theme }) => theme.black};
   }
-  &.classic:before { 
+  &.classic:before {
     position: absolute;
-    content: " ";
-    display: none; 
+    content: ' ';
+    display: none;
     width: 57px;
     height: 35px;
     background-image: url(${images.icons.FF7Cursor});
@@ -2044,19 +2865,44 @@ export const MainOperationButton = styled(ActionButton) <{ disabled?: boolean, s
     top: 0px;
     z-index: 1;
   }
-  &.classic.width80:before { left: -15px; }
-  &.classic:hover, &.classic:focus { color: ${({ theme }) => theme.azure2}; }
-  &.classic:disabled, &.classic.popup-button.dismiss:hover, &.classic.popup-button.dismiss:focus { color: ${({ theme }) => theme.red1}; }
-  &.classic:hover:before, &.classic:focus:before { display: block; }
-  &#confirm-expert-mode.classic { padding: 20px !important; }
-  &#confirm-expert-mode.classic:before { left: 10px; top: 15px; }
+  &.classic.width80:before {
+    left: -15px;
+  }
+  &.classic:hover,
+  &.classic:focus {
+    color: ${({ theme }) => theme.azure2};
+  }
+  &.classic:disabled,
+  &.classic.popup-button.dismiss:hover,
+  &.classic.popup-button.dismiss:focus {
+    color: ${({ theme }) => theme.red1};
+  }
+  &.classic:hover:before,
+  &.classic:focus:before {
+    display: block;
+  }
+  &#confirm-expert-mode.classic {
+    padding: 20px !important;
+  }
+  &#confirm-expert-mode.classic:before {
+    left: 10px;
+    top: 15px;
+  }
 
-  &.dark.width-auto, &.light.width-auto, { width: auto !important; }
+  &.dark.width-auto,
+  &.light.width-auto {
+    width: auto !important;
+  }
 `
 export const TradePriceContainer = styled.div`
   margin-top: 250px;
-  @media (max-width: 960px) { padding-left: 30px; }
-  @media (max-width: 1050px) { margin-top: 10px; padding-left: 0px; }  
+  @media (max-width: 960px) {
+    padding-left: 30px;
+  }
+  @media (max-width: 1050px) {
+    margin-top: 10px;
+    padding-left: 0px;
+  }
   /* @media (max-width: 1920px) { padding-left: 30px; } */
 `
 export const AddRecipientPanel = styled.div`
@@ -2075,30 +2921,45 @@ export const InputPanel = styled.div`
 export const ContainerRow = styled.div<{ error?: boolean }>`
   border: none;
   background: none;
-  position:relative;
+  position: relative;
 
-  &.dark {}
-  &.light {}
-  &.classic {}
+  &.dark {
+  }
+  &.light {
+  }
+  &.classic {
+  }
 
   &:after {
-    content: "";
+    content: '';
     position: absolute;
     width: 0%;
     height: 1px;
-    transition: width .3s;
+    transition: width 0.3s;
     bottom: 0px;
-    left: 0px; 
+    left: 0px;
   }
 
-  &.dark:after { background-color: ${({ theme, error }) => error ? theme.red2 : theme.azure1}; }
-  &.light:after { background-color: ${({ theme, error }) => error ? theme.red2 : theme.violet1}; }
-  &.classic:after { background-color: ${({ theme, error }) => error ? theme.red2 : theme.grey2}; }
+  &.dark:after {
+    background-color: ${({ theme, error }) => (error ? theme.red2 : theme.azure1)};
+  }
+  &.light:after {
+    background-color: ${({ theme, error }) => (error ? theme.red2 : theme.violet1)};
+  }
+  &.classic:after {
+    background-color: ${({ theme, error }) => (error ? theme.red2 : theme.grey2)};
+  }
 
-  &:hover::after { width: 100%; }
+  &:hover::after {
+    width: 100%;
+  }
 
-  & > div.input-container { flex: 1; padding: 3px; }
-  & > div.input-container > label, & > div.input-container > a { 
+  & > div.input-container {
+    flex: 1;
+    padding: 3px;
+  }
+  & > div.input-container > label,
+  & > div.input-container > a {
     font-size: 13px;
     font-weight: 500;
     display: block;
@@ -2106,22 +2967,40 @@ export const ContainerRow = styled.div<{ error?: boolean }>`
     margin: 0px 0px 10px 10px;
   }
 
-  & > div.input-container > label.aligned-left { float: none; margin-left: 0px; }
+  & > div.input-container > label.aligned-left {
+    float: none;
+    margin-left: 0px;
+  }
 
-  & > div.input-container.classic > label, & > div.input-container.classic > a {
+  & > div.input-container.classic > label,
+  & > div.input-container.classic > a {
     float: left;
     margin-left: 0px;
   }
 
-  &.dark > div.input-container > a { color: ${({ theme }) => theme.azure1}; }
-  &.light > div.input-container > a { color: ${({ theme }) => theme.violet1}; }
-  &.classic > div.input-container > a { color: ${({ theme }) => theme.azure1}; }
+  &.dark > div.input-container > a {
+    color: ${({ theme }) => theme.azure1};
+  }
+  &.light > div.input-container > a {
+    color: ${({ theme }) => theme.violet1};
+  }
+  &.classic > div.input-container > a {
+    color: ${({ theme }) => theme.azure1};
+  }
 
-  &.search-token-container { margin-bottom: 20px; }
+  &.search-token-container {
+    margin-bottom: 20px;
+  }
 
-  &.dark.search-token-container { border-bottom: solid 1px ${({ theme }) => theme.utils.hexToRGB(theme.white, 0.2)}; }
-  &.light.search-token-container { border-bottom: solid 1px ${({ theme }) => theme.utils.hexToRGB(theme.white, 0.2)}; }
-  &.classic.search-token-container { border-bottom: solid 1px ${({ theme }) => theme.utils.hexToRGB(theme.white, 0.2)}; }
+  &.dark.search-token-container {
+    border-bottom: solid 1px ${({ theme }) => theme.utils.hexToRGB(theme.white, 0.2)};
+  }
+  &.light.search-token-container {
+    border-bottom: solid 1px ${({ theme }) => theme.utils.hexToRGB(theme.white, 0.2)};
+  }
+  &.classic.search-token-container {
+    border-bottom: solid 1px ${({ theme }) => theme.utils.hexToRGB(theme.white, 0.2)};
+  }
 `
 export const Input = styled.input<{ error?: boolean }>`
   font-size: 16px;
@@ -2133,13 +3012,17 @@ export const Input = styled.input<{ error?: boolean }>`
   overflow: hidden;
   text-overflow: ellipsis;
   font-weight: 500;
-  width: 100%;  
+  width: 100%;
   padding: 0px;
-  -webkit-appearance: textfield;  
+  -webkit-appearance: textfield;
 
-  &.dark { color: ${({ error, theme }) => (error ? theme.red1 : theme.white)}; }
-  &.light {}
-  &.classic {}
+  &.dark {
+    color: ${({ error, theme }) => (error ? theme.red1 : theme.white)};
+  }
+  &.light {
+  }
+  &.classic {
+  }
 `
 export const SearchTokenInput = styled(Input)`
   padding-bottom: 10px;
@@ -2153,124 +3036,202 @@ export const SwapButtonsContainer = styled.div`
   justify-content: center;
   display: flex;
   padding: 1rem 0rem;
-  width:auto;
+  width: auto;
 
-  &.has-error { display: block; text-align: center; }
-
+  &.has-error {
+    display: block;
+    text-align: center;
+  }
 `
 export const SecondaryPanelBoxContainer = styled.div`
   padding: 5px;
   position: relative;
   z-index: 2;
 
-  &.dark {} 
-  &.light {}
-  &.classic {}
+  &.dark {
+  }
+  &.light {
+  }
+  &.classic {
+  }
 
-  &.dark > .inner-content, &.light > .inner-content, &.classic > .inner-content {
-    border-radius: .65rem;
+  &.dark > .inner-content,
+  &.light > .inner-content,
+  &.classic > .inner-content {
+    border-radius: 0.65rem;
     width: 100%;
     padding: 5px 5px 5px 5px;
     background-size: cover;
   }
 
-  &.dark > .inner-content { background: linear-gradient(90deg, ${({ theme }) => theme.utils.hexToRGB(theme.blue4, 0.8)} 60%, ${({ theme }) => theme.utils.hexToRGB(theme.blue3, 0.8)} 100%); }
-  &.light > .inner-content { 
-    background: linear-gradient(90deg, ${({ theme }) => theme.utils.hexToRGB(theme.violet5, 1)} 60%, ${({ theme }) => theme.utils.hexToRGB(theme.violet5, 1)} 100%); 
+  &.dark > .inner-content {
+    background: linear-gradient(
+      90deg,
+      ${({ theme }) => theme.utils.hexToRGB(theme.blue4, 0.8)} 60%,
+      ${({ theme }) => theme.utils.hexToRGB(theme.blue3, 0.8)} 100%
+    );
+  }
+  &.light > .inner-content {
+    background: linear-gradient(
+      90deg,
+      ${({ theme }) => theme.utils.hexToRGB(theme.violet5, 1)} 60%,
+      ${({ theme }) => theme.utils.hexToRGB(theme.violet5, 1)} 100%
+    );
     border: solid 1px ${({ theme }) => theme.utils.hexToRGB(theme.violet3, 1)};
-  }  
+  }
   &.classic > .inner-content {
-    background: linear-gradient(0deg, ${({ theme }) => theme.utils.hexToRGB(theme.violet6, 1)} 60%, ${({ theme }) => theme.utils.hexToRGB(theme.violet7, 1)} 100%); 
+    background: linear-gradient(
+      0deg,
+      ${({ theme }) => theme.utils.hexToRGB(theme.violet6, 1)} 60%,
+      ${({ theme }) => theme.utils.hexToRGB(theme.violet7, 1)} 100%
+    );
     border-radius: 1rem;
     border: solid 2px #424542;
     box-shadow: 1px 1px #e7dfe7, -1px -1px #e7dfe7, 1px -1px #e7dfe7, -1px 1px #e7dfe7, 0 -2px #9c9a9c, -2px 0 #7b757b,
       0 2px #424542;
   }
 
-  &.modal > .inner-content { height: 100%; }
+  &.modal > .inner-content {
+    height: 100%;
+  }
 
-  ${({ theme }) => theme.mediaWidth.upToSmall`&.popup{ min-width: 290px; } &.popup:not(:last-of-type) { margin-right: 20px; } `}
-  
-  &.popup > .popup-inner-content, &.modal > .modal-inner-content { padding: 10px 20px; }
+  ${({ theme }) =>
+    theme.mediaWidth.upToSmall`&.popup{ min-width: 290px; } &.popup:not(:last-of-type) { margin-right: 20px; } `}
 
-  @media (max-width: 1050px) { 
-    &.modal > .modal-inner-content { 
+  &.popup > .popup-inner-content, &.modal > .modal-inner-content {
+    padding: 10px 20px;
+  }
+
+  @media (max-width: 1050px) {
+    &.modal > .modal-inner-content {
       width: 95vw;
       margin: 0 auto;
       padding: 0;
     }
-    .connect-wallet-modal { padding: 10px 20px; }
-    & .popup-close-icon, & .modal-close-icon  { 
+    .connect-wallet-modal {
+      padding: 10px 20px;
+    }
+    & .popup-close-icon,
+    & .modal-close-icon {
       right: 20px;
-      top: 10px; 
+      top: 10px;
     }
   }
 
-  &.popup > .popup-inner-content h6 { font-size: 13px; margin: 0px 0px 15px 0px; }
-  &.popup > .popup-inner-content h6 + ul { font-size: 13px; }
-  &.classic.popup > .popup-inner-content h6 + ul { 
-    line-height: 1.5em; 
-    text-shadow: 1px 1px 1px ${({ theme }) => theme.black} 
+  &.popup > .popup-inner-content h6 {
+    font-size: 13px;
+    margin: 0px 0px 15px 0px;
   }
-  &.classic.popup > .popup-inner-content h6 + ul strong { }
+  &.popup > .popup-inner-content h6 + ul {
+    font-size: 13px;
+  }
+  &.classic.popup > .popup-inner-content h6 + ul {
+    line-height: 1.5em;
+    text-shadow: 1px 1px 1px ${({ theme }) => theme.black};
+  }
+  &.classic.popup > .popup-inner-content h6 + ul strong {
+  }
 
-  &.modal > .modal-inner-content h6 { font-size: 15px; margin: 0px 0px 15px 0px; }
-  &.classic.modal > .modal-inner-content h6, &.classic.popup > .popup-inner-content h6 { 
-    text-shadow: 1px 1px 1px ${({ theme }) => theme.black} 
+  &.modal > .modal-inner-content h6 {
+    font-size: 15px;
+    margin: 0px 0px 15px 0px;
   }
-  &.modal > .modal-inner-content h6.with-content-divisor { position:relative; padding-bottom: 15px; }
+  &.classic.modal > .modal-inner-content h6,
+  &.classic.popup > .popup-inner-content h6 {
+    text-shadow: 1px 1px 1px ${({ theme }) => theme.black};
+  }
+  &.modal > .modal-inner-content h6.with-content-divisor {
+    position: relative;
+    padding-bottom: 15px;
+  }
   &.modal > .modal-inner-content h6.with-content-divisor:after {
-    content: "";
-    display:block;
-    position:absolute;
+    content: '';
+    display: block;
+    position: absolute;
     bottom: 1px;
     left: 0px;
     width: 100%;
     height: 1px;
   }
 
-  &.dark.modal > .modal-inner-content h6.with-content-divisor:after { background-color: ${({ theme }) => theme.azure1} }
-  &.light.modal > .modal-inner-content h6.with-content-divisor:after { background-color: ${({ theme }) => theme.violet3} }
-  &.classic.modal > .modal-inner-content h6.with-content-divisor:after { background-color: ${({ theme }) => theme.grey2} }
+  &.dark.modal > .modal-inner-content h6.with-content-divisor:after {
+    background-color: ${({ theme }) => theme.azure1};
+  }
+  &.light.modal > .modal-inner-content h6.with-content-divisor:after {
+    background-color: ${({ theme }) => theme.violet3};
+  }
+  &.classic.modal > .modal-inner-content h6.with-content-divisor:after {
+    background-color: ${({ theme }) => theme.grey2};
+  }
 
-  &.popup > .popup-inner-content .popup-operations-container { /*overflow: hidden;*/ padding-top: 15px; }
-  &.popup > .popup-inner-content .popup-operations-container button { font-size: 12px !important; }
-  &.popup > .popup-inner-content .popup-operations-container button:last-child { float: right; }
-  &.classic.popup > .popup-inner-content .popup-operations-container button {}
+  &.popup > .popup-inner-content .popup-operations-container {
+    /*overflow: hidden;*/
+    padding-top: 15px;
+  }
+  &.popup > .popup-inner-content .popup-operations-container button {
+    font-size: 12px !important;
+  }
+  &.popup > .popup-inner-content .popup-operations-container button:last-child {
+    float: right;
+  }
+  &.classic.popup > .popup-inner-content .popup-operations-container button {
+  }
 
-  &.dark.popup > .popup-inner-content h6, &.dark.modal > .modal-inner-content h6 { color: ${({ theme }) => theme.azure1} }
-  &.dark.popup > .popup-inner-content h6 svg, &.dark.modal > .modal-inner-content h6 svg  { stroke: ${({ theme }) => theme.azure1} }
-  &.light.popup > .popup-inner-content h6, &.light.modal > .modal-inner-content h6  { }
-  &.classic.popup > .popup-inner-content h6, &.classic.modal > .modal-inner-content h6 { 
-    color: ${({ theme }) => theme.azure1}; 
-    letter-spacing: 0.15em; 
+  &.dark.popup > .popup-inner-content h6,
+  &.dark.modal > .modal-inner-content h6 {
+    color: ${({ theme }) => theme.azure1};
+  }
+  &.dark.popup > .popup-inner-content h6 svg,
+  &.dark.modal > .modal-inner-content h6 svg {
+    stroke: ${({ theme }) => theme.azure1};
+  }
+  &.light.popup > .popup-inner-content h6,
+  &.light.modal > .modal-inner-content h6 {
+  }
+  &.classic.popup > .popup-inner-content h6,
+  &.classic.modal > .modal-inner-content h6 {
+    color: ${({ theme }) => theme.azure1};
+    letter-spacing: 0.15em;
     line-height: 1.4em;
   }
-  &.classic.popup > .popup-inner-content h6 svg, &.classic.modal > .modal-inner-content h6 svg  { stroke: ${({ theme }) => theme.azure1} }
+  &.classic.popup > .popup-inner-content h6 svg,
+  &.classic.modal > .modal-inner-content h6 svg {
+    stroke: ${({ theme }) => theme.azure1};
+  }
 
-  &.modal > .modal-inner-content .modal-content-wrapper > .connect-wallet-terms-and-conditions { 
+  &.modal > .modal-inner-content .modal-content-wrapper > .connect-wallet-terms-and-conditions {
     display: flex;
     margin-bottom: 15px;
     padding: 15px 0px 15px 0px;
   }
 
-  &.modal > .modal-inner-content .modal-content-wrapper > .connect-wallet-terms-and-conditions > label { font-size: 15px; }
-  &.modal > .modal-inner-content .modal-content-wrapper > .connect-wallet-terms-and-conditions > label > input { margin-right: 10px; }
+  &.modal > .modal-inner-content .modal-content-wrapper > .connect-wallet-terms-and-conditions > label {
+    font-size: 15px;
+  }
+  &.modal > .modal-inner-content .modal-content-wrapper > .connect-wallet-terms-and-conditions > label > input {
+    margin-right: 10px;
+  }
   &.modal > .modal-inner-content .modal-content-wrapper > .connect-wallet-terms-and-conditions.classic > label {
     text-shadow: 1px 1px 1px ${({ theme }) => theme.black};
   }
 
-  &.modal > .modal-inner-content .modal-content-wrapper.connecting-wallet-modal .option-card-clickable { width: 100%; }
+  &.modal > .modal-inner-content .modal-content-wrapper.connecting-wallet-modal .option-card-clickable {
+    width: 100%;
+  }
 
-  &.dark.modal > .modal-inner-content .modal-content-wrapper > .connect-wallet-terms-and-conditions { 
+  &.dark.modal > .modal-inner-content .modal-content-wrapper > .connect-wallet-terms-and-conditions {
     border-top: solid 1px ${({ theme }) => theme.azure1};
     border-bottom: solid 1px ${({ theme }) => theme.azure1};
   }
-  
-  &.light.modal > .modal-inner-content { box-shadow: 0px 0px 16px ${({ theme }) => theme.utils.hexToRGB(theme.grey3, 0.4)}; }
-  &.light.modal > .modal-inner-content .modal-content-wrapper > .connect-wallet-terms-and-conditions { }
 
-  &.classic.modal > .modal-inner-content .modal-content-wrapper > .connect-wallet-terms-and-conditions { }
+  &.light.modal > .modal-inner-content {
+    box-shadow: 0px 0px 16px ${({ theme }) => theme.utils.hexToRGB(theme.grey3, 0.4)};
+  }
+  &.light.modal > .modal-inner-content .modal-content-wrapper > .connect-wallet-terms-and-conditions {
+  }
+
+  &.classic.modal > .modal-inner-content .modal-content-wrapper > .connect-wallet-terms-and-conditions {
+  }
 
   &.settings-menu-panel {
     min-width: 20.125rem;
@@ -2283,30 +3244,47 @@ export const SecondaryPanelBoxContainer = styled.div`
     z-index: 100;
 
     ${({ theme }) => theme.mediaWidth.upToExtraSmall` min-width: 18.125rem; right: -46px; `};
-    ${({ theme }) => theme.mediaWidth.upToMedium` min-width: 18.125rem; top: -22rem; right: -2px; @media (max-width: 1050px) { top: -19.5rem; } `};
+    ${({ theme }) =>
+      theme.mediaWidth
+        .upToMedium` min-width: 18.125rem; top: -22rem; right: -2px; @media (max-width: 1050px) { top: -19.5rem; } `};
   }
 
-  &.settings-menu-panel.classic {}
+  &.settings-menu-panel.classic {
+  }
 
-  &.settings-menu-panel .sectionHeader { font-weight: 500; font-size: 14px; }
-  &.settings-menu-panel .sectionOption { font-weight: 500; font-size: 14px; }
+  &.settings-menu-panel .sectionHeader {
+    font-weight: 500;
+    font-size: 14px;
+  }
+  &.settings-menu-panel .sectionOption {
+    font-weight: 500;
+    font-size: 14px;
+  }
 
-  &.settings-menu-panel.classic .sectionHeader.classic { 
-    color: ${({ theme }) => theme.azure1}; 
+  &.settings-menu-panel.classic .sectionHeader.classic {
+    color: ${({ theme }) => theme.azure1};
     text-shadow: 1px 1px 1px ${({ theme }) => theme.black};
   }
 
-  &.dark.settings-menu-panel .sectionOption { color: ${({ theme }) => theme.grey2}; }
-  &.light.settings-menu-panel .sectionOption { color: ${({ theme }) => theme.violet1}; }
-  &.classic.settings-menu-panel .sectionOption { 
+  &.dark.settings-menu-panel .sectionOption {
+    color: ${({ theme }) => theme.grey2};
+  }
+  &.light.settings-menu-panel .sectionOption {
+    color: ${({ theme }) => theme.violet1};
+  }
+  &.classic.settings-menu-panel .sectionOption {
     text-shadow: 1px 1px 1px ${({ theme }) => theme.black};
   }
 
   &.light.popup > .popup-inner-content,
-  &.light.settings-menu-panel > .inner-content { box-shadow: 0px 0px 16px ${({ theme }) => theme.utils.hexToRGB(theme.grey3, 0.4)}; }
+  &.light.settings-menu-panel > .inner-content {
+    box-shadow: 0px 0px 16px ${({ theme }) => theme.utils.hexToRGB(theme.grey3, 0.4)};
+  }
 
-  @media (max-width: 1050px) { 
-    &.dark { border: none; }
+  @media (max-width: 1050px) {
+    &.dark {
+      border: none;
+    }
     padding: 0px;
   }
 `
@@ -2318,42 +3296,64 @@ export const SecondaryPanelBoxContainerExtraDecorator = styled.div`
   top: 0px;
   left: 0px;
 
-  &.top { top:0px; left:0px; }
-  &.bottom { bottom: 0px; left: 0px; transform: scaleX(-1); }
+  &.top {
+    top: 0px;
+    left: 0px;
+  }
+  &.bottom {
+    bottom: 0px;
+    left: 0px;
+    transform: scaleX(-1);
+  }
 
-  &:before, &:after {
+  &:before,
+  &:after {
     position: absolute;
-    content: " ";
+    content: ' ';
     display: block;
     width: 12px;
-    height: 12px; 
-    background-color: transparent; 
-    background-size: 100% 100%;  
+    height: 12px;
+    background-color: transparent;
+    background-size: 100% 100%;
     opacity: 1;
   }
 
-  &:before { top: -8px; left: -8px; }
-  &:after { bottom: -8px; right: -8px; transform: rotate(180deg); }
+  &:before {
+    top: -8px;
+    left: -8px;
+  }
+  &:after {
+    bottom: -8px;
+    right: -8px;
+    transform: rotate(180deg);
+  }
 
   &.dark:before {
-    background-image: url(${(images.decorators.smallBoxes.dark)});
+    background-image: url(${images.decorators.smallBoxes.dark});
     background-position: left top;
     background-repeat: no-repeat;
   }
   &.dark:after {
-    background-image: url(${(images.decorators.smallBoxes.dark)});
+    background-image: url(${images.decorators.smallBoxes.dark});
     background-position: left top;
     background-repeat: no-repeat;
   }
 
-  &.light:before {}
-  &.light:after {}
+  &.light:before {
+  }
+  &.light:after {
+  }
 
-  &.classic:before {}
-  &.classic:after {}
+  &.classic:before {
+  }
+  &.classic:after {
+  }
 
-  @media (max-width: 1050px) { 
-    &:before, &:after { display: none; }
+  @media (max-width: 1050px) {
+    &:before,
+    &:after {
+      display: none;
+    }
   }
 `
 export const WalletConnectorsContainer = styled.div`
@@ -2370,13 +3370,15 @@ const Fader = styled.div`
 `
 export const AnimatedFader = animated(Fader)
 
-export const AdvancedDetailsFooter = styled.div<{ show: boolean }>` 
+export const AdvancedDetailsFooter = styled.div<{ show: boolean }>`
   display: ${({ show }) => (show ? 'block' : 'none')};
   transform: ${({ show }) => (show ? 'translateY(0%)' : 'translateY(-100%)')};
   width: 100%;
   z-index: -1;
   transition: transform 300ms ease-in-out;
-  @media (max-width: 1050px) { padding-left: -2rem !important; }
+  @media (max-width: 1050px) {
+    padding-left: -2rem !important;
+  }
 `
 const AnimatedDialogOverlay = animated(DialogOverlay)
 export const ThemedDialogOverlay = styled(AnimatedDialogOverlay)`
@@ -2388,9 +3390,14 @@ export const ThemedDialogOverlay = styled(AnimatedDialogOverlay)`
     justify-content: center;
   }
 
-  &.dark[data-reach-dialog-overlay] { background-color: ${({ theme }) => theme.utils.hexToRGB(theme.black, 0.8)}; }
-  &.light[data-reach-dialog-overlay] {}
-  &.classic[data-reach-dialog-overlay] { background-color: ${({ theme }) => theme.utils.hexToRGB(theme.black, 0.8)}; }
+  &.dark[data-reach-dialog-overlay] {
+    background-color: ${({ theme }) => theme.utils.hexToRGB(theme.black, 0.8)};
+  }
+  &.light[data-reach-dialog-overlay] {
+  }
+  &.classic[data-reach-dialog-overlay] {
+    background-color: ${({ theme }) => theme.utils.hexToRGB(theme.black, 0.8)};
+  }
 `
 const AnimatedDialogContent = animated(DialogContent)
 export const ThemedDialogContent = styled(({ minHeight, maxHeight, mobile, isOpen, ...rest }) => (
@@ -2407,19 +3414,31 @@ export const ThemedDialogContent = styled(({ minHeight, maxHeight, mobile, isOpe
     overflow-x: hidden;
     align-self: ${({ mobile }) => (mobile ? 'flex-end' : 'center')};
     max-width: 420px;
-    ${({ maxHeight }) => maxHeight && css` max-height: ${maxHeight}vh; `}
-    ${({ minHeight }) => minHeight && css` min-height: ${minHeight}vh; `}
+    ${({ maxHeight }) =>
+      maxHeight &&
+      css`
+        max-height: ${maxHeight}vh;
+      `}
+    ${({ minHeight }) =>
+      minHeight &&
+      css`
+        min-height: ${minHeight}vh;
+      `}
     display: flex;
     ${({ theme }) => theme.mediaWidth.upToMedium` width: 65vw; margin: 0; `}
-    ${({ theme, mobile }) => theme.mediaWidth.upToSmall` width:  85vw; ${mobile && css` width: 100vw; `} `}
+    ${({ theme, mobile }) =>
+      theme.mediaWidth.upToSmall` width:  85vw; ${mobile &&
+        css`
+          width: 100vw;
+        `} `}
   }
 
-  @media (max-width: 1050px) { 
-    display:block !important;
+  @media (max-width: 1050px) {
+    display: block !important;
     width: 100vw !important;
     max-width: 100% !important;
   }
-  
+
   &[data-reach-dialog-content] > .token-selection-content-container {
     width: 100%;
     display: flex;
@@ -2429,9 +3448,17 @@ export const ThemedDialogContent = styled(({ minHeight, maxHeight, mobile, isOpe
     padding: 10px 20px;
   }
 
-  &[data-reach-dialog-content] > .token-selection-content-container .modal-close-icon { right: 0px; top: 0px; }
-  &[data-reach-dialog-content] > .token-selection-content-container .modal-close-icon.confirmation-modal-close-icon { right: 20px; top: 15px; }
-  &[data-reach-dialog-content] > .token-selection-content-container > .confirmation-modal-content img.tokenLogo { margin-top: 0px; }
+  &[data-reach-dialog-content] > .token-selection-content-container .modal-close-icon {
+    right: 0px;
+    top: 0px;
+  }
+  &[data-reach-dialog-content] > .token-selection-content-container .modal-close-icon.confirmation-modal-close-icon {
+    right: 20px;
+    top: 15px;
+  }
+  &[data-reach-dialog-content] > .token-selection-content-container > .confirmation-modal-content img.tokenLogo {
+    margin-top: 0px;
+  }
 `
 export const SearchTokenFormItems = styled(AutoColumn)`
   display: grid;
@@ -2441,47 +3468,73 @@ export const SearchTokenFormItems = styled(AutoColumn)`
   padding: 0px 0px 15px 0px;
   margin-bottom: 15px;
 
-  &.dark { border-bottom: solid 1px ${({ theme }) => theme.azure1}; }
-  &.light { border-bottom: solid 1px ${({ theme }) => theme.violet3}; }
-  &.classic { border-bottom: solid 1px ${({ theme }) => theme.grey2}; }
+  &.dark {
+    border-bottom: solid 1px ${({ theme }) => theme.azure1};
+  }
+  &.light {
+    border-bottom: solid 1px ${({ theme }) => theme.violet3};
+  }
+  &.classic {
+    border-bottom: solid 1px ${({ theme }) => theme.grey2};
+  }
 
-  & + .tokens-list-container { flex: 1 1 0%; }
-  & + .tokens-list-container.dark { border-bottom: solid 1px ${({ theme }) => theme.azure1};}
-  & + .tokens-list-container.light { border-bottom: solid 1px ${({ theme }) => theme.violet3}; }
-  & + .tokens-list-container.classic { border-bottom: solid 1px ${({ theme }) => theme.grey2};}
+  & + .tokens-list-container {
+    flex: 1 1 0%;
+  }
+  & + .tokens-list-container.dark {
+    border-bottom: solid 1px ${({ theme }) => theme.azure1};
+  }
+  & + .tokens-list-container.light {
+    border-bottom: solid 1px ${({ theme }) => theme.violet3};
+  }
+  & + .tokens-list-container.classic {
+    border-bottom: solid 1px ${({ theme }) => theme.grey2};
+  }
 
-  & + .tokens-list-container img.ethereumLogo, & + .tokens-list-container img.logo { margin-top: 0px; }
+  & + .tokens-list-container img.ethereumLogo,
+  & + .tokens-list-container img.logo {
+    margin-top: 0px;
+  }
 `
 
 export const InfoBox = styled.div`
   padding: 10px;
-  border-radius: .65rem;
+  border-radius: 0.65rem;
   margin: 10px auto;
 
-  &.dark {}
-  &.light {}
-  &.classic {}
+  &.dark {
+  }
+  &.light {
+  }
+  &.classic {
+  }
 
   &.dark.info {
     border: solid 1px ${({ theme }) => theme.azure1};
     color: ${({ theme }) => theme.azure1};
   }
-  &.light.info {}
-  &.classic.info {}
+  &.light.info {
+  }
+  &.classic.info {
+  }
 
   &.dark.warning {
     border: solid 1px ${({ theme }) => theme.yellowGreen};
     color: ${({ theme }) => theme.yellowGreen};
   }
-  &.light.warning {}
-  &.classic.warning {}
+  &.light.warning {
+  }
+  &.classic.warning {
+  }
 
-  &.dark.error {     
+  &.dark.error {
     border: solid 1px ${({ theme }) => theme.red1};
     color: ${({ theme }) => theme.red1};
   }
-  &.light.error {}
-  &.classic.error {}
+  &.light.error {
+  }
+  &.classic.error {
+  }
 `
 export const ModalCaption = styled.div`
   ${({ theme }) => theme.flexRowNoWrap}
@@ -2495,9 +3548,7 @@ export const ModalCaption = styled.div`
     text-shadow: 1px 1px 1px ${({ theme }) => theme.black};
   }
 `
-export const LoaderBoxContainer = styled.div`
-  
-`
+export const LoaderBoxContainer = styled.div``
 export const StyledLoader = styled(Loader)`
   margin-right: 10px;
 `
@@ -2506,7 +3557,9 @@ export const LoadingMessage = styled.div<{ error?: boolean }>`
   align-items: center;
   justify-content: flex-start;
   color: ${({ theme, error }) => (error ? theme.red1 : theme.azure1)};
-  & > * { padding: 10px; }
+  & > * {
+    padding: 10px;
+  }
 `
 export const LoaderErrorGroup = styled.div`
   ${({ theme }) => theme.flexRowNoWrap};
@@ -2523,7 +3576,9 @@ export const LoaderErrorButton = styled.div`
   font-weight: 600;
   user-select: none;
 
-  &:hover { cursor: pointer; }
+  &:hover {
+    cursor: pointer;
+  }
 `
 export const LoadingWrapper = styled.div`
   ${({ theme }) => theme.flexRowNoWrap};
@@ -2533,79 +3588,123 @@ export const LoadingWrapper = styled.div`
 const SettingsMenuOptionBase = styled.button`
   align-items: center;
   height: 2rem;
-  border-radius: .65rem;
+  border-radius: 0.65rem;
   width: auto;
   min-width: 3.5rem;
   outline: none;
   background-color: transparent;
   border: solid 1px;
 
-  &:hover, &:focus {}
+  &:hover,
+  &:focus {
+  }
 
-  &.dark { border-color: #2f9ab8; color: ${({ theme }) => theme.white}; }
-  &.light { border-color: ${({ theme }) => theme.violet1}; color: ${({ theme }) => theme.violet1}; }
-  &.classic {}
+  &.dark {
+    border-color: #2f9ab8;
+    color: ${({ theme }) => theme.white};
+  }
+  &.light {
+    border-color: ${({ theme }) => theme.violet1};
+    color: ${({ theme }) => theme.violet1};
+  }
+  &.classic {
+  }
 
-  &.dark:hover, &.dark:focus { border-color: ${({ theme }) => theme.azure1}; background-color: ${({ theme }) => theme.grey4}; }
-  &.light:hover, &.light:focus { background-color: ${({ theme }) => theme.white}; color: ${({ theme }) => theme.violet1}; }
-  &.classic:hover, &.classic:focus { 
-    background-color: ${({ theme }) => theme.white}; 
-    border-color: ${({ theme }) => theme.yellowGreen}; 
-    color: ${({ theme }) => theme.blue4}; 
+  &.dark:hover,
+  &.dark:focus {
+    border-color: ${({ theme }) => theme.azure1};
+    background-color: ${({ theme }) => theme.grey4};
+  }
+  &.light:hover,
+  &.light:focus {
+    background-color: ${({ theme }) => theme.white};
+    color: ${({ theme }) => theme.violet1};
+  }
+  &.classic:hover,
+  &.classic:focus {
+    background-color: ${({ theme }) => theme.white};
+    border-color: ${({ theme }) => theme.yellowGreen};
+    color: ${({ theme }) => theme.blue4};
   }
 `
-export const SettingsMenuOption = styled(SettingsMenuOptionBase) <{ active: boolean }>`
+export const SettingsMenuOption = styled(SettingsMenuOptionBase)<{ active: boolean }>`
   margin-right: 8px;
 
-  &.dark { background-color: ${({ active, theme }) => active && theme.grey4}; }
-  &.light { background-color: ${({ active, theme }) => active && theme.white}; }
-  &.classic { background-color: ${({ active, theme }) => (active ? theme.utils.hexToRGB(theme.white, 1) : theme.utils.hexToRGB(theme.white, 0.8))}; }
+  &.dark {
+    background-color: ${({ active, theme }) => active && theme.grey4};
+  }
+  &.light {
+    background-color: ${({ active, theme }) => active && theme.white};
+  }
+  &.classic {
+    background-color: ${({ active, theme }) =>
+      active ? theme.utils.hexToRGB(theme.white, 1) : theme.utils.hexToRGB(theme.white, 0.8)};
+  }
 `
-export const SettingsMenuCustomOption = styled(SettingsMenuOptionBase) <{ active?: boolean; warning?: boolean }>`
+export const SettingsMenuCustomOption = styled(SettingsMenuOptionBase)<{ active?: boolean; warning?: boolean }>`
   height: 2rem;
   position: relative;
   padding: 0 0.75rem;
   flex: 1;
-  border: ${({ theme, active, warning }) => active && `1px solid ${warning ? theme.red1 : theme.primary1}`};  
-  
-  &:hover { border: ${({ theme, active, warning }) => active && `1px solid ${warning ? theme.red1 : theme.primary1}`}; }
+  border: ${({ theme, active, warning }) => active && `1px solid ${warning ? theme.red1 : theme.primary1}`};
 
-  & input { 
-    width: 80%; 
-    height: 100%; 
-    border: none; 
+  &:hover {
+    border: ${({ theme, active, warning }) => active && `1px solid ${warning ? theme.red1 : theme.primary1}`};
+  }
+
+  & input {
+    width: 80%;
+    height: 100%;
+    border: none;
     background-color: transparent;
-    outline: none; 
-    text-align: right; 
+    outline: none;
+    text-align: right;
   }
 
-  &.dark input { color: ${({ theme }) => theme.white}; }
-  &.light input { color: ${({ theme }) => theme.violet1}; }
-  &.classic input { color: ${({ theme }) => theme.blue4}; }
-  &.classic { 
+  &.dark input {
+    color: ${({ theme }) => theme.white};
+  }
+  &.light input {
+    color: ${({ theme }) => theme.violet1};
+  }
+  &.classic input {
     color: ${({ theme }) => theme.blue4};
-    background-color: ${({ active, theme }) => (active ? theme.utils.hexToRGB(theme.white, 1) : theme.utils.hexToRGB(theme.white, 0.8))}; 
+  }
+  &.classic {
+    color: ${({ theme }) => theme.blue4};
+    background-color: ${({ active, theme }) =>
+      active ? theme.utils.hexToRGB(theme.white, 1) : theme.utils.hexToRGB(theme.white, 0.8)};
   }
 
-  & + .minutes { padding-left: 8px; font-size: 14px; }
-  &.classic + .minutes { 
-    text-shadow: 1px 1px 1px ${({ theme }) => theme.black}; 
+  & + .minutes {
+    padding-left: 8px;
+    font-size: 14px;
+  }
+  &.classic + .minutes {
+    text-shadow: 1px 1px 1px ${({ theme }) => theme.black};
   }
 `
 export const SettingsMenuCustomOptionInput = styled.input`
   color: ${({ theme, color }) => (color === 'red' ? theme.red1 : theme.text1)};
 `
-export const ToggleButton = styled(SettingsMenuOptionBase) <{ isActive?: boolean; activeElement?: boolean }>`
+export const ToggleButton = styled(SettingsMenuOptionBase)<{ isActive?: boolean; activeElement?: boolean }>`
   width: fit-content;
   cursor: pointer;
   outline: none;
-  padding: 0;  
+  padding: 0;
 
-  &.dark { background: ${({ theme }) => theme.bg6}; }
-  &.light { background: ${({ theme }) => theme.utils.hexToRGB(theme.grey2, 0.3)}; }
-  &.light:hover span:not(.active) { color: ${({ theme }) => theme.violet1}; }
+  &.dark {
+    background: ${({ theme }) => theme.bg6};
+  }
+  &.light {
+    background: ${({ theme }) => theme.utils.hexToRGB(theme.grey2, 0.3)};
+  }
+  &.light:hover span:not(.active) {
+    color: ${({ theme }) => theme.violet1};
+  }
 
-  &.classic {}
+  &.classic {
+  }
 `
 export const ToggleButtonElement = styled.span<{ isActive?: boolean; isOnSwitch?: boolean }>`
   border-radius: .65rem;
@@ -2654,31 +3753,43 @@ export const SearchTokenListItem = styled(RowBetween)`
   cursor: ${({ disabled }) => !disabled && 'pointer'};
   pointer-events: ${({ disabled }) => disabled && 'none'};
   opacity: ${({ disabled, selected }) => (disabled || selected ? 0.5 : 1)};
-  border-radius: .65rem;
+  border-radius: 0.65rem;
   margin-bottom: 15px;
 
-  &.dark { color: ${({ theme }) => theme.azure2} !important; }
-  &.dark:disabled, &.light:disabled { opacity: 0.5; cursor: pointer; }
+  &.dark {
+    color: ${({ theme }) => theme.azure2} !important;
+  }
+  &.dark:disabled,
+  &.light:disabled {
+    opacity: 0.5;
+    cursor: pointer;
+  }
 
-  &.dark:hover, &.dark:focus { 
+  &.dark:hover,
+  &.dark:focus {
     border: 1px solid ${({ theme }) => theme.azure2} !important;
     background-color: ${({ theme }) => theme.blue3};
-    box-shadow: 0px 0px 4px ${({ theme }) => theme.azure2}; 
+    box-shadow: 0px 0px 4px ${({ theme }) => theme.azure2};
   }
 
-  &.light { color: ${({ theme }) => theme.violet1} !important; }
+  &.light {
+    color: ${({ theme }) => theme.violet1} !important;
+  }
 
-  &.light:hover, &.light:focus { 
+  &.light:hover,
+  &.light:focus {
     border: 1px solid ${({ theme }) => theme.violet1} !important;
     background-color: ${({ theme }) => theme.violet3};
-    box-shadow: 0px 0px 4px ${({ theme }) => theme.utils.hexToRGB(theme.black, 0.4)}; 
+    box-shadow: 0px 0px 4px ${({ theme }) => theme.utils.hexToRGB(theme.black, 0.4)};
   }
 
-  &.classic { position: relative; }
-  &.classic:before { 
+  &.classic {
+    position: relative;
+  }
+  &.classic:before {
     position: absolute;
-    content: " ";
-    display: none; 
+    content: ' ';
+    display: none;
     width: 57px;
     height: 35px;
     background-image: url(${images.icons.FF7Cursor});
@@ -2688,10 +3799,21 @@ export const SearchTokenListItem = styled(RowBetween)`
     top: 25%;
     z-index: 1;
   }
-  &.classic:hover, &.classic:focus { color: ${({ theme }) => theme.azure2}; }
-  &.classic:hover:before, &.classic:focus:before { display: block; }
-  &.classic > img { transition: margin-left 1s; }
-  &.classic:hover > img, &.classic:focus > img { margin-left: 52px; }
+  &.classic:hover,
+  &.classic:focus {
+    color: ${({ theme }) => theme.azure2};
+  }
+  &.classic:hover:before,
+  &.classic:focus:before {
+    display: block;
+  }
+  &.classic > img {
+    transition: margin-left 1s;
+  }
+  &.classic:hover > img,
+  &.classic:focus > img {
+    margin-left: 52px;
+  }
 `
 export const ModalContentWrapper = styled.div`
   display: flex;
@@ -2705,13 +3827,20 @@ export const ModalContentWrapper = styled.div`
     width: 100%;
   }
 
-  & img.claimedIcon { max-width: 100px; margin-top: 25px; }
-  & > .modal-content-wrapper-inner-container { position: relative; padding: 10px 20px; }
+  & img.claimedIcon {
+    max-width: 100px;
+    margin-top: 25px;
+  }
+  & > .modal-content-wrapper-inner-container {
+    position: relative;
+    padding: 10px 20px;
+  }
 
-  @media (max-width: 1050px) { 
+  @media (max-width: 1050px) {
     /* margin: 5px; */
-    & > .modal-content-wrapper-inner-container { }
-  }  
+    & > .modal-content-wrapper-inner-container {
+    }
+  }
 `
 export const SimpleModalContentWrapper = styled.div`
   width: 100%;
@@ -2722,9 +3851,13 @@ export const EmptyProposals = styled.div`
   justify-content: center;
   align-items: center;
 
-  &.dark { color: ${({ theme }) => theme.azure1}; }
-  &.light {}
-  &.classic {}
+  &.dark {
+    color: ${({ theme }) => theme.azure1};
+  }
+  &.light {
+  }
+  &.classic {
+  }
 `
 export const Dots = styled.span`
   &::after {
@@ -2746,24 +3879,49 @@ export const Dots = styled.span`
     }
   }
 `
-export const StyledPositionCard = styled(Box) <{ bgColor: any }>`
-  border: none;  
+export const StyledPositionCard = styled(Box)<{ bgColor: any }>`
+  border: none;
   position: relative;
   overflow: hidden;
 
-  &.dark { background-color: ${({ theme }) => theme.utils.hexToRGB(theme.black, 0.2)} }
-  &.light { background-color: ${({ theme }) => theme.utils.hexToRGB(theme.violet3, 0.2)} }
-  &.classic { background-color: ${({ theme }) => theme.utils.hexToRGB(theme.black, 0.2)} }
+  &.dark {
+    background-color: ${({ theme }) => theme.utils.hexToRGB(theme.black, 0.2)};
+  }
+  &.light {
+    background-color: ${({ theme }) => theme.utils.hexToRGB(theme.violet3, 0.2)};
+  }
+  &.classic {
+    background-color: ${({ theme }) => theme.utils.hexToRGB(theme.black, 0.2)};
+  }
 `
 export const RemoveLiquiditySliderItemContainer = styled.div`
-  & .title { margin: 0px; font-weight: 400; font-size: 16px; }
-  & .slider-percentage { font-size: 72px; font-weight: 500; }
+  & .title {
+    margin: 0px;
+    font-weight: 400;
+    font-size: 16px;
+  }
+  & .slider-percentage {
+    font-size: 72px;
+    font-weight: 500;
+  }
 
-  &.dark {}
-  &.light {}
-  &.classic {}
-  &.classic .title { font-size: 13px; text-shadow: 1px 1px 1px ${({ theme }) => theme.black}; line-height: 1.5em; }
-  &.classic .slider-percentage { font-size: 50px; font-weight: normal; margin-top: 15px; text-shadow: 1px 1px 1px ${({ theme }) => theme.black};  }
+  &.dark {
+  }
+  &.light {
+  }
+  &.classic {
+  }
+  &.classic .title {
+    font-size: 13px;
+    text-shadow: 1px 1px 1px ${({ theme }) => theme.black};
+    line-height: 1.5em;
+  }
+  &.classic .slider-percentage {
+    font-size: 50px;
+    font-weight: normal;
+    margin-top: 15px;
+    text-shadow: 1px 1px 1px ${({ theme }) => theme.black};
+  }
 `
 export const RemoveLiquidityCustomText = styled.div`
   font-size: 24px;
@@ -2775,8 +3933,12 @@ export const StyledRangeInput = styled.input`
   background: transparent; /* Otherwise white in Chrome */
   cursor: pointer;
 
-  &:focus { outline: none; }
-  &::-moz-focus-outer { border: 0; }
+  &:focus {
+    outline: none;
+  }
+  &::-moz-focus-outer {
+    border: 0;
+  }
 
   &::-webkit-slider-thumb {
     -webkit-appearance: none;
@@ -2793,16 +3955,25 @@ export const StyledRangeInput = styled.input`
     }
   }
 
-  &.dark::-webkit-slider-thumb { background-color: ${({ theme }) => theme.azure1}; color: ${({ theme }) => theme.azure1}; }
-  &.light::-webkit-slider-thumb { background-color: ${({ theme }) => theme.black}; color: ${({ theme }) => theme.black}; }
-  &.classic::-webkit-slider-thumb { background-color: ${({ theme }) => theme.azure1}; color: ${({ theme }) => theme.azure1}; }
+  &.dark::-webkit-slider-thumb {
+    background-color: ${({ theme }) => theme.azure1};
+    color: ${({ theme }) => theme.azure1};
+  }
+  &.light::-webkit-slider-thumb {
+    background-color: ${({ theme }) => theme.black};
+    color: ${({ theme }) => theme.black};
+  }
+  &.classic::-webkit-slider-thumb {
+    background-color: ${({ theme }) => theme.azure1};
+    color: ${({ theme }) => theme.azure1};
+  }
 
   &::-moz-range-thumb {
     height: 14px;
     width: 14px;
     border-radius: 100%;
     border: none;
-    
+
     &:hover,
     &:focus {
       box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.1), 0px 4px 8px rgba(0, 0, 0, 0.08), 0px 16px 24px rgba(0, 0, 0, 0.06),
@@ -2810,9 +3981,14 @@ export const StyledRangeInput = styled.input`
     }
   }
 
-  &.dark::-moz-range-thumb { background-color: ${({ theme }) => theme.azure1}; color: ${({ theme }) => theme.azure1}; }
-  &.light::-moz-range-thumb {}
-  &.classic::-moz-range-thumb {}
+  &.dark::-moz-range-thumb {
+    background-color: ${({ theme }) => theme.azure1};
+    color: ${({ theme }) => theme.azure1};
+  }
+  &.light::-moz-range-thumb {
+  }
+  &.classic::-moz-range-thumb {
+  }
 
   &::-ms-thumb {
     height: 14px;
@@ -2826,58 +4002,105 @@ export const StyledRangeInput = styled.input`
     }
   }
 
-  &.dark::-ms-thumb { background-color: ${({ theme }) => theme.azure1}; color: ${({ theme }) => theme.azure1}; }
-  &.light::-ms-thumb {}
-  &.classic::-ms-thumb {}
+  &.dark::-ms-thumb {
+    background-color: ${({ theme }) => theme.azure1};
+    color: ${({ theme }) => theme.azure1};
+  }
+  &.light::-ms-thumb {
+  }
+  &.classic::-ms-thumb {
+  }
 
   &.dark::-webkit-slider-runnable-track {
-    background: linear-gradient(90deg, ${({ theme }) => theme.utils.hexToRGB(theme.azure1, 1)}, ${({ theme }) => theme.utils.hexToRGB(theme.azure1, 0.7)});
+    background: linear-gradient(
+      90deg,
+      ${({ theme }) => theme.utils.hexToRGB(theme.azure1, 1)},
+      ${({ theme }) => theme.utils.hexToRGB(theme.azure1, 0.7)}
+    );
     height: 2px;
   }
 
   &.light::-webkit-slider-runnable-track {
-    background: linear-gradient(90deg, ${({ theme }) => theme.utils.hexToRGB(theme.azure1, 1)}, ${({ theme }) => theme.utils.hexToRGB(theme.azure1, 0.7)});
+    background: linear-gradient(
+      90deg,
+      ${({ theme }) => theme.utils.hexToRGB(theme.azure1, 1)},
+      ${({ theme }) => theme.utils.hexToRGB(theme.azure1, 0.7)}
+    );
     height: 2px;
   }
 
   &.classic::-webkit-slider-runnable-track {
-    background: linear-gradient(90deg, ${({ theme }) => theme.utils.hexToRGB(theme.azure1, 1)}, ${({ theme }) => theme.utils.hexToRGB(theme.azure1, 0.7)});
+    background: linear-gradient(
+      90deg,
+      ${({ theme }) => theme.utils.hexToRGB(theme.azure1, 1)},
+      ${({ theme }) => theme.utils.hexToRGB(theme.azure1, 0.7)}
+    );
     height: 2px;
   }
 
   &.dark::-moz-range-track {
-    background: linear-gradient(90deg, ${({ theme }) => theme.utils.hexToRGB(theme.azure1, 1)}, ${({ theme }) => theme.utils.hexToRGB(theme.azure1, 0.7)});
+    background: linear-gradient(
+      90deg,
+      ${({ theme }) => theme.utils.hexToRGB(theme.azure1, 1)},
+      ${({ theme }) => theme.utils.hexToRGB(theme.azure1, 0.7)}
+    );
     height: 2px;
   }
 
   &.light::-moz-range-track {
-    background: linear-gradient(90deg, ${({ theme }) => theme.utils.hexToRGB(theme.azure1, 1)}, ${({ theme }) => theme.utils.hexToRGB(theme.azure1, 0.7)});
+    background: linear-gradient(
+      90deg,
+      ${({ theme }) => theme.utils.hexToRGB(theme.azure1, 1)},
+      ${({ theme }) => theme.utils.hexToRGB(theme.azure1, 0.7)}
+    );
     height: 2px;
   }
 
   &.classic::-moz-range-track {
-    background: linear-gradient(90deg, ${({ theme }) => theme.utils.hexToRGB(theme.azure1, 1)}, ${({ theme }) => theme.utils.hexToRGB(theme.azure1, 0.7)});
+    background: linear-gradient(
+      90deg,
+      ${({ theme }) => theme.utils.hexToRGB(theme.azure1, 1)},
+      ${({ theme }) => theme.utils.hexToRGB(theme.azure1, 0.7)}
+    );
     height: 2px;
   }
 
   &::-ms-track {
     width: 100%;
     border-color: transparent;
-    color: transparent;    
+    color: transparent;
     height: 2px;
   }
 
-  &.dark::-ms-track { background: ${({ theme }) => theme.azure1}; }
-  &.dark::-ms-fill-lower { background: ${({ theme }) => theme.azure1}; }
-  &.dark::-ms-fill-upper { background: ${({ theme }) => theme.azure1}; }
+  &.dark::-ms-track {
+    background: ${({ theme }) => theme.azure1};
+  }
+  &.dark::-ms-fill-lower {
+    background: ${({ theme }) => theme.azure1};
+  }
+  &.dark::-ms-fill-upper {
+    background: ${({ theme }) => theme.azure1};
+  }
 
-  &.light::-ms-track { background: ${({ theme }) => theme.azure1}; }
-  &.light::-ms-fill-lower { background: ${({ theme }) => theme.azure1}; }
-  &.light::-ms-fill-upper { background: ${({ theme }) => theme.azure1}; }
+  &.light::-ms-track {
+    background: ${({ theme }) => theme.azure1};
+  }
+  &.light::-ms-fill-lower {
+    background: ${({ theme }) => theme.azure1};
+  }
+  &.light::-ms-fill-upper {
+    background: ${({ theme }) => theme.azure1};
+  }
 
-  &.classic::-ms-track { background: ${({ theme }) => theme.azure1}; }
-  &.classic::-ms-fill-lower { background: ${({ theme }) => theme.azure1}; }
-  &.classic::-ms-fill-upper { background: ${({ theme }) => theme.azure1}; }
+  &.classic::-ms-track {
+    background: ${({ theme }) => theme.azure1};
+  }
+  &.classic::-ms-fill-lower {
+    background: ${({ theme }) => theme.azure1};
+  }
+  &.classic::-ms-fill-upper {
+    background: ${({ theme }) => theme.azure1};
+  }
 `
 export const FooterControls = styled.div`
   font-size: small;
@@ -2886,11 +4109,15 @@ export const FooterControls = styled.div`
   align-items: center;
   justify-self: flex-end;
   max-width: 1200px;
-  z-index:2;
+  z-index: 2;
   width: 100%;
 
-  @media (max-width: 1050px) { max-width: 90%; }
-  @media (max-width: 1200px) { max-width: 90%; }
+  @media (max-width: 1050px) {
+    max-width: 90%;
+  }
+  @media (max-width: 1200px) {
+    max-width: 90%;
+  }
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
     flex-direction: row;
@@ -2909,7 +4136,8 @@ export const FooterControls = styled.div`
     ${({ theme }) => theme.backgroundContainer2}
   `};
 
-  &.classic {}
+  &.classic {
+  }
 `
 export const FooterElement = styled.div`
   display: flex;
@@ -2926,9 +4154,11 @@ export const FooterElementClock = styled.div`
 
   ${({ theme }) => theme.mediaWidth.upToMedium` flex-direction: row-reverse; align-items: center; `};
 
-  @media (max-width: 1050px) { display: none !important; }
+  @media (max-width: 1050px) {
+    display: none !important;
+  }
 
-  & svg.footer-icon { 
+  & svg.footer-icon {
     width: 15px;
     height: 15px;
     margin-top: -1px;
@@ -2936,9 +4166,16 @@ export const FooterElementClock = styled.div`
     margin-right: 3px;
   }
 
-  & svg.footer-icon.dark { stroke: ${({ theme }) => theme.azure1}; color: ${({ theme }) => theme.azure1}; }
-  & svg.footer-icon.light { stroke: ${({ theme }) => theme.violet1}; color: ${({ theme }) => theme.violet1}; }
-  & svg.footer-icon.classic {}
+  & svg.footer-icon.dark {
+    stroke: ${({ theme }) => theme.azure1};
+    color: ${({ theme }) => theme.azure1};
+  }
+  & svg.footer-icon.light {
+    stroke: ${({ theme }) => theme.violet1};
+    color: ${({ theme }) => theme.violet1};
+  }
+  & svg.footer-icon.classic {
+  }
 `
 export const HideSmall = styled.span`
   ${({ theme }) => theme.mediaWidth.upToSmall` display: none; `};
@@ -2951,7 +4188,9 @@ export const FooterElementWrap = styled.div`
   align-items: center;
   margin-left: auto;
 
-  &.classic > .theme-icon { display: none; }
+  &.classic > .theme-icon {
+    display: none;
+  }
 `
 export const AccountElement = styled.div<{ active: boolean }>`
   display: flex;
@@ -2976,13 +4215,17 @@ export const StyledInput = styled.input<{ error?: boolean; fontSize?: string; al
   text-overflow: ellipsis;
   padding: 0px;
   -webkit-appearance: textfield;
-  [type='number'] { -moz-appearance: textfield; }
+  [type='number'] {
+    -moz-appearance: textfield;
+  }
 
   // @media (max-width: 450px) {
   //   margin-left: -4rem;
   // }
 
-  &.classic { text-shadow: 1px 1px 1px ${({ theme }) => theme.black}; }
+  &.classic {
+    text-shadow: 1px 1px 1px ${({ theme }) => theme.black};
+  }
 `
 export const StyledMenuButton = styled.button`
   width: 100%;
@@ -3017,27 +4260,33 @@ export const StyledMenu = styled.div`
 `
 export const SettingsFlyout = styled.span`
   background-color: ${({ theme }) => theme.bg2};
-  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),0px 24px 32px rgba(0, 0, 0, 0.01);
+  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
+    0px 24px 32px rgba(0, 0, 0, 0.01);
   border-radius: 5px;
   padding: 0.5rem;
   z-index: 100;
 
   ${({ theme }) => theme.mediaWidth.upToMedium` top: -17.25rem; `};
 
-  &.classic { 
-    box-shadow: none; 
-    min-width: 12rem; 
-    background: linear-gradient(0deg, ${({ theme }) => theme.utils.hexToRGB(theme.blue6, 1)} 0%, ${({ theme }) => theme.utils.hexToRGB(theme.blue5, 1)} 100%); 
+  &.classic {
+    box-shadow: none;
+    min-width: 12rem;
+    background: linear-gradient(
+      0deg,
+      ${({ theme }) => theme.utils.hexToRGB(theme.blue6, 1)} 0%,
+      ${({ theme }) => theme.utils.hexToRGB(theme.blue5, 1)} 100%
+    );
     border-radius: 1rem;
     border: solid 2px #424542;
     box-shadow: 1px 1px #e7dfe7, -1px -1px #e7dfe7, 1px -1px #e7dfe7, -1px 1px #e7dfe7, 0 -2px #9c9a9c, -2px 0 #7b757b,
-      0 2px #424542;  }
-
+      0 2px #424542;
+  }
 `
 export const MenuFlyout = styled.span`
   min-width: 8.125rem;
   background-color: ${({ theme }) => theme.bg2};
-  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),0px 24px 32px rgba(0, 0, 0, 0.01);
+  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
+    0px 24px 32px rgba(0, 0, 0, 0.01);
   border-radius: 5px;
   padding: 0.5rem;
   display: flex;
@@ -3050,14 +4299,19 @@ export const MenuFlyout = styled.span`
 
   ${({ theme }) => theme.mediaWidth.upToMedium` top: -17.25rem; `};
 
-  &.classic { 
-    box-shadow: none; 
-    min-width: 12rem; 
-    background: linear-gradient(0deg, ${({ theme }) => theme.utils.hexToRGB(theme.blue6, 1)} 0%, ${({ theme }) => theme.utils.hexToRGB(theme.blue5, 1)} 100%); 
+  &.classic {
+    box-shadow: none;
+    min-width: 12rem;
+    background: linear-gradient(
+      0deg,
+      ${({ theme }) => theme.utils.hexToRGB(theme.blue6, 1)} 0%,
+      ${({ theme }) => theme.utils.hexToRGB(theme.blue5, 1)} 100%
+    );
     border-radius: 1rem;
     border: solid 2px #424542;
     box-shadow: 1px 1px #e7dfe7, -1px -1px #e7dfe7, 1px -1px #e7dfe7, -1px 1px #e7dfe7, 0 -2px #9c9a9c, -2px 0 #7b757b,
-      0 2px #424542;  }
+      0 2px #424542;
+  }
 `
 export const MenuItem = styled(ExternalLink)`
   flex: 1;
@@ -3068,11 +4322,21 @@ export const MenuItem = styled(ExternalLink)`
     cursor: pointer;
     text-decoration: none;
   }
-  > svg { margin-right: 8px; width: 14px; height: 14px; }
+  > svg {
+    margin-right: 8px;
+    width: 14px;
+    height: 14px;
+  }
 
-  &.classic { color: ${({ theme }) => theme.white}; }
-  &.classic:hover { color: ${({ theme }) => theme.yellowGreen}; }
-  &.classic:hover > svg { stroke: ${({ theme }) => theme.yellowGreen}; }
+  &.classic {
+    color: ${({ theme }) => theme.white};
+  }
+  &.classic:hover {
+    color: ${({ theme }) => theme.yellowGreen};
+  }
+  &.classic:hover > svg {
+    stroke: ${({ theme }) => theme.yellowGreen};
+  }
 `
 export const InfoLink = styled(ExternalLink)`
   width: 100%;
@@ -3080,8 +4344,13 @@ export const InfoLink = styled(ExternalLink)`
   font-size: 14px;
   color: ${({ theme }) => theme.text1};
 
-  &.classic { margin: 10px auto; }
-  &.classic:hover, &.classic:focus { color: ${({ theme }) => theme.yellowGreen}; }
+  &.classic {
+    margin: 10px auto;
+  }
+  &.classic:hover,
+  &.classic:focus {
+    color: ${({ theme }) => theme.yellowGreen};
+  }
 `
 export const QuestionWrapper = styled.div`
   display: flex;
@@ -3096,7 +4365,10 @@ export const QuestionWrapper = styled.div`
   background-color: ${({ theme }) => theme.transparent};
   color: ${({ theme }) => theme.text2};
 
-  :hover, :focus { opacity: 0.7; }
+  :hover,
+  :focus {
+    opacity: 0.7;
+  }
 `
 export const LightQuestionWrapper = styled.div`
   display: flex;
@@ -3113,7 +4385,10 @@ export const LightQuestionWrapper = styled.div`
   background-color: rgba(255, 255, 255, 0.1);
   color: ${({ theme }) => theme.white};
 
-  :hover, :focus { opacity: 0.7; }
+  :hover,
+  :focus {
+    opacity: 0.7;
+  }
 `
 export const QuestionMark = styled.span`
   font-size: 1rem;
@@ -3134,19 +4409,31 @@ export const SwapCallbackErrorContainer = styled.div`
   text-align: center;
   margin-bottom: 20px;
 
-  & > div > svg { stroke: ${({ theme }) => theme.red1}; width: 20px; height: 20px; }  
+  & > div > svg {
+    stroke: ${({ theme }) => theme.red1};
+    width: 20px;
+    height: 20px;
+  }
 `
 export const CountdownContainer = styled.div`
   font-size: 18px;
   font-weight: 500;
 
-  &.dark { color: ${({ theme }) => theme.white}; }
-  &.light { color: ${({ theme }) => theme.grey1}; }
-  &.classic { text-shadow: 1px 1px 1px ${({ theme }) => theme.black}; line-height: 1.5em; }
+  &.dark {
+    color: ${({ theme }) => theme.white};
+  }
+  &.light {
+    color: ${({ theme }) => theme.grey1};
+  }
+  &.classic {
+    text-shadow: 1px 1px 1px ${({ theme }) => theme.black};
+    line-height: 1.5em;
+  }
 
-  @media (max-width: 1050px) { 
+  @media (max-width: 1050px) {
     font-size: small;
-    &.classic {  }
+    &.classic {
+    }
   }
 `
 export const PoolSection = styled.div`
@@ -3165,9 +4452,17 @@ export const Divider = styled.hr`
   border: none;
   border-bottom: solid 1px;
 
-  &.dark { border-color: ${({ theme }) => theme.azure1}; }
-  &.light { border-color: ${({ theme }) => theme.violet1}; }
-  &.classic { border-color: ${({ theme }) => theme.white}; }
+  &.dark {
+    border-color: ${({ theme }) => theme.azure1};
+  }
+  &.light {
+    border-color: ${({ theme }) => theme.violet1};
+  }
+  &.classic {
+    border-color: ${({ theme }) => theme.white};
+  }
 
-  &.reduced-margins { margin: 10px 0px 10px 0px; } 
+  &.reduced-margins {
+    margin: 10px 0px 10px 0px;
+  }
 `
