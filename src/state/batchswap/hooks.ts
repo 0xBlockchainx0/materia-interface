@@ -8,7 +8,7 @@ import { useTradeExactIn, useTradeExactOut } from '../../hooks/Trades'
 import { isAddress } from '../../utils'
 import { AppDispatch, AppState } from '../index'
 import { useCurrencyBalances } from '../wallet/hooks'
-import { Field, selectCurrency, typeInput } from './actions'
+import { clearCurrency, Field, selectCurrency, typeInput } from './actions'
 import { useUserSlippageTolerance } from '../user/hooks'
 import { computeSlippageAdjustedAmounts } from '../../utils/prices'
 import useGetEthItemInteroperable from '../../hooks/useGetEthItemInteroperable'
@@ -20,6 +20,7 @@ export function useBatchSwapState(): AppState['batchswap'] {
 
 export function useBatchSwapActionHandlers(): {
   onCurrencySelection: (field: Field, otherField: Field, currency: Currency) => void
+  onCurrencyRemoval: (field: Field) => void
   onUserInput: (field: Field, typedValue: string) => void
 } {
   const dispatch = useDispatch<AppDispatch>()
@@ -36,6 +37,17 @@ export function useBatchSwapActionHandlers(): {
     [dispatch]
   )
 
+  const onCurrencyRemoval = useCallback(
+    (field: Field) => {
+      dispatch(
+        clearCurrency({
+          field
+        })
+      )
+    },
+    [dispatch]
+  )
+
   const onUserInput = useCallback(
     (field: Field, typedValue: string) => {
       dispatch(typeInput({ field, typedValue }))
@@ -45,6 +57,7 @@ export function useBatchSwapActionHandlers(): {
 
   return {
     onCurrencySelection,
+    onCurrencyRemoval,
     onUserInput
   }
 }

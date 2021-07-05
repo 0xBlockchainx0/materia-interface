@@ -1,5 +1,5 @@
 import { createReducer } from '@reduxjs/toolkit'
-import { Field, selectCurrency, typeInput } from './actions'
+import { Field, selectCurrency, clearCurrency, typeInput } from './actions'
 
 export interface BatchSwapState {
   readonly independentField: Field
@@ -126,6 +126,16 @@ export default createReducer<BatchSwapState>(initialState, builder =>
         return {
           ...state,
           [field]: { currencyId: currencyId }
+        }
+      }
+    })
+    .addCase(clearCurrency, (state, { payload: { field } }) => {
+      return {
+        ...state,
+        independentField: Field.INPUT,
+        [field]: {
+          currencyId: '',
+          typedValue: ''
         }
       }
     })

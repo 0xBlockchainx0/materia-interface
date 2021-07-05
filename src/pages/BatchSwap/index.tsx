@@ -75,7 +75,7 @@ export default function BatchSwap() {
   const maxAmountInput: CurrencyAmount | undefined = maxAmountSpend(originalCurrencyBalances[Field.INPUT])
   const atMaxAmountInput = Boolean(maxAmountInput && parsedAmounts[Field.INPUT]?.equalTo(maxAmountInput))
 
-  const { onCurrencySelection, onUserInput } = useBatchSwapActionHandlers()
+  const { onCurrencySelection, onCurrencyRemoval, onUserInput } = useBatchSwapActionHandlers()
 
   const handleTypeInput = useCallback(
     (value: string) => {
@@ -111,10 +111,15 @@ export default function BatchSwap() {
   const handleRemoveOutputToken = useCallback(() => {
     if (currentOutputs.length > MIN_BATCH_SWAP_OUTPUTS) {
       const outputs = [...currentOutputs]
-      outputs.pop()
+      const removed = outputs.pop()
+
       setCurrentOutputs(outputs)
+
+      if (removed) {
+        onCurrencyRemoval(removed)
+      }
     }
-  }, [currentOutputs, setCurrentOutputs])
+  }, [currentOutputs, setCurrentOutputs, onCurrencyRemoval])
 
   const [showMore, setShowMore] = useState(false)
 

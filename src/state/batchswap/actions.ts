@@ -15,5 +15,6 @@ export enum Field {
   OUTPUT_10 = 'OUTPUT_10'
 }
 
-export const selectCurrency = createAction<{ field: Field; otherField: Field; currencyId: string }>('swap/selectCurrency')
-export const typeInput = createAction<{ field: Field; typedValue: string }>('swap/typeInput')
+export const selectCurrency = createAction<{ field: Field; otherField: Field; currencyId: string }>('batchswap/selectCurrency')
+export const clearCurrency  = createAction<{ field: Field; }>('batchswap/clearCurrency')
+export const typeInput = createAction<{ field: Field; typedValue: string }>('batchswap/typeInput')
