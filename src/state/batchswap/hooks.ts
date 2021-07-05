@@ -1,5 +1,5 @@
 import useENS from '../../hooks/useENS'
-import { Currency, CurrencyAmount, ETHER, IETH, Token, Trade } from '@materia-dex/sdk'
+import { Currency, CurrencyAmount, ETHER, IETH, JSBI, Token, Trade } from '@materia-dex/sdk'
 import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useActiveWeb3React } from '../../hooks'
@@ -79,11 +79,17 @@ export function useDerivedBatchSwapInfo(
   const batchSwapState = useBatchSwapState()
   const {
     independentField,
-    typedValue,
-    [Field.INPUT]: { currencyId: inputCurrencyId },
-    [outputField]: { currencyId: outputCurrencyId },
+    [Field.INPUT]: { typedValue: inputTypedValue, currencyId: inputCurrencyId },
+    [outputField]: { typedValue: outputTypedValue, currencyId: outputCurrencyId },
     recipient
   } = batchSwapState
+
+  const outputPercentage: number = parseFloat(outputTypedValue ?? 0)
+  const calculatedTypedValue = JSBI.multiply(
+    JSBI.BigInt(inputTypedValue ?? 0),
+    JSBI.divide(JSBI.BigInt(outputPercentage), JSBI.BigInt(100))
+  )
+  const typedValue = calculatedTypedValue.toString()
 
   const inputCurrencyInteroperableId = useGetEthItemInteroperable(inputCurrencyId)
   const outputCurrencyInteroperableId = useGetEthItemInteroperable(outputCurrencyId)
@@ -189,6 +195,8 @@ export function useDerivedBatchSwapInfo(
   if (balanceIn && amountIn && balanceIn.lessThan(amountIn)) {
     inputError = 'Insufficient ' + originalCurrencies[Field.INPUT]?.symbol + ' balance'
   }
+
+  console.log(v2Trade)
 
   return {
     currencies,

@@ -65,47 +65,47 @@ const initialState: BatchSwapState = {
   },
   [Field.OUTPUT]: {
     currencyId: '',
-    typedValue: ''
+    typedValue: '0'
   },
   [Field.OUTPUT_1]: {
     currencyId: '',
-    typedValue: ''
+    typedValue: '0'
   },
   [Field.OUTPUT_2]: {
     currencyId: '',
-    typedValue: ''
+    typedValue: '0'
   },
   [Field.OUTPUT_3]: {
     currencyId: '',
-    typedValue: ''
+    typedValue: '0'
   },
   [Field.OUTPUT_4]: {
     currencyId: '',
-    typedValue: ''
+    typedValue: '0'
   },
   [Field.OUTPUT_5]: {
     currencyId: '',
-    typedValue: ''
+    typedValue: '0'
   },
   [Field.OUTPUT_6]: {
     currencyId: '',
-    typedValue: ''
+    typedValue: '0'
   },
   [Field.OUTPUT_7]: {
     currencyId: '',
-    typedValue: ''
+    typedValue: '0'
   },
   [Field.OUTPUT_8]: {
     currencyId: '',
-    typedValue: ''
+    typedValue: '0'
   },
   [Field.OUTPUT_9]: {
     currencyId: '',
-    typedValue: ''
+    typedValue: '0'
   },
   [Field.OUTPUT_10]: {
     currencyId: '',
-    typedValue: ''
+    typedValue: '0'
   },
   recipient: null
 }
@@ -118,8 +118,14 @@ export default createReducer<BatchSwapState>(initialState, builder =>
         return {
           ...state,
           independentField: Field.INPUT,
-          [field]: { currencyId: currencyId },
-          [otherField]: { currencyId: state[field].currencyId }
+          [field]: {
+            ...state[field],
+            currencyId: currencyId
+          },
+          [otherField]: {
+            ...state[field],
+            currencyId: state[field].currencyId
+          }
         }
       } else {
         // the normal case
@@ -135,7 +141,7 @@ export default createReducer<BatchSwapState>(initialState, builder =>
         independentField: Field.INPUT,
         [field]: {
           currencyId: '',
-          typedValue: ''
+          typedValue: '0'
         }
       }
     })

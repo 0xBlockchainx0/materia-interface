@@ -16,6 +16,7 @@ import { useTranslation } from 'react-i18next'
 import useCheckIsEthItem from '../../hooks/useCheckIsEthItem'
 import { ZERO_ADDRESS } from '../../constants'
 import { formatUnits, parseUnits } from 'ethers/lib/utils'
+import Slider from '../Slider'
 
 const InputRow = styled.div<{ selected: boolean }>`
   ${({ theme }) => theme.flexRowNoWrap}
@@ -95,6 +96,11 @@ const StyledTokenName = styled.span<{ active?: boolean }>`
   &.classic { 
     text-shadow: 1px 1px 1px ${({ theme }) => theme.black};
   }
+`
+
+const PercentageSlider = styled(Slider)`
+  margin-left: unset !important;
+  width: 25% !important;
 `
 
 interface CurrencyInputPanelProps {
@@ -188,13 +194,22 @@ export default function CurrencyInputPanel({
             {!hideInput && (
               <>
                 {percentage ? (
-                  <PercentageInput
-                    className="token-amount-input"
-                    value={value}
-                    onUserInput={val => {
-                      onUserInput(val)
-                    }}
-                  />
+                  // <PercentageInput
+                  //   className="token-amount-input"
+                  //   value={value}
+                  //   onUserInput={val => {
+                  //     onUserInput(val)
+                  //   }}
+                  // />
+                  <>
+                    <PercentageSlider
+                      value={parseInt(value ?? 0)}
+                      onChange={val => {
+                        onUserInput((val ?? 0).toString())
+                      }}
+                    />
+                    <div className="slider-percentage text-left">{value}%</div>
+                  </>
                 ) : (
                   <NumericalInput
                     className="token-amount-input"
