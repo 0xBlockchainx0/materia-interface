@@ -119,19 +119,22 @@ export default createReducer<BatchSwapState>(initialState, builder =>
           ...state,
           independentField: Field.INPUT,
           [field]: {
-            ...state[field],
+            typedValue: state[field].typedValue,
             currencyId: currencyId
           },
           [otherField]: {
-            ...state[field],
-            currencyId: state[field].currencyId
+            typedValue: state[otherField].typedValue,
+            currencyId: state[otherField].currencyId
           }
         }
       } else {
         // the normal case
         return {
           ...state,
-          [field]: { currencyId: currencyId }
+          [field]: {
+            typedValue: state[field].typedValue,
+            currencyId: currencyId
+          }
         }
       }
     })
@@ -150,8 +153,8 @@ export default createReducer<BatchSwapState>(initialState, builder =>
         ...state,
         independentField: Field.INPUT,
         [field]: {
-          ...state[field],
-          typedValue
+          typedValue: typedValue,
+          currencyId: state[field].currencyId
         }
       }
     })
