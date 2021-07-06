@@ -20,6 +20,7 @@ import Slider from '../Slider'
 
 const InputRow = styled.div<{ selected: boolean }>`
   ${({ theme }) => theme.flexRowNoWrap}
+  width: 95% !important;
   align-items: center;
   padding: ${({ selected }) => (selected ? '0.75rem 0.5rem 0.75rem 1rem' : '0.75rem 0.75rem 0.75rem 1rem')};
 `
@@ -122,6 +123,7 @@ interface CurrencyInputPanelProps {
   fatherPage?: string
   smallTokenImage?: boolean | undefined
   percentage?: boolean | undefined
+  badgeWidth?: any
 }
 
 export function roundInput(token: Token, value: string): string {
@@ -153,7 +155,8 @@ export default function CurrencyInputPanel({
   customBalanceText,
   fatherPage,
   smallTokenImage = false,
-  percentage = false
+  percentage = false,
+  badgeWidth = undefined
 }: CurrencyInputPanelProps) {
   const { t } = useTranslation()
 
@@ -207,6 +210,9 @@ export default function CurrencyInputPanel({
                       onChange={val => {
                         onUserInput((val ?? 0).toString())
                       }}
+                      style={
+                        { width: '75%', marginLeft: 15, marginRight: 15, padding: '15px 0' }
+                      }
                     />
                     <div className="slider-percentage text-left">{value}%</div>
                   </>
@@ -224,8 +230,8 @@ export default function CurrencyInputPanel({
                     MAX
                   </ActionButton>
                 )}
-                {currency && showErc20Badge && <Erc20Badge className={`${theme.name} ml5`}>ERC20</Erc20Badge>}
-                {currency && showEthItemBadge && <EthItemBadge className={`${theme.name} ml5`}>ITEM</EthItemBadge>}
+                {currency && showErc20Badge && <Erc20Badge className={`${theme.name} ml5`} width={badgeWidth} >ERC20</Erc20Badge>}
+                {currency && showEthItemBadge && <EthItemBadge className={`${theme.name} ml5`} width={badgeWidth}>ITEM</EthItemBadge>}
               </>
             )}
             <DropDownButton

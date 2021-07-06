@@ -48,7 +48,7 @@ export default function BatchSwapOutput({ outputField }: BatchSwapOutputProps) {
   )
 
   return (
-    <AutoColumn gap={'lg'}>
+    <AutoColumn gap={'sm'}>
       <CurrencyInputPanel
         value={formattedAmounts[outputField]}
         onUserInput={handleTypeOutput}
@@ -60,6 +60,7 @@ export default function BatchSwapOutput({ outputField }: BatchSwapOutputProps) {
         smallTokenImage={true}
         percentage={true}
         id="swap-currency-output"
+        badgeWidth={"25%"}
       />
       <div className={`advanced-batchswap-details-container ${theme.name}`}>
         <AdvancedBatchSwapDetailsDropdown

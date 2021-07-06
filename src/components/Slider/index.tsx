@@ -9,9 +9,10 @@ interface InputSliderProps {
   min?: number
   max?: number
   size?: number
+  style?: any
 }
 
-export default function Slider({ value, onChange, min = 0, step = 1, max = 100 }: InputSliderProps) {
+export default function Slider({ value, onChange, min = 0, step = 1, max = 100, style = null }: InputSliderProps) {
   const theme = useContext(ThemeContext)
   const changeCallback = useCallback(
     e => {
@@ -24,7 +25,7 @@ export default function Slider({ value, onChange, min = 0, step = 1, max = 100 }
     <StyledRangeInput
       type="range"
       value={value}
-      style={{ width: '90%', marginLeft: 15, marginRight: 15, padding: '15px 0' }}
+      style={ style ?? { width: '70%', marginLeft: 15, marginRight: 15, padding: '15px 0' }}
       onChange={changeCallback}
       aria-labelledby="input slider"
       step={step}

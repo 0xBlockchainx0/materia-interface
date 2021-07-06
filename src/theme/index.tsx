@@ -2196,7 +2196,10 @@ export const Erc20Badge = styled(ActionButton)<{
   disabled?: boolean
   selected?: boolean
   useCustomProperties?: boolean
+  width?: any
 }>`
+  width: ${({ width }) => width ?? 'auto'};
+
   &.dark {
     color: ${({ theme }) => theme.yellow2} !important;
     border: 1px solid ${({ theme }) => theme.yellow2} !important;
