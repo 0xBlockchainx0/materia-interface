@@ -85,10 +85,7 @@ export function useDerivedBatchSwapInfo(
   } = batchSwapState
 
   const outputPercentage: number = parseFloat(outputTypedValue ?? 0)
-  const calculatedTypedValue = JSBI.multiply(
-    JSBI.BigInt(inputTypedValue ?? 0),
-    JSBI.divide(JSBI.BigInt(outputPercentage), JSBI.BigInt(100))
-  )
+  const calculatedTypedValue = parseFloat(inputTypedValue ?? 0) * outputPercentage / 100
   const typedValue = calculatedTypedValue.toString()
 
   const inputCurrencyInteroperableId = useGetEthItemInteroperable(inputCurrencyId)
@@ -195,9 +192,7 @@ export function useDerivedBatchSwapInfo(
   if (balanceIn && amountIn && balanceIn.lessThan(amountIn)) {
     inputError = 'Insufficient ' + originalCurrencies[Field.INPUT]?.symbol + ' balance'
   }
-
-  console.log(v2Trade)
-
+  
   return {
     currencies,
     originalCurrencies,
