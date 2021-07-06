@@ -9,12 +9,12 @@ import { Currency, ETHER, Token } from '@materia-dex/sdk'
 import { useActiveWeb3React } from '../../hooks'
 import { Field } from '../../state/wrap/actions'
 import { useWrapActionHandlers, useWrapState } from '../../state/wrap/hooks'
-import 'react-dropdown/style.css';
+import 'react-dropdown/style.css'
 import { unwrappedToken } from '../../utils/wrappedCurrency'
 import { ChevronUp, ChevronDown, Disc, ExternalLink, Copy } from 'react-feather'
 import useAddTokenToMetamask from '../../hooks/useAddTokenToMetamask'
 import { getEtherscanLink } from '../../utils'
-import { CopyToClipboard } from 'react-copy-to-clipboard';
+import { CopyToClipboard } from 'react-copy-to-clipboard'
 
 export const FixedHeightRow = styled(RowBetween)`
   height: auto;
@@ -24,10 +24,10 @@ interface InventoryItemProps {
   token: Token
   tokenName: string
   tokenSymbol: string
-  tokenAddress: string | null,
-  tokenType?: string | null,
-  balance?: string | null,
-  wrapped?: boolean,
+  tokenAddress: string | null
+  tokenType?: string | null
+  balance?: string | null
+  wrapped?: boolean
   onCurrencySelect: (currency: Currency) => void
 }
 
@@ -49,9 +49,7 @@ export default function InventoryItem({
   const { onUserInput } = useWrapActionHandlers()
   const handleMaxButton = useCallback(() => {
     onUserInput(Field.INPUT, balance ?? '0.0')
-  },
-    [onUserInput, balance]
-  )
+  }, [onUserInput, balance])
 
   const handleNumericalInput = useCallback(
     (value: string) => {
@@ -66,13 +64,11 @@ export default function InventoryItem({
     [independentField]: typedValue
   }
 
-  const options = [
-    'ERC20', 'ERC721', 'ERC1155'
-  ];
-  const defaultOption = options[1];
+  const options = ['ERC20', 'ERC721', 'ERC1155']
+  const defaultOption = options[1]
 
   const onSelect = useCallback(
-    (value) => {
+    value => {
       switch (value.value) {
         case 'ERC20':
           setIsERC20(true)
@@ -83,7 +79,7 @@ export default function InventoryItem({
   )
 
   const onTokenSelection = useCallback(
-    (token) => {
+    token => {
       let currency = ETHER
 
       if (token.symbol != 'ETH') {
@@ -95,55 +91,91 @@ export default function InventoryItem({
     [onCurrencySelect]
   )
 
-  const { addToken, } = useAddTokenToMetamask(undefined, token)
+  const { addToken } = useAddTokenToMetamask(undefined, token)
 
   return (
     <InventoryItemContainer className={theme.name}>
       <InventoryGridContainer>
         <div>
-          <div>{tokenName} ({tokenSymbol})</div>
+          <div>
+            {tokenName} ({tokenSymbol})
+          </div>
           <div className="balanceRow">
             <div>Balance:</div>
             <div>{balance}</div>
-            {tokenType
-              && (
-                <span className="tokenType">
-                  <span>{tokenType}</span>
-                </span>
-              )}
+            {tokenType && (
+              <span className="tokenType">
+                <span>{tokenType}</span>
+              </span>
+            )}
           </div>
         </div>
         <div className="margin-pull-right">
-          <IconButton className={theme.name} onClick={() => { onTokenSelection(token) }}>
+          <IconButton
+            className={theme.name}
+            onClick={() => {
+              onTokenSelection(token)
+            }}
+          >
             <ExternalLink />
           </IconButton>
           {token.symbol != 'ETH' && library?.provider?.isMetaMask && (
             <IconButton className={`metamask ${theme.name}`} onClick={addToken}>
-              <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
-                width="29.048px" height="27.282px" viewBox="0 0 29.048 27.282" enableBackground="new 0 0 29.048 27.282">
-                <polygon fill="none" stroke="currentColor" points="10.822,4.142 1.901,0.813 0.517,4.977 1.451,9.458 0.858,9.898 1.737,10.568 
+              <svg
+                version="1.1"
+                id="Layer_1"
+                xmlns="http://www.w3.org/2000/svg"
+                x="0px"
+                y="0px"
+                width="29.048px"
+                height="27.282px"
+                viewBox="0 0 29.048 27.282"
+                enableBackground="new 0 0 29.048 27.282"
+              >
+                <polygon
+                  fill="none"
+                  stroke="currentColor"
+                  points="10.822,4.142 1.901,0.813 0.517,4.977 1.451,9.458 0.858,9.898 1.737,10.568 
 	1.066,11.095 1.945,11.897 1.396,12.293 2.66,13.776 0.748,19.729 2.528,25.806 8.756,24.091 9.965,25.08 12.415,26.782 
 	16.622,26.782 19.083,25.08 20.292,24.091 26.52,25.806 28.311,19.729 26.377,13.776 27.652,12.293 27.102,11.897 27.981,11.095 
-	27.3,10.568 28.179,9.898 27.596,9.458 28.531,4.977 27.135,0.813 18.226,4.142 "/>
+	27.3,10.568 28.179,9.898 27.596,9.458 28.531,4.977 27.135,0.813 18.226,4.142 "
+                />
                 <polygon fill="#FFFFFF" fillOpacity="0" points="9.174,17.259 11.371,16.259 12.272,18.17 " />
                 <g>
                   <polygon fill="#FFFFFF" fillOpacity="0" points="16.776,18.17 17.688,16.259 19.885,17.259 	" />
                 </g>
                 <g>
-                  <polygon fill="none" stroke="currentColor" points="27.596,9.458 28.531,4.977 27.135,0.813 16.567,8.657 20.631,12.095 26.377,13.776 
-		27.652,12.293 27.102,11.897 27.981,11.095 27.3,10.568 28.179,9.898 	"/>
+                  <polygon
+                    fill="none"
+                    stroke="currentColor"
+                    points="27.596,9.458 28.531,4.977 27.135,0.813 16.567,8.657 20.631,12.095 26.377,13.776 
+		27.652,12.293 27.102,11.897 27.981,11.095 27.3,10.568 28.179,9.898 	"
+                  />
                 </g>
                 <g>
-                  <polygon fill="none" stroke="currentColor" points="0.517,4.977 1.451,9.458 0.858,9.898 1.737,10.568 1.066,11.095 1.945,11.897 
-		1.396,12.293 2.66,13.776 8.405,12.095 12.47,8.657 1.901,0.813 	"/>
+                  <polygon
+                    fill="none"
+                    stroke="currentColor"
+                    points="0.517,4.977 1.451,9.458 0.858,9.898 1.737,10.568 1.066,11.095 1.945,11.897 
+		1.396,12.293 2.66,13.776 8.405,12.095 12.47,8.657 1.901,0.813 	"
+                  />
                 </g>
-                <polygon fill="#FFFFFF" fillOpacity="0" points="16.864,24.706 16.567,22.278 16.04,21.916 12.997,21.916 12.47,22.278 12.195,24.706 " />
+                <polygon
+                  fill="#FFFFFF"
+                  fillOpacity="0"
+                  points="16.864,24.706 16.567,22.278 16.04,21.916 12.997,21.916 12.47,22.278 12.195,24.706 "
+                />
               </svg>
             </IconButton>
           )}
           {token.symbol != 'ETH' && (
-            <IconButton className={`${theme.name}`} onClick={() => { setShowMore(!showMore) }}>
-              {showMore ? (<ChevronUp />) : (<ChevronDown />)}
+            <IconButton
+              className={`${theme.name}`}
+              onClick={() => {
+                setShowMore(!showMore)
+              }}
+            >
+              {showMore ? <ChevronUp /> : <ChevronDown />}
             </IconButton>
           )}
         </div>
@@ -166,9 +198,7 @@ export default function InventoryItem({
           </div>
           <div className="decimalsRow">
             <div>Decimals:</div>
-            <Text className={` token-decimals ${theme.name}`}>
-              {token && token?.decimals}
-            </Text>
+            <Text className={` token-decimals ${theme.name}`}>{token && token?.decimals}</Text>
           </div>
         </AutoColumn>
       )}

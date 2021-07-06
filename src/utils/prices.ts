@@ -2,6 +2,7 @@ import { BLOCKED_PRICE_IMPACT_NON_EXPERT } from '../constants'
 import { Currency, CurrencyAmount, Fraction, JSBI, Pair, Percent, TokenAmount, Trade } from '@materia-dex/sdk'
 import { ALLOWED_PRICE_IMPACT_HIGH, ALLOWED_PRICE_IMPACT_LOW, ALLOWED_PRICE_IMPACT_MEDIUM } from '../constants'
 import { Field } from '../state/swap/actions'
+import { Field as BatchSwapField } from '../state/batchswap/actions'
 import { basisPointsToPercent } from './index'
 
 // const BASE_FEE = new Percent(JSBI.BigInt(30), JSBI.BigInt(10000))
@@ -52,6 +53,18 @@ export function computeSlippageAdjustedAmounts(
   return {
     [Field.INPUT]: trade?.maximumAmountIn(pct),
     [Field.OUTPUT]: trade?.minimumAmountOut(pct)
+  }
+}
+
+export function computeBatchSwapSlippageAdjustedAmounts(
+  trade: Trade | undefined,
+  allowedSlippage: number,
+  outputField: BatchSwapField
+): { [field in BatchSwapField]?: CurrencyAmount } {
+  const pct = basisPointsToPercent(allowedSlippage)
+  return {
+    [BatchSwapField.INPUT]: trade?.maximumAmountIn(pct),
+    [outputField]: trade?.minimumAmountOut(pct)
   }
 }
 

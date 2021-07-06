@@ -4,7 +4,7 @@ import { AutoColumn } from '../Column'
 import CurrencyInputPanel from '../CurrencyInputPanel'
 import { Field } from '../../state/batchswap/actions'
 import { useDerivedBatchSwapInfo, useBatchSwapState, useBatchSwapActionHandlers } from '../../state/batchswap/hooks'
-import AdvancedSwapDetailsDropdown from '../swap/AdvancedSwapDetailsDropdown'
+import AdvancedBatchSwapDetailsDropdown from '../batchswap/AdvancedBatchSwapDetailsDropdown'
 import { useContext } from 'react'
 
 export const Center = styled.div`
@@ -21,16 +21,12 @@ interface BatchSwapOutputProps {
 
 export default function BatchSwapOutput({ outputField }: BatchSwapOutputProps) {
   const theme = useContext(ThemeContext)
-  
+
   // batch swap state
   const { independentField, [outputField]: typedField, recipient } = useBatchSwapState()
   const typedValue = typedField.typedValue
-  const {
-    v2Trade,
-    parsedAmount,
-    originalCurrencies,
-  } = useDerivedBatchSwapInfo(outputField, true)
-  
+  const { v2Trade, parsedAmount, originalCurrencies } = useDerivedBatchSwapInfo(outputField, true)
+
   const trade = v2Trade
 
   const { onCurrencySelection, onUserInput } = useBatchSwapActionHandlers()
@@ -65,11 +61,13 @@ export default function BatchSwapOutput({ outputField }: BatchSwapOutputProps) {
         percentage={true}
         id="swap-currency-output"
       />
-      
-        <div className={`advanced-batchswap-details-container ${theme.name}`}>
-          <AdvancedSwapDetailsDropdown trade={trade} originalCurrencies={originalCurrencies} />
-        </div> 
-     
+      <div className={`advanced-batchswap-details-container ${theme.name}`}>
+        <AdvancedBatchSwapDetailsDropdown
+          trade={trade}
+          originalCurrencies={originalCurrencies}
+          outputField={outputField}
+        />
+      </div>
     </AutoColumn>
   )
 }
