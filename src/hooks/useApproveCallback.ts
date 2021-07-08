@@ -1,8 +1,8 @@
 import { MaxUint256 } from '@ethersproject/constants'
 import { TransactionResponse } from '@ethersproject/providers'
-import { Trade, TokenAmount, CurrencyAmount, ETHER, Token } from '@materia-dex/sdk'
+import { Trade, TokenAmount, CurrencyAmount, ETHER, Token, ChainId } from '@materia-dex/sdk'
 import { useCallback, useMemo } from 'react'
-import { ORCHESTRATOR_ADDRESS, WUSD, ZERO_ADDRESS } from '../constants'
+import { ORCHESTRATOR_ADDRESS, BATCH_SWAPPER_ADDRESS, WUSD, ZERO_ADDRESS } from '../constants'
 import { useTokenAllowance } from '../data/Allowances'
 import { Field } from '../state/swap/actions'
 import { useTransactionAdder, useHasPendingApproval } from '../state/transactions/hooks'
@@ -187,4 +187,14 @@ export function useApproveCallbackFromTrade(trade?: Trade, token?: Token, allowe
     [trade, allowedSlippage]
   )
   return useTokenApproveCallback(amountToApprove, token, ORCHESTRATOR_ADDRESS, false)
+}
+
+// wraps useApproveCallback in the context of a swap
+export function useApproveCallbackFromBatchSwapTrade(trade?: Trade, token?: Token, allowedSlippage = 0) {
+  const { chainId } = useActiveWeb3React()
+  const amountToApprove = useMemo(
+    () => (trade ? computeSlippageAdjustedAmounts(trade, allowedSlippage)[Field.INPUT] : undefined),
+    [trade, allowedSlippage]
+  )
+  return useTokenApproveCallback(amountToApprove, token, BATCH_SWAPPER_ADDRESS[chainId ?? ChainId.MAINNET], false)
 }

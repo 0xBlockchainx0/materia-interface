@@ -3046,6 +3046,17 @@ export const SwapButtonsContainer = styled.div`
     text-align: center;
   }
 `
+export const BatchSwapButtonsContainer = styled.div`
+  justify-content: center;
+  display: flex;
+  padding: 1rem 0rem;
+  width: auto;
+
+  &.has-error {
+    display: block;
+    text-align: center;
+  }
+`
 export const SecondaryPanelBoxContainer = styled.div`
   padding: 5px;
   position: relative;

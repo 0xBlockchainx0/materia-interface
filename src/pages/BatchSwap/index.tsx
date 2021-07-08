@@ -1,10 +1,10 @@
-import { CurrencyAmount } from '@materia-dex/sdk'
+import { CurrencyAmount, JSBI, Trade } from '@materia-dex/sdk'
 import React, { useCallback, useContext, useEffect, useState } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 import { AutoColumn } from '../../components/Column'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import AdvancedSwapDetailsDropdown from '../../components/swap/AdvancedSwapDetailsDropdown'
-import { Wrapper } from '../../components/swap/styleds'
+import { BottomGrouping, SwapCallbackError, Wrapper } from '../../components/swap/styleds'
 import { Field } from '../../state/batchswap/actions'
 import { useDerivedBatchSwapInfo, useBatchSwapActionHandlers, useBatchSwapState } from '../../state/batchswap/hooks'
 import AppBody from '../AppBody'
@@ -15,14 +15,27 @@ import {
   TabLinkItem,
   PageContentContainer,
   ActionButton,
-  SmallOperationButton
+  SmallOperationButton,
+  BatchSwapButtonsContainer,
+  OperationButton,
+  MainOperationButton
 } from '../../theme'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import Inventory from '../../components/Inventory'
-import { Plus } from 'react-feather'
+import { Link, Plus } from 'react-feather'
 import { Minus } from 'react-feather'
 import BatchSwapOutput from '../../components/BatchSwapOutput'
 import typedKeys from '../../utils/typesKeys'
+import { ApprovalState, useApproveCallbackFromBatchSwapTrade } from '../../hooks/useApproveCallback'
+import { wrappedCurrency } from '../../utils/wrappedCurrency'
+import { useExpertModeManager, useIsClassicMode, useUserSlippageTolerance } from '../../state/user/hooks'
+import { AutoRow, RowCenter } from '../../components/Row'
+import { ButtonMateriaConfirmed, ButtonMateriaError } from '../../components/Button'
+import Loader from '../../components/Loader'
+import { useActiveWeb3React } from '../../hooks'
+import useSound from 'use-sound'
+import { computeTradePriceBreakdown, warningSeverity } from '../../utils/prices'
+import { useWalletModalToggle } from '../../state/application/hooks'
 
 export const ButtonBgItem = styled.img`
   height: 3ch;
@@ -58,11 +71,18 @@ export default function BatchSwap() {
   const MAX_BATCH_SWAP_OUTPUTS = 10
 
   const theme = useContext(ThemeContext)
+  const { account, chainId } = useActiveWeb3React()
 
-  // swap state
   const { [Field.INPUT]: typedField } = useBatchSwapState()
   const typedValue = typedField.typedValue
-  const { originalCurrencyBalances, parsedAmount, originalCurrencies } = useDerivedBatchSwapInfo(Field.OUTPUT_1, true)
+  const {
+    currencies,
+    originalCurrencyBalances,
+    parsedAmount,
+    originalCurrencies,
+    v2Trade: trade,
+    inputError: batchSwapInputError
+  } = useDerivedBatchSwapInfo(Field.OUTPUT_1, true)
 
   const parsedAmounts = {
     [Field.INPUT]: parsedAmount
@@ -132,6 +152,66 @@ export default function BatchSwap() {
     setRemoveOutputTokenDisabled(outputs <= MIN_BATCH_SWAP_OUTPUTS)
     setAddOutputTokenDisabled(outputs >= MAX_BATCH_SWAP_OUTPUTS)
   }, [currentOutputs, setAddOutputTokenDisabled, setRemoveOutputTokenDisabled])
+
+  const [allowedSlippage] = useUserSlippageTolerance()
+
+  const [approval, approveCallback] = useApproveCallbackFromBatchSwapTrade(
+    trade,
+    wrappedCurrency(originalCurrencies[Field.INPUT], chainId) ?? undefined,
+    allowedSlippage
+  )
+
+  const [approvalSubmitted, setApprovalSubmitted] = useState<boolean>(false)
+
+  useEffect(() => {
+    if (approval === ApprovalState.PENDING) {
+      setApprovalSubmitted(true)
+    }
+  }, [approval, approvalSubmitted])
+
+  const [{ showConfirm, tradeToConfirm, batchSwapErrorMessage, attemptingTxn, txHash }, setBatchSwapState] = useState<{
+    showConfirm: boolean
+    tradeToConfirm: Trade | undefined
+    attemptingTxn: boolean
+    batchSwapErrorMessage: string | undefined
+    txHash: string | undefined
+  }>({
+    showConfirm: false,
+    tradeToConfirm: undefined,
+    attemptingTxn: false,
+    batchSwapErrorMessage: undefined,
+    txHash: undefined
+  })
+
+  const handleBatchSwap = useCallback(() => {}, [])
+
+  const [isExpertMode] = useExpertModeManager()
+  const [isShown, setIsShown] = useState(false)
+
+  const alarm = require('../../assets/audio/FF7CursorMove.mp3')
+  const [play, { stop }] = useSound(alarm)
+  const classicMode = useIsClassicMode()
+
+  const isValid = !batchSwapInputError
+  const { priceImpactWithoutFee } = computeTradePriceBreakdown(trade)
+  const priceImpactSeverity = warningSeverity(priceImpactWithoutFee)
+
+  const toggleWalletModal = useWalletModalToggle()
+
+  const route = trade?.route
+  const userHasSpecifiedInputOutput = Boolean(
+    currencies[Field.INPUT] && parsedAmounts[Field.INPUT]?.greaterThan(JSBI.BigInt(0))
+  )
+  const noRoute = !route
+
+  const showApproveFlow =
+    !batchSwapInputError &&
+    (approval === ApprovalState.NOT_APPROVED ||
+      approval === ApprovalState.PENDING ||
+      (approvalSubmitted && approval === ApprovalState.APPROVED)) &&
+    !(priceImpactSeverity > 3 && !isExpertMode)
+
+  const { error: swapCallbackError } = { error: null }
 
   return (
     <>
@@ -222,6 +302,140 @@ export default function BatchSwap() {
                     </AutoColumn>
                   </div>
                 </PageContentContainer>
+                <BottomGrouping>
+                  <BatchSwapButtonsContainer className={isExpertMode && batchSwapErrorMessage ? 'has-error' : ''}>
+                    {!account ? (
+                      <OperationButton
+                        onClick={toggleWalletModal}
+                        className={`connect-wallet-button ${theme.name}`}
+                        label="Connect Wallet"
+                      >
+                        <Link />
+                      </OperationButton>
+                    ) : noRoute && userHasSpecifiedInputOutput ? (
+                      <MainOperationButton className={theme.name} disabled={true}>
+                        Insufficient liquidity for this trade
+                      </MainOperationButton>
+                    ) : showApproveFlow ? (
+                      <RowCenter>
+                        <ButtonMateriaConfirmed
+                          onClick={approveCallback}
+                          disabled={approval !== ApprovalState.NOT_APPROVED || approvalSubmitted}
+                          hide={approval !== ApprovalState.NOT_APPROVED || approvalSubmitted}
+                          altDisabledStyle={approval === ApprovalState.PENDING} // show solid button while waiting
+                          confirmed={approval === ApprovalState.APPROVED}
+                        >
+                          {approval === ApprovalState.PENDING ? (
+                            <AutoRow gap="6px" justify="center">
+                              Approving <Loader stroke="white" />
+                            </AutoRow>
+                          ) : approvalSubmitted && approval === ApprovalState.APPROVED ? (
+                            'Approved'
+                          ) : (
+                            'Approve ' + originalCurrencies[Field.INPUT]?.symbol
+                          )}
+                        </ButtonMateriaConfirmed>
+                        <ButtonMateriaError
+                          onClick={() => {
+                            if (isExpertMode) {
+                              handleBatchSwap()
+                            } else {
+                              setBatchSwapState({
+                                tradeToConfirm: trade,
+                                attemptingTxn: false,
+                                batchSwapErrorMessage: undefined,
+                                showConfirm: true,
+                                txHash: undefined
+                              })
+                            }
+                          }}
+                          id="batch-swap-button"
+                          disabled={
+                            !isValid ||
+                            approval !== ApprovalState.APPROVED ||
+                            (priceImpactSeverity > 3 && !isExpertMode)
+                          }
+                          hide={
+                            !isValid ||
+                            approval !== ApprovalState.APPROVED ||
+                            (priceImpactSeverity > 3 && !isExpertMode)
+                          }
+                          error={isValid && priceImpactSeverity > 2}
+                          showSwap={
+                            !(
+                              !isValid ||
+                              approval !== ApprovalState.APPROVED ||
+                              (priceImpactSeverity > 3 && !isExpertMode)
+                            )
+                          }
+                          useCustomProperties={priceImpactSeverity > 3 ? true : false}
+                          isExpertModeActive={isExpertMode}
+                          onMouseEnter={() => {
+                            setIsShown(true)
+                            if (classicMode) {
+                              play()
+                            }
+                          }}
+                          onMouseLeave={() => {
+                            setIsShown(false)
+                            if (classicMode) {
+                              stop()
+                            }
+                          }}
+                        >
+                          {priceImpactSeverity > 3 && !isExpertMode
+                            ? `Price Impact High`
+                            : `Swap ${priceImpactSeverity > 2 ? 'Anyway' : ''}`}
+                        </ButtonMateriaError>
+                      </RowCenter>
+                    ) : (
+                      <>
+                        {isExpertMode && batchSwapErrorMessage ? (
+                          <SwapCallbackError error={batchSwapErrorMessage} />
+                        ) : null}
+                        <ButtonMateriaError
+                          onClick={() => {
+                            if (isExpertMode) {
+                              handleBatchSwap()
+                            } else {
+                              setBatchSwapState({
+                                tradeToConfirm: trade,
+                                attemptingTxn: false,
+                                batchSwapErrorMessage: undefined,
+                                showConfirm: true,
+                                txHash: undefined
+                              })
+                            }
+                          }}
+                          id="batch-swap-button"
+                          disabled={!isValid || (priceImpactSeverity > 3 && !isExpertMode) || !!swapCallbackError}
+                          error={isValid && priceImpactSeverity > 2 && !swapCallbackError}
+                          showSwap={!(!isValid || (priceImpactSeverity > 3 && !isExpertMode) || !!swapCallbackError)}
+                          useCustomProperties={priceImpactSeverity > 3 ? true : false}
+                          isExpertModeActive={isExpertMode}
+                          onMouseEnter={() => {
+                            setIsShown(true)
+                            if (classicMode) {
+                              play()
+                            }
+                          }}
+                          onMouseLeave={() => {
+                            setIsShown(false)
+                            if (classicMode) {
+                              stop()
+                            }
+                          }}
+                        >
+                          {batchSwapInputError
+                            ? batchSwapInputError
+                            : priceImpactSeverity > 3 && !isExpertMode
+                            ? `Price Impact Too High`
+                            : `Swap ${priceImpactSeverity > 2 ? 'Anyway' : ''}`}
+                        </ButtonMateriaError>
+                      </>
+                    )}
+                  </BatchSwapButtonsContainer>
+                </BottomGrouping>
               </div>
             </PageItemsContainer>
           </PageGridContainer>
