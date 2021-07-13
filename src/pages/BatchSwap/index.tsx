@@ -1,5 +1,5 @@
 import { CurrencyAmount, JSBI, Trade } from '@materia-dex/sdk'
-import React, { useCallback, useContext, useEffect, useState } from 'react'
+import React, { useCallback, useContext, useEffect, useState, useMemo } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 import { AutoColumn } from '../../components/Column'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
@@ -36,6 +36,12 @@ import { useActiveWeb3React } from '../../hooks'
 import useSound from 'use-sound'
 import { computeTradePriceBreakdown, warningSeverity } from '../../utils/prices'
 import { useWalletModalToggle } from '../../state/application/hooks'
+import { BATCH_SWAPPER_ADDRESS, ZERO_ADDRESS } from '../../constants'
+import useCheckIsEthItem from '../../hooks/useCheckIsEthItem'
+import { useEthItemContract } from '../../hooks/useContract'
+import { Contract } from 'ethers'
+import useTransactionDeadline from '../../hooks/useTransactionDeadline'
+import { splitSignature } from 'ethers/lib/utils'
 
 export const ButtonBgItem = styled.img`
   height: 3ch;
@@ -71,7 +77,7 @@ export default function BatchSwap() {
   const MAX_BATCH_SWAP_OUTPUTS = 10
 
   const theme = useContext(ThemeContext)
-  const { account, chainId } = useActiveWeb3React()
+  const { account, chainId, library } = useActiveWeb3React()
 
   const { [Field.INPUT]: typedField } = useBatchSwapState()
   const typedValue = typedField.typedValue
@@ -83,6 +89,8 @@ export default function BatchSwap() {
     v2Trade: trade,
     inputError: batchSwapInputError
   } = useDerivedBatchSwapInfo(Field.OUTPUT_1, true)
+
+  const [signatureData, setSignatureData] = useState<{ v: number; r: string; s: string } | null>(null)
 
   const parsedAmounts = {
     [Field.INPUT]: parsedAmount
@@ -107,8 +115,9 @@ export default function BatchSwap() {
   const handleInputSelect = useCallback(
     inputCurrency => {
       onCurrencySelection(Field.INPUT, Field.OUTPUT_1, inputCurrency)
+      setSignatureData(null)
     },
-    [onCurrencySelection]
+    [onCurrencySelection, setSignatureData]
   )
 
   const handleMaxInput = useCallback(() => {
@@ -162,6 +171,80 @@ export default function BatchSwap() {
   )
 
   const [approvalSubmitted, setApprovalSubmitted] = useState<boolean>(false)
+
+  const tokenInput = useMemo(() => wrappedCurrency(originalCurrencies[Field.INPUT], chainId), [
+    originalCurrencies,
+    chainId
+  ])
+
+  const isEthItemInput = useCheckIsEthItem(tokenInput?.address ?? ZERO_ADDRESS)?.ethItem ?? false
+  const ethItemContract: Contract | null = useEthItemContract(isEthItemInput ? tokenInput?.address : undefined)
+
+  async function onAttemptToApprove() {
+    if (!isEthItemInput) {
+      return approveCallback()
+    }
+
+    if (!ethItemContract || !tokenInput || !library || !chainId) throw new Error('missing dependencies')
+
+    const inputAmount = parsedAmounts[Field.INPUT]
+
+    if (!inputAmount) throw new Error('missing input amount')
+
+    // try to gather a signature for permission
+    const nonce = await ethItemContract.permitNonce(account)
+
+    const EIP712Domain = [
+      { name: 'name', type: 'string' },
+      { name: 'version', type: 'string' },
+      { name: 'chainId', type: 'uint256' },
+      { name: 'verifyingContract', type: 'address' }
+    ]
+    const domain = {
+      name: 'Item',
+      version: '1',
+      chainId: chainId,
+      verifyingContract: tokenInput.address
+    }
+    const Permit = [
+      { name: 'owner', type: 'address' },
+      { name: 'spender', type: 'address' },
+      { name: 'value', type: 'uint256' },
+      { name: 'nonce', type: 'uint256' }
+    ]
+    const message = {
+      owner: account,
+      spender: BATCH_SWAPPER_ADDRESS[chainId],
+      value: inputAmount.raw.toString(),
+      nonce: nonce.toHexString()
+    }
+    const data = JSON.stringify({
+      types: {
+        EIP712Domain,
+        Permit
+      },
+      domain,
+      primaryType: 'Permit',
+      message
+    })
+
+    library
+      .send('eth_signTypedData_v4', [account, data])
+      .then(splitSignature)
+      .then(signature => {
+        setSignatureData({
+          v: signature.v,
+          r: signature.r,
+          s: signature.s
+        })
+      })
+      .catch(error => {
+        // for all errors other than 4001 (EIP-1193 user rejected request), fall back to manual approve
+        if (error?.code !== 4001) {
+          approveCallback()
+        }
+      })
+  }
 
   useEffect(() => {
     if (approval === ApprovalState.PENDING) {
@@ -316,20 +399,22 @@ export default function BatchSwap() {
                       <MainOperationButton className={theme.name} disabled={true}>
                         Insufficient liquidity for this trade
                       </MainOperationButton>
-                    ) : showApproveFlow ? (
+                    ) : showApproveFlow && signatureData === null ? (
                       <RowCenter>
                         <ButtonMateriaConfirmed
-                          onClick={approveCallback}
-                          disabled={approval !== ApprovalState.NOT_APPROVED || approvalSubmitted}
-                          hide={approval !== ApprovalState.NOT_APPROVED || approvalSubmitted}
+                          onClick={onAttemptToApprove}
+                          disabled={
+                            approval !== ApprovalState.NOT_APPROVED || approvalSubmitted || signatureData !== null
+                          }
+                          hide={approval !== ApprovalState.NOT_APPROVED}
                           altDisabledStyle={approval === ApprovalState.PENDING} // show solid button while waiting
-                          confirmed={approval === ApprovalState.APPROVED}
+                          confirmed={approval === ApprovalState.APPROVED || signatureData !== null}
                         >
                           {approval === ApprovalState.PENDING ? (
                             <AutoRow gap="6px" justify="center">
                               Approving <Loader stroke="white" />
                             </AutoRow>
-                          ) : approvalSubmitted && approval === ApprovalState.APPROVED ? (
+                          ) : (approvalSubmitted && approval === ApprovalState.APPROVED) || signatureData !== null ? (
                             'Approved'
                           ) : (
                             'Approve ' + originalCurrencies[Field.INPUT]?.symbol

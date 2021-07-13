@@ -12,7 +12,7 @@ import {
 } from '../constants/abis/argent-wallet-detector'
 import ENS_PUBLIC_RESOLVER_ABI from '../constants/abis/ens-public-resolver.json'
 import ENS_ABI from '../constants/abis/ens-registrar.json'
-import { ERC20_BYTES32_ABI, ETHITEM_KNOWLEDGE_BASE_ABI, ETHITEM_ORCHESTRATOR_ABI, WERC20_ABI } from '../constants/abis/erc20'
+import { ERC20_BYTES32_ABI, ETHITEM_KNOWLEDGE_BASE_ABI, WERC20_ABI, ETHITEM_INTEROPERABLE_INTERFACE_ABI } from '../constants/abis/erc20'
 import ERC20_ABI from '../constants/abis/erc20.json'
 import { MIGRATOR_ABI, MIGRATOR_ADDRESS } from '../constants/abis/migrator'
 import UNISOCKS_ABI from '../constants/abis/unisocks.json'
@@ -106,6 +106,10 @@ export function useBytes32TokenContract(tokenAddress?: string, withSignerIfPossi
 
 export function usePairContract(pairAddress?: string, withSignerIfPossible?: boolean): Contract | null {
   return useContract(pairAddress, IMateriaPairABI, withSignerIfPossible)
+}
+
+export function useEthItemContract(ethItemAddress?: string, withSignerIfPossible?: boolean): Contract | null {
+  return useContract(ethItemAddress, ETHITEM_INTEROPERABLE_INTERFACE_ABI, withSignerIfPossible)
 }
 
 export function useUnmemoizedPairContract(pairAddress?: string, withSignerIfPossible?: boolean): Contract | null {
