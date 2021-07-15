@@ -36,7 +36,7 @@ import { useActiveWeb3React } from '../../hooks'
 import useSound from 'use-sound'
 import { computeTradePriceBreakdown, warningSeverity } from '../../utils/prices'
 import { useWalletModalToggle } from '../../state/application/hooks'
-import { BATCH_SWAPPER_ADDRESS, ZERO_ADDRESS } from '../../constants'
+import { MATERIA_BATCH_SWAPPER_ADDRESS, ZERO_ADDRESS } from '../../constants'
 import useCheckIsEthItem from '../../hooks/useCheckIsEthItem'
 import { useEthItemContract } from '../../hooks/useContract'
 import { Contract } from 'ethers'
@@ -214,7 +214,7 @@ export default function BatchSwap() {
     ]
     const message = {
       owner: account,
-      spender: BATCH_SWAPPER_ADDRESS[chainId],
+      spender: MATERIA_BATCH_SWAPPER_ADDRESS[chainId],
       value: inputAmount.raw.toString(),
       nonce: nonce.toHexString()
     }
@@ -422,17 +422,17 @@ export default function BatchSwap() {
                         </ButtonMateriaConfirmed>
                         <ButtonMateriaError
                           onClick={() => {
-                            if (isExpertMode) {
+                            // if (isExpertMode) {
                               handleBatchSwap()
-                            } else {
-                              setBatchSwapState({
-                                tradeToConfirm: trade,
-                                attemptingTxn: false,
-                                batchSwapErrorMessage: undefined,
-                                showConfirm: true,
-                                txHash: undefined
-                              })
-                            }
+                            // } else {
+                            //   setBatchSwapState({
+                            //     tradeToConfirm: trade,
+                            //     attemptingTxn: false,
+                            //     batchSwapErrorMessage: undefined,
+                            //     showConfirm: true,
+                            //     txHash: undefined
+                            //   })
+                            // }
                           }}
                           id="batch-swap-button"
                           disabled={
@@ -480,17 +480,17 @@ export default function BatchSwap() {
                         ) : null}
                         <ButtonMateriaError
                           onClick={() => {
-                            if (isExpertMode) {
+                            // if (isExpertMode) {
                               handleBatchSwap()
-                            } else {
-                              setBatchSwapState({
-                                tradeToConfirm: trade,
-                                attemptingTxn: false,
-                                batchSwapErrorMessage: undefined,
-                                showConfirm: true,
-                                txHash: undefined
-                              })
-                            }
+                            // } else {
+                            //   setBatchSwapState({
+                            //     tradeToConfirm: trade,
+                            //     attemptingTxn: false,
+                            //     batchSwapErrorMessage: undefined,
+                            //     showConfirm: true,
+                            //     txHash: undefined
+                            //   })
+                            // }
                           }}
                           id="batch-swap-button"
                           disabled={!isValid || (priceImpactSeverity > 3 && !isExpertMode) || !!swapCallbackError}

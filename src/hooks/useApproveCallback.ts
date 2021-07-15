@@ -2,7 +2,7 @@ import { MaxUint256 } from '@ethersproject/constants'
 import { TransactionResponse } from '@ethersproject/providers'
 import { Trade, TokenAmount, CurrencyAmount, ETHER, Token, ChainId } from '@materia-dex/sdk'
 import { useCallback, useMemo } from 'react'
-import { ORCHESTRATOR_ADDRESS, BATCH_SWAPPER_ADDRESS, WUSD, ZERO_ADDRESS } from '../constants'
+import { ORCHESTRATOR_ADDRESS, MATERIA_BATCH_SWAPPER_ADDRESS, WUSD, ZERO_ADDRESS } from '../constants'
 import { useTokenAllowance } from '../data/Allowances'
 import { Field } from '../state/swap/actions'
 import { useTransactionAdder, useHasPendingApproval } from '../state/transactions/hooks'
@@ -197,5 +197,5 @@ export function useApproveCallbackFromBatchSwapTrade(trade?: Trade, token?: Toke
     () => (trade ? computeSlippageAdjustedAmounts(trade, allowedSlippage)[Field.INPUT] : undefined),
     [trade, allowedSlippage]
   )
-  return useTokenApproveCallback(amountToApprove, token, BATCH_SWAPPER_ADDRESS[chainId ?? ChainId.MAINNET], true, true)
+  return useTokenApproveCallback(amountToApprove, token, MATERIA_BATCH_SWAPPER_ADDRESS[chainId ?? ChainId.MAINNET], true, true)
 }
