@@ -1,3 +1,4 @@
+import { Currency } from '@materia-dex/sdk'
 import { createAction } from '@reduxjs/toolkit'
 
 export enum Field {
@@ -15,6 +16,6 @@ export enum Field {
   OUTPUT_10 = 'OUTPUT_10'
 }
 
-export const selectCurrency = createAction<{ field: Field; otherField: Field; currencyId: string }>('batchswap/selectCurrency')
+export const selectCurrency = createAction<{ field: Field; otherField: Field; currencyId: string, interoperable?: string, currency: Currency }>('batchswap/selectCurrency')
 export const clearCurrency  = createAction<{ field: Field; }>('batchswap/clearCurrency')
 export const typeInput = createAction<{ field: Field; typedValue: string }>('batchswap/typeInput')

@@ -1,12 +1,18 @@
 import { CurrencyAmount, JSBI, Trade } from '@materia-dex/sdk'
 import React, { useCallback, useContext, useEffect, useState, useMemo } from 'react'
+import ReactGA from 'react-ga'
 import styled, { ThemeContext } from 'styled-components'
 import { AutoColumn } from '../../components/Column'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import AdvancedSwapDetailsDropdown from '../../components/swap/AdvancedSwapDetailsDropdown'
 import { BottomGrouping, SwapCallbackError, Wrapper } from '../../components/swap/styleds'
 import { Field } from '../../state/batchswap/actions'
-import { useDerivedBatchSwapInfo, useBatchSwapActionHandlers, useBatchSwapState } from '../../state/batchswap/hooks'
+import {
+  useDerivedBatchSwapInfo,
+  useBatchSwapActionHandlers,
+  useBatchSwapState,
+  useOutputsParametersInfo
+} from '../../state/batchswap/hooks'
 import AppBody from '../AppBody'
 import {
   PageGridContainer,
@@ -42,6 +48,7 @@ import { useEthItemContract } from '../../hooks/useContract'
 import { Contract } from 'ethers'
 import useTransactionDeadline from '../../hooks/useTransactionDeadline'
 import { splitSignature } from 'ethers/lib/utils'
+import { TokenInParameter, TokenOutParameter, useBatchSwapCallback } from '../../hooks/useBatchSwapCallback'
 
 export const ButtonBgItem = styled.img`
   height: 3ch;
@@ -266,7 +273,59 @@ export default function BatchSwap() {
     txHash: undefined
   })
 
-  const handleBatchSwap = useCallback(() => {}, [])
+  const inputParameters: TokenInParameter = {
+    token: tokenInput,
+    amount: parsedAmounts[Field.INPUT],
+    permit: signatureData
+  }
+
+  const { outputsInfo: outputsParameters } = useOutputsParametersInfo(currentOutputs)
+
+  const { callback: batchSwapCallback, error: batchSwapCallbackError } = useBatchSwapCallback(
+    inputParameters,
+    outputsParameters
+  )
+
+  const handleBatchSwap = useCallback(() => {
+    if (!batchSwapCallback) {
+      return
+    }
+    setBatchSwapState({
+      attemptingTxn: true,
+      tradeToConfirm,
+      showConfirm,
+      batchSwapErrorMessage: undefined,
+      txHash: undefined
+    })
+    batchSwapCallback()
+      .then(hash => {
+        setBatchSwapState({
+          attemptingTxn: false,
+          tradeToConfirm,
+          showConfirm,
+          batchSwapErrorMessage: undefined,
+          txHash: hash
+        })
+
+        ReactGA.event({
+          category: 'BatchSwap',
+          action: 'BatchSwap w/o Send',
+          label: [
+            inputParameters?.token?.symbol,
+            outputsParameters?.map(x => `${x.token?.symbol} (${x.percentage}%)`)?.join(', ')
+          ].join('/')
+        })
+      })
+      .catch(error => {
+        setBatchSwapState({
+          attemptingTxn: false,
+          tradeToConfirm,
+          showConfirm,
+          batchSwapErrorMessage: error.message,
+          txHash: undefined
+        })
+      })
+  }, [tradeToConfirm, account, showConfirm, batchSwapCallback, originalCurrencies])
 
   const [isExpertMode] = useExpertModeManager()
   const [isShown, setIsShown] = useState(false)
@@ -423,7 +482,7 @@ export default function BatchSwap() {
                         <ButtonMateriaError
                           onClick={() => {
                             // if (isExpertMode) {
-                              handleBatchSwap()
+                            handleBatchSwap()
                             // } else {
                             //   setBatchSwapState({
                             //     tradeToConfirm: trade,
@@ -481,7 +540,7 @@ export default function BatchSwap() {
                         <ButtonMateriaError
                           onClick={() => {
                             // if (isExpertMode) {
-                              handleBatchSwap()
+                            handleBatchSwap()
                             // } else {
                             //   setBatchSwapState({
                             //     tradeToConfirm: trade,

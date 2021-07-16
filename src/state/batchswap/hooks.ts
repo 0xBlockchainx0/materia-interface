@@ -13,24 +13,28 @@ import { useUserSlippageTolerance } from '../user/hooks'
 import { computeSlippageAdjustedAmounts } from '../../utils/prices'
 import useGetEthItemInteroperable from '../../hooks/useGetEthItemInteroperable'
 import { BAD_RECIPIENT_ADDRESSES, involvesAddress, tryParseAmount } from '../swap/hooks'
+import { TokenOutParameter } from '../../hooks/useBatchSwapCallback'
+import { wrappedCurrency } from '../../utils/wrappedCurrency'
 
 export function useBatchSwapState(): AppState['batchswap'] {
   return useSelector<AppState, AppState['batchswap']>(state => state.batchswap)
 }
 
 export function useBatchSwapActionHandlers(): {
-  onCurrencySelection: (field: Field, otherField: Field, currency: Currency) => void
+  onCurrencySelection: (field: Field, otherField: Field, currency: Currency, interoperable?: string) => void
   onCurrencyRemoval: (field: Field) => void
   onUserInput: (field: Field, typedValue: string) => void
 } {
   const dispatch = useDispatch<AppDispatch>()
   const onCurrencySelection = useCallback(
-    (field: Field, otherField: Field, currency: Currency) => {
+    (field: Field, otherField: Field, currency: Currency, interoperable?: string) => {
       dispatch(
         selectCurrency({
           field,
           otherField,
-          currencyId: currency instanceof Token ? currency.address : currency === ETHER ? 'ETH' : ''
+          currency: currency,
+          currencyId: currency instanceof Token ? currency.address : currency === ETHER ? 'ETH' : '',
+          interoperable: interoperable
         })
       )
     },
@@ -201,5 +205,34 @@ export function useDerivedBatchSwapInfo(
     parsedAmount,
     v2Trade: v2Trade ?? undefined,
     inputError,
+  }
+}
+
+export function useOutputsParametersInfo(
+  outputFields: Field[]
+): {
+  outputsInfo: TokenOutParameter[] | undefined
+} {
+  const { chainId } = useActiveWeb3React()
+  const batchSwapState = useBatchSwapState()
+  const outputsInfo: TokenOutParameter[] = []
+
+  outputFields.map(outputField => {
+    const {
+      [outputField]: { typedValue: outputTypedValue, currency: outputCurrency, currencyId: outputCurrencyId, interoperable: interoperable },
+    } = batchSwapState
+    const outputToken = wrappedCurrency(outputCurrency, chainId)
+    const outputInfo: TokenOutParameter = {
+      token: outputToken,
+      interoperable: interoperable,
+      percentage: parseInt(outputTypedValue ?? 0),
+      amount: undefined
+    }
+
+    outputsInfo.push(outputInfo)
+  })
+  
+  return {
+    outputsInfo: undefined
   }
 }

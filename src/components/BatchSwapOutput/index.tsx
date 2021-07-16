@@ -6,6 +6,10 @@ import { Field } from '../../state/batchswap/actions'
 import { useDerivedBatchSwapInfo, useBatchSwapState, useBatchSwapActionHandlers } from '../../state/batchswap/hooks'
 import AdvancedBatchSwapDetailsDropdown from '../batchswap/AdvancedBatchSwapDetailsDropdown'
 import { useContext } from 'react'
+import useGetEthItemInteroperable from '../../hooks/useGetEthItemInteroperable'
+import { wrappedCurrency } from '../../utils/wrappedCurrency'
+import { useActiveWeb3React } from '../../hooks'
+import { ZERO_ADDRESS } from '../../constants'
 
 export const Center = styled.div`
   display: flex;
@@ -21,11 +25,15 @@ interface BatchSwapOutputProps {
 
 export default function BatchSwapOutput({ outputField }: BatchSwapOutputProps) {
   const theme = useContext(ThemeContext)
+  const { chainId } = useActiveWeb3React()
 
   // batch swap state
   const { independentField, [outputField]: typedField, recipient } = useBatchSwapState()
   const typedValue = typedField.typedValue
   const { v2Trade, parsedAmount, originalCurrencies } = useDerivedBatchSwapInfo(outputField, true)
+
+  const outputCurrencyId = wrappedCurrency(originalCurrencies[outputField], chainId)?.address ?? ZERO_ADDRESS
+  const interoperable = useGetEthItemInteroperable(outputCurrencyId)
 
   const trade = v2Trade
 
@@ -43,7 +51,7 @@ export default function BatchSwapOutput({ outputField }: BatchSwapOutputProps) {
   }
 
   const handleOutputSelect = useCallback(
-    outputCurrency => onCurrencySelection(outputField, Field.INPUT, outputCurrency),
+    outputCurrency => onCurrencySelection(outputField, Field.INPUT, outputCurrency, interoperable),
     [onCurrencySelection]
   )
 
