@@ -28,7 +28,40 @@ const store = configureStore({
     lists,
     wrap
   },
-  middleware: [...getDefaultMiddleware({ thunk: false }), save({ states: PERSISTED_KEYS })],
+  middleware: [...getDefaultMiddleware({
+    thunk: false,
+    serializableCheck: {
+      ignoredActions: [
+        'application/updateBlockNumber',
+        'user/addSerializedToken',
+        'batchswap/selectCurrency',
+        'batchswap/typeInput',
+        'multicall/fetchingMulticallResults',
+        'multicall/updateMulticallResults',
+        'multicall/addMulticallListeners',
+        'multicall/removeMulticallListeners',
+        'transactions/addTransaction',
+        'transactions/checkedTransaction',
+        'application/setOpenModal'
+      ],
+      ignoredActionPaths: [
+        'payload.currency',
+        'batchswap.INPUT.currency',
+        'batchswap.OUTPUT.currency',
+        'batchswap.OUTPUT_1.currency',
+        'batchswap.OUTPUT_2.currency',
+        'batchswap.OUTPUT_3.currency',
+        'batchswap.OUTPUT_4.currency',
+        'batchswap.OUTPUT_5.currency',
+        'batchswap.OUTPUT_6.currency',
+        'batchswap.OUTPUT_7.currency',
+        'batchswap.OUTPUT_8.currency',
+        'batchswap.OUTPUT_9.currency',
+        'batchswap.OUTPUT_10.currency'
+      ],
+      ignoredPaths: [],
+    },
+  }), save({ states: PERSISTED_KEYS })],
   preloadedState: load({ states: PERSISTED_KEYS })
 })
 

@@ -219,8 +219,9 @@ export function useOutputsParametersInfo(
 
   outputFields.map(outputField => {
     const {
-      [outputField]: { typedValue: outputTypedValue, currency: outputCurrency, currencyId: outputCurrencyId, interoperable: interoperable },
+      [outputField]: { typedValue: outputTypedValue, currency: outputCurrency, interoperable: interoperable },
     } = batchSwapState
+    
     const outputToken = wrappedCurrency(outputCurrency, chainId)
     const outputInfo: TokenOutParameter = {
       token: outputToken,
@@ -233,6 +234,6 @@ export function useOutputsParametersInfo(
   })
   
   return {
-    outputsInfo: undefined
+    outputsInfo: outputsInfo
   }
 }

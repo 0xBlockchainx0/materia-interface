@@ -279,8 +279,8 @@ export default function BatchSwap() {
     permit: signatureData
   }
 
-  const { outputsInfo: outputsParameters } = useOutputsParametersInfo(currentOutputs)
-
+  const { outputsInfo: outputsParameters } = useOutputsParametersInfo(currentOutputs) 
+  
   const { callback: batchSwapCallback, error: batchSwapCallbackError } = useBatchSwapCallback(
     inputParameters,
     outputsParameters

@@ -62,7 +62,7 @@ const initialState: BatchSwapState = {
 
 export default createReducer<BatchSwapState>(initialState, builder =>
   builder
-    .addCase(selectCurrency, (state, { payload: { currencyId, field, otherField, interoperable } }) => {
+    .addCase(selectCurrency, (state, { payload: { currencyId, field, otherField, interoperable, currency } }) => {
       if (currencyId === state[otherField].currencyId) {
         // the case where we have to swap the order
         return {
@@ -71,11 +71,13 @@ export default createReducer<BatchSwapState>(initialState, builder =>
           [field]: {
             typedValue: state[field].typedValue,
             currencyId: currencyId,
+            currency: currency,
             interoperable: interoperable
           },
           [otherField]: {
             typedValue: state[otherField].typedValue,
             currencyId: state[otherField].currencyId,
+            currency: state[otherField].currency,
             interoperable: state[otherField].interoperable
           }
         }
@@ -86,6 +88,7 @@ export default createReducer<BatchSwapState>(initialState, builder =>
           [field]: {
             typedValue: state[field].typedValue,
             currencyId: currencyId,
+            currency: currency,
             interoperable: interoperable
           }
         }
@@ -105,7 +108,8 @@ export default createReducer<BatchSwapState>(initialState, builder =>
         [field]: {
           typedValue: typedValue,
           currencyId: state[field].currencyId,
-          interoperable: state[field].interoperable
+          interoperable: state[field].interoperable,
+          currency: state[field].currency
         }
       }
     })

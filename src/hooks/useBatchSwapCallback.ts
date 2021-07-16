@@ -101,8 +101,8 @@ function useBatchSwapCallArguments(
 
     const tokenIn = [
       input.token?.address,
-      input.amount,
-      input.amount,
+      `0x${input.amount ? input.amount.raw.toString(16) : '0'}`,
+      `0x${input.amount ? input.amount.raw.toString(16) : '0'}`,
       [
         input.permit?.v ?? '0',
         input.permit?.r ?? '0',
@@ -119,7 +119,7 @@ function useBatchSwapCallArguments(
 
     const settings = [
       FACTORY_ADDRESS,
-      WUSD[chainId],
+      WUSD[chainId].address,
       ERC20WRAPPER[chainId],
       deadline,
       recipient
