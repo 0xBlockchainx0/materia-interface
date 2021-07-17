@@ -2730,7 +2730,7 @@ export const SmallOperationButton = styled(Button)<{ disabled?: boolean }>`
   }
 
   &.classic, &.classic:after, &.classic:before, &.classic > svg { transform: none; }
-  &.classic > svg { display: none; }
+  &.classic > svg { display: inherit; }
 
   &:before { bottom: 104px; right: -184px;  }
 

@@ -11,7 +11,8 @@ import {
   useDerivedBatchSwapInfo,
   useBatchSwapActionHandlers,
   useBatchSwapState,
-  useOutputsParametersInfo
+  useOutputsParametersInfo,
+  useBatchSwapDefaults
 } from '../../state/batchswap/hooks'
 import AppBody from '../AppBody'
 import {
@@ -46,9 +47,8 @@ import { MATERIA_BATCH_SWAPPER_ADDRESS, ZERO_ADDRESS } from '../../constants'
 import useCheckIsEthItem from '../../hooks/useCheckIsEthItem'
 import { useEthItemContract } from '../../hooks/useContract'
 import { Contract } from 'ethers'
-import useTransactionDeadline from '../../hooks/useTransactionDeadline'
 import { splitSignature } from 'ethers/lib/utils'
-import { TokenInParameter, TokenOutParameter, useBatchSwapCallback } from '../../hooks/useBatchSwapCallback'
+import { TokenInParameter, useBatchSwapCallback } from '../../hooks/useBatchSwapCallback'
 
 export const ButtonBgItem = styled.img`
   height: 3ch;
@@ -73,6 +73,10 @@ export const RemoveOutputButton = styled(SmallOperationButton)`
 
 export const OutputButtonContainer = styled.div`
   margin: auto;
+
+  &.classic {
+    margin: inherit !important;
+  }
 `
 
 export const BatchSwapDetails = styled(AdvancedSwapDetailsDropdown)`
@@ -85,6 +89,8 @@ export default function BatchSwap() {
 
   const theme = useContext(ThemeContext)
   const { account, chainId, library } = useActiveWeb3React()
+
+  const defaultSelectedCurrency = useBatchSwapDefaults()
 
   const { [Field.INPUT]: typedField } = useBatchSwapState()
   const typedValue = typedField.typedValue
@@ -99,9 +105,11 @@ export default function BatchSwap() {
 
   const [signatureData, setSignatureData] = useState<{ v: number; r: string; s: string } | null>(null)
 
-  const parsedAmounts = {
-    [Field.INPUT]: parsedAmount
-  }
+  const parsedAmounts = useMemo(() => {
+    return {
+      [Field.INPUT]: parsedAmount
+    }
+  }, [parsedAmount])
 
   const formattedAmounts = {
     [Field.INPUT]: typedValue
@@ -273,14 +281,18 @@ export default function BatchSwap() {
     txHash: undefined
   })
 
-  const inputParameters: TokenInParameter = {
-    token: tokenInput,
-    amount: parsedAmounts[Field.INPUT],
-    permit: signatureData
-  }
+  const inputParameters: TokenInParameter = useMemo(() => {
+    const parameters: TokenInParameter = {
+      token: tokenInput,
+      amount: parsedAmounts[Field.INPUT],
+      permit: signatureData
+    }
 
-  const { outputsInfo: outputsParameters } = useOutputsParametersInfo(currentOutputs) 
-  
+    return parameters
+  }, [tokenInput, parsedAmounts, signatureData])
+
+  const { outputsInfo: outputsParameters } = useOutputsParametersInfo(currentOutputs)
+
   const { callback: batchSwapCallback, error: batchSwapCallbackError } = useBatchSwapCallback(
     inputParameters,
     outputsParameters
@@ -325,7 +337,7 @@ export default function BatchSwap() {
           txHash: undefined
         })
       })
-  }, [tradeToConfirm, account, showConfirm, batchSwapCallback, originalCurrencies])
+  }, [inputParameters, outputsParameters, tradeToConfirm, showConfirm, batchSwapCallback])
 
   const [isExpertMode] = useExpertModeManager()
   const [isShown, setIsShown] = useState(false)

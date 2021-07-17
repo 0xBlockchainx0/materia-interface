@@ -10,7 +10,7 @@ export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 export const ETHEREUM_OBJECT_ID = '11027808402393750762873608378930398077418220124669629658698890017122249518391'
 
 export const MATERIA_BATCH_SWAPPER_ADDRESS: { [chainId in ChainId]: string } = {
-  [ChainId.MAINNET]: ZERO_ADDRESS,
+  [ChainId.MAINNET]: '0x54c5aFB953a7AEbbf9F5D092Cd03e16Ef14De4aa',
   [ChainId.RINKEBY]: ZERO_ADDRESS,
   [ChainId.ROPSTEN]: '0x54c5aFB953a7AEbbf9F5D092Cd03e16Ef14De4aa',
   [ChainId.GÖRLI]: ZERO_ADDRESS,
@@ -47,11 +47,17 @@ export const GIL: { [chainId in ChainId]: Token } = {
 }
 
 export const WUSD: { [chainId in ChainId]: Token } = {
-  [ChainId.MAINNET]: new Token(ChainId.MAINNET, '0x7C974104DF9dd7fb91205ab3D66d15AFf1049DE8', 18, 'WUSD', 'Wrapped USD'),
+  [ChainId.MAINNET]: new Token(
+    ChainId.MAINNET,
+    '0x7C974104DF9dd7fb91205ab3D66d15AFf1049DE8',
+    18,
+    'WUSD',
+    'Wrapped USD'
+  ),
   [ChainId.RINKEBY]: new Token(ChainId.RINKEBY, ZERO_ADDRESS, 18, 'WUSD', 'Wrapped USD'),
   [ChainId.ROPSTEN]: new Token(ChainId.ROPSTEN, '0x3CF9679b78075054093E04bB27758A0b25c2BdBc', 18, 'PIT', 'Pitfall'),
   [ChainId.GÖRLI]: new Token(ChainId.GÖRLI, ZERO_ADDRESS, 18, 'WUSD', 'Wrapped USD'),
-  [ChainId.KOVAN]: new Token(ChainId.KOVAN, ZERO_ADDRESS, 18, 'WUSD', 'Wrapped USD'),
+  [ChainId.KOVAN]: new Token(ChainId.KOVAN, ZERO_ADDRESS, 18, 'WUSD', 'Wrapped USD')
 }
 
 export const WBTC: { [chainId in ChainId]: Token } = {
@@ -59,7 +65,7 @@ export const WBTC: { [chainId in ChainId]: Token } = {
   [ChainId.RINKEBY]: new Token(ChainId.RINKEBY, ZERO_ADDRESS, 8, 'WBTC', 'Wrapped BTC'),
   [ChainId.ROPSTEN]: new Token(ChainId.ROPSTEN, '0x65058d7081fcdc3cd8727dbb7f8f9d52cefdd291', 8, 'WBTC', 'Wrapped BTC'),
   [ChainId.GÖRLI]: new Token(ChainId.GÖRLI, ZERO_ADDRESS, 8, 'WBTC', 'Wrapped BTC'),
-  [ChainId.KOVAN]: new Token(ChainId.KOVAN, ZERO_ADDRESS, 8, 'WBTC', 'Wrapped BTC'),
+  [ChainId.KOVAN]: new Token(ChainId.KOVAN, ZERO_ADDRESS, 8, 'WBTC', 'Wrapped BTC')
 }
 
 export const DAI = new Token(ChainId.MAINNET, '0x6B175474E89094C44Da98b954EedeAC495271d0F', 18, 'DAI', 'Dai Stablecoin')
@@ -71,40 +77,88 @@ export const AMPL = new Token(ChainId.MAINNET, '0xD46bA6D942050d489DBd938a2C909A
 
 // EthItems
 export const IGIL: { [chainId in ChainId]: Token } = {
-  [ChainId.MAINNET]: new Token(ChainId.MAINNET, '0xE51a7641A2D62119458B38e074367D9bFA8a3916', 18, 'iGIL', 'Materia item'),
+  [ChainId.MAINNET]: new Token(
+    ChainId.MAINNET,
+    '0xE51a7641A2D62119458B38e074367D9bFA8a3916',
+    18,
+    'iGIL',
+    'Materia item'
+  ),
   [ChainId.RINKEBY]: new Token(ChainId.RINKEBY, ZERO_ADDRESS, 18, 'iGIL', 'Materia item'),
-  [ChainId.ROPSTEN]: new Token(ChainId.ROPSTEN, '0x2E78e06859476359967a222eb5fB51A5b0C95e8C', 18, 'iGIL', 'Materia item'),
+  [ChainId.ROPSTEN]: new Token(
+    ChainId.ROPSTEN,
+    '0x2E78e06859476359967a222eb5fB51A5b0C95e8C',
+    18,
+    'iGIL',
+    'Materia item'
+  ),
   [ChainId.GÖRLI]: new Token(ChainId.GÖRLI, ZERO_ADDRESS, 18, 'iGIL', 'Materia item'),
   [ChainId.KOVAN]: new Token(ChainId.KOVAN, ZERO_ADDRESS, 18, 'iGIL', 'Materia item')
 }
 
 export const IUSDC: { [chainId in ChainId]: Token } = {
-  [ChainId.MAINNET]: new Token(ChainId.MAINNET, '0x7a3428F1CBA2756aB9a6D672311ca6C8DcE65C6B', 18, 'iUSDC', 'USD Coin item'),
+  [ChainId.MAINNET]: new Token(
+    ChainId.MAINNET,
+    '0x7a3428F1CBA2756aB9a6D672311ca6C8DcE65C6B',
+    18,
+    'iUSDC',
+    'USD Coin item'
+  ),
   [ChainId.RINKEBY]: new Token(ChainId.RINKEBY, ZERO_ADDRESS, 18, 'iUSDC', 'USD Coin item'),
-  [ChainId.ROPSTEN]: new Token(ChainId.ROPSTEN, '0xCE34847810703C5FD47b23327c1B8dAD6413B1A9', 18, 'iUSDC', 'USD Coin item'),
+  [ChainId.ROPSTEN]: new Token(
+    ChainId.ROPSTEN,
+    '0xCE34847810703C5FD47b23327c1B8dAD6413B1A9',
+    18,
+    'iUSDC',
+    'USD Coin item'
+  ),
   [ChainId.GÖRLI]: new Token(ChainId.GÖRLI, ZERO_ADDRESS, 18, 'iUSDC', 'USD Coin item'),
   [ChainId.KOVAN]: new Token(ChainId.KOVAN, ZERO_ADDRESS, 18, 'iUSDC', 'USD Coin item')
 }
 
 export const IDAI: { [chainId in ChainId]: Token } = {
-  [ChainId.MAINNET]: new Token(ChainId.MAINNET, '0x4d69a1d482ff9b89600c1DD9e535538957Cd8E29', 18, 'iDAI', 'Dai Stablecoin item'),
+  [ChainId.MAINNET]: new Token(
+    ChainId.MAINNET,
+    '0x4d69a1d482ff9b89600c1DD9e535538957Cd8E29',
+    18,
+    'iDAI',
+    'Dai Stablecoin item'
+  ),
   [ChainId.RINKEBY]: new Token(ChainId.RINKEBY, ZERO_ADDRESS, 18, 'iDAI', 'Dai Stablecoin item'),
-  [ChainId.ROPSTEN]: new Token(ChainId.ROPSTEN, '0x25E4ac6a9ADba26eFb3aDE755aC33A7C85552F0f', 18, 'iDAI', 'Dai Stablecoin item'),
+  [ChainId.ROPSTEN]: new Token(
+    ChainId.ROPSTEN,
+    '0x25E4ac6a9ADba26eFb3aDE755aC33A7C85552F0f',
+    18,
+    'iDAI',
+    'Dai Stablecoin item'
+  ),
   [ChainId.GÖRLI]: new Token(ChainId.GÖRLI, ZERO_ADDRESS, 18, 'iDAI', 'Dai Stablecoin item'),
   [ChainId.KOVAN]: new Token(ChainId.KOVAN, ZERO_ADDRESS, 18, 'iDAI', 'Dai Stablecoin item')
 }
 
 export const IWBTC: { [chainId in ChainId]: Token } = {
-  [ChainId.MAINNET]: new Token(ChainId.MAINNET, '0x4FA2d28cEc65f86A843Bd1806Dc88930554b6756', 18, 'iWBTC', 'Wrapped BTC item'),
+  [ChainId.MAINNET]: new Token(
+    ChainId.MAINNET,
+    '0x4FA2d28cEc65f86A843Bd1806Dc88930554b6756',
+    18,
+    'iWBTC',
+    'Wrapped BTC item'
+  ),
   [ChainId.RINKEBY]: new Token(ChainId.RINKEBY, ZERO_ADDRESS, 18, 'iWBTC', 'Wrapped BTC item'),
-  [ChainId.ROPSTEN]: new Token(ChainId.ROPSTEN, '0x0419b5c078cdf1cac30051ae1a84e20b3642c9a3', 18, 'iWBTC', 'Wrapped BTC item'),
+  [ChainId.ROPSTEN]: new Token(
+    ChainId.ROPSTEN,
+    '0x0419b5c078cdf1cac30051ae1a84e20b3642c9a3',
+    18,
+    'iWBTC',
+    'Wrapped BTC item'
+  ),
   [ChainId.GÖRLI]: new Token(ChainId.GÖRLI, ZERO_ADDRESS, 18, 'iWBTC', 'Wrapped BTC item'),
   [ChainId.KOVAN]: new Token(ChainId.KOVAN, ZERO_ADDRESS, 18, 'iWBTC', 'Wrapped BTC item')
 }
 
 export const MERKLE_DISTRIBUTOR_ADDRESS: { [chainId in ChainId]?: string } = {
   [ChainId.MAINNET]: '0x0e31Da738c6B429436735243D9A1737387521F37',
-  [ChainId.ROPSTEN]: '0x0e31Da738c6B429436735243D9A1737387521F37',
+  [ChainId.ROPSTEN]: '0x0e31Da738c6B429436735243D9A1737387521F37'
 }
 
 const WUSD_ONLY: ChainTokenList = {
@@ -147,21 +201,11 @@ export const BASES_TO_TRACK_LIQUIDITY_FOR: ChainTokenList = {
 }
 
 export const PINNED_PAIRS: { readonly [chainId in ChainId]?: [Token, Token][] } = {
-  [ChainId.MAINNET]: [
-    [IETH[ChainId.MAINNET], WUSD[ChainId.MAINNET]]
-  ],
-  [ChainId.ROPSTEN]: [
-    [IETH[ChainId.ROPSTEN], WUSD[ChainId.ROPSTEN]]
-  ],
-  [ChainId.RINKEBY]: [
-    [IETH[ChainId.RINKEBY], WUSD[ChainId.RINKEBY]]
-  ],
-  [ChainId.GÖRLI]: [
-    [IETH[ChainId.GÖRLI], WUSD[ChainId.GÖRLI]]
-  ],
-  [ChainId.KOVAN]: [
-    [IETH[ChainId.KOVAN], WUSD[ChainId.KOVAN]]
-  ]
+  [ChainId.MAINNET]: [[IETH[ChainId.MAINNET], WUSD[ChainId.MAINNET]]],
+  [ChainId.ROPSTEN]: [[IETH[ChainId.ROPSTEN], WUSD[ChainId.ROPSTEN]]],
+  [ChainId.RINKEBY]: [[IETH[ChainId.RINKEBY], WUSD[ChainId.RINKEBY]]],
+  [ChainId.GÖRLI]: [[IETH[ChainId.GÖRLI], WUSD[ChainId.GÖRLI]]],
+  [ChainId.KOVAN]: [[IETH[ChainId.KOVAN], WUSD[ChainId.KOVAN]]]
 }
 
 export interface WalletInfo {
@@ -219,7 +263,7 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
     color: '#315CF5',
     mobile: true,
     mobileOnly: true
-  },
+  }
   // FORTMATIC: {
   //   connector: fortmatic,
   //   name: 'Fortmatic',

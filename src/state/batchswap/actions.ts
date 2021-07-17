@@ -16,6 +16,13 @@ export enum Field {
   OUTPUT_10 = 'OUTPUT_10'
 }
 
-export const selectCurrency = createAction<{ field: Field; otherField: Field; currencyId: string, interoperable?: string, currency: Currency }>('batchswap/selectCurrency')
-export const clearCurrency  = createAction<{ field: Field; }>('batchswap/clearCurrency')
+export const selectCurrency = createAction<{
+  field: Field
+  otherField: Field
+  currencyId: string
+  interoperable?: string
+  currency: Currency
+}>('batchswap/selectCurrency')
+export const clearCurrency = createAction<{ field: Field }>('batchswap/clearCurrency')
 export const typeInput = createAction<{ field: Field; typedValue: string }>('batchswap/typeInput')
+export const setInitialDefaultInput = createAction<{ inputCurrencyId?: string }>('swap/setInitialDefaultInput')

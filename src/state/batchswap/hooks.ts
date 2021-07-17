@@ -1,6 +1,6 @@
 import useENS from '../../hooks/useENS'
-import { Currency, CurrencyAmount, ETHER, IETH, JSBI, Token, Trade } from '@materia-dex/sdk'
-import { useCallback } from 'react'
+import { ChainId, Currency, CurrencyAmount, ETHER, IETH, JSBI, Token, Trade } from '@materia-dex/sdk'
+import { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useActiveWeb3React } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
@@ -8,13 +8,14 @@ import { useTradeExactIn, useTradeExactOut } from '../../hooks/Trades'
 import { isAddress } from '../../utils'
 import { AppDispatch, AppState } from '../index'
 import { useCurrencyBalances } from '../wallet/hooks'
-import { clearCurrency, Field, selectCurrency, typeInput } from './actions'
+import { clearCurrency, Field, selectCurrency, typeInput, setInitialDefaultInput } from './actions'
 import { useUserSlippageTolerance } from '../user/hooks'
 import { computeSlippageAdjustedAmounts } from '../../utils/prices'
 import useGetEthItemInteroperable from '../../hooks/useGetEthItemInteroperable'
 import { BAD_RECIPIENT_ADDRESSES, involvesAddress, tryParseAmount } from '../swap/hooks'
 import { TokenOutParameter } from '../../hooks/useBatchSwapCallback'
-import { wrappedCurrency } from '../../utils/wrappedCurrency'
+import { unwrappedToken, wrappedCurrency } from '../../utils/wrappedCurrency'
+import { WUSD } from '../../constants'
 
 export function useBatchSwapState(): AppState['batchswap'] {
   return useSelector<AppState, AppState['batchswap']>(state => state.batchswap)
@@ -76,7 +77,7 @@ export function useDerivedBatchSwapInfo(
   currencyBalances: { [field in Field]?: CurrencyAmount }
   originalCurrencyBalances: { [field in Field]?: CurrencyAmount }
   parsedAmount: CurrencyAmount | undefined
-  v2Trade: Trade | undefined,
+  v2Trade: Trade | undefined
   inputError?: string
 } {
   const { account, chainId } = useActiveWeb3React()
@@ -89,7 +90,7 @@ export function useDerivedBatchSwapInfo(
   } = batchSwapState
 
   const outputPercentage: number = parseFloat(outputTypedValue ?? 0)
-  const calculatedTypedValue = parseFloat(inputTypedValue ?? 0) * outputPercentage / 100
+  const calculatedTypedValue = (parseFloat(inputTypedValue ?? 0) * outputPercentage) / 100
   const typedValue = calculatedTypedValue.toString()
 
   const inputCurrencyInteroperableId = useGetEthItemInteroperable(inputCurrencyId)
@@ -113,26 +114,25 @@ export function useDerivedBatchSwapInfo(
   ])
 
   const relevantTokenBalances = useCurrencyBalances(account ?? undefined, [
-    interoperable ? (inputCurrencyInteroperable ?? inputCurrency) : inputCurrency ?? undefined,
-    interoperable ? (outputCurrencyInteroperable ?? outputCurrency) : outputCurrency ?? undefined
+    interoperable ? inputCurrencyInteroperable ?? inputCurrency : inputCurrency ?? undefined,
+    interoperable ? outputCurrencyInteroperable ?? outputCurrency : outputCurrency ?? undefined
   ])
 
   const isExactIn: boolean = independentField === Field.INPUT
 
-  const parsedAmount = tryParseAmount(typedValue,
-    (isExactIn ?
-      inputCurrencyInteroperable ?? inputCurrency :
-      outputCurrencyInteroperable ?? outputCurrency)
-    ?? undefined
+  const parsedAmount = tryParseAmount(
+    typedValue,
+    (isExactIn ? inputCurrencyInteroperable ?? inputCurrency : outputCurrencyInteroperable ?? outputCurrency) ??
+      undefined
   )
 
   const bestTradeExactIn = useTradeExactIn(
-    (isExactIn ? parsedAmount : undefined),
-    (outputCurrencyInteroperable ?? outputCurrency) ?? undefined
+    isExactIn ? parsedAmount : undefined,
+    outputCurrencyInteroperable ?? outputCurrency ?? undefined
   )
   const bestTradeExactOut = useTradeExactOut(
-    (inputCurrencyInteroperable ?? inputCurrency) ?? undefined,
-    (!isExactIn ? parsedAmount : undefined)
+    inputCurrencyInteroperable ?? inputCurrency ?? undefined,
+    !isExactIn ? parsedAmount : undefined
   )
 
   const v2Trade = isExactIn ? bestTradeExactIn : bestTradeExactOut
@@ -142,8 +142,8 @@ export function useDerivedBatchSwapInfo(
     [outputField]: relevantTokenBalances[1]
   }
   const currencies: { [field in Field]?: Currency } = {
-    [Field.INPUT]: interoperable ? (inputCurrencyInteroperable ?? inputCurrency) : inputCurrency ?? undefined,
-    [outputField]: interoperable ? (outputCurrencyInteroperable ?? outputCurrency) : outputCurrency ?? undefined
+    [Field.INPUT]: interoperable ? inputCurrencyInteroperable ?? inputCurrency : inputCurrency ?? undefined,
+    [outputField]: interoperable ? outputCurrencyInteroperable ?? outputCurrency : outputCurrency ?? undefined
   }
 
   const originalCurrencyBalances = {
@@ -188,15 +188,13 @@ export function useDerivedBatchSwapInfo(
   // compare input balance to max input
   const [balanceIn, amountIn] = [
     originalCurrencyBalances[Field.INPUT],
-    slippageAdjustedAmounts
-      ? slippageAdjustedAmounts[Field.INPUT]
-      : null
+    slippageAdjustedAmounts ? slippageAdjustedAmounts[Field.INPUT] : null
   ]
 
   if (balanceIn && amountIn && balanceIn.lessThan(amountIn)) {
     inputError = 'Insufficient ' + originalCurrencies[Field.INPUT]?.symbol + ' balance'
   }
-  
+
   return {
     currencies,
     originalCurrencies,
@@ -204,7 +202,7 @@ export function useDerivedBatchSwapInfo(
     originalCurrencyBalances,
     parsedAmount,
     v2Trade: v2Trade ?? undefined,
-    inputError,
+    inputError
   }
 }
 
@@ -219,9 +217,9 @@ export function useOutputsParametersInfo(
 
   outputFields.map(outputField => {
     const {
-      [outputField]: { typedValue: outputTypedValue, currency: outputCurrency, interoperable: interoperable },
+      [outputField]: { typedValue: outputTypedValue, currency: outputCurrency, interoperable: interoperable }
     } = batchSwapState
-    
+
     const outputToken = wrappedCurrency(outputCurrency, chainId)
     const outputInfo: TokenOutParameter = {
       token: outputToken,
@@ -232,8 +230,30 @@ export function useOutputsParametersInfo(
 
     outputsInfo.push(outputInfo)
   })
-  
+
   return {
     outputsInfo: outputsInfo
   }
+}
+
+export function useBatchSwapDefaults(): { inputCurrencyId: string | undefined } | undefined {
+  const { chainId } = useActiveWeb3React()
+  const dispatch = useDispatch<AppDispatch>()
+  const [result, setResult] = useState<{ inputCurrencyId: string | undefined } | undefined>()
+
+  useEffect(() => {
+    if (!chainId) return
+
+    const token = WUSD[chainId]
+
+    dispatch(
+      setInitialDefaultInput({
+        inputCurrencyId: token.address
+      })
+    )
+
+    setResult({ inputCurrencyId: token.address })
+  }, [dispatch, chainId])
+
+  return result
 }

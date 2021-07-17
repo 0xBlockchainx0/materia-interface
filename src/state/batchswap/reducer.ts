@@ -1,6 +1,6 @@
 import { Currency } from '@materia-dex/sdk'
 import { createReducer } from '@reduxjs/toolkit'
-import { Field, selectCurrency, clearCurrency, typeInput } from './actions'
+import { Field, selectCurrency, clearCurrency, typeInput, setInitialDefaultInput } from './actions'
 
 export interface BatchSwapField {
   readonly currency: Currency | undefined
@@ -32,7 +32,6 @@ const initialInputFieldState: BatchSwapField = {
   currencyId: '',
   interoperable: undefined,
   typedValue: ''
-  
 }
 
 const initialOutputFieldState: BatchSwapField = {
@@ -98,7 +97,7 @@ export default createReducer<BatchSwapState>(initialState, builder =>
       return {
         ...state,
         independentField: Field.INPUT,
-        [field]: field === Field.INPUT? initialInputFieldState : initialOutputFieldState
+        [field]: field === Field.INPUT ? initialInputFieldState : initialOutputFieldState
       }
     })
     .addCase(typeInput, (state, { payload: { field, typedValue } }) => {
@@ -110,6 +109,15 @@ export default createReducer<BatchSwapState>(initialState, builder =>
           currencyId: state[field].currencyId,
           interoperable: state[field].interoperable,
           currency: state[field].currency
+        }
+      }
+    })
+    .addCase(setInitialDefaultInput, (state, { payload: { inputCurrencyId } }) => {
+      return {
+        ...initialState,
+        [Field.INPUT]: {
+          ...initialInputFieldState,
+          currencyId: inputCurrencyId
         }
       }
     })
