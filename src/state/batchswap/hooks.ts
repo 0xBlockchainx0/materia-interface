@@ -120,6 +120,7 @@ export function useDerivedBatchSwapInfo(
 
   const isExactIn: boolean = independentField === Field.INPUT
 
+  const inputParsedAmount = tryParseAmount(inputTypedValue, inputCurrencyInteroperable ?? inputCurrency ?? undefined)
   const parsedAmount = tryParseAmount(
     typedValue,
     (isExactIn ? inputCurrencyInteroperable ?? inputCurrency : outputCurrencyInteroperable ?? outputCurrency) ??
@@ -200,7 +201,7 @@ export function useDerivedBatchSwapInfo(
     originalCurrencies,
     currencyBalances,
     originalCurrencyBalances,
-    parsedAmount,
+    parsedAmount: inputParsedAmount,
     v2Trade: v2Trade ?? undefined,
     inputError
   }

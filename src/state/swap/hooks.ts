@@ -89,7 +89,11 @@ export function tryParseAmount(value?: string, currency?: Currency): CurrencyAmo
 }
 
 // try to parse a user entered amount for a given token
-export function trySaferParseAmount(value?: string, currency?: Currency, decimals?: number): CurrencyAmount | undefined {
+export function trySaferParseAmount(
+  value?: string,
+  currency?: Currency,
+  decimals?: number
+): CurrencyAmount | undefined {
   if (!value || !currency) {
     return undefined
   }
@@ -122,7 +126,11 @@ export function trySaferParseAmount(value?: string, currency?: Currency, decimal
 }
 
 // try to parse a user entered amount for a given token
-export function trySaferParseAmountIncludingZeroValues(value?: string, currency?: Currency, decimals?: number): CurrencyAmount | undefined {
+export function trySaferParseAmountIncludingZeroValues(
+  value?: string,
+  currency?: Currency,
+  decimals?: number
+): CurrencyAmount | undefined {
   if (!value || !currency) {
     return undefined
   }
@@ -150,7 +158,10 @@ export function trySaferParseAmountIncludingZeroValues(value?: string, currency?
   return undefined
 }
 
-export function decodeInteroperableValueToERC20TokenAmount(currencyAmount?: CurrencyAmount, erc20CurrencyAmount?: CurrencyAmount): CurrencyAmount | undefined {
+export function decodeInteroperableValueToERC20TokenAmount(
+  currencyAmount?: CurrencyAmount,
+  erc20CurrencyAmount?: CurrencyAmount
+): CurrencyAmount | undefined {
   if (!currencyAmount || !erc20CurrencyAmount) {
     return undefined
   }
@@ -168,15 +179,13 @@ export function decodeInteroperableValueToERC20TokenAmount(currencyAmount?: Curr
 
     if (deltaDecimals > 0) {
       typedValueFormatted = JSBI.BigInt(parseUnits(value, erc20Currency.decimals))
-    }
-    else if (deltaDecimals == 0) {
+    } else if (deltaDecimals == 0) {
       typedValueFormatted = JSBI.BigInt(parseUnits(value, currency.decimals))
-    }
-    else {
-      // EthItem can't unwrap token with more than 18 decimals 
+    } else {
+      // EthItem can't unwrap token with more than 18 decimals
       throw 'Too much decimals for EthItem'
     }
-    
+
     return erc20Currency instanceof Token
       ? new TokenAmount(erc20Currency, typedValueFormatted)
       : CurrencyAmount.ether(typedValueFormatted)
@@ -216,7 +225,7 @@ export function useDerivedSwapInfo(
   currencyBalances: { [field in Field]?: CurrencyAmount }
   originalCurrencyBalances: { [field in Field]?: CurrencyAmount }
   parsedAmount: CurrencyAmount | undefined
-  v2Trade: Trade | undefined,
+  v2Trade: Trade | undefined
   inputError?: string
 } {
   const { account, chainId } = useActiveWeb3React()
@@ -228,7 +237,7 @@ export function useDerivedSwapInfo(
     [Field.OUTPUT]: { currencyId: outputCurrencyId },
     recipient
   } = swapState
-  
+
   const inputCurrencyInteroperableId = useGetEthItemInteroperable(inputCurrencyId)
   const outputCurrencyInteroperableId = useGetEthItemInteroperable(outputCurrencyId)
 
@@ -250,26 +259,25 @@ export function useDerivedSwapInfo(
   ])
 
   const relevantTokenBalances = useCurrencyBalances(account ?? undefined, [
-    interoperable ? (inputCurrencyInteroperable ?? inputCurrency) : inputCurrency ?? undefined,
-    interoperable ? (outputCurrencyInteroperable ?? outputCurrency) : outputCurrency ?? undefined
+    interoperable ? inputCurrencyInteroperable ?? inputCurrency : inputCurrency ?? undefined,
+    interoperable ? outputCurrencyInteroperable ?? outputCurrency : outputCurrency ?? undefined
   ])
 
   const isExactIn: boolean = independentField === Field.INPUT
 
-  const parsedAmount = tryParseAmount(typedValue,
-    (isExactIn ?
-      inputCurrencyInteroperable ?? inputCurrency :
-      outputCurrencyInteroperable ?? outputCurrency)
-    ?? undefined
+  const parsedAmount = tryParseAmount(
+    typedValue,
+    (isExactIn ? inputCurrencyInteroperable ?? inputCurrency : outputCurrencyInteroperable ?? outputCurrency) ??
+      undefined
   )
 
   const bestTradeExactIn = useTradeExactIn(
-    (isExactIn ? parsedAmount : undefined),
-    (outputCurrencyInteroperable ?? outputCurrency) ?? undefined
+    isExactIn ? parsedAmount : undefined,
+    outputCurrencyInteroperable ?? outputCurrency ?? undefined
   )
   const bestTradeExactOut = useTradeExactOut(
-    (inputCurrencyInteroperable ?? inputCurrency) ?? undefined,
-    (!isExactIn ? parsedAmount : undefined)
+    inputCurrencyInteroperable ?? inputCurrency ?? undefined,
+    !isExactIn ? parsedAmount : undefined
   )
 
   const v2Trade = isExactIn ? bestTradeExactIn : bestTradeExactOut
@@ -279,8 +287,8 @@ export function useDerivedSwapInfo(
     [Field.OUTPUT]: relevantTokenBalances[1]
   }
   const currencies: { [field in Field]?: Currency } = {
-    [Field.INPUT]: interoperable ? (inputCurrencyInteroperable ?? inputCurrency) : inputCurrency ?? undefined,
-    [Field.OUTPUT]: interoperable ? (outputCurrencyInteroperable ?? outputCurrency) : outputCurrency ?? undefined
+    [Field.INPUT]: interoperable ? inputCurrencyInteroperable ?? inputCurrency : inputCurrency ?? undefined,
+    [Field.OUTPUT]: interoperable ? outputCurrencyInteroperable ?? outputCurrency : outputCurrency ?? undefined
   }
 
   const originalCurrencyBalances = {
@@ -325,9 +333,7 @@ export function useDerivedSwapInfo(
   // compare input balance to max input
   const [balanceIn, amountIn] = [
     originalCurrencyBalances[Field.INPUT],
-    slippageAdjustedAmounts
-      ? slippageAdjustedAmounts[Field.INPUT]
-      : null
+    slippageAdjustedAmounts ? slippageAdjustedAmounts[Field.INPUT] : null
   ]
 
   if (balanceIn && amountIn && balanceIn.lessThan(amountIn)) {
@@ -341,12 +347,12 @@ export function useDerivedSwapInfo(
     originalCurrencyBalances,
     parsedAmount,
     v2Trade: v2Trade ?? undefined,
-    inputError,
+    inputError
   }
 }
 
 function parseCurrencyFromURLParameter(urlParam: any, chainId: ChainId | undefined): string {
-  const defaultCurrency = chainId ? (WUSD[chainId]?.address ?? 'ETH') : 'ETH'
+  const defaultCurrency = chainId ? WUSD[chainId]?.address ?? 'ETH' : 'ETH'
 
   if (typeof urlParam === 'string') {
     const valid = isAddress(urlParam)
