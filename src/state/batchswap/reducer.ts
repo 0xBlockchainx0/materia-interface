@@ -112,11 +112,12 @@ export default createReducer<BatchSwapState>(initialState, builder =>
         }
       }
     })
-    .addCase(setInitialDefaultInput, (state, { payload: { inputCurrencyId } }) => {
+    .addCase(setInitialDefaultInput, (state, { payload: { inputCurrency, inputCurrencyId } }) => {
       return {
         ...initialState,
         [Field.INPUT]: {
           ...initialInputFieldState,
+          currency: inputCurrency,
           currencyId: inputCurrencyId
         }
       }

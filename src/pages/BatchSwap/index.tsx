@@ -41,7 +41,6 @@ import { ButtonMateriaConfirmed, ButtonMateriaError } from '../../components/But
 import Loader from '../../components/Loader'
 import { useActiveWeb3React } from '../../hooks'
 import useSound from 'use-sound'
-import { computeTradePriceBreakdown, warningSeverity } from '../../utils/prices'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import { MATERIA_BATCH_SWAPPER_ADDRESS, ZERO_ADDRESS } from '../../constants'
 import useCheckIsEthItem from '../../hooks/useCheckIsEthItem'
@@ -49,6 +48,7 @@ import { useEthItemContract } from '../../hooks/useContract'
 import { Contract } from 'ethers'
 import { splitSignature } from 'ethers/lib/utils'
 import { TokenInParameter, useBatchSwapCallback } from '../../hooks/useBatchSwapCallback'
+import ConfirmBatchSwapModal from '../../components/batchswap/ConfirmBatchSwapModal'
 
 export const ButtonBgItem = styled.img`
   height: 3ch;
@@ -129,8 +129,8 @@ export default function BatchSwap() {
 
   const handleInputSelect = useCallback(
     inputCurrency => {
-      onCurrencySelection(Field.INPUT, Field.OUTPUT_1, inputCurrency)
       setSignatureData(null)
+      onCurrencySelection(Field.INPUT, Field.OUTPUT_1, inputCurrency)
     },
     [onCurrencySelection, setSignatureData]
   )
@@ -267,15 +267,13 @@ export default function BatchSwap() {
     }
   }, [approval, approvalSubmitted])
 
-  const [{ showConfirm, tradeToConfirm, batchSwapErrorMessage, attemptingTxn, txHash }, setBatchSwapState] = useState<{
+  const [{ showConfirm, batchSwapErrorMessage, attemptingTxn, txHash }, setBatchSwapState] = useState<{
     showConfirm: boolean
-    tradeToConfirm: Trade | undefined
     attemptingTxn: boolean
     batchSwapErrorMessage: string | undefined
     txHash: string | undefined
   }>({
     showConfirm: false,
-    tradeToConfirm: undefined,
     attemptingTxn: false,
     batchSwapErrorMessage: undefined,
     txHash: undefined
@@ -304,7 +302,6 @@ export default function BatchSwap() {
     }
     setBatchSwapState({
       attemptingTxn: true,
-      tradeToConfirm,
       showConfirm,
       batchSwapErrorMessage: undefined,
       txHash: undefined
@@ -313,7 +310,6 @@ export default function BatchSwap() {
       .then(hash => {
         setBatchSwapState({
           attemptingTxn: false,
-          tradeToConfirm,
           showConfirm,
           batchSwapErrorMessage: undefined,
           txHash: hash
@@ -331,13 +327,12 @@ export default function BatchSwap() {
       .catch(error => {
         setBatchSwapState({
           attemptingTxn: false,
-          tradeToConfirm,
           showConfirm,
           batchSwapErrorMessage: error.message,
           txHash: undefined
         })
       })
-  }, [inputParameters, outputsParameters, tradeToConfirm, showConfirm, batchSwapCallback])
+  }, [inputParameters, outputsParameters, showConfirm, batchSwapCallback])
 
   const [isExpertMode] = useExpertModeManager()
   const [isShown, setIsShown] = useState(false)
@@ -347,8 +342,6 @@ export default function BatchSwap() {
   const classicMode = useIsClassicMode()
 
   const isValid = !batchSwapInputError
-  const { priceImpactWithoutFee } = computeTradePriceBreakdown(trade)
-  const priceImpactSeverity = warningSeverity(priceImpactWithoutFee)
 
   const toggleWalletModal = useWalletModalToggle()
 
@@ -362,15 +355,30 @@ export default function BatchSwap() {
     !batchSwapInputError &&
     (approval === ApprovalState.NOT_APPROVED ||
       approval === ApprovalState.PENDING ||
-      (approvalSubmitted && approval === ApprovalState.APPROVED)) &&
-    !(priceImpactSeverity > 3 && !isExpertMode)
+      (approvalSubmitted && approval === ApprovalState.APPROVED))
 
-  const { error: swapCallbackError } = { error: null }
+  const handleConfirmDismiss = useCallback(() => {
+    setBatchSwapState({ showConfirm: false, attemptingTxn, batchSwapErrorMessage, txHash })
+    if (txHash) {
+      setSignatureData(null)
+      onUserInput(Field.INPUT, '')
+    }
+  }, [attemptingTxn, onUserInput, setSignatureData, batchSwapErrorMessage, txHash])
 
   return (
     <>
       <AppBody>
         <Wrapper id="batch-swap-page">
+          <ConfirmBatchSwapModal
+            input={inputParameters}
+            outputs={outputsParameters}
+            isOpen={showConfirm}
+            attemptingTxn={attemptingTxn}
+            txHash={txHash}
+            onConfirm={handleBatchSwap}
+            batchSwapErrorMessage={batchSwapErrorMessage}
+            onDismiss={handleConfirmDismiss}
+          />
           <PageGridContainer className="batch-swap">
             <div className={`left-column batch-swap ${theme.name}`}>
               <div className="collapsable-title">
@@ -493,38 +501,23 @@ export default function BatchSwap() {
                         </ButtonMateriaConfirmed>
                         <ButtonMateriaError
                           onClick={() => {
-                            // if (isExpertMode) {
-                            handleBatchSwap()
-                            // } else {
-                            //   setBatchSwapState({
-                            //     tradeToConfirm: trade,
-                            //     attemptingTxn: false,
-                            //     batchSwapErrorMessage: undefined,
-                            //     showConfirm: true,
-                            //     txHash: undefined
-                            //   })
-                            // }
+                            if (isExpertMode) {
+                              handleBatchSwap()
+                            } else {
+                              setBatchSwapState({
+                                attemptingTxn: false,
+                                batchSwapErrorMessage: undefined,
+                                showConfirm: true,
+                                txHash: undefined
+                              })
+                            }
                           }}
                           id="batch-swap-button"
-                          disabled={
-                            !isValid ||
-                            approval !== ApprovalState.APPROVED ||
-                            (priceImpactSeverity > 3 && !isExpertMode)
-                          }
-                          hide={
-                            !isValid ||
-                            approval !== ApprovalState.APPROVED ||
-                            (priceImpactSeverity > 3 && !isExpertMode)
-                          }
-                          error={isValid && priceImpactSeverity > 2}
-                          showSwap={
-                            !(
-                              !isValid ||
-                              approval !== ApprovalState.APPROVED ||
-                              (priceImpactSeverity > 3 && !isExpertMode)
-                            )
-                          }
-                          useCustomProperties={priceImpactSeverity > 3 ? true : false}
+                          disabled={!isValid || approval !== ApprovalState.APPROVED}
+                          hide={!isValid || approval !== ApprovalState.APPROVED}
+                          error={isValid}
+                          showSwap={!(!isValid || approval !== ApprovalState.APPROVED)}
+                          useCustomProperties={false}
                           isExpertModeActive={isExpertMode}
                           onMouseEnter={() => {
                             setIsShown(true)
@@ -539,9 +532,7 @@ export default function BatchSwap() {
                             }
                           }}
                         >
-                          {priceImpactSeverity > 3 && !isExpertMode
-                            ? `Price Impact High`
-                            : `Swap ${priceImpactSeverity > 2 ? 'Anyway' : ''}`}
+                          {`Batch Swap`}
                         </ButtonMateriaError>
                       </RowCenter>
                     ) : (
@@ -551,23 +542,22 @@ export default function BatchSwap() {
                         ) : null}
                         <ButtonMateriaError
                           onClick={() => {
-                            // if (isExpertMode) {
-                            handleBatchSwap()
-                            // } else {
-                            //   setBatchSwapState({
-                            //     tradeToConfirm: trade,
-                            //     attemptingTxn: false,
-                            //     batchSwapErrorMessage: undefined,
-                            //     showConfirm: true,
-                            //     txHash: undefined
-                            //   })
-                            // }
+                            if (isExpertMode) {
+                              handleBatchSwap()
+                            } else {
+                              setBatchSwapState({
+                                attemptingTxn: false,
+                                batchSwapErrorMessage: undefined,
+                                showConfirm: true,
+                                txHash: undefined
+                              })
+                            }
                           }}
                           id="batch-swap-button"
-                          disabled={!isValid || (priceImpactSeverity > 3 && !isExpertMode) || !!swapCallbackError}
-                          error={isValid && priceImpactSeverity > 2 && !swapCallbackError}
-                          showSwap={!(!isValid || (priceImpactSeverity > 3 && !isExpertMode) || !!swapCallbackError)}
-                          useCustomProperties={priceImpactSeverity > 3 ? true : false}
+                          disabled={!isValid || !!batchSwapCallbackError}
+                          error={isValid && !batchSwapCallbackError}
+                          showSwap={!(!isValid || !!batchSwapCallbackError)}
+                          useCustomProperties={false}
                           isExpertModeActive={isExpertMode}
                           onMouseEnter={() => {
                             setIsShown(true)
@@ -582,11 +572,7 @@ export default function BatchSwap() {
                             }
                           }}
                         >
-                          {batchSwapInputError
-                            ? batchSwapInputError
-                            : priceImpactSeverity > 3 && !isExpertMode
-                            ? `Price Impact Too High`
-                            : `Swap ${priceImpactSeverity > 2 ? 'Anyway' : ''}`}
+                          {batchSwapInputError ? batchSwapInputError : `Batch Swap`}
                         </ButtonMateriaError>
                       </>
                     )}

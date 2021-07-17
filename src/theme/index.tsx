@@ -4429,6 +4429,22 @@ export const SwapCallbackErrorContainer = styled.div`
     height: 20px;
   }
 `
+export const BatchSwapCallbackErrorContainer = styled.div`
+  align-items: center;
+  width: 100%;
+  color: ${({ theme }) => theme.red1};
+  overflow: hidden;
+  font-size: 12px;
+  font-weight: 500;
+  text-align: center;
+  margin-bottom: 20px;
+
+  & > div > svg {
+    stroke: ${({ theme }) => theme.red1};
+    width: 20px;
+    height: 20px;
+  }
+`
 export const CountdownContainer = styled.div`
   font-size: 18px;
   font-weight: 500;

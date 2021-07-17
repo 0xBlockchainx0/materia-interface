@@ -25,4 +25,6 @@ export const selectCurrency = createAction<{
 }>('batchswap/selectCurrency')
 export const clearCurrency = createAction<{ field: Field }>('batchswap/clearCurrency')
 export const typeInput = createAction<{ field: Field; typedValue: string }>('batchswap/typeInput')
-export const setInitialDefaultInput = createAction<{ inputCurrencyId?: string }>('swap/setInitialDefaultInput')
+export const setInitialDefaultInput = createAction<{ inputCurrency?: Currency; inputCurrencyId?: string }>(
+  'swap/setInitialDefaultInput'
+)

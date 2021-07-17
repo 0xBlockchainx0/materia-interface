@@ -14,7 +14,7 @@ import { computeSlippageAdjustedAmounts } from '../../utils/prices'
 import useGetEthItemInteroperable from '../../hooks/useGetEthItemInteroperable'
 import { BAD_RECIPIENT_ADDRESSES, involvesAddress, tryParseAmount } from '../swap/hooks'
 import { TokenOutParameter } from '../../hooks/useBatchSwapCallback'
-import { wrappedCurrency } from '../../utils/wrappedCurrency'
+import { unwrappedToken, wrappedCurrency } from '../../utils/wrappedCurrency'
 import { WUSD } from '../../constants'
 
 export function useBatchSwapState(): AppState['batchswap'] {
@@ -245,9 +245,11 @@ export function useBatchSwapDefaults(): { inputCurrencyId: string | undefined } 
     if (!chainId) return
 
     const token = WUSD[chainId]
+    const currency = unwrappedToken(WUSD[chainId])
 
     dispatch(
       setInitialDefaultInput({
+        inputCurrency: currency,
         inputCurrencyId: token.address
       })
     )
