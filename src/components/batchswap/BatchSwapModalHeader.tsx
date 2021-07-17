@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { ArrowDown } from 'react-feather'
+import { ArrowDown, Plus } from 'react-feather'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components'
 import { AutoColumn } from '../Column'
@@ -35,10 +35,14 @@ export default function BatchSwapModalHeader({
         </RowFixed>
       </RowBetween>
 
-      {outputs.map(output => (
+      {outputs.map((output, index) => (
         <>
           <RowFixed>
-            <ArrowDown size="16" color={theme.text2} style={{ marginLeft: '4px', minWidth: '16px' }} />
+            {index == 0 ? (
+              <ArrowDown size="16" color={theme.text2} style={{ marginLeft: '4px', minWidth: '16px' }} />
+            ) : (
+              <Plus size="16" color={theme.text2} style={{ marginLeft: '4px', minWidth: '16px' }} />
+            )}
           </RowFixed>
           <RowBetween align="flex-end">
             <RowFixed gap={'0px'}>
