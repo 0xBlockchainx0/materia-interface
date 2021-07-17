@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useState } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 import { AutoColumn } from '../Column'
 import CurrencyInputPanel from '../CurrencyInputPanel'
@@ -10,6 +10,8 @@ import useGetEthItemInteroperable from '../../hooks/useGetEthItemInteroperable'
 import { wrappedCurrency } from '../../utils/wrappedCurrency'
 import { useActiveWeb3React } from '../../hooks'
 import { ZERO_ADDRESS } from '../../constants'
+import { useEffect } from 'react'
+import { Currency } from '@materia-dex/sdk'
 
 export const Center = styled.div`
   display: flex;
@@ -28,11 +30,12 @@ export default function BatchSwapOutput({ outputField }: BatchSwapOutputProps) {
   const { chainId } = useActiveWeb3React()
 
   // batch swap state
-  const { independentField, [outputField]: typedField, recipient } = useBatchSwapState()
+  const { [outputField]: typedField } = useBatchSwapState()
   const typedValue = typedField.typedValue
-  const { v2Trade, parsedAmount, originalCurrencies } = useDerivedBatchSwapInfo(outputField, true)
+  const { v2Trade, originalCurrencies } = useDerivedBatchSwapInfo(outputField, true)
 
-  const outputCurrencyId = wrappedCurrency(originalCurrencies[outputField], chainId)?.address ?? ZERO_ADDRESS
+  const [outputCurrency, setOutputCurrency] = useState<Currency | undefined>(undefined)
+  const outputCurrencyId = wrappedCurrency(outputCurrency, chainId)?.address ?? ZERO_ADDRESS
   const interoperable = useGetEthItemInteroperable(outputCurrencyId)
 
   const trade = v2Trade
@@ -43,7 +46,7 @@ export default function BatchSwapOutput({ outputField }: BatchSwapOutputProps) {
     (value: string) => {
       onUserInput(outputField, value)
     },
-    [onUserInput]
+    [onUserInput, outputField]
   )
 
   const formattedAmounts = {
@@ -51,9 +54,17 @@ export default function BatchSwapOutput({ outputField }: BatchSwapOutputProps) {
   }
 
   const handleOutputSelect = useCallback(
-    outputCurrency => onCurrencySelection(outputField, Field.INPUT, outputCurrency, interoperable),
-    [onCurrencySelection]
+    outputCurrency => {
+      setOutputCurrency(outputCurrency)
+    },
+    [setOutputCurrency]
   )
+
+  useEffect(() => {
+    if (outputCurrency) {
+      onCurrencySelection(outputField, Field.INPUT, outputCurrency, interoperable)
+    }
+  }, [interoperable, onCurrencySelection, outputCurrency, outputField, setOutputCurrency])
 
   return (
     <AutoColumn gap={'sm'}>
@@ -67,8 +78,8 @@ export default function BatchSwapOutput({ outputField }: BatchSwapOutputProps) {
         otherCurrency={originalCurrencies[Field.INPUT]}
         smallTokenImage={true}
         percentage={true}
-        id="swap-currency-output"
-        badgeWidth={"25%"}
+        id="batch-swap-currency-output"
+        badgeWidth={'25%'}
       />
       <div className={`advanced-batchswap-details-container ${theme.name}`}>
         <AdvancedBatchSwapDetailsDropdown

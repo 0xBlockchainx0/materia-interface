@@ -9,40 +9,6 @@ import isZero from '../utils/isZero'
 import { useActiveWeb3React } from './index'
 import useTransactionDeadline from './useTransactionDeadline'
 
-// function batchSwap(TokenIn calldata tokenIn, TokenOut[] calldata tokensOut, Settings calldata settings) external
-// function batchSwapItem(TokenIn calldata tokenIn, TokenOut[] calldata tokensOut, Settings calldata settings) external
-// function batchSwapEth(TokenOut[] calldata tokensOut, Settings calldata settings) external payable
-
-/** 
-struct TokenIn {
-  address token
-  uint256 amount
-  uint256 approveMax
-  Signature signature
-}
-
-struct Signature {
-  uint8 v
-  bytes32 r
-  bytes32 s
-}
-
-struct TokenOut {
-  address asInteroperable
-  uint256 millesimals
-  uint256 amountMin
-  bool unwrap
-}
-
-struct Settings {
-  address factory
-  address bridgeToken
-  address erc20Wrapper
-  uint deadline
-  address to
-}
-**/
-
 export enum BatchSwapCallbackState {
   INVALID,
   LOADING,
@@ -50,16 +16,16 @@ export enum BatchSwapCallbackState {
 }
 
 export interface TokenInParameter {
-  token: Token | undefined,
-  amount: CurrencyAmount | undefined,
-  permit: { v: number; r: string; s: string; } | null
+  token: Token | undefined
+  amount: CurrencyAmount | undefined
+  permit: { v: number; r: string; s: string } | null
 }
 
 export interface TokenOutParameter {
-  token: Token | undefined,
-  interoperable: string | undefined,
-  percentage: number | undefined,
-  amount: CurrencyAmount | undefined,
+  token: Token | undefined
+  interoperable: string | undefined
+  percentage: number | undefined
+  amount: CurrencyAmount | undefined
 }
 
 interface BatchSwapParameters {
@@ -87,45 +53,40 @@ type EstimatedSwapCall = SuccessfulCall | FailedCall
 
 function useBatchSwapCallArguments(
   input: TokenInParameter | undefined,
-  outputs: TokenOutParameter[] | undefined,
+  outputs: TokenOutParameter[] | undefined
 ): BatchSwapCall[] {
   const { account, chainId, library } = useActiveWeb3React()
   const deadline = useTransactionDeadline()
   const recipient = account
-  const contract: Contract | null = (!library || !account || !chainId) ? null : getBatchSwapperContract(chainId, library, account)
+  const contract: Contract | null =
+    !library || !account || !chainId ? null : getBatchSwapperContract(chainId, library, account)
 
   return useMemo(() => {
     const batchSwapMethods: BatchSwapParameters[] = []
 
     if (!input || !outputs || !recipient || !library || !account || !chainId || !deadline || !contract) return []
 
+    // function batchSwap(TokenIn calldata tokenIn, TokenOut[] calldata tokensOut, Settings calldata settings) external
+    // function batchSwapItem(TokenIn calldata tokenIn, TokenOut[] calldata tokensOut, Settings calldata settings) external
+    // function batchSwapEth(TokenOut[] calldata tokensOut, Settings calldata settings) external payable
+
     const tokenIn = [
       input.token?.address,
       `0x${input.amount ? input.amount.raw.toString(16) : '0'}`,
       `0x${input.amount ? input.amount.raw.toString(16) : '0'}`,
-      [
-        input.permit?.v ?? '0',
-        input.permit?.r ?? '0',
-        input.permit?.s ?? '0',
-      ]
+      [input.permit?.v ?? '0', input.permit?.r ?? '0', input.permit?.s ?? '0']
     ]
 
     const tokenOuts = outputs?.map(x => [
       x.interoperable ?? x.token?.address,
-      ((x.percentage ?? 0) * 10),
+      (x.percentage ?? 0) * 10,
       ZERO_HEX,
-      x.interoperable ? false : true
+      !!x.interoperable
     ])
 
-    const settings = [
-      FACTORY_ADDRESS,
-      WUSD[chainId].address,
-      ERC20WRAPPER[chainId],
-      deadline,
-      recipient
-    ]
+    const settings = [FACTORY_ADDRESS, WUSD[chainId].address, ERC20WRAPPER[chainId], deadline, recipient]
 
-    const methodName = "batchSwapItem"
+    const methodName = 'batchSwapItem'
     const value = ZERO_HEX
 
     batchSwapMethods.push({
@@ -134,11 +95,16 @@ function useBatchSwapCallArguments(
       value: value
     })
 
+    console.log('************************************')
+    console.log('*** methodName: ', methodName)
+    console.log('*** args: ', [tokenIn, tokenOuts, settings])
+    console.log('*** value: ', value)
+
     return batchSwapMethods.map(parameters => ({
       parameters: parameters,
       contract: contract
     }))
-  }, [account, contract, chainId, deadline, library, recipient])
+  }, [input, outputs, recipient, library, account, chainId, deadline, contract])
 }
 
 export function useBatchSwapCallback(
@@ -233,7 +199,7 @@ export function useBatchSwapCallback(
         })
           .then((response: any) => {
             const inputSymbol = input?.token?.symbol
-            const outputInfos = outputs?.map(x => `${x.token?.symbol} (${x.percentage}%)`)?.join(", ")
+            const outputInfos = outputs?.map(x => `${x.token?.symbol} (${x.percentage}%)`)?.join(', ')
             const inputAmount = input?.amount?.toSignificant(3)
 
             const base = `Batch Swap ${inputAmount} ${inputSymbol} for ${outputInfos}`

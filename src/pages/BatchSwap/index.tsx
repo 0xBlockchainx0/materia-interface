@@ -90,7 +90,7 @@ export default function BatchSwap() {
   const theme = useContext(ThemeContext)
   const { account, chainId, library } = useActiveWeb3React()
 
-  const defaultSelectedCurrency = useBatchSwapDefaults()
+  useBatchSwapDefaults()
 
   const { [Field.INPUT]: typedField } = useBatchSwapState()
   const typedValue = typedField.typedValue

@@ -1,5 +1,5 @@
 import useENS from '../../hooks/useENS'
-import { ChainId, Currency, CurrencyAmount, ETHER, IETH, JSBI, Token, Trade } from '@materia-dex/sdk'
+import { Currency, CurrencyAmount, ETHER, IETH, Token, Trade } from '@materia-dex/sdk'
 import { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useActiveWeb3React } from '../../hooks'
@@ -14,7 +14,7 @@ import { computeSlippageAdjustedAmounts } from '../../utils/prices'
 import useGetEthItemInteroperable from '../../hooks/useGetEthItemInteroperable'
 import { BAD_RECIPIENT_ADDRESSES, involvesAddress, tryParseAmount } from '../swap/hooks'
 import { TokenOutParameter } from '../../hooks/useBatchSwapCallback'
-import { unwrappedToken, wrappedCurrency } from '../../utils/wrappedCurrency'
+import { wrappedCurrency } from '../../utils/wrappedCurrency'
 import { WUSD } from '../../constants'
 
 export function useBatchSwapState(): AppState['batchswap'] {
