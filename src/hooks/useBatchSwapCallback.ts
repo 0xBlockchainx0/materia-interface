@@ -2,11 +2,12 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { Contract } from '@ethersproject/contracts'
 import { Token, CurrencyAmount, FACTORY_ADDRESS } from '@materia-dex/sdk'
 import { useMemo } from 'react'
-import { ERC20WRAPPER, WUSD, ZERO_HEX } from '../constants'
+import { ERC20WRAPPER, WUSD, ZERO_ADDRESS, ZERO_HEX } from '../constants'
 import { useTransactionAdder } from '../state/transactions/hooks'
 import { calculateGasMargin, getBatchSwapperContract } from '../utils'
 import isZero from '../utils/isZero'
 import { useActiveWeb3React } from './index'
+import useCheckIsEthItem from './useCheckIsEthItem'
 import useTransactionDeadline from './useTransactionDeadline'
 
 export enum BatchSwapCallbackState {
@@ -58,6 +59,8 @@ function useBatchSwapCallArguments(
   const { account, chainId, library } = useActiveWeb3React()
   const deadline = useTransactionDeadline()
   const recipient = account
+  const inputIsEth = false
+  const inputIsEthItem = useCheckIsEthItem(input?.token?.address ?? ZERO_ADDRESS)?.ethItem
   const contract: Contract | null =
     !library || !account || !chainId ? null : getBatchSwapperContract(chainId, library, account)
 
@@ -66,39 +69,88 @@ function useBatchSwapCallArguments(
 
     if (!input || !outputs || !recipient || !library || !account || !chainId || !deadline || !contract) return []
 
-    // function batchSwap(TokenIn calldata tokenIn, TokenOut[] calldata tokensOut, Settings calldata settings) external
-    // function batchSwapItem(TokenIn calldata tokenIn, TokenOut[] calldata tokensOut, Settings calldata settings) external
+    // ETH
     // function batchSwapEth(TokenOut[] calldata tokensOut, Settings calldata settings) external payable
+    if (inputIsEth) {
+      const tokenOuts = outputs?.map(x => [
+        x.interoperable ?? x.token?.address,
+        (x.percentage ?? 0) * 10,
+        ZERO_HEX,
+        !!x.interoperable
+      ])
 
-    const tokenIn = [
-      input.token?.address,
-      `0x${input.amount ? input.amount.raw.toString(16) : '0'}`,
-      `0x${input.amount ? input.amount.raw.toString(16) : '0'}`,
-      [input.permit?.v ?? '0', input.permit?.r ?? '0', input.permit?.s ?? '0']
-    ]
+      const settings = [FACTORY_ADDRESS, WUSD[chainId].address, ERC20WRAPPER[chainId], deadline, recipient]
 
-    const tokenOuts = outputs?.map(x => [
-      x.interoperable ?? x.token?.address,
-      (x.percentage ?? 0) * 10,
-      ZERO_HEX,
-      !!x.interoperable
-    ])
+      const methodName = 'batchSwapEth'
+      const value = `0x${input.amount ? input.amount.raw.toString(16) : '0'}`
 
-    const settings = [FACTORY_ADDRESS, WUSD[chainId].address, ERC20WRAPPER[chainId], deadline, recipient]
+      batchSwapMethods.push({
+        methodName: methodName,
+        args: [tokenOuts, settings],
+        value: value
+      })
+    }
+    // ETHITEM
+    // function batchSwapItem(TokenIn calldata tokenIn, TokenOut[] calldata tokensOut, Settings calldata settings) external
+    if (inputIsEthItem) {
+      const withPermit = input.permit?.v !== 0 && input.permit?.r !== '0' && input.permit?.s !== '0'
 
-    const methodName = 'batchSwapItem'
-    const value = ZERO_HEX
+      const tokenIn = [
+        input.token?.address,
+        `0x${input.amount ? input.amount.raw.toString(16) : '0'}`,
+        withPermit ? `0x${input.amount ? input.amount.raw.toString(16) : '0'}` : ZERO_HEX,
+        [input.permit?.v ?? ZERO_HEX, input.permit?.r ?? ZERO_HEX, input.permit?.s ?? ZERO_HEX]
+      ]
 
-    batchSwapMethods.push({
-      methodName: methodName,
-      args: [tokenIn, tokenOuts, settings],
-      value: value
-    })
+      const tokenOuts = outputs?.map(x => [
+        x.interoperable ?? x.token?.address,
+        (x.percentage ?? 0) * 10,
+        ZERO_HEX,
+        !!x.interoperable
+      ])
+
+      const settings = [FACTORY_ADDRESS, WUSD[chainId].address, ERC20WRAPPER[chainId], deadline, recipient]
+
+      const methodName = 'batchSwapItem'
+      const value = ZERO_HEX
+
+      batchSwapMethods.push({
+        methodName: methodName,
+        args: [tokenIn, tokenOuts, settings],
+        value: value
+      })
+    }
+    // ERC20
+    // function batchSwap(TokenIn calldata tokenIn, TokenOut[] calldata tokensOut, Settings calldata settings) external
+    else {
+      const tokenIn = [
+        input.token?.address,
+        `0x${input.amount ? input.amount.raw.toString(16) : '0'}`,
+        ZERO_HEX,
+        [0, ZERO_HEX, ZERO_HEX]
+      ]
+
+      const tokenOuts = outputs?.map(x => [
+        x.interoperable ?? x.token?.address,
+        (x.percentage ?? 0) * 10,
+        ZERO_HEX,
+        !!x.interoperable
+      ])
+
+      const settings = [FACTORY_ADDRESS, WUSD[chainId].address, ERC20WRAPPER[chainId], deadline, recipient]
+
+      const methodName = 'batchSwap'
+      const value = ZERO_HEX
+
+      batchSwapMethods.push({
+        methodName: methodName,
+        args: [tokenIn, tokenOuts, settings],
+        value: value
+      })
+    }
 
     console.log('************************************')
-    console.log('*** methodName: ', methodName)
-    console.log('*** args: ', [tokenIn, tokenOuts, settings])
-    console.log('*** value: ', value)
+    console.log('*** batchSwapMethods: ', batchSwapMethods)
 
     return batchSwapMethods.map(parameters => ({
       parameters: parameters,
