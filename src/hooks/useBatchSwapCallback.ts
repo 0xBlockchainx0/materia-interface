@@ -2,7 +2,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { Contract } from '@ethersproject/contracts'
 import { Token, CurrencyAmount, FACTORY_ADDRESS } from '@materia-dex/sdk'
 import { useMemo } from 'react'
-import { ERC20WRAPPER, WUSD, ZERO_ADDRESS, ZERO_HEX } from '../constants'
+import { ERC20WRAPPER, WUSD, ZERO_ADDRESS, ZERO_HEX, ZERO_HEX_PERMIT } from '../constants'
 import { useTransactionAdder } from '../state/transactions/hooks'
 import { calculateGasMargin, getBatchSwapperContract } from '../utils'
 import isZero from '../utils/isZero'
@@ -99,7 +99,7 @@ function useBatchSwapCallArguments(
         input.token?.address,
         `0x${input.amount ? input.amount.raw.toString(16) : '0'}`,
         withPermit ? `0x${input.amount ? input.amount.raw.toString(16) : '0'}` : ZERO_HEX,
-        [input.permit?.v ?? ZERO_HEX, input.permit?.r ?? ZERO_HEX, input.permit?.s ?? ZERO_HEX]
+        [input.permit?.v ?? 0, input.permit?.r ?? ZERO_HEX_PERMIT, input.permit?.s ?? ZERO_HEX_PERMIT]
       ]
 
       const tokenOuts = outputs?.map(x => [
@@ -127,7 +127,7 @@ function useBatchSwapCallArguments(
         input.token?.address,
         `0x${input.amount ? input.amount.raw.toString(16) : '0'}`,
         ZERO_HEX,
-        [0, ZERO_HEX, ZERO_HEX]
+        [0, ZERO_HEX_PERMIT, ZERO_HEX_PERMIT]
       ]
 
       const tokenOuts = outputs?.map(x => [
