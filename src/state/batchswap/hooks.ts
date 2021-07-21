@@ -223,6 +223,7 @@ export function useOutputsParametersInfo(
 
     const outputToken = wrappedCurrency(outputCurrency, chainId)
     const outputInfo: TokenOutParameter = {
+      currency: outputCurrency,
       token: outputToken,
       interoperable: interoperable,
       percentage: parseInt(outputTypedValue ?? 0),

@@ -1,4 +1,4 @@
-import { CurrencyAmount, JSBI, Trade } from '@materia-dex/sdk'
+import { CurrencyAmount, ETHER, JSBI, Trade } from '@materia-dex/sdk'
 import React, { useCallback, useContext, useEffect, useState, useMemo } from 'react'
 import ReactGA from 'react-ga'
 import styled, { ThemeContext } from 'styled-components'
@@ -42,7 +42,12 @@ import Loader from '../../components/Loader'
 import { useActiveWeb3React } from '../../hooks'
 import useSound from 'use-sound'
 import { useWalletModalToggle } from '../../state/application/hooks'
-import { MATERIA_BATCH_SWAPPER_ADDRESS, ZERO_ADDRESS } from '../../constants'
+import {
+  MATERIA_BATCH_SWAPPER_ADDRESS,
+  MAX_BATCH_SWAP_OUTPUTS,
+  MIN_BATCH_SWAP_OUTPUTS,
+  ZERO_ADDRESS
+} from '../../constants'
 import useCheckIsEthItem from '../../hooks/useCheckIsEthItem'
 import { useEthItemContract } from '../../hooks/useContract'
 import { Contract } from 'ethers'
@@ -84,9 +89,6 @@ export const BatchSwapDetails = styled(AdvancedSwapDetailsDropdown)`
 `
 
 export default function BatchSwap() {
-  const MIN_BATCH_SWAP_OUTPUTS = 1
-  const MAX_BATCH_SWAP_OUTPUTS = 10
-
   const theme = useContext(ThemeContext)
   const { account, chainId, library } = useActiveWeb3React()
 
@@ -281,6 +283,7 @@ export default function BatchSwap() {
 
   const inputParameters: TokenInParameter = useMemo(() => {
     const parameters: TokenInParameter = {
+      currency: originalCurrencies[Field.INPUT],
       token: tokenInput,
       amount: parsedAmounts[Field.INPUT],
       permit: signatureData
@@ -319,8 +322,8 @@ export default function BatchSwap() {
           category: 'BatchSwap',
           action: 'BatchSwap w/o Send',
           label: [
-            inputParameters?.token?.symbol,
-            outputsParameters?.map(x => `${x.token?.symbol} (${x.percentage}%)`)?.join(', ')
+            (inputParameters.currency == ETHER ? 'ETH' : inputParameters?.token?.symbol),
+            outputsParameters?.map(x => `${x.currency == ETHER ? 'ETH' : x.token?.symbol} (${x.percentage}%)`)?.join(', ')
           ].join('/')
         })
       })
@@ -353,6 +356,7 @@ export default function BatchSwap() {
 
   const showApproveFlow =
     !batchSwapInputError &&
+    originalCurrencies[Field.INPUT] !== ETHER &&
     (approval === ApprovalState.NOT_APPROVED ||
       approval === ApprovalState.PENDING ||
       (approvalSubmitted && approval === ApprovalState.APPROVED))

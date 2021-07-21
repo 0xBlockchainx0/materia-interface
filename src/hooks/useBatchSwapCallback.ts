@@ -1,6 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { Contract } from '@ethersproject/contracts'
-import { Token, CurrencyAmount, FACTORY_ADDRESS } from '@materia-dex/sdk'
+import { Token, CurrencyAmount, FACTORY_ADDRESS, Currency, ETHER } from '@materia-dex/sdk'
 import { useMemo } from 'react'
 import { ERC20WRAPPER, WUSD, ZERO_ADDRESS, ZERO_HEX, ZERO_HEX_PERMIT } from '../constants'
 import { useTransactionAdder } from '../state/transactions/hooks'
@@ -17,12 +17,14 @@ export enum BatchSwapCallbackState {
 }
 
 export interface TokenInParameter {
+  currency: Currency | undefined
   token: Token | undefined
   amount: CurrencyAmount | undefined
   permit: { v: number; r: string; s: string } | null
 }
 
 export interface TokenOutParameter {
+  currency: Currency | undefined
   token: Token | undefined
   interoperable: string | undefined
   percentage: number | undefined
@@ -59,8 +61,8 @@ function useBatchSwapCallArguments(
   const { account, chainId, library } = useActiveWeb3React()
   const deadline = useTransactionDeadline()
   const recipient = account
-  const inputIsEth = false
-  const inputIsEthItem = useCheckIsEthItem(input?.token?.address ?? ZERO_ADDRESS)?.ethItem
+  const inputIsEth = input?.currency == ETHER
+  const inputIsEthItem = useCheckIsEthItem(input?.token?.address ?? ZERO_ADDRESS)?.ethItem && !inputIsEth
   const contract: Contract | null =
     !library || !account || !chainId ? null : getBatchSwapperContract(chainId, library, account)
 
@@ -76,7 +78,7 @@ function useBatchSwapCallArguments(
         x.interoperable ?? x.token?.address,
         (x.percentage ?? 0) * 10,
         ZERO_HEX,
-        !!x.interoperable
+        x.currency == ETHER ? true : !!x.interoperable
       ])
 
       const settings = [FACTORY_ADDRESS, WUSD[chainId].address, ERC20WRAPPER[chainId], deadline, recipient]
@@ -92,7 +94,7 @@ function useBatchSwapCallArguments(
     }
     // ETHITEM
     // function batchSwapItem(TokenIn calldata tokenIn, TokenOut[] calldata tokensOut, Settings calldata settings) external
-    if (inputIsEthItem) {
+    else if (inputIsEthItem) {
       const withPermit = input.permit?.v !== 0 && input.permit?.r !== '0' && input.permit?.s !== '0'
 
       const tokenIn = [
@@ -106,7 +108,7 @@ function useBatchSwapCallArguments(
         x.interoperable ?? x.token?.address,
         (x.percentage ?? 0) * 10,
         ZERO_HEX,
-        !!x.interoperable
+        x.currency == ETHER ? true : !!x.interoperable
       ])
 
       const settings = [FACTORY_ADDRESS, WUSD[chainId].address, ERC20WRAPPER[chainId], deadline, recipient]
@@ -134,7 +136,7 @@ function useBatchSwapCallArguments(
         x.interoperable ?? x.token?.address,
         (x.percentage ?? 0) * 10,
         ZERO_HEX,
-        !!x.interoperable
+        x.currency == ETHER ? true : !!x.interoperable
       ])
 
       const settings = [FACTORY_ADDRESS, WUSD[chainId].address, ERC20WRAPPER[chainId], deadline, recipient]
@@ -250,8 +252,8 @@ export function useBatchSwapCallback(
           ...(value && !isZero(value) ? { value, from: account } : { from: account })
         })
           .then((response: any) => {
-            const inputSymbol = input?.token?.symbol
-            const outputInfos = outputs?.map(x => `${x.token?.symbol} (${x.percentage}%)`)?.join(', ')
+            const inputSymbol = input.currency == ETHER ? 'ETH' : input?.token?.symbol
+            const outputInfos = outputs?.map(x => `${x.currency == ETHER ? 'ETH' : x.token?.symbol} (${x.percentage}%)`)?.join(', ')
             const inputAmount = input?.amount?.toSignificant(3)
 
             const base = `Batch Swap ${inputAmount} ${inputSymbol} for ${outputInfos}`

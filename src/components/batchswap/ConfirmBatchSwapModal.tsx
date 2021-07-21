@@ -1,3 +1,4 @@
+import { ETHER } from '@materia-dex/sdk'
 import React, { useCallback } from 'react'
 import { TokenInParameter, TokenOutParameter } from '../../hooks/useBatchSwapCallback'
 import TransactionConfirmationModal, {
@@ -41,7 +42,7 @@ export default function ConfirmBatchSwapModal({
   }, [input, outputs, onConfirm, batchSwapErrorMessage])
 
   const inputSymbol = input?.token?.symbol
-  const outputInfos = outputs?.map(x => `${x.token?.symbol} (${x.percentage}%)`)?.join(', ')
+  const outputInfos = outputs?.map(x => `${x.currency == ETHER ? 'ETH' : x.token?.symbol} (${x.percentage}%)`)?.join(', ')
   const inputAmount = input?.amount?.toSignificant(6)
   const pendingText = `Batch swapping ${inputAmount} ${inputSymbol} for ${outputInfos}`
 

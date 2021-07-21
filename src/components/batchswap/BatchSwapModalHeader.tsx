@@ -7,7 +7,7 @@ import CurrencyLogo from '../CurrencyLogo'
 import { RowBetween, RowFixed } from '../Row'
 import { TruncatedText } from './styleds'
 import { TokenInParameter, TokenOutParameter } from '../../hooks/useBatchSwapCallback'
-import { unwrappedToken } from '../../utils/wrappedCurrency'
+import { ETHER } from '@materia-dex/sdk'
 
 export default function BatchSwapModalHeader({
   input,
@@ -17,7 +17,7 @@ export default function BatchSwapModalHeader({
   outputs: TokenOutParameter[]
 }) {
   const theme = useContext(ThemeContext)
-  const currencyInput = input.token ? unwrappedToken(input.token) : undefined
+  const currencyInput = input.currency == ETHER ? ETHER : input.token
 
   return (
     <AutoColumn gap={'md'} style={{ marginTop: '20px' }}>
@@ -47,7 +47,7 @@ export default function BatchSwapModalHeader({
           <RowBetween align="flex-end">
             <RowFixed gap={'0px'}>
               <CurrencyLogo
-                currency={output.token && unwrappedToken(output.token)}
+                currency={output.currency == ETHER ? ETHER : output.token}
                 size={'24px'}
                 style={{ marginRight: '12px' }}
               />
@@ -57,7 +57,7 @@ export default function BatchSwapModalHeader({
             </RowFixed>
             <RowFixed gap={'0px'}>
               <Text fontSize={24} fontWeight={500} style={{ marginLeft: '10px' }}>
-                {(output.token && unwrappedToken(output.token))?.symbol}
+                {output.currency == ETHER ? 'ETH' : output.token?.symbol}
               </Text>
             </RowFixed>
           </RowBetween>
