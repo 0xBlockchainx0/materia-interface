@@ -2730,7 +2730,15 @@ export const SmallOperationButton = styled(Button)<{ disabled?: boolean }>`
   }
 
   &.classic, &.classic:after, &.classic:before, &.classic > svg { transform: none; }
-  &.classic > svg { display: inherit; }
+  &.classic > svg { 
+    display: inherit;
+    stroke-width: 0.2rem;
+    color: ${({ theme }) => theme.yellowGreen}
+  }
+
+  &.classic:hover > svg { 
+    color: ${({ theme }) => theme.azure2}
+  }
 
   &:before { bottom: 104px; right: -184px;  }
 

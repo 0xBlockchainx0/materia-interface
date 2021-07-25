@@ -151,14 +151,14 @@ function useBatchSwapCallArguments(
       })
     }
 
-    console.log('************************************')
-    console.log('*** batchSwapMethods: ', batchSwapMethods)
+    // console.log('************************************')
+    // console.log('*** batchSwapMethods: ', batchSwapMethods)
 
     return batchSwapMethods.map(parameters => ({
       parameters: parameters,
       contract: contract
     }))
-  }, [input, outputs, recipient, library, account, chainId, deadline, contract])
+  }, [input, outputs, recipient, library, account, chainId, deadline, contract, inputIsEth, inputIsEthItem])
 }
 
 export function useBatchSwapCallback(
@@ -253,7 +253,9 @@ export function useBatchSwapCallback(
         })
           .then((response: any) => {
             const inputSymbol = input.currency == ETHER ? 'ETH' : input?.token?.symbol
-            const outputInfos = outputs?.map(x => `${x.currency == ETHER ? 'ETH' : x.token?.symbol} (${x.percentage}%)`)?.join(', ')
+            const outputInfos = outputs
+              ?.map(x => `${x.currency == ETHER ? 'ETH' : x.token?.symbol} (${x.percentage}%)`)
+              ?.join(', ')
             const inputAmount = input?.amount?.toSignificant(3)
 
             const base = `Batch Swap ${inputAmount} ${inputSymbol} for ${outputInfos}`

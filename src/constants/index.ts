@@ -41,7 +41,7 @@ type ChainTokenList = {
 export const GIL: { [chainId in ChainId]: Token } = {
   [ChainId.MAINNET]: new Token(ChainId.MAINNET, '0x020810D775fC019480CD56ECb960389d3477039D', 18, 'GIL', 'Materia'),
   [ChainId.RINKEBY]: new Token(ChainId.RINKEBY, ZERO_ADDRESS, 18, 'GIL', 'Materia'),
-  [ChainId.ROPSTEN]: new Token(ChainId.ROPSTEN, '0xa5a5f4ECD079e8C92d4D8Ec3AC7bFcD37B5e4ab2', 18, 'LIG', 'Materia'),
+  [ChainId.ROPSTEN]: new Token(ChainId.ROPSTEN, '0x1D4f770032A551D70c240D937a8e8cf19Ee37E7d', 18, 'GIL', 'Materia'),
   [ChainId.GÖRLI]: new Token(ChainId.GÖRLI, ZERO_ADDRESS, 18, 'GIL', 'Materia'),
   [ChainId.KOVAN]: new Token(ChainId.KOVAN, ZERO_ADDRESS, 18, 'GIL', 'Materia')
 }
@@ -311,6 +311,8 @@ export const BETTER_TRADE_LINK_THRESHOLD = new Percent(JSBI.BigInt(75), JSBI.Big
 
 export const MIN_BATCH_SWAP_OUTPUTS = 1
 export const MAX_BATCH_SWAP_OUTPUTS = 10
+export const MAX_BATCH_SWAP_OUTPUTS_FREE = 3
+export const MIN_GIL_UNLOCK_FULL_BATCHSWAP = JSBI.BigInt(1000 * 10 ** 18)
 
 export const ZERO_HEX = '0x0'
 export const ZERO_HEX_PERMIT = '0x0000000000000000000000000000000000000000000000000000000000000000'

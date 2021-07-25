@@ -90,28 +90,6 @@ export function useTokenBalances(
   return useTokenBalancesWithLoadingIndicator(address, tokens)[0]
 }
 
-export function useUserTokens(): any {
-  const { account } = useActiveWeb3React()
-  const allTokens = useAllListTokens()
-  const allTokensArray = useMemo(() => Object.values(allTokens ?? {}), [allTokens])
-  const balances = useTokenBalances(account ?? undefined, allTokensArray)
-  const ethBalance = useCurrencyBalance(account ?? undefined, ETHER)
-  let filteredBalances: Array<any> = []
-
-  if (ethBalance && JSBI.greaterThan(ethBalance.raw, JSBI.BigInt(0))) {
-    filteredBalances.push(ethBalance)
-  }
-
-  Object.keys(balances).forEach(currency => {
-    const balance = balances[currency]?.raw
-    if (balance && JSBI.greaterThan(balance, JSBI.BigInt(0))) {
-      filteredBalances.push(balances[currency])
-    }
-  })
-
-  return filteredBalances ?? []
-}
-
 // get the balance for a single token/account combo
 export function useTokenBalance(account?: string, token?: Token): TokenAmount | undefined {
   const tokenBalances = useTokenBalances(account, [token])
@@ -175,4 +153,26 @@ export function useAggregateUniBalance(): TokenAmount | undefined {
       uniUnHarvested?.raw ?? JSBI.BigInt(0)
     )
   )
+}
+
+export function useUserTokens(): any {
+  const { account } = useActiveWeb3React()
+  const allTokens = useAllListTokens()
+  const allTokensArray = useMemo(() => Object.values(allTokens ?? {}), [allTokens])
+  const balances = useTokenBalances(account ?? undefined, allTokensArray)
+  const ethBalance = useCurrencyBalance(account ?? undefined, ETHER)
+  const filteredBalances: Array<any> = []
+
+  if (ethBalance && JSBI.greaterThan(ethBalance.raw, JSBI.BigInt(0))) {
+    filteredBalances.push(ethBalance)
+  }
+
+  Object.keys(balances).forEach(currency => {
+    const balance = balances[currency]?.raw
+    if (balance && JSBI.greaterThan(balance, JSBI.BigInt(0))) {
+      filteredBalances.push(balances[currency])
+    }
+  })
+
+  return filteredBalances ?? []
 }

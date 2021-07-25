@@ -109,11 +109,21 @@ export function getBatchSwapperContract(_: ChainId, library: Web3Provider, accou
   return getContract(MATERIA_BATCH_SWAPPER_ADDRESS[_], BatchSwapperMateria, library, account)
 }
 
-export function getEthItemCollectionContract(_: number, ethItemCollectionAddress: string, library: Web3Provider, account?: string): Contract {
+export function getEthItemCollectionContract(
+  _: number,
+  ethItemCollectionAddress: string,
+  library: Web3Provider,
+  account?: string
+): Contract {
   return getContract(ethItemCollectionAddress, IERC1155ABI, library, account)
 }
 
-export function getERC20WrapperCollectionContract(_: number, erc20WrapperAddress: string, library: Web3Provider, account?: string): Contract {
+export function getERC20WrapperCollectionContract(
+  _: number,
+  erc20WrapperAddress: string,
+  library: Web3Provider,
+  account?: string
+): Contract {
   return getContract(erc20WrapperAddress, IERC20WrapperV1, library, account)
 }
 

@@ -1,4 +1,4 @@
-import { CurrencyAmount, ETHER, JSBI, Trade } from '@materia-dex/sdk'
+import { ChainId, CurrencyAmount, ETHER, JSBI, TokenAmount, Trade } from '@materia-dex/sdk'
 import React, { useCallback, useContext, useEffect, useState, useMemo } from 'react'
 import ReactGA from 'react-ga'
 import styled, { ThemeContext } from 'styled-components'
@@ -43,9 +43,12 @@ import { useActiveWeb3React } from '../../hooks'
 import useSound from 'use-sound'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import {
+  GIL,
   MATERIA_BATCH_SWAPPER_ADDRESS,
   MAX_BATCH_SWAP_OUTPUTS,
+  MAX_BATCH_SWAP_OUTPUTS_FREE,
   MIN_BATCH_SWAP_OUTPUTS,
+  MIN_GIL_UNLOCK_FULL_BATCHSWAP,
   ZERO_ADDRESS
 } from '../../constants'
 import useCheckIsEthItem from '../../hooks/useCheckIsEthItem'
@@ -54,6 +57,7 @@ import { Contract } from 'ethers'
 import { splitSignature } from 'ethers/lib/utils'
 import { TokenInParameter, useBatchSwapCallback } from '../../hooks/useBatchSwapCallback'
 import ConfirmBatchSwapModal from '../../components/batchswap/ConfirmBatchSwapModal'
+import { useTokenBalance } from '../../state/wallet/hooks'
 
 export const ButtonBgItem = styled.img`
   height: 3ch;
@@ -172,12 +176,37 @@ export default function BatchSwap() {
   const [addOutputTokenDisabled, setAddOutputTokenDisabled] = useState(false)
   const [removeOutputTokenDisabled, setRemoveOutputTokenDisabled] = useState(false)
 
+  const gilBalance = useTokenBalance(account ?? undefined, GIL[chainId ?? ChainId.MAINNET])
+  const minGilUnlockAmount = useMemo(() => {
+    return new TokenAmount(GIL[chainId ?? ChainId.MAINNET], MIN_GIL_UNLOCK_FULL_BATCHSWAP)
+  }, [chainId])
+  const accountHaveGilBalance = gilBalance ? !gilBalance?.lessThan(minGilUnlockAmount) : false
+
   useEffect(() => {
     const outputs = currentOutputs.length
 
-    setRemoveOutputTokenDisabled(outputs <= MIN_BATCH_SWAP_OUTPUTS)
-    setAddOutputTokenDisabled(outputs >= MAX_BATCH_SWAP_OUTPUTS)
-  }, [currentOutputs, setAddOutputTokenDisabled, setRemoveOutputTokenDisabled])
+    console.log('************************************')
+    console.log('*** gilBalance: ', gilBalance)
+    console.log('*** gilBalance.raw: ', gilBalance?.raw.toString())
+    console.log('*** minGilUnlockAmount: ', minGilUnlockAmount)
+    console.log('*** minGilUnlockAmount.raw: ', minGilUnlockAmount?.raw.toString())
+    console.log('*** accountHaveGilBalance: ', accountHaveGilBalance)
+
+    const removeDisabled = outputs <= MIN_BATCH_SWAP_OUTPUTS
+    const addDisabled =
+      (accountHaveGilBalance && outputs >= MAX_BATCH_SWAP_OUTPUTS) ||
+      (!accountHaveGilBalance && outputs >= MAX_BATCH_SWAP_OUTPUTS_FREE)
+
+    setRemoveOutputTokenDisabled(removeDisabled)
+    setAddOutputTokenDisabled(addDisabled)
+  }, [
+    gilBalance,
+    currentOutputs,
+    setAddOutputTokenDisabled,
+    setRemoveOutputTokenDisabled,
+    accountHaveGilBalance,
+    minGilUnlockAmount
+  ])
 
   const [allowedSlippage] = useUserSlippageTolerance()
 
@@ -290,7 +319,7 @@ export default function BatchSwap() {
     }
 
     return parameters
-  }, [tokenInput, parsedAmounts, signatureData])
+  }, [originalCurrencies, tokenInput, parsedAmounts, signatureData])
 
   const { outputsInfo: outputsParameters } = useOutputsParametersInfo(currentOutputs)
 
@@ -322,8 +351,10 @@ export default function BatchSwap() {
           category: 'BatchSwap',
           action: 'BatchSwap w/o Send',
           label: [
-            (inputParameters.currency == ETHER ? 'ETH' : inputParameters?.token?.symbol),
-            outputsParameters?.map(x => `${x.currency == ETHER ? 'ETH' : x.token?.symbol} (${x.percentage}%)`)?.join(', ')
+            inputParameters.currency == ETHER ? 'ETH' : inputParameters?.token?.symbol,
+            outputsParameters
+              ?.map(x => `${x.currency == ETHER ? 'ETH' : x.token?.symbol} (${x.percentage}%)`)
+              ?.join(', ')
           ].join('/')
         })
       })
