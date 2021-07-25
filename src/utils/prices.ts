@@ -18,12 +18,13 @@ export function computeTradePriceBreakdown(
   const realizedLPFee = !trade
     ? undefined
     : ONE_HUNDRED_PERCENT.subtract(
-      trade.route.pairs.reduce<Fraction>(
-        // (currentFee: Fraction, pair: Pair): Fraction => currentFee.multiply(INPUT_FRACTION_AFTER_FEE),
-        (currentFee: Fraction, pair: Pair): Fraction => currentFee.multiply(ONE_HUNDRED_PERCENT.subtract(new Percent(pair.swapFee, JSBI.BigInt(10000)))),
-        ONE_HUNDRED_PERCENT
+        trade.route.pairs.reduce<Fraction>(
+          // (currentFee: Fraction, pair: Pair): Fraction => currentFee.multiply(INPUT_FRACTION_AFTER_FEE),
+          (currentFee: Fraction, pair: Pair): Fraction =>
+            currentFee.multiply(ONE_HUNDRED_PERCENT.subtract(new Percent(pair.swapFee, JSBI.BigInt(10000)))),
+          ONE_HUNDRED_PERCENT
+        )
       )
-    )
 
   // remove lp fees from price impact
   const priceImpactWithoutFeeFraction = trade && realizedLPFee ? trade.priceImpact.subtract(realizedLPFee) : undefined
@@ -79,13 +80,16 @@ export function warningSeverity(priceImpact: Percent | undefined): 0 | 1 | 2 | 3
 export function formatExecutionPrice(
   trade?: Trade,
   originalCurrencies?: { [field in Field]?: Currency },
-  inverted?: boolean): string {
+  inverted?: boolean
+): string {
   if (!trade || !originalCurrencies) {
     return ''
   }
   return inverted
-    ? `${trade.executionPrice.invert().toSignificant(6)} ${originalCurrencies[Field.INPUT]?.symbol} / ${originalCurrencies[Field.OUTPUT]?.symbol
-    }`
-    : `${trade.executionPrice.toSignificant(6)} ${originalCurrencies[Field.OUTPUT]?.symbol} / ${originalCurrencies[Field.INPUT]?.symbol
-    }`
+    ? `${trade.executionPrice.invert().toSignificant(6)} ${originalCurrencies[Field.INPUT]?.symbol} / ${
+        originalCurrencies[Field.OUTPUT]?.symbol
+      }`
+    : `${trade.executionPrice.toSignificant(6)} ${originalCurrencies[Field.OUTPUT]?.symbol} / ${
+        originalCurrencies[Field.INPUT]?.symbol
+      }`
 }

@@ -1,9 +1,18 @@
-import { Currency } from '@materia-dex/sdk'
+import { Currency, CurrencyAmount } from '@materia-dex/sdk'
 import { createReducer } from '@reduxjs/toolkit'
-import { Field, selectCurrency, clearCurrency, typeInput, setInitialDefaultInput } from './actions'
+import {
+  Field,
+  selectCurrency,
+  clearCurrency,
+  typeInput,
+  setInitialState,
+  setAmountMin,
+  resetBatchSwapOutputs
+} from './actions'
 
 export interface BatchSwapField {
   readonly currency: Currency | undefined
+  readonly currencyAmountMin: CurrencyAmount | undefined
   readonly currencyId: string | undefined
   readonly interoperable: string | undefined
   readonly typedValue: string
@@ -29,6 +38,7 @@ export interface BatchSwapState {
 
 const initialInputFieldState: BatchSwapField = {
   currency: undefined,
+  currencyAmountMin: undefined,
   currencyId: '',
   interoperable: undefined,
   typedValue: ''
@@ -36,6 +46,7 @@ const initialInputFieldState: BatchSwapField = {
 
 const initialOutputFieldState: BatchSwapField = {
   currency: undefined,
+  currencyAmountMin: undefined,
   currencyId: '',
   interoperable: undefined,
   typedValue: '0'
@@ -68,16 +79,13 @@ export default createReducer<BatchSwapState>(initialState, builder =>
           ...state,
           independentField: Field.INPUT,
           [field]: {
-            typedValue: state[field].typedValue,
+            ...state[field],
             currencyId: currencyId,
             currency: currency,
             interoperable: interoperable
           },
           [otherField]: {
-            typedValue: state[otherField].typedValue,
-            currencyId: state[otherField].currencyId,
-            currency: state[otherField].currency,
-            interoperable: state[otherField].interoperable
+            ...state[otherField]
           }
         }
       } else {
@@ -85,7 +93,7 @@ export default createReducer<BatchSwapState>(initialState, builder =>
         return {
           ...state,
           [field]: {
-            typedValue: state[field].typedValue,
+            ...state[field],
             currencyId: currencyId,
             currency: currency,
             interoperable: interoperable
@@ -105,14 +113,12 @@ export default createReducer<BatchSwapState>(initialState, builder =>
         ...state,
         independentField: Field.INPUT,
         [field]: {
-          typedValue: typedValue,
-          currencyId: state[field].currencyId,
-          interoperable: state[field].interoperable,
-          currency: state[field].currency
+          ...state[field],
+          typedValue: typedValue
         }
       }
     })
-    .addCase(setInitialDefaultInput, (state, { payload: { inputCurrency, inputCurrencyId } }) => {
+    .addCase(setInitialState, (state, { payload: { inputCurrency, inputCurrencyId } }) => {
       return {
         ...initialState,
         [Field.INPUT]: {
@@ -120,6 +126,30 @@ export default createReducer<BatchSwapState>(initialState, builder =>
           currency: inputCurrency,
           currencyId: inputCurrencyId
         }
+      }
+    })
+    .addCase(setAmountMin, (state, { payload: { field, amount } }) => {
+      return {
+        ...state,
+        [field]: {
+          ...state[field],
+          currencyAmountMin: amount
+        }
+      }
+    })
+    .addCase(resetBatchSwapOutputs, (state, { payload: {} }) => {
+      return {
+        ...state,
+        [Field.OUTPUT]: initialOutputFieldState,
+        [Field.OUTPUT_1]: initialOutputFieldState,
+        [Field.OUTPUT_2]: initialOutputFieldState,
+        [Field.OUTPUT_3]: initialOutputFieldState,
+        [Field.OUTPUT_5]: initialOutputFieldState,
+        [Field.OUTPUT_6]: initialOutputFieldState,
+        [Field.OUTPUT_7]: initialOutputFieldState,
+        [Field.OUTPUT_8]: initialOutputFieldState,
+        [Field.OUTPUT_9]: initialOutputFieldState,
+        [Field.OUTPUT_10]: initialOutputFieldState
       }
     })
 )

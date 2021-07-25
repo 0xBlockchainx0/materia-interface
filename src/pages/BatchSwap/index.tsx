@@ -124,7 +124,7 @@ export default function BatchSwap() {
   const maxAmountInput: CurrencyAmount | undefined = maxAmountSpend(originalCurrencyBalances[Field.INPUT])
   const atMaxAmountInput = Boolean(maxAmountInput && parsedAmounts[Field.INPUT]?.equalTo(maxAmountInput))
 
-  const { onCurrencySelection, onCurrencyRemoval, onUserInput } = useBatchSwapActionHandlers()
+  const { onCurrencySelection, onCurrencyRemoval, onUserInput, onBatchSwapOutputsReset } = useBatchSwapActionHandlers()
 
   const handleTypeInput = useCallback(
     (value: string) => {
@@ -184,14 +184,6 @@ export default function BatchSwap() {
 
   useEffect(() => {
     const outputs = currentOutputs.length
-
-    console.log('************************************')
-    console.log('*** gilBalance: ', gilBalance)
-    console.log('*** gilBalance.raw: ', gilBalance?.raw.toString())
-    console.log('*** minGilUnlockAmount: ', minGilUnlockAmount)
-    console.log('*** minGilUnlockAmount.raw: ', minGilUnlockAmount?.raw.toString())
-    console.log('*** accountHaveGilBalance: ', accountHaveGilBalance)
-
     const removeDisabled = outputs <= MIN_BATCH_SWAP_OUTPUTS
     const addDisabled =
       (accountHaveGilBalance && outputs >= MAX_BATCH_SWAP_OUTPUTS) ||
@@ -395,10 +387,12 @@ export default function BatchSwap() {
   const handleConfirmDismiss = useCallback(() => {
     setBatchSwapState({ showConfirm: false, attemptingTxn, batchSwapErrorMessage, txHash })
     if (txHash) {
-      setSignatureData(null)
       onUserInput(Field.INPUT, '')
+      onBatchSwapOutputsReset()
+      setSignatureData(null)
+      setCurrentOutputs([Field.OUTPUT_1])
     }
-  }, [attemptingTxn, onUserInput, setSignatureData, batchSwapErrorMessage, txHash])
+  }, [attemptingTxn, batchSwapErrorMessage, txHash, onUserInput, onBatchSwapOutputsReset])
 
   return (
     <>

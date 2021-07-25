@@ -25,6 +25,7 @@ export interface TokenInParameter {
 
 export interface TokenOutParameter {
   currency: Currency | undefined
+  currencyAmountMin: CurrencyAmount | undefined
   token: Token | undefined
   interoperable: string | undefined
   percentage: number | undefined
@@ -77,7 +78,7 @@ function useBatchSwapCallArguments(
       const tokenOuts = outputs?.map(x => [
         x.interoperable ?? x.token?.address,
         (x.percentage ?? 0) * 10,
-        ZERO_HEX,
+        `0x${x.currencyAmountMin ? x.currencyAmountMin.raw.toString(16) : '0'}`,
         x.currency == ETHER ? true : !!x.interoperable
       ])
 
@@ -107,7 +108,7 @@ function useBatchSwapCallArguments(
       const tokenOuts = outputs?.map(x => [
         x.interoperable ?? x.token?.address,
         (x.percentage ?? 0) * 10,
-        ZERO_HEX,
+        `0x${x.currencyAmountMin ? x.currencyAmountMin.raw.toString(16) : '0'}`,
         x.currency == ETHER ? true : !!x.interoperable
       ])
 
@@ -135,7 +136,7 @@ function useBatchSwapCallArguments(
       const tokenOuts = outputs?.map(x => [
         x.interoperable ?? x.token?.address,
         (x.percentage ?? 0) * 10,
-        ZERO_HEX,
+        `0x${x.currencyAmountMin ? x.currencyAmountMin.raw.toString(16) : '0'}`,
         x.currency == ETHER ? true : !!x.interoperable
       ])
 
@@ -151,8 +152,8 @@ function useBatchSwapCallArguments(
       })
     }
 
-    // console.log('************************************')
-    // console.log('*** batchSwapMethods: ', batchSwapMethods)
+    console.log('************************************')
+    console.log('*** batchSwapMethods: ', batchSwapMethods)
 
     return batchSwapMethods.map(parameters => ({
       parameters: parameters,

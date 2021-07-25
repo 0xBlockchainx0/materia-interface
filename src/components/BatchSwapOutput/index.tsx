@@ -13,14 +13,6 @@ import { ZERO_ADDRESS } from '../../constants'
 import { useEffect } from 'react'
 import { Currency } from '@materia-dex/sdk'
 
-export const Center = styled.div`
-  display: flex;
-  margin: 0 auto;
-  justify-content: center;
-  padding-top: 5px;
-  padding-bottom: 5px;
-`
-
 interface BatchSwapOutputProps {
   outputField: Field
 }
@@ -32,7 +24,8 @@ export default function BatchSwapOutput({ outputField }: BatchSwapOutputProps) {
   // batch swap state
   const { [outputField]: typedField } = useBatchSwapState()
   const typedValue = typedField.typedValue
-  const { v2Trade, originalCurrencies } = useDerivedBatchSwapInfo(outputField, true)
+  const currentAmountMin = typedField.currencyAmountMin
+  const { v2Trade, originalCurrencies, outputAmountMin } = useDerivedBatchSwapInfo(outputField, true)
 
   const [outputCurrency, setOutputCurrency] = useState<Currency | undefined>(undefined)
   const outputCurrencyId = wrappedCurrency(outputCurrency, chainId)?.address ?? ZERO_ADDRESS
@@ -40,7 +33,7 @@ export default function BatchSwapOutput({ outputField }: BatchSwapOutputProps) {
 
   const trade = v2Trade
 
-  const { onCurrencySelection, onUserInput } = useBatchSwapActionHandlers()
+  const { onCurrencySelection, onUserInput, onCurrencyAmountMin } = useBatchSwapActionHandlers()
 
   const handleTypeOutput = useCallback(
     (value: string) => {
@@ -65,6 +58,17 @@ export default function BatchSwapOutput({ outputField }: BatchSwapOutputProps) {
       onCurrencySelection(outputField, Field.INPUT, outputCurrency, interoperable)
     }
   }, [interoperable, onCurrencySelection, outputCurrency, outputField, setOutputCurrency])
+
+  useEffect(() => {
+    const needUpdate =
+      !outputAmountMin ||
+      !currentAmountMin ||
+      (outputAmountMin && currentAmountMin && !currentAmountMin.equalTo(outputAmountMin))
+
+    if (needUpdate) {
+      onCurrencyAmountMin(outputField, outputAmountMin)
+    }
+  }, [outputField, outputAmountMin, onCurrencyAmountMin, currentAmountMin])
 
   return (
     <AutoColumn gap={'sm'}>

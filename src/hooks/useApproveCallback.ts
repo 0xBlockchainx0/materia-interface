@@ -12,7 +12,6 @@ import { useTokenContract } from './useContract'
 import { useActiveWeb3React } from './index'
 import useCheckIsEthItem from './useCheckIsEthItem'
 
-
 export enum ApprovalState {
   UNKNOWN,
   NOT_APPROVED,
@@ -25,7 +24,7 @@ export function useTokenApproveCallback(
   token?: Token,
   spender?: string,
   approveWUSD: boolean = true,
-  approveEthItems: boolean = false,
+  approveEthItems: boolean = false
 ): [ApprovalState, () => Promise<void>] {
   const { account, chainId } = useActiveWeb3React()
   const currentAllowance = useTokenAllowance(token, account ?? undefined, spender)
@@ -37,7 +36,8 @@ export function useTokenApproveCallback(
   const approvalState: ApprovalState = useMemo(() => {
     if (!amountToApprove || !spender) return ApprovalState.UNKNOWN
     if (amountToApprove.currency === ETHER) return ApprovalState.APPROVED
-    if ((!approveEthItems && approveWUSD && ethItem && !isWUSD) || (!approveEthItems && !approveWUSD && ethItem)) return ApprovalState.APPROVED
+    if ((!approveEthItems && approveWUSD && ethItem && !isWUSD) || (!approveEthItems && !approveWUSD && ethItem))
+      return ApprovalState.APPROVED
     // we might not have enough data to know whether or not we need to approve
     if (!currentAllowance) return ApprovalState.UNKNOWN
 
@@ -197,5 +197,11 @@ export function useApproveCallbackFromBatchSwapTrade(trade?: Trade, token?: Toke
     () => (trade ? computeSlippageAdjustedAmounts(trade, allowedSlippage)[Field.INPUT] : undefined),
     [trade, allowedSlippage]
   )
-  return useTokenApproveCallback(amountToApprove, token, MATERIA_BATCH_SWAPPER_ADDRESS[chainId ?? ChainId.MAINNET], true, true)
+  return useTokenApproveCallback(
+    amountToApprove,
+    token,
+    MATERIA_BATCH_SWAPPER_ADDRESS[chainId ?? ChainId.MAINNET],
+    true,
+    true
+  )
 }

@@ -8,9 +8,17 @@ import { useTradeExactIn, useTradeExactOut } from '../../hooks/Trades'
 import { isAddress } from '../../utils'
 import { AppDispatch, AppState } from '../index'
 import { useCurrencyBalances } from '../wallet/hooks'
-import { clearCurrency, Field, selectCurrency, typeInput, setInitialDefaultInput } from './actions'
+import {
+  clearCurrency,
+  Field,
+  selectCurrency,
+  typeInput,
+  setInitialState,
+  setAmountMin,
+  resetBatchSwapOutputs
+} from './actions'
 import { useUserSlippageTolerance } from '../user/hooks'
-import { computeSlippageAdjustedAmounts } from '../../utils/prices'
+import { computeBatchSwapSlippageAdjustedAmounts } from '../../utils/prices'
 import useGetEthItemInteroperable from '../../hooks/useGetEthItemInteroperable'
 import { BAD_RECIPIENT_ADDRESSES, involvesAddress, tryParseAmount } from '../swap/hooks'
 import { TokenOutParameter } from '../../hooks/useBatchSwapCallback'
@@ -25,6 +33,8 @@ export function useBatchSwapActionHandlers(): {
   onCurrencySelection: (field: Field, otherField: Field, currency: Currency, interoperable?: string) => void
   onCurrencyRemoval: (field: Field) => void
   onUserInput: (field: Field, typedValue: string) => void
+  onCurrencyAmountMin: (field: Field, amount?: CurrencyAmount) => void
+  onBatchSwapOutputsReset: () => void
 } {
   const dispatch = useDispatch<AppDispatch>()
   const onCurrencySelection = useCallback(
@@ -60,10 +70,23 @@ export function useBatchSwapActionHandlers(): {
     [dispatch]
   )
 
+  const onCurrencyAmountMin = useCallback(
+    (field: Field, amount?: CurrencyAmount) => {
+      dispatch(setAmountMin({ field, amount }))
+    },
+    [dispatch]
+  )
+
+  const onBatchSwapOutputsReset = useCallback(() => {
+    dispatch(resetBatchSwapOutputs({}))
+  }, [dispatch])
+
   return {
     onCurrencySelection,
     onCurrencyRemoval,
-    onUserInput
+    onUserInput,
+    onCurrencyAmountMin,
+    onBatchSwapOutputsReset
   }
 }
 
@@ -79,6 +102,7 @@ export function useDerivedBatchSwapInfo(
   parsedAmount: CurrencyAmount | undefined
   v2Trade: Trade | undefined
   inputError?: string
+  outputAmountMin?: CurrencyAmount
 } {
   const { account, chainId } = useActiveWeb3React()
   const batchSwapState = useBatchSwapState()
@@ -184,7 +208,10 @@ export function useDerivedBatchSwapInfo(
 
   const [allowedSlippage] = useUserSlippageTolerance()
 
-  const slippageAdjustedAmounts = v2Trade && allowedSlippage && computeSlippageAdjustedAmounts(v2Trade, allowedSlippage)
+  const slippageAdjustedAmounts =
+    v2Trade && allowedSlippage && computeBatchSwapSlippageAdjustedAmounts(v2Trade, allowedSlippage, outputField)
+
+  const outputAmountMin = slippageAdjustedAmounts ? slippageAdjustedAmounts[outputField] : undefined
 
   // compare input balance to max input
   const [balanceIn, amountIn] = [
@@ -203,7 +230,8 @@ export function useDerivedBatchSwapInfo(
     originalCurrencyBalances,
     parsedAmount: inputParsedAmount,
     v2Trade: v2Trade ?? undefined,
-    inputError
+    inputError,
+    outputAmountMin
   }
 }
 
@@ -218,12 +246,18 @@ export function useOutputsParametersInfo(
 
   outputFields.map(outputField => {
     const {
-      [outputField]: { typedValue: outputTypedValue, currency: outputCurrency, interoperable: interoperable }
+      [outputField]: {
+        typedValue: outputTypedValue,
+        currency: outputCurrency,
+        interoperable: interoperable,
+        currencyAmountMin: outputAmountMin
+      }
     } = batchSwapState
 
     const outputToken = wrappedCurrency(outputCurrency, chainId)
     const outputInfo: TokenOutParameter = {
       currency: outputCurrency,
+      currencyAmountMin: outputAmountMin,
       token: outputToken,
       interoperable: interoperable,
       percentage: parseInt(outputTypedValue ?? 0),
@@ -250,7 +284,7 @@ export function useBatchSwapDefaults(): { inputCurrencyId: string | undefined } 
     const currency = unwrappedToken(WUSD[chainId])
 
     dispatch(
-      setInitialDefaultInput({
+      setInitialState({
         inputCurrency: currency,
         inputCurrencyId: token.address
       })
