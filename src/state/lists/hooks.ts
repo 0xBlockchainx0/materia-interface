@@ -59,7 +59,7 @@ export function listToTokenMap(list: TokenList): TokenAddressMap {
           })
           ?.filter((x): x is TagInfo => Boolean(x)) ?? []
       const token = new WrappedTokenInfo(tokenInfo, tags)
-      if (tokenMap[token.chainId][token.address] !== undefined) {
+      if (tokenMap && tokenMap[token.chainId] && tokenMap[token.chainId][token.address]) {
         throw Error('Duplicate tokens.')
       }
       return {
@@ -142,17 +142,16 @@ export function useAllTokenList(): TokenAddressMap {
   let allTokenAddressMap: any = { ...EMPTY_LIST }
   const tokenLists = useAllLists()
 
-  tokenLists.map((list) => {
+  tokenLists.map(list => {
     try {
       allTokenAddressMap = deepMerge(allTokenAddressMap, listToAllTokenMap(list))
-    }
-    catch (error) {
+    } catch (error) {
       console.error('Could not show inventory token list due to error', error)
     }
-    return true;
+    return true
   })
 
-  return allTokenAddressMap;
+  return allTokenAddressMap
 }
 
 // returns all downloaded current lists
