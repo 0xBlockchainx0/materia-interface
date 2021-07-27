@@ -209,7 +209,7 @@ export function useDerivedBatchSwapInfo(
   const [allowedSlippage] = useUserSlippageTolerance()
 
   const slippageAdjustedAmounts =
-    v2Trade && allowedSlippage && computeBatchSwapSlippageAdjustedAmounts(v2Trade, allowedSlippage, outputField)
+    v2Trade && allowedSlippage != undefined && computeBatchSwapSlippageAdjustedAmounts(v2Trade, allowedSlippage, outputField)
 
   const outputAmountMin = slippageAdjustedAmounts ? slippageAdjustedAmounts[outputField] : undefined
 
