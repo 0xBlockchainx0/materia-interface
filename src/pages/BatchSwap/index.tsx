@@ -44,11 +44,13 @@ import useSound from 'use-sound'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import {
   GIL,
+  IGIL,
   MATERIA_BATCH_SWAPPER_ADDRESS,
   MAX_BATCH_SWAP_OUTPUTS,
   MAX_BATCH_SWAP_OUTPUTS_FREE,
   MIN_BATCH_SWAP_OUTPUTS,
   MIN_GIL_UNLOCK_FULL_BATCHSWAP,
+  MIN_IGIL_UNLOCK_FULL_BATCHSWAP,
   ZERO_ADDRESS
 } from '../../constants'
 import useCheckIsEthItem from '../../hooks/useCheckIsEthItem'
@@ -182,12 +184,18 @@ export default function BatchSwap() {
   }, [chainId])
   const accountHaveGilBalance = gilBalance ? !gilBalance?.lessThan(minGilUnlockAmount) : false
 
+  const igilBalance = useTokenBalance(account ?? undefined, IGIL[chainId ?? ChainId.MAINNET])
+  const minIGilUnlockAmount = useMemo(() => {
+    return new TokenAmount(GIL[chainId ?? ChainId.MAINNET], MIN_IGIL_UNLOCK_FULL_BATCHSWAP)
+  }, [chainId])
+  const accountHaveIGilBalance = igilBalance ? !igilBalance?.lessThan(minIGilUnlockAmount) : false
+
   useEffect(() => {
     const outputs = currentOutputs.length
     const removeDisabled = outputs <= MIN_BATCH_SWAP_OUTPUTS
     const addDisabled =
-      (accountHaveGilBalance && outputs >= MAX_BATCH_SWAP_OUTPUTS) ||
-      (!accountHaveGilBalance && outputs >= MAX_BATCH_SWAP_OUTPUTS_FREE)
+      ((accountHaveGilBalance || accountHaveIGilBalance) && outputs >= MAX_BATCH_SWAP_OUTPUTS) ||
+      (!accountHaveGilBalance && !accountHaveIGilBalance && outputs >= MAX_BATCH_SWAP_OUTPUTS_FREE)
 
     setRemoveOutputTokenDisabled(removeDisabled)
     setAddOutputTokenDisabled(addDisabled)
