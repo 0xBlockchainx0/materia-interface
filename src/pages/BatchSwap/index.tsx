@@ -60,6 +60,7 @@ import { splitSignature } from 'ethers/lib/utils'
 import { TokenInParameter, useBatchSwapCallback } from '../../hooks/useBatchSwapCallback'
 import ConfirmBatchSwapModal from '../../components/batchswap/ConfirmBatchSwapModal'
 import { useTokenBalance } from '../../state/wallet/hooks'
+import UnlockFullBatchSwapModal from '../../components/batchswap/UnlockFullBatchSwapModal'
 
 export const ButtonBgItem = styled.img`
   height: 3ch;
@@ -190,22 +191,33 @@ export default function BatchSwap() {
   }, [chainId])
   const accountHaveIGilBalance = igilBalance ? !igilBalance?.lessThan(minIGilUnlockAmount) : false
 
+  const [showUnlockModal, setShowUnlockModal] = useState(false)
+  const handleUnlockModalDismiss = useCallback(() => {
+    setShowUnlockModal(!showUnlockModal)
+  }, [showUnlockModal, setShowUnlockModal])
+
   useEffect(() => {
     const outputs = currentOutputs.length
     const removeDisabled = outputs <= MIN_BATCH_SWAP_OUTPUTS
-    const addDisabled =
-      ((accountHaveGilBalance || accountHaveIGilBalance) && outputs >= MAX_BATCH_SWAP_OUTPUTS) ||
-      (!accountHaveGilBalance && !accountHaveIGilBalance && outputs >= MAX_BATCH_SWAP_OUTPUTS_FREE)
+    const addDisabled = (accountHaveGilBalance || accountHaveIGilBalance) && outputs >= MAX_BATCH_SWAP_OUTPUTS
+    const showUnlockModal =
+      !accountHaveGilBalance && !accountHaveIGilBalance && outputs >= MAX_BATCH_SWAP_OUTPUTS_FREE + 1
 
-    setRemoveOutputTokenDisabled(removeDisabled)
-    setAddOutputTokenDisabled(addDisabled)
+    if (showUnlockModal) {
+      setShowUnlockModal(true)
+      handleRemoveOutputToken()
+    } else {
+      setRemoveOutputTokenDisabled(removeDisabled)
+      setAddOutputTokenDisabled(addDisabled)
+    }
   }, [
     gilBalance,
     currentOutputs,
     setAddOutputTokenDisabled,
     setRemoveOutputTokenDisabled,
     accountHaveGilBalance,
-    minGilUnlockAmount
+    minGilUnlockAmount,
+    setShowUnlockModal
   ])
 
   const [allowedSlippage] = useUserSlippageTolerance()
@@ -416,6 +428,7 @@ export default function BatchSwap() {
             batchSwapErrorMessage={batchSwapErrorMessage}
             onDismiss={handleConfirmDismiss}
           />
+          <UnlockFullBatchSwapModal isOpen={showUnlockModal} onDismiss={handleUnlockModalDismiss} />
           <PageGridContainer className="batch-swap">
             <div className={`left-column batch-swap ${theme.name}`}>
               <div className="collapsable-title">

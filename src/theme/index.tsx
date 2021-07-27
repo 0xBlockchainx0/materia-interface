@@ -3853,6 +3853,10 @@ export const ModalContentWrapper = styled.div`
     max-width: 100px;
     margin-top: 25px;
   }
+  & img.gilIcon {
+    max-width: 100px;
+    margin-top: 25px;
+  }
   & > .modal-content-wrapper-inner-container {
     position: relative;
     padding: 10px 20px;
