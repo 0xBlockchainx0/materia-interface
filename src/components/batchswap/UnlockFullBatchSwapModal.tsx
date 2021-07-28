@@ -10,6 +10,11 @@ import { AutoRow } from '../Row'
 
 const ModalTitle = styled.div`
   margin-top: 0.5rem;
+  padding: 0.5rem 1rem 0rem 1rem;
+`
+
+const ModalContent = styled.div`
+  padding: 0 1rem;
 `
 
 const GilLogo = styled.img`
@@ -27,7 +32,7 @@ export default function UnlockFullBatchSwapModal({ isOpen, onDismiss }: { isOpen
         <IconButton className={`modal-close-icon ${theme.name}`} onClick={onDismiss}>
           <X />
         </IconButton>
-        <div className="modal-content-wrapper">
+        <ModalContent className="modal-content-wrapper">
           <AutoRow style={{ marginTop: '20px', justifyContent: 'space-between' }}>
             To unlock the full functionality of Batch Swap you need to own at least {MIN_GIL_UNLOCK_FULL_BATCHSWAP_TEXT}{' '}
             GILs. IGILs are valid too!
@@ -35,7 +40,7 @@ export default function UnlockFullBatchSwapModal({ isOpen, onDismiss }: { isOpen
           <AutoRow style={{ marginTop: '20px', justifyContent: 'center' }}>
             <GilLogo src={images.icons.gil} className="gilIcon" />
           </AutoRow>
-        </div>
+        </ModalContent>
       </>
     )
   }, [onDismiss, theme])

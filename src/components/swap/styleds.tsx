@@ -34,6 +34,10 @@ export const BottomGrouping = styled.div`
   margin-top: 0rem;
 `
 
+export const BatchSwapBottomGrouping = styled(BottomGrouping)`
+  ${({ theme }) => theme.mediaWidth.upToMedium` padding-top: 2.5rem; `}
+`
+
 export const ErrorText = styled(Text)<{ severity?: 0 | 1 | 2 | 3 | 4 }>`
   color: ${({ theme, severity }) =>
     severity === 3 || severity === 4
@@ -102,7 +106,10 @@ export const Dots = styled.span`
 export function SwapCallbackError({ error }: { error: string }) {
   return (
     <SwapCallbackErrorContainer>
-      <div><AlertTriangle />&nbsp;&nbsp;{error}</div>
+      <div>
+        <AlertTriangle />
+        &nbsp;&nbsp;{error}
+      </div>
     </SwapCallbackErrorContainer>
   )
 }

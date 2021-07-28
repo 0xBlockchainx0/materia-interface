@@ -5,14 +5,15 @@ import styled, { ThemeContext } from 'styled-components'
 import { AutoColumn } from '../../components/Column'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import AdvancedSwapDetailsDropdown from '../../components/swap/AdvancedSwapDetailsDropdown'
-import { BottomGrouping, SwapCallbackError, Wrapper } from '../../components/swap/styleds'
+import { BatchSwapBottomGrouping, SwapCallbackError, Wrapper } from '../../components/swap/styleds'
 import { Field } from '../../state/batchswap/actions'
 import {
   useDerivedBatchSwapInfo,
   useBatchSwapActionHandlers,
   useBatchSwapState,
   useOutputsParametersInfo,
-  useBatchSwapDefaults
+  useBatchSwapDefaults,
+  useValidateBatchSwapParameters
 } from '../../state/batchswap/hooks'
 import AppBody from '../AppBody'
 import {
@@ -24,8 +25,7 @@ import {
   ActionButton,
   SmallOperationButton,
   BatchSwapButtonsContainer,
-  OperationButton,
-  MainOperationButton
+  OperationButton
 } from '../../theme'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import Inventory from '../../components/Inventory'
@@ -108,8 +108,7 @@ export default function BatchSwap() {
     originalCurrencyBalances,
     parsedAmount,
     originalCurrencies,
-    v2Trade: trade,
-    inputError: batchSwapInputError
+    v2Trade: trade
   } = useDerivedBatchSwapInfo(Field.OUTPUT_1, true)
 
   const [signatureData, setSignatureData] = useState<{ v: number; r: string; s: string } | null>(null)
@@ -387,18 +386,14 @@ export default function BatchSwap() {
   const [play, { stop }] = useSound(alarm)
   const classicMode = useIsClassicMode()
 
-  const isValid = !batchSwapInputError
+  const { message: batchSwapValidationErrorMessage } = useValidateBatchSwapParameters(currentOutputs)
+
+  const isValid = !batchSwapValidationErrorMessage
 
   const toggleWalletModal = useWalletModalToggle()
 
-  const route = trade?.route
-  const userHasSpecifiedInputOutput = Boolean(
-    currencies[Field.INPUT] && parsedAmounts[Field.INPUT]?.greaterThan(JSBI.BigInt(0))
-  )
-  const noRoute = !route
-
   const showApproveFlow =
-    !batchSwapInputError &&
+    !batchSwapValidationErrorMessage &&
     originalCurrencies[Field.INPUT] !== ETHER &&
     (approval === ApprovalState.NOT_APPROVED ||
       approval === ApprovalState.PENDING ||
@@ -408,7 +403,7 @@ export default function BatchSwap() {
     setBatchSwapState({ showConfirm: false, attemptingTxn, batchSwapErrorMessage, txHash })
     if (txHash) {
       onUserInput(Field.INPUT, '')
-      onBatchSwapOutputsReset()
+      // onBatchSwapOutputsReset()
       setSignatureData(null)
       setCurrentOutputs([Field.OUTPUT_1])
     }
@@ -514,7 +509,7 @@ export default function BatchSwap() {
                     </AutoColumn>
                   </div>
                 </PageContentContainer>
-                <BottomGrouping>
+                <BatchSwapBottomGrouping>
                   <BatchSwapButtonsContainer className={isExpertMode && batchSwapErrorMessage ? 'has-error' : ''}>
                     {!account ? (
                       <OperationButton
@@ -524,10 +519,6 @@ export default function BatchSwap() {
                       >
                         <Link />
                       </OperationButton>
-                    ) : noRoute && userHasSpecifiedInputOutput ? (
-                      <MainOperationButton className={theme.name} disabled={true}>
-                        Insufficient liquidity for this trade
-                      </MainOperationButton>
                     ) : showApproveFlow && signatureData === null ? (
                       <RowCenter>
                         <ButtonMateriaConfirmed
@@ -622,12 +613,12 @@ export default function BatchSwap() {
                             }
                           }}
                         >
-                          {batchSwapInputError ? batchSwapInputError : `Batch Swap`}
+                          {batchSwapValidationErrorMessage ? batchSwapValidationErrorMessage : `Batch Swap`}
                         </ButtonMateriaError>
                       </>
                     )}
                   </BatchSwapButtonsContainer>
-                </BottomGrouping>
+                </BatchSwapBottomGrouping>
               </div>
             </PageItemsContainer>
           </PageGridContainer>

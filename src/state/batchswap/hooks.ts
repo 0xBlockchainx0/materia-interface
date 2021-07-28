@@ -101,7 +101,6 @@ export function useDerivedBatchSwapInfo(
   originalCurrencyBalances: { [field in Field]?: CurrencyAmount }
   parsedAmount: CurrencyAmount | undefined
   v2Trade: Trade | undefined
-  inputError?: string
   outputAmountMin?: CurrencyAmount
 } {
   const { account, chainId } = useActiveWeb3React()
@@ -148,7 +147,7 @@ export function useDerivedBatchSwapInfo(
   const parsedAmount = tryParseAmount(
     typedValue,
     (isExactIn ? inputCurrencyInteroperable ?? inputCurrency : outputCurrencyInteroperable ?? outputCurrency) ??
-      undefined
+    undefined
   )
 
   const bestTradeExactIn = useTradeExactIn(
@@ -180,48 +179,12 @@ export function useDerivedBatchSwapInfo(
     [outputField]: outputCurrency ?? undefined
   }
 
-  let inputError: string | undefined
-  if (!account) {
-    inputError = 'Connect Wallet'
-  }
-
-  if (!parsedAmount) {
-    inputError = inputError ?? 'Enter an amount'
-  }
-
-  if (!originalCurrencies[Field.INPUT] || !originalCurrencies[outputField]) {
-    inputError = inputError ?? 'Select a token'
-  }
-
-  const formattedTo = isAddress(to)
-  if (!to || !formattedTo) {
-    inputError = inputError ?? 'Enter a recipient'
-  } else {
-    if (
-      BAD_RECIPIENT_ADDRESSES.indexOf(formattedTo) !== -1 ||
-      (bestTradeExactIn && involvesAddress(bestTradeExactIn, formattedTo)) ||
-      (bestTradeExactOut && involvesAddress(bestTradeExactOut, formattedTo))
-    ) {
-      inputError = inputError ?? 'Invalid recipient'
-    }
-  }
-
   const [allowedSlippage] = useUserSlippageTolerance()
 
   const slippageAdjustedAmounts =
     v2Trade && allowedSlippage != undefined && computeBatchSwapSlippageAdjustedAmounts(v2Trade, allowedSlippage, outputField)
 
   const outputAmountMin = slippageAdjustedAmounts ? slippageAdjustedAmounts[outputField] : undefined
-
-  // compare input balance to max input
-  const [balanceIn, amountIn] = [
-    originalCurrencyBalances[Field.INPUT],
-    slippageAdjustedAmounts ? slippageAdjustedAmounts[Field.INPUT] : null
-  ]
-
-  if (balanceIn && amountIn && balanceIn.lessThan(amountIn)) {
-    inputError = 'Insufficient ' + originalCurrencies[Field.INPUT]?.symbol + ' balance'
-  }
 
   return {
     currencies,
@@ -230,7 +193,6 @@ export function useDerivedBatchSwapInfo(
     originalCurrencyBalances,
     parsedAmount: inputParsedAmount,
     v2Trade: v2Trade ?? undefined,
-    inputError,
     outputAmountMin
   }
 }
@@ -269,6 +231,109 @@ export function useOutputsParametersInfo(
 
   return {
     outputsInfo: outputsInfo
+  }
+}
+
+export function useValidateBatchSwapParameters(
+  outputFields: Field[]
+): {
+  message?: string
+} {
+  const { chainId, account } = useActiveWeb3React()
+  const batchSwapState = useBatchSwapState()
+
+  const currencies: Array<Currency | undefined> = []
+  const percentages: Array<number> = [];
+
+  const {
+    [Field.INPUT]: {
+      typedValue: inputTypedValue,
+      currency: inputCurrency,
+    }
+  } = batchSwapState
+
+  const inputToken = inputCurrency == ETHER ? inputCurrency : wrappedCurrency(inputCurrency, chainId)
+
+  outputFields.map(outputField => {
+    const {
+      [outputField]: {
+        typedValue: outputTypedValue,
+        currency: outputCurrency,
+      }
+    } = batchSwapState
+
+    const outputToken = outputCurrency == ETHER ? outputCurrency : wrappedCurrency(outputCurrency, chainId)
+    const percentage = parseInt(outputTypedValue ?? 0)
+
+    currencies.push(outputToken)
+    percentages.push(percentage)
+  })
+
+  const selectedCurrencies = currencies.filter(x => !!x)
+
+  if (account) {
+    return {
+      message: 'Connect wallet'
+    }
+  }
+
+  const inputTokenSelected = inputToken == undefined
+
+  if (inputTokenSelected) {
+    return {
+      message: 'Select input token'
+    }
+  }
+
+  const inputQuantityInvalid = inputTypedValue == undefined || inputTypedValue.trim().length == 0 || inputTypedValue == '0'
+
+  if (inputQuantityInvalid) {
+    return {
+      message: 'Enter input amount'
+    }
+  }
+
+  const inputCurrencySelectedInOutputs = selectedCurrencies.includes(inputToken)
+
+  if (inputCurrencySelectedInOutputs) {
+    return {
+      message: 'Invalid input token'
+    }
+  }
+
+  const outputCurrencyDuplicated = [...new Set(selectedCurrencies)].length < selectedCurrencies.length
+  const outputCurrencyNotSelectedError = selectedCurrencies.length != outputFields.length
+
+  if (outputCurrencyDuplicated) {
+    return {
+      message: 'Invalid output token'
+    }
+  }
+
+  if (outputCurrencyNotSelectedError) {
+    return {
+      message: 'Select output token'
+    }
+  }
+
+  const totalPercentage = percentages.reduce((a, b) => a + b, 0)
+  const percentageGreaterThan100 = totalPercentage > 100
+  const percentageLowerThan100 = totalPercentage < 100
+
+  if (percentageGreaterThan100) {
+    return {
+      message: 'Percentage greater than 100%'
+    }
+  }
+
+  if (percentageLowerThan100) {
+    return {
+      message: 'Percentage lower than 100%'
+    }
+  }
+
+  return {
+    message: undefined
   }
 }
 
