@@ -271,7 +271,7 @@ export function useValidateBatchSwapParameters(
 
   const selectedCurrencies = currencies.filter(x => !!x)
 
-  if (account) {
+  if (!account) {
     return {
       message: 'Connect wallet'
     }
@@ -317,8 +317,15 @@ export function useValidateBatchSwapParameters(
   }
 
   const totalPercentage = percentages.reduce((a, b) => a + b, 0)
+  const zeroPercentages = percentages.filter(x => !x).length > 0
   const percentageGreaterThan100 = totalPercentage > 100
   const percentageLowerThan100 = totalPercentage < 100
+
+  if (zeroPercentages) {
+    return {
+      message: 'Select an output value'
+    }
+  }
 
   if (percentageGreaterThan100) {
     return {
