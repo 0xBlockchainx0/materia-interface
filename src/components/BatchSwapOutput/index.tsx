@@ -21,17 +21,14 @@ export default function BatchSwapOutput({ outputField }: BatchSwapOutputProps) {
   const theme = useContext(ThemeContext)
   const { chainId } = useActiveWeb3React()
 
-  // batch swap state
   const { [outputField]: typedField } = useBatchSwapState()
   const typedValue = typedField.typedValue
   const currentAmountMin = typedField.currencyAmountMin
-  const { v2Trade, originalCurrencies, outputAmountMin } = useDerivedBatchSwapInfo(outputField, true)
+  const { v2Trade: trade, originalCurrencies, outputAmountMin } = useDerivedBatchSwapInfo(outputField, true)
 
   const [outputCurrency, setOutputCurrency] = useState<Currency | undefined>(undefined)
   const outputCurrencyId = wrappedCurrency(outputCurrency, chainId)?.address ?? ZERO_ADDRESS
   const interoperable = useGetEthItemInteroperable(outputCurrencyId)
-
-  const trade = v2Trade
 
   const { onCurrencySelection, onUserInput, onCurrencyAmountMin } = useBatchSwapActionHandlers()
 

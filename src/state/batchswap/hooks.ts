@@ -5,7 +5,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useActiveWeb3React } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
 import { useTradeExactIn, useTradeExactOut } from '../../hooks/Trades'
-import { isAddress } from '../../utils'
 import { AppDispatch, AppState } from '../index'
 import { useCurrencyBalances } from '../wallet/hooks'
 import {
@@ -20,7 +19,7 @@ import {
 import { useUserSlippageTolerance } from '../user/hooks'
 import { computeBatchSwapSlippageAdjustedAmounts } from '../../utils/prices'
 import useGetEthItemInteroperable from '../../hooks/useGetEthItemInteroperable'
-import { BAD_RECIPIENT_ADDRESSES, involvesAddress, tryParseAmount } from '../swap/hooks'
+import { tryParseAmount } from '../swap/hooks'
 import { TokenOutParameter } from '../../hooks/useBatchSwapCallback'
 import { unwrappedToken, wrappedCurrency } from '../../utils/wrappedCurrency'
 import { WUSD } from '../../constants'
@@ -235,7 +234,8 @@ export function useOutputsParametersInfo(
 }
 
 export function useValidateBatchSwapParameters(
-  outputFields: Field[]
+  outputFields: Field[],
+  inputExceedBalance: boolean
 ): {
   message?: string
 } {
@@ -269,11 +269,15 @@ export function useValidateBatchSwapParameters(
     percentages.push(percentage)
   })
 
-  const selectedCurrencies = currencies.filter(x => !!x)
-
   if (!account) {
     return {
       message: 'Connect wallet'
+    }
+  }
+
+  if (inputExceedBalance) {
+    return {
+      message: 'Insufficient input balance'
     }
   }
 
@@ -293,6 +297,7 @@ export function useValidateBatchSwapParameters(
     }
   }
 
+  const selectedCurrencies = currencies.filter(x => !!x)
   const inputCurrencySelectedInOutputs = selectedCurrencies.includes(inputToken)
 
   if (inputCurrencySelectedInOutputs) {

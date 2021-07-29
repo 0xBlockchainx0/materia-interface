@@ -125,6 +125,7 @@ export default function BatchSwap() {
 
   const maxAmountInput: CurrencyAmount | undefined = maxAmountSpend(originalCurrencyBalances[Field.INPUT])
   const atMaxAmountInput = Boolean(maxAmountInput && parsedAmounts[Field.INPUT]?.equalTo(maxAmountInput))
+  const atGreaterAmountInput = Boolean(maxAmountInput && parsedAmounts[Field.INPUT]?.greaterThan(maxAmountInput))
 
   const { onCurrencySelection, onCurrencyRemoval, onUserInput, onBatchSwapOutputsReset } = useBatchSwapActionHandlers()
 
@@ -386,7 +387,7 @@ export default function BatchSwap() {
   const [play, { stop }] = useSound(alarm)
   const classicMode = useIsClassicMode()
 
-  const { message: batchSwapValidationErrorMessage } = useValidateBatchSwapParameters(currentOutputs)
+  const { message: batchSwapValidationErrorMessage } = useValidateBatchSwapParameters(currentOutputs, atGreaterAmountInput)
 
   const isValid = !batchSwapValidationErrorMessage
 
