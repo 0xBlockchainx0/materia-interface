@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react'
-import styled, { ThemeContext } from 'styled-components'
+import { ThemeContext } from 'styled-components'
 import { AutoColumn } from '../Column'
 import CurrencyInputPanel from '../CurrencyInputPanel'
 import { Field } from '../../state/batchswap/actions'
@@ -21,16 +21,21 @@ export default function BatchSwapOutput({ outputField }: BatchSwapOutputProps) {
   const theme = useContext(ThemeContext)
   const { chainId } = useActiveWeb3React()
 
-  const { [outputField]: typedField } = useBatchSwapState()
-  const typedValue = typedField.typedValue
-  const currentAmountMin = typedField.currencyAmountMin
+  const { [outputField]: field } = useBatchSwapState()
+
+  const typedValue = field.typedValue
+  const currentAmountMin = field.currencyAmountMin
+  const currentHasTrade = field.trade
+
   const { v2Trade: trade, originalCurrencies, outputAmountMin } = useDerivedBatchSwapInfo(outputField, true)
+
+  const hasTrade = !!trade
 
   const [outputCurrency, setOutputCurrency] = useState<Currency | undefined>(undefined)
   const outputCurrencyId = wrappedCurrency(outputCurrency, chainId)?.address ?? ZERO_ADDRESS
   const interoperable = useGetEthItemInteroperable(outputCurrencyId)
 
-  const { onCurrencySelection, onUserInput, onCurrencyAmountMin } = useBatchSwapActionHandlers()
+  const { onCurrencySelection, onUserInput, onCurrencyAmountMin, onHasTrade } = useBatchSwapActionHandlers()
 
   const handleTypeOutput = useCallback(
     (value: string) => {
@@ -66,6 +71,14 @@ export default function BatchSwapOutput({ outputField }: BatchSwapOutputProps) {
       onCurrencyAmountMin(outputField, outputAmountMin)
     }
   }, [outputField, outputAmountMin, onCurrencyAmountMin, currentAmountMin])
+
+  useEffect(() => {
+    const needUpdate = hasTrade !== currentHasTrade
+
+    if (needUpdate) {
+      onHasTrade(outputField, hasTrade)
+    }
+  }, [outputField, hasTrade, currentHasTrade, onHasTrade])
 
   return (
     <AutoColumn gap={'sm'}>

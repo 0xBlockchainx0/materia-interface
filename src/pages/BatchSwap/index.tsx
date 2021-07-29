@@ -123,6 +123,8 @@ export default function BatchSwap() {
     [Field.INPUT]: typedValue
   }
 
+  const inputHasTrade = !!trade
+
   const maxAmountInput: CurrencyAmount | undefined = maxAmountSpend(originalCurrencyBalances[Field.INPUT])
   const atMaxAmountInput = Boolean(maxAmountInput && parsedAmounts[Field.INPUT]?.equalTo(maxAmountInput))
   const atGreaterAmountInput = Boolean(maxAmountInput && parsedAmounts[Field.INPUT]?.greaterThan(maxAmountInput))
@@ -387,7 +389,7 @@ export default function BatchSwap() {
   const [play, { stop }] = useSound(alarm)
   const classicMode = useIsClassicMode()
 
-  const { message: batchSwapValidationErrorMessage } = useValidateBatchSwapParameters(currentOutputs, atGreaterAmountInput)
+  const { message: batchSwapValidationErrorMessage } = useValidateBatchSwapParameters(currentOutputs, atGreaterAmountInput, inputHasTrade)
 
   const isValid = !batchSwapValidationErrorMessage
 
@@ -404,7 +406,7 @@ export default function BatchSwap() {
     setBatchSwapState({ showConfirm: false, attemptingTxn, batchSwapErrorMessage, txHash })
     if (txHash) {
       onUserInput(Field.INPUT, '')
-      // onBatchSwapOutputsReset()
+      onBatchSwapOutputsReset()
       setSignatureData(null)
       setCurrentOutputs([Field.OUTPUT_1])
     }

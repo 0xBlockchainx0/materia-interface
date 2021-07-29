@@ -197,22 +197,13 @@ export default function CurrencyInputPanel({
             {!hideInput && (
               <>
                 {percentage ? (
-                  // <PercentageInput
-                  //   className="token-amount-input"
-                  //   value={value}
-                  //   onUserInput={val => {
-                  //     onUserInput(val)
-                  //   }}
-                  // />
                   <>
                     <PercentageSlider
                       value={parseInt(value ?? 0)}
                       onChange={val => {
                         onUserInput((val ?? 0).toString())
                       }}
-                      style={
-                        { width: '75%', marginLeft: 15, marginRight: 15, padding: '15px 0' }
-                      }
+                      style={{ width: '75%', marginRight: 10, padding: '15px 0' }}
                     />
                     <div className="slider-percentage text-left">{value}%</div>
                   </>
@@ -230,8 +221,16 @@ export default function CurrencyInputPanel({
                     MAX
                   </ActionButton>
                 )}
-                {currency && showErc20Badge && <Erc20Badge className={`${theme.name} ml5`} width={badgeWidth} >ERC20</Erc20Badge>}
-                {currency && showEthItemBadge && <EthItemBadge className={`${theme.name} ml5`} width={badgeWidth}>ITEM</EthItemBadge>}
+                {currency && showErc20Badge && (
+                  <Erc20Badge className={`${theme.name} ml5`} width={badgeWidth}>
+                    ERC20
+                  </Erc20Badge>
+                )}
+                {currency && showEthItemBadge && (
+                  <EthItemBadge className={`${theme.name} ml5`} width={badgeWidth}>
+                    ITEM
+                  </EthItemBadge>
+                )}
               </>
             )}
             <DropDownButton

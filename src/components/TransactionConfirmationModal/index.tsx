@@ -77,7 +77,7 @@ function TransactionSubmittedContent({
 }: {
   onDismiss: () => void
   hash: string | undefined
-  chainId: ChainId,
+  chainId: ChainId
   currencyToAdd?: Currency | undefined
 }) {
   const theme = useContext(ThemeContext)
@@ -106,17 +106,22 @@ function TransactionSubmittedContent({
             </ExternalLink>
           )}
           {currencyToAdd && library?.provider?.isMetaMask && (
-            <ButtonMateriaPrimary onClick={addToken} style={{ margin: '20px 0 0 0' }} className={theme.name} width="fit-content">
+            <ButtonMateriaPrimary
+              onClick={addToken}
+              style={{ margin: '20px 0 0 0' }}
+              className={theme.name}
+              width="fit-content"
+            >
               {!success ? (
                 <RowFixed>
                   Add {currencyToAdd.symbol} to Metamask <StyledLogo src={MetaMaskLogo} />
                 </RowFixed>
               ) : (
-                  <RowFixed>
-                    Added {currencyToAdd.symbol}{' '}
-                    <CheckCircle size={'16px'} stroke={theme.green1} style={{ marginLeft: '6px' }} />
-                  </RowFixed>
-                )}
+                <RowFixed>
+                  Added {currencyToAdd.symbol}{' '}
+                  <CheckCircle size={'16px'} stroke={theme.green1} style={{ marginLeft: '6px' }} />
+                </RowFixed>
+              )}
             </ButtonMateriaPrimary>
           )}
           <ButtonMateriaPrimary onClick={onDismiss} style={{ margin: '20px 0 0 0' }} className={theme.name}>
@@ -154,18 +159,6 @@ export function ConfirmationModalContent({
           {bottomContent()}
         </div>
       </div>
-      {/* <Wrapper>
-      <Section>
-        <RowBetween>
-          <Text fontWeight={500} fontSize={20}>
-            
-          </Text>
-          <CloseIcon onClick={onDismiss} />
-        </RowBetween>
-        
-      </Section>
-      <BottomSection gap="12px">{bottomContent()}</BottomSection>
-    </Wrapper> */}
     </>
   )
 }
@@ -189,7 +182,9 @@ export function TransactionErrorContent({ message, onDismiss }: { message: strin
         </AutoColumn>
       </Section>
       <BottomSection gap="12px">
-        <ButtonMateriaPrimary onClick={onDismiss}>Dismiss</ButtonMateriaPrimary>
+        <ButtonMateriaPrimary className={theme.name} onClick={onDismiss}>
+          Dismiss
+        </ButtonMateriaPrimary>
       </BottomSection>
     </Wrapper>
   )
@@ -201,7 +196,7 @@ interface ConfirmationModalProps {
   hash: string | undefined
   content: () => React.ReactNode
   attemptingTxn: boolean
-  pendingText: string,
+  pendingText: string
   currencyToAdd?: Currency | undefined
 }
 
@@ -231,8 +226,8 @@ export default function TransactionConfirmationModal({
           currencyToAdd={currencyToAdd}
         />
       ) : (
-            content()
-          )}
+        content()
+      )}
     </Modal>
   )
 }

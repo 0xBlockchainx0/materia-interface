@@ -30,3 +30,4 @@ export const setInitialState = createAction<{ inputCurrency?: Currency; inputCur
 )
 export const setAmountMin = createAction<{ field: Field; amount?: CurrencyAmount }>('batchswap/setAmountMin')
 export const resetBatchSwapOutputs = createAction<{}>('batchswap/resetBatchSwapOutputs')
+export const setHasTrade = createAction<{ field: Field; trade: boolean }>('batchswap/setHasTrade')

@@ -7,7 +7,8 @@ import {
   typeInput,
   setInitialState,
   setAmountMin,
-  resetBatchSwapOutputs
+  resetBatchSwapOutputs,
+  setHasTrade
 } from './actions'
 
 export interface BatchSwapField {
@@ -16,6 +17,7 @@ export interface BatchSwapField {
   readonly currencyId: string | undefined
   readonly interoperable: string | undefined
   readonly typedValue: string
+  readonly trade: boolean
 }
 export interface BatchSwapState {
   readonly independentField: Field
@@ -41,7 +43,8 @@ const initialInputFieldState: BatchSwapField = {
   currencyAmountMin: undefined,
   currencyId: '',
   interoperable: undefined,
-  typedValue: ''
+  typedValue: '',
+  trade: false
 }
 
 const initialOutputFieldState: BatchSwapField = {
@@ -49,24 +52,25 @@ const initialOutputFieldState: BatchSwapField = {
   currencyAmountMin: undefined,
   currencyId: '',
   interoperable: undefined,
-  typedValue: '0'
+  typedValue: '0',
+  trade: false
 }
 
 const initialState: BatchSwapState = {
   independentField: Field.INPUT,
   typedValue: '',
-  [Field.INPUT]: initialInputFieldState,
-  [Field.OUTPUT]: initialOutputFieldState,
-  [Field.OUTPUT_1]: initialOutputFieldState,
-  [Field.OUTPUT_2]: initialOutputFieldState,
-  [Field.OUTPUT_3]: initialOutputFieldState,
-  [Field.OUTPUT_4]: initialOutputFieldState,
-  [Field.OUTPUT_5]: initialOutputFieldState,
-  [Field.OUTPUT_6]: initialOutputFieldState,
-  [Field.OUTPUT_7]: initialOutputFieldState,
-  [Field.OUTPUT_8]: initialOutputFieldState,
-  [Field.OUTPUT_9]: initialOutputFieldState,
-  [Field.OUTPUT_10]: initialOutputFieldState,
+  [Field.INPUT]: { ...initialInputFieldState },
+  [Field.OUTPUT]: { ...initialOutputFieldState },
+  [Field.OUTPUT_1]: { ...initialOutputFieldState },
+  [Field.OUTPUT_2]: { ...initialOutputFieldState },
+  [Field.OUTPUT_3]: { ...initialOutputFieldState },
+  [Field.OUTPUT_4]: { ...initialOutputFieldState },
+  [Field.OUTPUT_5]: { ...initialOutputFieldState },
+  [Field.OUTPUT_6]: { ...initialOutputFieldState },
+  [Field.OUTPUT_7]: { ...initialOutputFieldState },
+  [Field.OUTPUT_8]: { ...initialOutputFieldState },
+  [Field.OUTPUT_9]: { ...initialOutputFieldState },
+  [Field.OUTPUT_10]: { ...initialOutputFieldState },
   recipient: null
 }
 
@@ -105,7 +109,7 @@ export default createReducer<BatchSwapState>(initialState, builder =>
       return {
         ...state,
         independentField: Field.INPUT,
-        [field]: field === Field.INPUT ? initialInputFieldState : initialOutputFieldState
+        [field]: field === Field.INPUT ? { ...initialInputFieldState } : { ...initialOutputFieldState }
       }
     })
     .addCase(typeInput, (state, { payload: { field, typedValue } }) => {
@@ -137,19 +141,28 @@ export default createReducer<BatchSwapState>(initialState, builder =>
         }
       }
     })
-    .addCase(resetBatchSwapOutputs, (state, { payload: {} }) => {
+    .addCase(resetBatchSwapOutputs, (state, { payload: { } }) => {
       return {
         ...state,
-        [Field.OUTPUT]: initialOutputFieldState,
-        [Field.OUTPUT_1]: initialOutputFieldState,
-        [Field.OUTPUT_2]: initialOutputFieldState,
-        [Field.OUTPUT_3]: initialOutputFieldState,
-        [Field.OUTPUT_5]: initialOutputFieldState,
-        [Field.OUTPUT_6]: initialOutputFieldState,
-        [Field.OUTPUT_7]: initialOutputFieldState,
-        [Field.OUTPUT_8]: initialOutputFieldState,
-        [Field.OUTPUT_9]: initialOutputFieldState,
-        [Field.OUTPUT_10]: initialOutputFieldState
+        [Field.OUTPUT]: { ...initialOutputFieldState },
+        [Field.OUTPUT_1]: { ...initialOutputFieldState },
+        [Field.OUTPUT_2]: { ...initialOutputFieldState },
+        [Field.OUTPUT_3]: { ...initialOutputFieldState },
+        [Field.OUTPUT_5]: { ...initialOutputFieldState },
+        [Field.OUTPUT_6]: { ...initialOutputFieldState },
+        [Field.OUTPUT_7]: { ...initialOutputFieldState },
+        [Field.OUTPUT_8]: { ...initialOutputFieldState },
+        [Field.OUTPUT_9]: { ...initialOutputFieldState },
+        [Field.OUTPUT_10]: { ...initialOutputFieldState }
+      }
+    })
+    .addCase(setHasTrade, (state, { payload: { field, trade } }) => {
+      return {
+        ...state,
+        [field]: {
+          ...state[field],
+          trade: trade
+        }
       }
     })
 )

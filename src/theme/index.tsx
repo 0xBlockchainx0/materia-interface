@@ -2199,6 +2199,7 @@ export const Erc20Badge = styled(ActionButton)<{
   width?: any
 }>`
   width: ${({ width }) => width ?? 'auto'};
+  min-width: unset !important;
 
   &.dark {
     color: ${({ theme }) => theme.yellow2} !important;

@@ -90,6 +90,7 @@ export default function SwapModalHeader({
               <TYPE.main color={theme.primary1}> Price Updated</TYPE.main>
             </RowFixed>
             <ButtonMateriaPrimary
+              className={theme.name}
               style={{ padding: '.5rem', width: 'fit-content', fontSize: '0.825rem', borderRadius: '12px' }}
               onClick={onAcceptChanges}
             >

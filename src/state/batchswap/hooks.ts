@@ -14,7 +14,8 @@ import {
   typeInput,
   setInitialState,
   setAmountMin,
-  resetBatchSwapOutputs
+  resetBatchSwapOutputs,
+  setHasTrade
 } from './actions'
 import { useUserSlippageTolerance } from '../user/hooks'
 import { computeBatchSwapSlippageAdjustedAmounts } from '../../utils/prices'
@@ -34,6 +35,7 @@ export function useBatchSwapActionHandlers(): {
   onUserInput: (field: Field, typedValue: string) => void
   onCurrencyAmountMin: (field: Field, amount?: CurrencyAmount) => void
   onBatchSwapOutputsReset: () => void
+  onHasTrade: (field: Field, trade: boolean) => void
 } {
   const dispatch = useDispatch<AppDispatch>()
   const onCurrencySelection = useCallback(
@@ -80,12 +82,18 @@ export function useBatchSwapActionHandlers(): {
     dispatch(resetBatchSwapOutputs({}))
   }, [dispatch])
 
+  const onHasTrade = useCallback(
+    (field: Field, trade: boolean) => {
+      dispatch(setHasTrade({ field, trade }))
+    }, [dispatch])
+
   return {
     onCurrencySelection,
     onCurrencyRemoval,
     onUserInput,
     onCurrencyAmountMin,
-    onBatchSwapOutputsReset
+    onBatchSwapOutputsReset,
+    onHasTrade
   }
 }
 
@@ -235,7 +243,8 @@ export function useOutputsParametersInfo(
 
 export function useValidateBatchSwapParameters(
   outputFields: Field[],
-  inputExceedBalance: boolean
+  inputExceedBalance: boolean,
+  inputHasTrade: boolean
 ): {
   message?: string
 } {
@@ -244,6 +253,7 @@ export function useValidateBatchSwapParameters(
 
   const currencies: Array<Currency | undefined> = []
   const percentages: Array<number> = [];
+  const hasTrades: Array<boolean> = [];
 
   const {
     [Field.INPUT]: {
@@ -259,6 +269,7 @@ export function useValidateBatchSwapParameters(
       [outputField]: {
         typedValue: outputTypedValue,
         currency: outputCurrency,
+        trade: outputHasTrade
       }
     } = batchSwapState
 
@@ -267,6 +278,7 @@ export function useValidateBatchSwapParameters(
 
     currencies.push(outputToken)
     percentages.push(percentage)
+    hasTrades.push(outputHasTrade)
   })
 
   if (!account) {
@@ -341,6 +353,20 @@ export function useValidateBatchSwapParameters(
   if (percentageLowerThan100) {
     return {
       message: 'Percentage lower than 100%'
+    }
+  }
+
+  if (!inputHasTrade) {
+    return {
+      message: 'Insufficient liquidity for this trade'
+    }
+  }
+
+  const outputNoTradeError = hasTrades.filter(x => !!x).length != outputFields.length
+
+  if (outputNoTradeError) {
+    return {
+      message: 'Insufficient liquidity for this trade'
     }
   }
 
