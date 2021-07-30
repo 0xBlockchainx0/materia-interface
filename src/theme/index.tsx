@@ -1257,6 +1257,8 @@ export const SectionTitle = styled.h6`
 
 export const SectionContent = styled.div`
   font-weight: 400;
+  line-height: 1.5rem;
+  padding: .5rem;
   &.dark {
   }
   &.light {
@@ -4064,6 +4066,7 @@ export const Dots = styled.span`
 `
 export const StyledPositionCard = styled(Box)<{ bgColor: any }>`
   border: none;
+  border-radius: .625rem;
   position: relative;
   overflow: hidden;
 
