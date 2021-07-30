@@ -465,7 +465,11 @@ export default function BatchSwap() {
                   id={`batch-swap`}
                   to={'/batch-swap'}
                   className={`tabLinkItem ${theme.name}`}
-                  isActive={(match, { pathname }) => Boolean(match) || pathname.startsWith('/batch-swap')}
+                  isActive={(match, { pathname }) => Boolean(match) 
+                    || pathname.startsWith('/batch-swap') 
+                    || pathname.startsWith('/uni-batch-swap') 
+                    || pathname.startsWith('/sushi-batch-swap')
+                  }
                 >
                   <span>Batch SWAP</span> {/* <BatchSwapIcon/> */}{' '}
                 </TabLinkItem>
