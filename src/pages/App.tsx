@@ -79,6 +79,8 @@ export default function App() {
               <Route exact strict path="/remove/:currencyIdA/:currencyIdB" component={RemoveLiquidity} />
               <Route exact strict path="/lm/:currencyIdA/:currencyIdB/:season" component={Manage} />
               <Route exact strict path="/batch-swap" component={BatchSwap} />
+              <Route exact strict path="/uni-batch-swap" component={BatchSwap} />
+              <Route exact strict path="/sushi-batch-swap" component={BatchSwap} />
               <Route component={RedirectPathToSwapOnly} />
             </Switch>
           </Web3ReactManager>

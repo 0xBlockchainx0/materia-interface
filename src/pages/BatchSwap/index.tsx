@@ -25,7 +25,8 @@ import {
   ActionButton,
   SmallOperationButton,
   BatchSwapButtonsContainer,
-  OperationButton
+  OperationButton,
+  InternalLinkItem
 } from '../../theme'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import Inventory from '../../components/Inventory'
@@ -93,6 +94,14 @@ export const OutputButtonContainer = styled.div`
 
 export const BatchSwapDetails = styled(AdvancedSwapDetailsDropdown)`
   display: contents !important;
+`
+
+export const SwitchDexContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+
+  ${({ theme }) => theme.mediaWidth.upToMedium` padding-top: 2.5rem; justify-content: center;`}
 `
 
 export default function BatchSwap() {
@@ -389,7 +398,11 @@ export default function BatchSwap() {
   const [play, { stop }] = useSound(alarm)
   const classicMode = useIsClassicMode()
 
-  const { message: batchSwapValidationErrorMessage } = useValidateBatchSwapParameters(currentOutputs, atGreaterAmountInput, inputHasTrade)
+  const { message: batchSwapValidationErrorMessage } = useValidateBatchSwapParameters(
+    currentOutputs,
+    atGreaterAmountInput,
+    inputHasTrade
+  )
 
   const isValid = !batchSwapValidationErrorMessage
 
@@ -624,6 +637,33 @@ export default function BatchSwap() {
                 </BatchSwapBottomGrouping>
               </div>
             </PageItemsContainer>
+            <div></div>
+            <SwitchDexContainer>
+              <InternalLinkItem
+                id={`batch-swap-dex-materia`}
+                to={'/batch-swap'}
+                className={theme.name}
+                isActive={(match, { pathname }) => Boolean(match) || pathname.startsWith('/batch-swap')}
+              >
+                Materia
+              </InternalLinkItem>
+              <InternalLinkItem
+                id={`batch-swap-dex-uniswap`}
+                to={'/uni-batch-swap'}
+                className={theme.name}
+                isActive={(match, { pathname }) => Boolean(match) || pathname.startsWith('/uni-batch-swap')}
+              >
+                Uniswap V2
+              </InternalLinkItem>
+              <InternalLinkItem
+                id={`batch-swap-dex-sushi`}
+                to={'/sushi-batch-swap'}
+                className={theme.name}
+                isActive={(match, { pathname }) => Boolean(match) || pathname.startsWith('/sushi-batch-swap')}
+              >
+                Sushi
+              </InternalLinkItem>
+            </SwitchDexContainer>
           </PageGridContainer>
         </Wrapper>
       </AppBody>

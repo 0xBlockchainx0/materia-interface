@@ -1970,6 +1970,80 @@ export const TabLinkItem = styled(NavLink).attrs({ tablinkitemactiveclassname })
     font-size: small !important;
   }
 `
+
+const internallinkitemactiveclassname = 'active'
+export const InternalLinkItem = styled(NavLink).attrs({ internallinkitemactiveclassname })`
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: left;
+  outline: none;
+  cursor: pointer;
+  text-decoration: none;
+  font-size: 18px;
+  width: fit-content;
+  margin: 0 12px;
+  font-weight: 500;
+  float: right;
+
+  &.dark {
+    color: ${({ theme }) => theme.white};
+  }
+  &.light {
+    color: ${({ theme }) => theme.grey1};
+  }
+  &.classic {
+    color: ${({ theme }) => theme.white};
+    text-shadow: 1px 1px 1px ${({ theme }) => theme.black};
+  }
+
+  &.${tablinkitemactiveclassname} {
+  }
+
+  &.dark.${tablinkitemactiveclassname} {
+    color: ${({ theme }) => theme.azure1};
+  }
+  &.light.${tablinkitemactiveclassname} {
+    color: ${({ theme }) => theme.violet1};
+  }
+  &.classic.${tablinkitemactiveclassname} {
+    color: ${({ theme }) => theme.azure1};
+  }
+
+  &.dark:hover,
+  &.dark:focus {
+    color: ${({ theme }) => theme.azure1};
+  }
+  &.light:hover,
+  &.light:focus {
+    color: ${({ theme }) => theme.violet4};
+  }
+  &.classic:hover,
+  &.classic:focus {
+    color: ${({ theme }) => theme.azure1};
+  }
+
+  &.dark.disabled,
+  &.light.disabled,
+  &.classic.disabled {
+    opacity: 0.7;
+    color: ${({ theme }) => theme.grey1};
+  }
+
+  &.dark.disabled:hover,
+  &.dark.disabled:focus,
+  &.light.disabled:hover,
+  &.light.disabled:focus,
+  &.classic.disabled:hover,
+  &.classic.disabled:focus {
+    opacity: 1;
+  }
+
+  @media (max-width: 1050px) {
+    font-size: small !important;
+  }
+`
+
+
 export const PageContentContainer = styled.div`
   margin-top: 40px;
   @media (min-width: 1051px) {

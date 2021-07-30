@@ -150,7 +150,9 @@ export default function Header() {
             isActive={(match, { pathname }) =>
               Boolean(match) ||
               pathname.startsWith('/swap') ||
-              pathname.startsWith('/batch-swap')
+              pathname.startsWith('/batch-swap') ||
+              pathname.startsWith('/uni-batch-swap') ||
+              pathname.startsWith('/sushi-batch-swap')
             }>
             Swap
           </StyledNavLink>
