@@ -2,7 +2,7 @@ import { Currency } from '@materia-dex/sdk'
 import React, { useContext } from 'react'
 import { ThemeContext } from 'styled-components'
 import { useUserTokens } from '../../state/wallet/hooks'
-import { SectionTitle, InventoryContainer, SimpleInformationsTextParagraph } from '../../theme'
+import { SectionTitle, InventoryContainer, SimpleInformationsTextParagraph, SectionContent } from '../../theme'
 import InventoryItem from './InventoryItem'
 import { Scrollbars } from 'react-custom-scrollbars'
 

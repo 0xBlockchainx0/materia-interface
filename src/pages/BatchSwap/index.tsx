@@ -26,7 +26,8 @@ import {
   SmallOperationButton,
   BatchSwapButtonsContainer,
   OperationButton,
-  InternalLinkItem
+  InternalLinkItem,
+  InternalLinkBadge
 } from '../../theme'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import Inventory from '../../components/Inventory'
@@ -643,30 +644,30 @@ export default function BatchSwap() {
             </PageItemsContainer>
             <div></div>
             <SwitchDexContainer>
-              <InternalLinkItem
+              <InternalLinkBadge
                 id={`batch-swap-dex-materia`}
                 to={'/batch-swap'}
                 className={theme.name}
                 isActive={(match, { pathname }) => Boolean(match) || pathname.startsWith('/batch-swap')}
               >
                 Materia
-              </InternalLinkItem>
-              <InternalLinkItem
+              </InternalLinkBadge>
+              <InternalLinkBadge
                 id={`batch-swap-dex-uniswap`}
                 to={'/uni-batch-swap'}
                 className={theme.name}
                 isActive={(match, { pathname }) => Boolean(match) || pathname.startsWith('/uni-batch-swap')}
               >
                 Uniswap V2
-              </InternalLinkItem>
-              <InternalLinkItem
+              </InternalLinkBadge>
+              <InternalLinkBadge
                 id={`batch-swap-dex-sushi`}
                 to={'/sushi-batch-swap'}
                 className={theme.name}
                 isActive={(match, { pathname }) => Boolean(match) || pathname.startsWith('/sushi-batch-swap')}
               >
                 Sushi
-              </InternalLinkItem>
+              </InternalLinkBadge>
             </SwitchDexContainer>
           </PageGridContainer>
         </Wrapper>

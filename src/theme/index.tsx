@@ -439,13 +439,14 @@ a { color: ${colors(false, false).blue1}; }
 button { user-select: none; }
 
 html {
-  font-size: 16px;
+  font-size: 1rem;
   font-variant: none;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   font-feature-settings: 'ss01' on, 'ss02' on, 'cv01' on, 'cv03' on;  
 }
+
 
 .wrapASBlock { margin: 5px 0px 5px 0px }
 .wrapASBlock div.clearfix { clear: both; }
@@ -459,8 +460,27 @@ html {
   background-color: ${({ theme }) => theme.bg2};
 }
 
-html, input, textarea, button { font-family: \'Cera Pro\', sans-serif; font-display: fallback; };
-@supports (font-variation-settings: normal) { html, input, textarea, button { font-family: \'Cera Pro\', sans-serif; } };
+.text-secondary {
+  --tw-text-opacity: 1;
+  color: rgba(127,127,127,var(--tw-text-opacity));
+}
+
+html, input, textarea, button { 
+  font-family: "DM Sans",-apple-system,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif,BlinkMacSystemFont,"Helvetica Neue","Helvetica",sans-serif;
+  --primary: #0d0415;
+  --text-primary: #bfbfbf;
+  --font-sans: "DM Sans",-apple-system,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif,BlinkMacSystemFont,"Helvetica Neue","Helvetica",sans-serif;
+  --scrollbar-width: 14px; 
+};
+@supports (font-variation-settings: normal) { 
+  html, input, textarea, button { 
+    font-family: "DM Sans",-apple-system,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif,BlinkMacSystemFont,"Helvetica Neue","Helvetica",sans-serif; 
+    --primary: #0d0415;
+    --text-primary: #bfbfbf;
+    --font-sans: "DM Sans",-apple-system,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif,BlinkMacSystemFont,"Helvetica Neue","Helvetica",sans-serif;
+    --scrollbar-width: 14px;
+  } 
+};
 
 body {
   min-height: 100vh;
@@ -1115,8 +1135,7 @@ export const MainContainerContentWrapper = styled.div`
   --tw-shadow: 0px 50px 250px -47px rgba(39,176,230,0.29)!important;
 
   &.dark {
-    background: rgb(31,121,228);
-    background-color: rgb(6 31 64)!important
+    background-color: rgb(14 32 60)!important
   }
   //&.dark { background: linear-gradient(133deg, ${({ theme }) => theme.utils.hexToRGB(theme.blue2, 0.8)} 60%, ${({
   theme
@@ -1167,7 +1186,7 @@ export const FeatureTitle = styled.h2`
   }
 `
 export const FeatureChildrenContainer = styled.div`
-  border-radius:3px;
+  border-radius:.65rem;
   max-width: 1200px;
   min-height: 580px;
   padding: 20px 7px;
@@ -1191,7 +1210,7 @@ export const SectionTitle = styled.h6`
   font-size: 18px;
   position: relative;
   display: inline-block;
-  margin: 0px 0px 7px 0px;
+  margin: 7px;
   text-transform: capitalize;
   padding: 0px;
   width: 80%;
@@ -1251,7 +1270,6 @@ export const SectionContent = styled.div`
 `
 
 export const InventoryContainer = styled.div`
-  margin-right: 1rem;
   overflow-y: auto;
   overflow: hidden;
 
@@ -1260,28 +1278,27 @@ export const InventoryContainer = styled.div`
   }
 `
 export const InventoryItemContainer = styled.div`
-  padding: 10px 15px 10px 15px;
-  margin-left: 3px;
-  margin-bottom: 1px;
+  padding: 1rem;  
+  margin-bottom: 5px;
   height: auto;
   background-size: cover;
   position: relative;
-  font-weight: 500;
   font-size: 15px;
+  border-radius: .65rem;
   color: ${({ theme }) => theme.text6};
 
   &.dark {
     background: linear-gradient(
       90deg,
-      ${({ theme }) => theme.utils.hexToRGB(theme.black, 1)} 0%,
-      ${({ theme }) => theme.utils.hexToRGB(theme.black, 0)} 100%
+      rgba(15, 24, 42, .6) 0%, 
+      rgba(15, 24, 42, .6) 100%
     );
   }
   &.dark:hover {
     background: linear-gradient(
       90deg,
-      ${({ theme }) => theme.utils.hexToRGB(theme.azure8, 1)} 0%,
-      ${({ theme }) => theme.utils.hexToRGB(theme.azure8, 0)} 100%
+      ${({ theme }) => theme.utils.hexToRGB(theme.azure8, 0.6)} 0%,
+      ${({ theme }) => theme.utils.hexToRGB(theme.azure8, 0.6)} 100%
     );
     color: ${({ theme }) => theme.text1};
     &.dark:after {
@@ -1289,33 +1306,18 @@ export const InventoryItemContainer = styled.div`
     }
   }
 
-  &.dark:after,
-  &.light:after {
-    content: ' ';
-    display: block;
-    position: absolute;
-    width: 2px;
-    height: 100%;
-    top: 0px;
-    left: -3px;
-  }
-
-  &.dark:after {
-    background-color: ${({ theme }) => theme.black};
-  }
-  &.light:after {
-    background-color: rgba(211, 221, 250, 1);
-  }
-
   &.light {
-    background: linear-gradient(90deg, rgba(211, 221, 250, 1) 0%, rgba(211, 221, 250, 0) 100%);
+    background: linear-gradient(
+      90deg, 
+      rgba(211, 221, 250, 0.6) 0%, 
+      rgba(211, 221, 250, 0.6) 100%);
     color: ${({ theme }) => theme.text2};
   }
   &.light:hover {
     background: linear-gradient(
       90deg,
-      ${({ theme }) => theme.utils.hexToRGB(theme.violet3, 1)} 0%,
-      ${({ theme }) => theme.utils.hexToRGB(theme.violet3, 0)} 100%
+      ${({ theme }) => theme.utils.hexToRGB(theme.violet3, 0.6)} 0%,
+      ${({ theme }) => theme.utils.hexToRGB(theme.violet3, 0.6)} 100%
     );
     color: ${({ theme }) => theme.text1};
     &.light:after {
@@ -2042,10 +2044,89 @@ export const InternalLinkItem = styled(NavLink).attrs({ internallinkitemactivecl
     font-size: small !important;
   }
 `
+export const InternalLinkBadge = styled(NavLink).attrs({ internallinkitemactiveclassname })`
+  display: flex;
+  border-radius: 0.625rem;
+  padding: 0.6rem;
+  flex-flow: row nowrap;
+  align-items: left;
+  outline: none;
+  cursor: pointer;
+  text-decoration: none;
+  width: fit-content;
+  margin: 0 3px;
+  font-weight: 400;
+  float: right;
+
+  &.dark {
+    color: ${({ theme }) => theme.white};
+    background-color: #0e203c;
+  }
+  &.light {
+    color: ${({ theme }) => theme.grey1};
+    background-color: #e1e7f9;
+  }
+  &.classic {
+    color: ${({ theme }) => theme.white};
+    text-shadow: 1px 1px 1px ${({ theme }) => theme.black};
+  }
+
+  &.${tablinkitemactiveclassname} {
+  }
+
+  &.dark.${tablinkitemactiveclassname} {
+    color: ${({ theme }) => theme.azure1};
+    background-color: ${({ theme }) => theme.utils.hexToRGB(theme.azure8, 0.6)};
+  }
+  &.light.${tablinkitemactiveclassname} {
+    color: ${({ theme }) => theme.violet1};
+    background-color: ${({ theme }) => theme.utils.hexToRGB(theme.violet3, 0.6)};
+  }
+  &.classic.${tablinkitemactiveclassname} {
+    color: ${({ theme }) => theme.azure1};
+  }
+
+  &.dark:hover,
+  &.dark:focus {
+    color: ${({ theme }) => theme.azure1};
+    background-color: ${({ theme }) => theme.utils.hexToRGB(theme.azure8, 0.6)};
+  }
+  &.light:hover,
+  &.light:focus {
+    color: ${({ theme }) => theme.violet4};
+    background-color: ${({ theme }) => theme.utils.hexToRGB(theme.violet3, 0.6)};
+  }
+  &.classic:hover,
+  &.classic:focus {
+    color: ${({ theme }) => theme.azure1};
+  }
+
+  &.dark.disabled,
+  &.light.disabled,
+  &.classic.disabled {
+    opacity: 0.7;
+    color: ${({ theme }) => theme.grey1};
+  }
+
+  &.dark.disabled:hover,
+  &.dark.disabled:focus,
+  &.light.disabled:hover,
+  &.light.disabled:focus,
+  &.classic.disabled:hover,
+  &.classic.disabled:focus {
+    opacity: 1;
+  }
+
+  @media (max-width: 1050px) {
+    font-size: small !important;
+  }
+`
 
 
 export const PageContentContainer = styled.div`
   margin-top: 40px;
+  padding:1rem;
+  border-radius:0.65rem;
   @media (min-width: 1051px) {
     display: grid;
     grid-template-columns: 42.5% 15% 42.5%;
@@ -2488,7 +2569,7 @@ export const DropDownButton = styled(BaseButton)<{ width?: string; borderRadius?
 `
 export const SwitchButton = styled(Button)<{ disabled?: boolean }>`
   padding: 0px !important;
-  border-radius: 0px !important;
+  border-radius: -0.35rem !important;
   display: inline-block;
   text-align: center;
   border-color: transparent;
@@ -2769,7 +2850,7 @@ export const OperationButton = styled(Button)<{ label?: string; disabled?: boole
 
 export const SmallOperationButton = styled(Button)<{ disabled?: boolean }>`
   padding: 0px !important;
-  border-radius: 0px !important;
+  border-radius: 4px !important;
   display: inline-block;
   text-align: center;
   border-color: transparent;
@@ -2877,8 +2958,9 @@ export const MainOperationButton = styled(ActionButton)<{
   selected?: boolean
   useCustomProperties?: boolean
 }>`
-  font-size: 16px !important;
-  padding: 5px 10px !important;
+  font-size: 1rem !important;
+  padding: .7rem !important;
+  border-radius: 0.625rem;
 
   &:disabled {
     opacity: 0.5;
