@@ -24,6 +24,8 @@ export default function AppBody({ children }: { children: React.ReactNode }) {
         featureTitle = 'swap';
       break;
       case 'batch-swap':
+      case 'uni-batch-swap':
+      case 'sushi-batch-swap':
         featureTitle = 'batch swap';
       break;
       case 'lm':

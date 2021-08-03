@@ -1,4 +1,6 @@
 import { ChainId, JSBI, Percent, Token, IETH } from '@materia-dex/sdk'
+import { WETH } from '@uniswap/sdk'
+
 import { AbstractConnector } from '@web3-react/abstract-connector'
 
 import { fortmatic, injected, portis, walletconnect, walletlink } from '../connectors'
@@ -8,14 +10,6 @@ export const ORCHESTRATOR_ADDRESS = '0xB0F720Baa5BD1715897d4790A59f5c7aa1377D79'
 export const MATERIA_DFO_ADDRESS = '0xf056aE03Cf991e4587Da458B2c85e9a353684B3a'
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 export const ETHEREUM_OBJECT_ID = '11027808402393750762873608378930398077418220124669629658698890017122249518391'
-
-export const MATERIA_BATCH_SWAPPER_ADDRESS: { [chainId in ChainId]: string } = {
-  [ChainId.MAINNET]: '0x54c5aFB953a7AEbbf9F5D092Cd03e16Ef14De4aa',
-  [ChainId.RINKEBY]: ZERO_ADDRESS,
-  [ChainId.ROPSTEN]: '0x54c5aFB953a7AEbbf9F5D092Cd03e16Ef14De4aa',
-  [ChainId.GÖRLI]: ZERO_ADDRESS,
-  [ChainId.KOVAN]: ZERO_ADDRESS
-}
 
 export const ERC20WRAPPER: { [chainId in ChainId]: string } = {
   [ChainId.MAINNET]: '0xC46abE9805c54107114e04bdb30F189434ccE2d3',
@@ -169,11 +163,28 @@ const WUSD_ONLY: ChainTokenList = {
   [ChainId.KOVAN]: [WUSD[ChainId.KOVAN]]
 }
 
+const WETH_ONLY: ChainTokenList = {
+  [ChainId.MAINNET]: [WETH[ChainId.MAINNET]],
+  [ChainId.ROPSTEN]: [WETH[ChainId.ROPSTEN]],
+  [ChainId.RINKEBY]: [WETH[ChainId.RINKEBY]],
+  [ChainId.GÖRLI]: [WETH[ChainId.GÖRLI]],
+  [ChainId.KOVAN]: [WETH[ChainId.KOVAN]]
+}
+
 // used to construct intermediary pairs for trading
 export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
   ...WUSD_ONLY,
   [ChainId.MAINNET]: [...WUSD_ONLY[ChainId.MAINNET]],
   [ChainId.ROPSTEN]: [...WUSD_ONLY[ChainId.ROPSTEN]]
+}
+
+export const BASES_TO_CHECK_TRADES_AGAINST_UNISWAP: ChainTokenList = {
+  ...WETH_ONLY,
+  [ChainId.MAINNET]: [...WETH_ONLY[ChainId.MAINNET]],
+  [ChainId.ROPSTEN]: [...WETH_ONLY[ChainId.ROPSTEN]],
+  [ChainId.RINKEBY]: [...WETH_ONLY[ChainId.RINKEBY]],
+  [ChainId.GÖRLI]: [...WETH_ONLY[ChainId.GÖRLI]],
+  [ChainId.KOVAN]: [...WETH_ONLY[ChainId.KOVAN]]
 }
 
 /**
@@ -183,6 +194,12 @@ export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
 export const CUSTOM_BASES: { [chainId in ChainId]?: { [tokenAddress: string]: Token[] } } = {
   [ChainId.MAINNET]: {
     [AMPL.address]: [DAI, IETH[ChainId.MAINNET]]
+  }
+}
+
+export const CUSTOM_BASES_UNISWAP: { [chainId in ChainId]?: { [tokenAddress: string]: Token[] } } = {
+  [ChainId.MAINNET]: {
+    [AMPL.address]: [DAI, WETH[ChainId.MAINNET]]
   }
 }
 
@@ -317,5 +334,39 @@ export const MAX_BATCH_SWAP_OUTPUTS = 10
 export const MAX_BATCH_SWAP_OUTPUTS_FREE = 2
 export const MIN_GIL_UNLOCK_FULL_BATCHSWAP = JSBI.BigInt(1000 * 10 ** 18)
 export const MIN_IGIL_UNLOCK_FULL_BATCHSWAP = JSBI.BigInt(1000 * 10 ** 18)
-export const MIN_GIL_UNLOCK_FULL_BATCHSWAP_TEXT = "1000"
-export const MIN_IGIL_UNLOCK_FULL_BATCHSWAP_TEXT = "1000"
+export const MIN_GIL_UNLOCK_FULL_BATCHSWAP_TEXT = '1000'
+export const MIN_IGIL_UNLOCK_FULL_BATCHSWAP_TEXT = '1000'
+
+export const MATERIA_BATCH_SWAPPER_ADDRESS: { [chainId in ChainId]: string } = {
+  [ChainId.MAINNET]: '0x54c5aFB953a7AEbbf9F5D092Cd03e16Ef14De4aa',
+  [ChainId.RINKEBY]: ZERO_ADDRESS,
+  [ChainId.ROPSTEN]: '0x54c5aFB953a7AEbbf9F5D092Cd03e16Ef14De4aa',
+  [ChainId.GÖRLI]: ZERO_ADDRESS,
+  [ChainId.KOVAN]: ZERO_ADDRESS
+}
+
+export const DEX_BATCH_SWAPPER_ADDRESS: { [chainId in ChainId]: string } = {
+  [ChainId.MAINNET]: '0x69dEb16AAd308F9D760bf02F7F739d220fa81F54',
+  [ChainId.RINKEBY]: ZERO_ADDRESS,
+  [ChainId.ROPSTEN]: '0x69dEb16AAd308F9D760bf02F7F739d220fa81F54',
+  [ChainId.GÖRLI]: ZERO_ADDRESS,
+  [ChainId.KOVAN]: ZERO_ADDRESS
+}
+
+export const UNISWAP_V2_INIT_CODE_HASH = '0x96e8ac4277198ff8b6f785478aa9a39f403cb768dd02cbee326c3e7da348845f'
+
+export const UNISWAP_V2_FACTORY_ADDRESS: { [chainId in ChainId]: string } = {
+  [ChainId.MAINNET]: '0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f',
+  [ChainId.RINKEBY]: '0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f',
+  [ChainId.ROPSTEN]: '0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f',
+  [ChainId.GÖRLI]: '0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f',
+  [ChainId.KOVAN]: '0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f'
+}
+
+export const UNISWAP_V2_BRIDGE_TOKEN: { [chainId in ChainId]: string } = {
+  [ChainId.MAINNET]: WETH[ChainId.MAINNET].address,
+  [ChainId.RINKEBY]: WETH[ChainId.RINKEBY].address,
+  [ChainId.ROPSTEN]: WETH[ChainId.ROPSTEN].address,
+  [ChainId.GÖRLI]: WETH[ChainId.GÖRLI].address,
+  [ChainId.KOVAN]: WETH[ChainId.KOVAN].address
+}

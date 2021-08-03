@@ -31,6 +31,7 @@ import { ApplicationModal } from '../state/application/actions'
 import AddressClaimModal from '../components/claim/AddressClaimModal'
 
 import spaceVideo from '../assets/images/space.mp4';
+import BatchSwapUni from './BatchSwapUni'
 
 function TopLevelModals() {
   const open = useModalOpen(ApplicationModal.ADDRESS_CLAIM)
@@ -79,7 +80,7 @@ export default function App() {
               <Route exact strict path="/remove/:currencyIdA/:currencyIdB" component={RemoveLiquidity} />
               <Route exact strict path="/lm/:currencyIdA/:currencyIdB/:season" component={Manage} />
               <Route exact strict path="/batch-swap" component={BatchSwap} />
-              <Route exact strict path="/uni-batch-swap" component={BatchSwap} />
+              <Route exact strict path="/uni-batch-swap" component={BatchSwapUni} />
               <Route exact strict path="/sushi-batch-swap" component={BatchSwap} />
               <Route component={RedirectPathToSwapOnly} />
             </Switch>

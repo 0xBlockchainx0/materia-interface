@@ -191,7 +191,12 @@ export function useApproveCallbackFromTrade(trade?: Trade, token?: Token, allowe
 }
 
 // wraps useApproveCallback in the context of a swap
-export function useApproveCallbackFromBatchSwapTrade(trade?: Trade, token?: Token, allowedSlippage = 0) {
+export function useApproveCallbackFromBatchSwapTrade(
+  trade?: Trade,
+  token?: Token,
+  allowedSlippage = 0,
+  addressToApprove?: string
+) {
   const { chainId } = useActiveWeb3React()
   const amountToApprove = useMemo(
     () => (trade ? computeSlippageAdjustedAmounts(trade, allowedSlippage)[Field.INPUT] : undefined),
@@ -200,7 +205,7 @@ export function useApproveCallbackFromBatchSwapTrade(trade?: Trade, token?: Toke
   return useTokenApproveCallback(
     amountToApprove,
     token,
-    MATERIA_BATCH_SWAPPER_ADDRESS[chainId ?? ChainId.MAINNET],
+    addressToApprove ?? MATERIA_BATCH_SWAPPER_ADDRESS[chainId ?? ChainId.MAINNET],
     true,
     true
   )

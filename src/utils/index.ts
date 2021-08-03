@@ -7,7 +7,8 @@ import { abi as IMateriaOrchestratorABI } from '@materia-dex/materia-contracts-p
 import { abi as IERC1155ABI } from '@materia-dex/materia-contracts-proxy/build/IERC1155.json'
 import { abi as IERC20WrapperV1 } from '@materia-dex/materia-contracts-proxy/build/IERC20WrapperV1.json'
 import { abi as BatchSwapperMateria } from '../constants/abis/BatchSwapperMateria.json'
-import { MATERIA_BATCH_SWAPPER_ADDRESS, ORCHESTRATOR_ADDRESS } from '../constants'
+import { abi as BatchSwapper } from '../constants/abis/BatchSwapper.json'
+import { MATERIA_BATCH_SWAPPER_ADDRESS, DEX_BATCH_SWAPPER_ADDRESS, ORCHESTRATOR_ADDRESS } from '../constants'
 import { ChainId, JSBI, Percent, Token, CurrencyAmount, Currency, ETHER } from '@materia-dex/sdk'
 import { TokenAddressMap } from '../state/lists/hooks'
 
@@ -107,6 +108,10 @@ export function getOrchestratorContract(_: number, library: Web3Provider, accoun
 
 export function getBatchSwapperContract(_: ChainId, library: Web3Provider, account?: string): Contract {
   return getContract(MATERIA_BATCH_SWAPPER_ADDRESS[_], BatchSwapperMateria, library, account)
+}
+
+export function getDexBatchSwapperContract(_: ChainId, library: Web3Provider, account?: string): Contract {
+  return getContract(DEX_BATCH_SWAPPER_ADDRESS[_], BatchSwapper, library, account)
 }
 
 export function getEthItemCollectionContract(

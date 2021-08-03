@@ -6,7 +6,7 @@ import { AutoColumn } from '../../components/Column'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import AdvancedSwapDetailsDropdown from '../../components/swap/AdvancedSwapDetailsDropdown'
 import { BatchSwapBottomGrouping, SwapCallbackError, Wrapper } from '../../components/swap/styleds'
-import { Field } from '../../state/batchswap/actions'
+import { Field } from '../../state/batchswap-uni/actions'
 import {
   useDerivedBatchSwapInfo,
   useBatchSwapActionHandlers,
@@ -14,7 +14,7 @@ import {
   useOutputsParametersInfo,
   useBatchSwapDefaults,
   useValidateBatchSwapParameters
-} from '../../state/batchswap/hooks'
+} from '../../state/batchswap-uni/hooks'
 import AppBody from '../AppBody'
 import {
   PageGridContainer,
@@ -26,14 +26,13 @@ import {
   SmallOperationButton,
   BatchSwapButtonsContainer,
   OperationButton,
-  InternalLinkItem,
   InternalLinkBadge
 } from '../../theme'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import Inventory from '../../components/Inventory'
 import { Link, Plus } from 'react-feather'
 import { Minus } from 'react-feather'
-import BatchSwapOutput from '../../components/BatchSwapOutput'
+import BatchSwapOutputUniswap from '../../components/BatchSwapOutputUniswap'
 import typedKeys from '../../utils/typesKeys'
 import { ApprovalState, useApproveCallbackFromBatchSwapTrade } from '../../hooks/useApproveCallback'
 import { wrappedCurrency } from '../../utils/wrappedCurrency'
@@ -47,19 +46,14 @@ import { useWalletModalToggle } from '../../state/application/hooks'
 import {
   GIL,
   IGIL,
-  MATERIA_BATCH_SWAPPER_ADDRESS,
   MAX_BATCH_SWAP_OUTPUTS,
   MAX_BATCH_SWAP_OUTPUTS_FREE,
   MIN_BATCH_SWAP_OUTPUTS,
   MIN_GIL_UNLOCK_FULL_BATCHSWAP,
   MIN_IGIL_UNLOCK_FULL_BATCHSWAP,
-  ZERO_ADDRESS
+  DEX_BATCH_SWAPPER_ADDRESS
 } from '../../constants'
-import useCheckIsEthItem from '../../hooks/useCheckIsEthItem'
-import { useEthItemContract } from '../../hooks/useContract'
-import { Contract } from 'ethers'
-import { splitSignature } from 'ethers/lib/utils'
-import { TokenInParameter, useBatchSwapCallback } from '../../hooks/useBatchSwapCallback'
+import { TokenInParameter, useUniswapBatchSwapCallback } from '../../hooks/useUniswapBatchSwapCallback'
 import ConfirmBatchSwapModal from '../../components/batchswap/ConfirmBatchSwapModal'
 import { useTokenBalance } from '../../state/wallet/hooks'
 import UnlockFullBatchSwapModal from '../../components/batchswap/UnlockFullBatchSwapModal'
@@ -105,7 +99,7 @@ export const SwitchDexContainer = styled.div`
   ${({ theme }) => theme.mediaWidth.upToMedium` padding-top: 2.5rem; justify-content: center;`}
 `
 
-export default function BatchSwap() {
+export default function BatchSwapUni() {
   const theme = useContext(ThemeContext)
   const { account, chainId, library } = useActiveWeb3React()
 
@@ -119,7 +113,7 @@ export default function BatchSwap() {
     parsedAmount,
     originalCurrencies,
     v2Trade: trade
-  } = useDerivedBatchSwapInfo(Field.OUTPUT_1, true)
+  } = useDerivedBatchSwapInfo(Field.OUTPUT_1)
 
   const [signatureData, setSignatureData] = useState<{ v: number; r: string; s: string } | null>(null)
 
@@ -237,7 +231,8 @@ export default function BatchSwap() {
   const [approval, approveCallback] = useApproveCallbackFromBatchSwapTrade(
     trade,
     wrappedCurrency(originalCurrencies[Field.INPUT], chainId) ?? undefined,
-    allowedSlippage
+    allowedSlippage,
+    DEX_BATCH_SWAPPER_ADDRESS[chainId ?? ChainId.MAINNET]
   )
 
   const [approvalSubmitted, setApprovalSubmitted] = useState<boolean>(false)
@@ -247,73 +242,9 @@ export default function BatchSwap() {
     chainId
   ])
 
-  const isEthItemInput = useCheckIsEthItem(tokenInput?.address ?? ZERO_ADDRESS)?.ethItem ?? false
-  const ethItemContract: Contract | null = useEthItemContract(isEthItemInput ? tokenInput?.address : undefined)
-
   async function onAttemptToApprove() {
-    if (!isEthItemInput) {
-      return approveCallback()
-    }
-
-    if (!ethItemContract || !tokenInput || !library || !chainId) throw new Error('missing dependencies')
-
-    const inputAmount = parsedAmounts[Field.INPUT]
-
-    if (!inputAmount) throw new Error('missing input amount')
-
-    // try to gather a signature for permission
-    const nonce = await ethItemContract.permitNonce(account)
-
-    const EIP712Domain = [
-      { name: 'name', type: 'string' },
-      { name: 'version', type: 'string' },
-      { name: 'chainId', type: 'uint256' },
-      { name: 'verifyingContract', type: 'address' }
-    ]
-    const domain = {
-      name: 'Item',
-      version: '1',
-      chainId: chainId,
-      verifyingContract: tokenInput.address
-    }
-    const Permit = [
-      { name: 'owner', type: 'address' },
-      { name: 'spender', type: 'address' },
-      { name: 'value', type: 'uint256' },
-      { name: 'nonce', type: 'uint256' }
-    ]
-    const message = {
-      owner: account,
-      spender: MATERIA_BATCH_SWAPPER_ADDRESS[chainId],
-      value: inputAmount.raw.toString(),
-      nonce: nonce.toHexString()
-    }
-    const data = JSON.stringify({
-      types: {
-        EIP712Domain,
-        Permit
-      },
-      domain,
-      primaryType: 'Permit',
-      message
-    })
-
-    library
-      .send('eth_signTypedData_v4', [account, data])
-      .then(splitSignature)
-      .then(signature => {
-        setSignatureData({
-          v: signature.v,
-          r: signature.r,
-          s: signature.s
-        })
-      })
-      .catch(error => {
-        // for all errors other than 4001 (EIP-1193 user rejected request), fall back to manual approve
-        if (error?.code !== 4001) {
-          approveCallback()
-        }
-      })
+    // Permit not used within other DEXes than Materia
+    return approveCallback()
   }
 
   useEffect(() => {
@@ -347,7 +278,7 @@ export default function BatchSwap() {
 
   const { outputsInfo: outputsParameters } = useOutputsParametersInfo(currentOutputs)
 
-  const { callback: batchSwapCallback, error: batchSwapCallbackError } = useBatchSwapCallback(
+  const { callback: batchSwapCallback, error: batchSwapCallbackError } = useUniswapBatchSwapCallback(
     inputParameters,
     outputsParameters
   )
@@ -372,8 +303,8 @@ export default function BatchSwap() {
         })
 
         ReactGA.event({
-          category: 'BatchSwap',
-          action: 'BatchSwap w/o Send',
+          category: 'BatchSwap Uniswap',
+          action: 'BatchSwap Uniswap w/o Send',
           label: [
             inputParameters.currency == ETHER ? 'ETH' : inputParameters?.token?.symbol,
             outputsParameters
@@ -506,7 +437,7 @@ export default function BatchSwap() {
                   <div>
                     <AutoColumn gap={'lg'}>
                       {currentOutputs.map((output, index) => (
-                        <BatchSwapOutput key={index} outputField={output} />
+                        <BatchSwapOutputUniswap key={index} outputField={output} />
                       ))}
                       <OutputButtonContainer>
                         <AddOutputButton
