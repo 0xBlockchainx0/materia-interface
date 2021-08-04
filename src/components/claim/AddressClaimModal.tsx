@@ -15,38 +15,14 @@ import {
 import { useClaimCallback, useUserUnclaimedAmount, useUserHasAvailableClaim } from '../../state/claim/hooks'
 import { images } from '../../theme/images'
 
-import { Text } from 'rebass'
 import AddressInputPanel from '../AddressInputPanel'
 import useENS from '../../hooks/useENS'
 import { useActiveWeb3React } from '../../hooks'
 import { isAddress } from 'ethers/lib/utils'
-import Confetti from '../Confetti'
-import { CardNoise, CardBGImage } from '../earn/styled'
 import { useIsTransactionPending } from '../../state/transactions/hooks'
 import { TokenAmount } from '@materia-dex/sdk'
 import { getEtherscanLink, shortenAddress } from '../../utils'
 
-const ContentWrapper = styled(AutoColumn)`
-  width: 100%;
-`
-
-const ModalUpper = styled(DataCard)`
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-  background: radial-gradient(76.02% 75.41% at 1.84% 0%, #ff007a 0%, #021d43 100%);
-`
-
-const ConfirmOrLoadingWrapper = styled.div<{ activeBG: boolean }>`
-  width: 100%;
-  padding: 24px;
-  position: relative;
-  background: ${({ activeBG }) =>
-    activeBG &&
-    'radial-gradient(76.02% 75.41% at 1.84% 0%, rgba(255, 0, 122, 0.2) 0%, rgba(33, 114, 229, 0.2) 100%), #FFFFFF;'};
-`
-
-const ConfirmedIcon = styled(ColumnCenter)`
-  padding: 60px 0;
-`
 
 export default function AddressClaimModal({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: () => void }) {
   const { chainId } = useActiveWeb3React()

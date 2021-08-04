@@ -46,11 +46,10 @@ export default function App() {
       <Route component={GoogleAnalyticsReporter} />
       <Route component={DarkModeQueryParamReader} />
       <AppWrapper>
-        <div className={ `appBackground ${theme.name}` }>
-          <video autoPlay muted loop id="myVideo">
-            <source src="https://materiadex.com/static/space-4f6501da9af201ec2ef667bb87db6640.mp4" type="video/mp4"/>
-          </video>
-          <div className={ `videoOverlay ${theme.name}` }></div>
+        <div className={`appBackground ${theme.name}`}>
+          <div className="galaxy">
+            <div className="stars"></div>
+          </div>
         </div>
         <URLWarning />
         <HeaderWrapper>

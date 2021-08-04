@@ -8,7 +8,6 @@ import DoubleCurrencyLogo from '../DoubleLogo'
 import { RowBetween } from '../Row'
 import { CurrencyFormPanel, ActionButton, DropDownButton, Erc20Badge, EthItemBadge } from '../../theme'
 import { Input as NumericalInput } from '../NumericalInput'
-import { Input as PercentageInput } from '../PercentageInput'
 import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
 
 import { useActiveWeb3React } from '../../hooks'

@@ -8,7 +8,6 @@ import ListUpdatePopup from './ListUpdatePopup'
 import TransactionPopup from './TransactionPopup'
 import { 
   SecondaryPanelBoxContainer, 
-  SecondaryPanelBoxContainerExtraDecorator, 
   IconButton, 
   AnimatedFader } from '../../theme'
 

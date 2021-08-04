@@ -11,24 +11,22 @@ import { useActiveWeb3React } from '../../hooks'
 import { useTokenBalance } from '../../state/wallet/hooks'
 import { 
   ExternalLink, 
-  TYPE, 
   StyledPositionCard, 
   Dots, 
   ActionButton, 
   SimpleTextParagraph, 
   IconButton,
-  MainOperationButton, 
   SectionTitle, 
   SecondaryPanelBoxContainer, 
-  SecondaryPanelBoxContainerExtraDecorator } from '../../theme'
+} from '../../theme'
 import { currencyId } from '../../utils/currencyId'
 import { unwrappedToken } from '../../utils/wrappedCurrency'
-import { ButtonSecondary, ButtonEmpty, ButtonMateriaPrimary } from '../Button'
+import { ButtonMateriaPrimary } from '../Button'
 import { CardNoise } from '../earn/styled'
 
 import { useColor } from '../../hooks/useColor'
 
-import Card, { LightCard } from '../Card'
+import Card from '../Card'
 import { AutoColumn } from '../Column'
 import CurrencyLogo from '../CurrencyLogo'
 import DoubleCurrencyLogo from '../DoubleLogo'

@@ -8,8 +8,6 @@ import { useCurrency } from '../../hooks/Tokens'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import {
   PageGridContainer,
-  SecondaryPanelBoxContainer,
-  SecondaryPanelBoxContainerExtraDecorator,
   SimpleTextParagraph,
   ActionButton,
   SectionTitle,
@@ -72,11 +70,7 @@ export default function Manage({
   const [showClaimRewardModal, setShowClaimRewardModal] = useState(false)
 
   // fade cards if nothing staked or nothing earned yet
-  const disableTop = !stakingInfo?.stakedAmount || stakingInfo.stakedAmount.equalTo(JSBI.BigInt(0))
-  const token = currencyA === currencyWUSD ? tokenB : tokenA
   const tokenWUSD = currencyA === currencyWUSD ? tokenA : tokenB
-
-  const backgroundColor = useColor(token)
 
   // get tokenWUSD value of staked MP tokens
   const totalSupplyOfStakingToken = useTotalSupply(stakingInfo?.stakedAmount?.token)

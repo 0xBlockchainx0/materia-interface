@@ -7,15 +7,15 @@ import { ArrowDown, Plus, ChevronUp, ChevronDown, Link } from 'react-feather'
 import ReactGA from 'react-ga'
 import { RouteComponentProps } from 'react-router'
 import { Text } from 'rebass'
-import styled, { ThemeContext } from 'styled-components'
-import { ButtonMateriaLight, ButtonMateriaError, ButtonMateriaPrimary, ButtonMateriaConfirmed } from '../../components/Button'
+import { ThemeContext } from 'styled-components'
+import { ButtonMateriaError, ButtonMateriaPrimary, ButtonMateriaConfirmed } from '../../components/Button'
 import { AutoColumn } from '../../components/Column'
 import TransactionConfirmationModal, { ConfirmationModalContent } from '../../components/TransactionConfirmationModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import DoubleCurrencyLogo from '../../components/DoubleLogo'
 import { AddRemoveTabs } from '../../components/NavigationTabs'
 import { MinimalPositionCard } from '../../components/PositionCard'
-import Row, { RowBetween, RowFixed } from '../../components/Row'
+import { RowBetween, RowFixed } from '../../components/Row'
 
 import Slider from '../../components/Slider'
 import CurrencyLogo from '../../components/CurrencyLogo'
@@ -32,7 +32,6 @@ import {
   TYPE,
   PageGridContainer,
   SecondaryPanelBoxContainer,
-  SecondaryPanelBoxContainerExtraDecorator,
   SimpleTextParagraph,
   PageItemsContainer,
   PageContentContainer,
@@ -58,7 +57,6 @@ import { Field } from '../../state/burn/actions'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import { useUserSlippageTolerance } from '../../state/user/hooks'
 import { BigNumber } from '@ethersproject/bignumber'
-import { CardSection, DataCard, CardNoise, CardBGImage } from '../../components/earn/styled'
 
 export default function RemoveLiquidity({
   history,
@@ -226,7 +224,7 @@ export default function RemoveLiquidity({
     if (!liquidityAmount) throw new Error('missing liquidity amount')
 
     const currencyWUSD = WUSD[chainId ?? 1]
-    const currencyBIsWUSD = wrappedCurrency(currencyB, chainId)?.address == currencyWUSD.address
+    const currencyBIsWUSD = wrappedCurrency(currencyB, chainId)?.address === currencyWUSD.address
 
     const currencyBIsETH = currencyB === ETHER
     const oneCurrencyIsETH = currencyA === ETHER || currencyBIsETH

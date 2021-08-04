@@ -7,11 +7,9 @@ import { Text } from 'rebass'
 import { ExternalLink as Link } from '../../theme'
 import { Currency, ETHER, Token } from '@materia-dex/sdk'
 import { useActiveWeb3React } from '../../hooks'
-import { Field } from '../../state/wrap/actions'
-import { useWrapActionHandlers, useWrapState } from '../../state/wrap/hooks'
 import 'react-dropdown/style.css'
 import { unwrappedToken } from '../../utils/wrappedCurrency'
-import { ChevronUp, ChevronDown, Disc, ExternalLink, Copy } from 'react-feather'
+import { ChevronUp, ChevronDown, ExternalLink, Copy } from 'react-feather'
 import useAddTokenToMetamask from '../../hooks/useAddTokenToMetamask'
 import { getEtherscanLink } from '../../utils'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
@@ -38,45 +36,12 @@ export default function InventoryItem({
   tokenType,
   tokenAddress,
   balance,
-  wrapped = false,
   onCurrencySelect
 }: InventoryItemProps) {
   const theme = useContext(ThemeContext)
   const [showMore, setShowMore] = useState(false)
-  const [isERC20, setIsERC20] = useState(true)
 
-  const { account, library, chainId } = useActiveWeb3React()
-  const { onUserInput } = useWrapActionHandlers()
-  const handleMaxButton = useCallback(() => {
-    onUserInput(Field.INPUT, balance ?? '0.0')
-  }, [onUserInput, balance])
-
-  const handleNumericalInput = useCallback(
-    (value: string) => {
-      onUserInput(Field.INPUT, value)
-    },
-    [onUserInput]
-  )
-
-  const { independentField, typedValue } = useWrapState()
-
-  const formattedAmounts = {
-    [independentField]: typedValue
-  }
-
-  const options = ['ERC20', 'ERC721', 'ERC1155']
-  const defaultOption = options[1]
-
-  const onSelect = useCallback(
-    value => {
-      switch (value.value) {
-        case 'ERC20':
-          setIsERC20(true)
-          break
-      }
-    },
-    [setIsERC20]
-  )
+  const { library, chainId } = useActiveWeb3React()
 
   const onTokenSelection = useCallback(
     token => {

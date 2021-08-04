@@ -8,8 +8,6 @@ import { useActiveWeb3React } from '../../hooks'
 import AppBody from '../AppBody'
 import {
   PageGridContainer,
-  SecondaryPanelBoxContainer,
-  SecondaryPanelBoxContainerExtraDecorator,
   SimpleTextParagraph,
   PageItemsContainer,
   TabsBar,
