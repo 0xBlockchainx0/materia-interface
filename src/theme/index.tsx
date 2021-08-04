@@ -1253,7 +1253,7 @@ export const MainContainerExtraDecorator = styled.div`
 export const MainContainerContentWrapper = styled.div`
   position: relative;
   max-width: 1200px;
-  box-shadow: 0px 0px 20px 10px #00000012;
+  box-shadow: 0px 10px 20px 10px #00000012;
 
   min-height: 620px;
   width: 100%;

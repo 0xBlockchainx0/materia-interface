@@ -14,7 +14,7 @@ const StyledPolling = styled.div`
   padding: 1rem;
   color: white;
   transition: opacity 0.25s ease;
-  color: ${({ theme }) => theme.green1};
+  color: ${({ theme }) => theme.grey1};
   :hover {
     opacity: 1;
   }
@@ -32,7 +32,7 @@ const StyledPollingDot = styled.div`
   margin-top: 3px;
   border-radius: 50%;
   position: relative;
-  background-color: ${({ theme }) => theme.green1};
+  background-color: ${({ theme }) => theme.grey1};
 `
 
 const rotate360 = keyframes`
@@ -51,7 +51,7 @@ const Spinner = styled.div`
   border-top: 1px solid transparent;
   border-right: 1px solid transparent;
   border-bottom: 1px solid transparent;
-  border-left: 2px solid ${({ theme }) => theme.green1};
+  border-left: 2px solid ${({ theme }) => theme.grey1};
   background: transparent;
   width: 14px;
   height: 14px;
@@ -86,7 +86,7 @@ export default function Polling() {
   return (
     <ExternalLink href={chainId && blockNumber ? getEtherscanLink(chainId, blockNumber.toString(), 'block') : ''}>
       <StyledPolling>
-        <TYPE.small style={{ opacity: isMounted ? '0.2' : '0.6' }}>{blockNumber}</TYPE.small>
+        <TYPE.small style={{ opacity: isMounted ? '0.5' : '0.8' }}>{blockNumber}</TYPE.small>
         <StyledPollingDot>{!isMounted && <Spinner />}</StyledPollingDot>
       </StyledPolling>
     </ExternalLink>
