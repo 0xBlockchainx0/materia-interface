@@ -41,7 +41,7 @@ export default function ConfirmBatchSwapModal({
     ) : null
   }, [input, outputs, onConfirm, batchSwapErrorMessage])
 
-  const inputSymbol = input?.token?.symbol
+  const inputSymbol = input?.currency == ETHER ? 'ETH' : input?.token?.symbol
   const outputInfos = outputs?.map(x => `${x.currency == ETHER ? 'ETH' : x.token?.symbol} (${x.percentage}%)`)?.join(', ')
   const inputAmount = input?.amount?.toSignificant(6)
   const pendingText = `Batch swapping ${inputAmount} ${inputSymbol} for ${outputInfos}`

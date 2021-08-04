@@ -9,7 +9,6 @@ import {
   CurrencyAmount as SushiswapCurrencyAmount,
   Token as SushiswapToken,
   TokenAmount as SushiswapTokenAmount,
-  ETHER as SUSHISWAP_ETHER,
   WETH as SUSHISWAP_WETH
 } from '@sushiswap/sdk'
 
@@ -17,7 +16,7 @@ export function wrappedCurrencySushiswap(
   currency: SushiswapCurrency | undefined,
   chainId: SushiswapChainId | undefined
 ): SushiswapToken | undefined {
-  return chainId && (currency === SUSHISWAP_ETHER || currency === ETHER)
+  return chainId && (currency === SushiswapCurrency.ETHER || currency === ETHER)
     ? SUSHISWAP_WETH[chainId]
     : materiaToSushiswapToken(currency)
 }
@@ -26,7 +25,7 @@ export function wrappedCurrencySushiswapObject(
   currency: SushiswapCurrency | undefined,
   chainId: SushiswapChainId | undefined
 ): SushiswapToken | undefined {
-  return chainId && (currency === SUSHISWAP_ETHER || currency === ETHER)
+  return chainId && (currency === SushiswapCurrency.ETHER || currency === ETHER)
     ? SUSHISWAP_WETH[chainId]
     : currency instanceof SushiswapToken
     ? currency
@@ -42,7 +41,7 @@ export function wrappedCurrencyAmountSushiswap(
 }
 
 export function unwrappedTokenSushiswap(token: SushiswapToken): SushiswapCurrency {
-  if (token?.equals(SUSHISWAP_WETH[token.chainId])) return SUSHISWAP_ETHER
+  if (token?.equals(SUSHISWAP_WETH[token.chainId])) return SushiswapCurrency.ETHER
   return token
 }
 

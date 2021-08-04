@@ -669,7 +669,7 @@ export default function BatchSwap() {
                 className={theme.name}
                 isActive={(match, { pathname }) => Boolean(match) || pathname.startsWith('/sushi-batch-swap')}
               >
-                Sushi
+                Sushiswap
               </InternalLinkBadge>
             </SwitchDexContainer>
           </PageGridContainer>
