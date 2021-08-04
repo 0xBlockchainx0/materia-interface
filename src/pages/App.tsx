@@ -24,13 +24,12 @@ import { RedirectOldRemoveLiquidityPathStructure } from './RemoveLiquidity/redir
 import Swap from './Swap'
 import BatchSwap from './BatchSwap'
 import { OpenClaimAddressModalAndRedirectToSwap, RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects'
-
 import { AppWrapper, HeaderWrapper, BodyWrapper, Marginer } from '../theme'
 import { useModalOpen, useToggleModal } from '../state/application/hooks'
 import { ApplicationModal } from '../state/application/actions'
 import AddressClaimModal from '../components/claim/AddressClaimModal'
-
 import BatchSwapUni from './BatchSwapUni'
+import BatchSwapSushi from './BatchSwapSushi'
 
 function TopLevelModals() {
   const open = useModalOpen(ApplicationModal.ADDRESS_CLAIM)
@@ -79,7 +78,7 @@ export default function App() {
               <Route exact strict path="/lm/:currencyIdA/:currencyIdB/:season" component={Manage} />
               <Route exact strict path="/batch-swap" component={BatchSwap} />
               <Route exact strict path="/uni-batch-swap" component={BatchSwapUni} />
-              <Route exact strict path="/sushi-batch-swap" component={BatchSwap} />
+              <Route exact strict path="/sushi-batch-swap" component={BatchSwapSushi} />
               <Route component={RedirectPathToSwapOnly} />
             </Switch>
           </Web3ReactManager>

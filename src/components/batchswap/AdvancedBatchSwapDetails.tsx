@@ -74,7 +74,7 @@ export interface AdvancedBatchSwapDetailsProps {
   infoLink?: string
 }
 
-export function AdvancedBatchSwapDetails({ trade, originalCurrencies, outputField, infoLink = "https://info.materiadex.com" }: AdvancedBatchSwapDetailsProps) {
+export function AdvancedBatchSwapDetails({ trade, originalCurrencies, outputField, infoLink = "https://info.materiadex.com/pair" }: AdvancedBatchSwapDetailsProps) {
   const [allowedSlippage] = useUserSlippageTolerance()
   const theme = useContext(ThemeContext)
 
@@ -91,7 +91,7 @@ export function AdvancedBatchSwapDetails({ trade, originalCurrencies, outputFiel
           <AutoColumn style={{ padding: '0 24px' }}>
             <InfoLink
               className={theme.name}
-              href={`${infoLink}/pair/${trade.route.pairs[0].liquidityToken.address}`}
+              href={`${infoLink}/${trade.route.pairs[0].liquidityToken.address}`}
               target="_blank"
             >
               View pair analytics

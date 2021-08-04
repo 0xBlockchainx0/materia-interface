@@ -8,6 +8,7 @@ import transactions from './transactions/reducer'
 import swap from './swap/reducer'
 import batchswap from './batchswap/reducer'
 import batchswapUni from './batchswap-uni/reducer'
+import batchswapSushi from './batchswap-sushi/reducer'
 import mint from './mint/reducer'
 import lists from './lists/reducer'
 import burn from './burn/reducer'
@@ -24,6 +25,7 @@ const store = configureStore({
     swap,
     batchswap,
     batchswapUni,
+    batchswapSushi,
     mint,
     burn,
     multicall,

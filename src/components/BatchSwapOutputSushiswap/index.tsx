@@ -2,8 +2,8 @@ import React, { useCallback, useState } from 'react'
 import { ThemeContext } from 'styled-components'
 import { AutoColumn } from '../Column'
 import CurrencyInputPanel from '../CurrencyInputPanel'
-import { Field } from '../../state/batchswap-uni/actions'
-import { useDerivedBatchSwapInfo, useBatchSwapState, useBatchSwapActionHandlers } from '../../state/batchswap-uni/hooks'
+import { Field } from '../../state/batchswap-sushi/actions'
+import { useDerivedBatchSwapInfo, useBatchSwapState, useBatchSwapActionHandlers } from '../../state/batchswap-sushi/hooks'
 import AdvancedBatchSwapDetailsDropdown from '../batchswap/AdvancedBatchSwapDetailsDropdown'
 import { useContext } from 'react'
 import useGetEthItemInteroperable from '../../hooks/useGetEthItemInteroperable'
@@ -13,11 +13,11 @@ import { ZERO_ADDRESS } from '../../constants'
 import { useEffect } from 'react'
 import { Currency } from '@materia-dex/sdk'
 
-interface BatchSwapOutputUniswapProps {
+interface BatchSwapOutputSushiswapProps {
   outputField: Field
 }
 
-export default function BatchSwapOutputUniswap({ outputField }: BatchSwapOutputUniswapProps) {
+export default function BatchSwapOutputSushiswap({ outputField }: BatchSwapOutputSushiswapProps) {
   const theme = useContext(ThemeContext)
   const { chainId } = useActiveWeb3React()
 
@@ -100,7 +100,7 @@ export default function BatchSwapOutputUniswap({ outputField }: BatchSwapOutputU
           trade={trade}
           originalCurrencies={originalCurrencies}
           outputField={outputField}
-          infoLink={'https://v2.info.uniswap.org/pair'}
+          infoLink={'https://analytics.sushi.com/pairs'}
         />
       </div>
     </AutoColumn>

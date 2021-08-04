@@ -6,7 +6,7 @@ import { AutoColumn } from '../../components/Column'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import AdvancedSwapDetailsDropdown from '../../components/swap/AdvancedSwapDetailsDropdown'
 import { BatchSwapBottomGrouping, SwapCallbackError, Wrapper } from '../../components/swap/styleds'
-import { Field } from '../../state/batchswap-uni/actions'
+import { Field } from '../../state/batchswap-sushi/actions'
 import {
   useDerivedBatchSwapInfo,
   useBatchSwapActionHandlers,
@@ -14,7 +14,7 @@ import {
   useOutputsParametersInfo,
   useBatchSwapDefaults,
   useValidateBatchSwapParameters
-} from '../../state/batchswap-uni/hooks'
+} from '../../state/batchswap-sushi/hooks'
 import AppBody from '../AppBody'
 import {
   PageGridContainer,
@@ -32,7 +32,7 @@ import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import Inventory from '../../components/Inventory'
 import { Link, Plus } from 'react-feather'
 import { Minus } from 'react-feather'
-import BatchSwapOutputUniswap from '../../components/BatchSwapOutputUniswap'
+import BatchSwapOutputSushiswap from '../../components/BatchSwapOutputSushiswap'
 import typedKeys from '../../utils/typesKeys'
 import { ApprovalState, useApproveCallbackFromBatchSwapTrade } from '../../hooks/useApproveCallback'
 import { wrappedCurrency } from '../../utils/wrappedCurrency'
@@ -53,7 +53,7 @@ import {
   MIN_IGIL_UNLOCK_FULL_BATCHSWAP,
   DEX_BATCH_SWAPPER_ADDRESS
 } from '../../constants'
-import { TokenInParameter, useUniswapBatchSwapCallback } from '../../hooks/useUniswapBatchSwapCallback'
+import { TokenInParameter, useSushiswapBatchSwapCallback } from '../../hooks/useSushiswapBatchSwapCallback'
 import ConfirmBatchSwapModal from '../../components/batchswap/ConfirmBatchSwapModal'
 import { useTokenBalance } from '../../state/wallet/hooks'
 import UnlockFullBatchSwapModal from '../../components/batchswap/UnlockFullBatchSwapModal'
@@ -99,7 +99,7 @@ export const SwitchDexContainer = styled.div`
   ${({ theme }) => theme.mediaWidth.upToMedium` padding-top: 2.5rem; justify-content: center;`}
 `
 
-export default function BatchSwapUni() {
+export default function BatchSwapSushi() {
   const theme = useContext(ThemeContext)
   const { account, chainId, library } = useActiveWeb3React()
 
@@ -278,7 +278,7 @@ export default function BatchSwapUni() {
 
   const { outputsInfo: outputsParameters } = useOutputsParametersInfo(currentOutputs)
 
-  const { callback: batchSwapCallback, error: batchSwapCallbackError } = useUniswapBatchSwapCallback(
+  const { callback: batchSwapCallback, error: batchSwapCallbackError } = useSushiswapBatchSwapCallback(
     inputParameters,
     outputsParameters
   )
@@ -303,8 +303,8 @@ export default function BatchSwapUni() {
         })
 
         ReactGA.event({
-          category: 'BatchSwap Uniswap',
-          action: 'BatchSwap Uniswap w/o Send',
+          category: 'BatchSwap Sushiswap',
+          action: 'BatchSwap Sushiswap w/o Send',
           label: [
             inputParameters.currency == ETHER ? 'ETH' : inputParameters?.token?.symbol,
             outputsParameters
@@ -437,7 +437,7 @@ export default function BatchSwapUni() {
                   <div>
                     <AutoColumn gap={'lg'}>
                       {currentOutputs.map((output, index) => (
-                        <BatchSwapOutputUniswap key={index} outputField={output} />
+                        <BatchSwapOutputSushiswap key={index} outputField={output} />
                       ))}
                       <OutputButtonContainer>
                         <AddOutputButton

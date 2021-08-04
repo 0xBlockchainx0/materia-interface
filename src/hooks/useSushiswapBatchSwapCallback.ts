@@ -1,12 +1,12 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { Contract } from '@ethersproject/contracts'
 import { Token, CurrencyAmount, Currency, ETHER, IETH } from '@materia-dex/sdk'
-import { WETH } from '@uniswap/sdk'
+import { WETH } from '@sushiswap/sdk'
 import { useMemo } from 'react'
 import {
-  UNISWAP_V2_FACTORY_ADDRESS,
-  UNISWAP_V2_INIT_CODE_HASH,
-  UNISWAP_V2_BRIDGE_TOKEN,
+  SUSHISWAP_V2_FACTORY_ADDRESS,
+  SUSHISWAP_V2_INIT_CODE_HASH,
+  SUSHISWAP_V2_BRIDGE_TOKEN,
   ZERO_ADDRESS,
   ZERO_HEX
 } from '../constants'
@@ -62,7 +62,7 @@ interface FailedCall {
 
 type EstimatedSwapCall = SuccessfulCall | FailedCall
 
-function useUniswapBatchSwapCallArguments(
+function useSushiswapBatchSwapCallArguments(
   input: TokenInParameter | undefined,
   outputs: TokenOutParameter[] | undefined
 ): BatchSwapCall[] {
@@ -88,9 +88,9 @@ function useUniswapBatchSwapCallArguments(
       ])
 
       const settings = [
-        UNISWAP_V2_FACTORY_ADDRESS[chainId],
-        UNISWAP_V2_INIT_CODE_HASH,
-        UNISWAP_V2_BRIDGE_TOKEN[chainId],
+        SUSHISWAP_V2_FACTORY_ADDRESS[chainId],
+        SUSHISWAP_V2_INIT_CODE_HASH,
+        SUSHISWAP_V2_BRIDGE_TOKEN[chainId],
         WETH[chainId].address,
         deadline,
         recipient
@@ -117,9 +117,9 @@ function useUniswapBatchSwapCallArguments(
       ])
 
       const settings = [
-        UNISWAP_V2_FACTORY_ADDRESS[chainId],
-        UNISWAP_V2_INIT_CODE_HASH,
-        UNISWAP_V2_BRIDGE_TOKEN[chainId],
+        SUSHISWAP_V2_FACTORY_ADDRESS[chainId],
+        SUSHISWAP_V2_INIT_CODE_HASH,
+        SUSHISWAP_V2_BRIDGE_TOKEN[chainId],
         WETH[chainId].address,
         deadline,
         recipient
@@ -135,8 +135,8 @@ function useUniswapBatchSwapCallArguments(
       })
     }
 
-    console.log('************************************')
-    console.log('*** batchSwapMethodsUniswap: ', batchSwapMethods)
+    // console.log('************************************')
+    // console.log('*** batchSwapMethodsSushiswap: ', batchSwapMethods)
 
     return batchSwapMethods.map(parameters => ({
       parameters: parameters,
@@ -145,13 +145,13 @@ function useUniswapBatchSwapCallArguments(
   }, [input, outputs, recipient, library, account, chainId, deadline, contract, inputIsEth])
 }
 
-export function useUniswapBatchSwapCallback(
+export function useSushiswapBatchSwapCallback(
   input: TokenInParameter | undefined,
   outputs: TokenOutParameter[] | undefined
 ): { state: BatchSwapCallbackState; callback: null | (() => Promise<string>); error: string | null } {
   const { account, chainId, library } = useActiveWeb3React()
 
-  const batchSwapCalls = useUniswapBatchSwapCallArguments(input, outputs)
+  const batchSwapCalls = useSushiswapBatchSwapCallArguments(input, outputs)
   const addTransaction = useTransactionAdder()
 
   const recipient = account

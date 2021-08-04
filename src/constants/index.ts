@@ -1,9 +1,10 @@
 import { ChainId, JSBI, Percent, Token, IETH } from '@materia-dex/sdk'
-import { WETH } from '@uniswap/sdk'
+import { WETH as UNISWAP_WETH } from '@uniswap/sdk'
+import { Token as SushiswapToken, WETH as SUSHISWAP_WETH } from '@sushiswap/sdk'
 
 import { AbstractConnector } from '@web3-react/abstract-connector'
 
-import { fortmatic, injected, portis, walletconnect, walletlink } from '../connectors'
+import { injected, walletconnect, walletlink } from '../connectors'
 
 export const FACTORY_ADDRESS = '0xB498a69fF7b9a73C58491d564Fc6a462b259c860'
 export const ORCHESTRATOR_ADDRESS = '0xB0F720Baa5BD1715897d4790A59f5c7aa1377D79'
@@ -30,6 +31,10 @@ export const ETHITEM_START_BLOCK: { [chainId in ChainId]: string } = {
 // a list of tokens by chain
 type ChainTokenList = {
   readonly [chainId in ChainId]: Token[]
+}
+
+type SushiswapChainTokenList = {
+  readonly [chainId in ChainId]: SushiswapToken[]
 }
 
 export const GIL: { [chainId in ChainId]: Token } = {
@@ -163,12 +168,20 @@ const WUSD_ONLY: ChainTokenList = {
   [ChainId.KOVAN]: [WUSD[ChainId.KOVAN]]
 }
 
-const WETH_ONLY: ChainTokenList = {
-  [ChainId.MAINNET]: [WETH[ChainId.MAINNET]],
-  [ChainId.ROPSTEN]: [WETH[ChainId.ROPSTEN]],
-  [ChainId.RINKEBY]: [WETH[ChainId.RINKEBY]],
-  [ChainId.GÖRLI]: [WETH[ChainId.GÖRLI]],
-  [ChainId.KOVAN]: [WETH[ChainId.KOVAN]]
+const UNISWAP_WETH_ONLY: ChainTokenList = {
+  [ChainId.MAINNET]: [UNISWAP_WETH[ChainId.MAINNET]],
+  [ChainId.ROPSTEN]: [UNISWAP_WETH[ChainId.ROPSTEN]],
+  [ChainId.RINKEBY]: [UNISWAP_WETH[ChainId.RINKEBY]],
+  [ChainId.GÖRLI]: [UNISWAP_WETH[ChainId.GÖRLI]],
+  [ChainId.KOVAN]: [UNISWAP_WETH[ChainId.KOVAN]]
+}
+
+const SUSHISWAP_WETH_ONLY: SushiswapChainTokenList = {
+  [ChainId.MAINNET]: [SUSHISWAP_WETH[ChainId.MAINNET]],
+  [ChainId.ROPSTEN]: [SUSHISWAP_WETH[ChainId.ROPSTEN]],
+  [ChainId.RINKEBY]: [SUSHISWAP_WETH[ChainId.RINKEBY]],
+  [ChainId.GÖRLI]: [SUSHISWAP_WETH[ChainId.GÖRLI]],
+  [ChainId.KOVAN]: [SUSHISWAP_WETH[ChainId.KOVAN]]
 }
 
 // used to construct intermediary pairs for trading
@@ -179,12 +192,21 @@ export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
 }
 
 export const BASES_TO_CHECK_TRADES_AGAINST_UNISWAP: ChainTokenList = {
-  ...WETH_ONLY,
-  [ChainId.MAINNET]: [...WETH_ONLY[ChainId.MAINNET]],
-  [ChainId.ROPSTEN]: [...WETH_ONLY[ChainId.ROPSTEN]],
-  [ChainId.RINKEBY]: [...WETH_ONLY[ChainId.RINKEBY]],
-  [ChainId.GÖRLI]: [...WETH_ONLY[ChainId.GÖRLI]],
-  [ChainId.KOVAN]: [...WETH_ONLY[ChainId.KOVAN]]
+  ...UNISWAP_WETH_ONLY,
+  [ChainId.MAINNET]: [...UNISWAP_WETH_ONLY[ChainId.MAINNET]],
+  [ChainId.ROPSTEN]: [...UNISWAP_WETH_ONLY[ChainId.ROPSTEN]],
+  [ChainId.RINKEBY]: [...UNISWAP_WETH_ONLY[ChainId.RINKEBY]],
+  [ChainId.GÖRLI]: [...UNISWAP_WETH_ONLY[ChainId.GÖRLI]],
+  [ChainId.KOVAN]: [...UNISWAP_WETH_ONLY[ChainId.KOVAN]]
+}
+
+export const BASES_TO_CHECK_TRADES_AGAINST_SUSHISWAP: SushiswapChainTokenList = {
+  ...SUSHISWAP_WETH_ONLY,
+  [ChainId.MAINNET]: [...SUSHISWAP_WETH_ONLY[ChainId.MAINNET]],
+  [ChainId.ROPSTEN]: [...SUSHISWAP_WETH_ONLY[ChainId.ROPSTEN]],
+  [ChainId.RINKEBY]: [...SUSHISWAP_WETH_ONLY[ChainId.RINKEBY]],
+  [ChainId.GÖRLI]: [...SUSHISWAP_WETH_ONLY[ChainId.GÖRLI]],
+  [ChainId.KOVAN]: [...SUSHISWAP_WETH_ONLY[ChainId.KOVAN]]
 }
 
 /**
@@ -197,11 +219,9 @@ export const CUSTOM_BASES: { [chainId in ChainId]?: { [tokenAddress: string]: To
   }
 }
 
-export const CUSTOM_BASES_UNISWAP: { [chainId in ChainId]?: { [tokenAddress: string]: Token[] } } = {
-  [ChainId.MAINNET]: {
-    [AMPL.address]: [DAI, WETH[ChainId.MAINNET]]
-  }
-}
+export const CUSTOM_BASES_UNISWAP: { [chainId in ChainId]?: { [tokenAddress: string]: Token[] } } = {}
+
+export const CUSTOM_BASES_SUSHISWAP: { [chainId in ChainId]?: { [tokenAddress: string]: SushiswapToken[] } } = {}
 
 // used for display in the default list when adding liquidity
 export const SUGGESTED_BASES: ChainTokenList = {
@@ -355,6 +375,8 @@ export const DEX_BATCH_SWAPPER_ADDRESS: { [chainId in ChainId]: string } = {
 
 export const UNISWAP_V2_INIT_CODE_HASH = '0x96e8ac4277198ff8b6f785478aa9a39f403cb768dd02cbee326c3e7da348845f'
 
+export const SUSHISWAP_V2_INIT_CODE_HASH = '0xe18a34eb0e04b04f7a0ac29a6e80748dca96319b42c54d679cb821dca90c6303'
+
 export const UNISWAP_V2_FACTORY_ADDRESS: { [chainId in ChainId]: string } = {
   [ChainId.MAINNET]: '0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f',
   [ChainId.RINKEBY]: '0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f',
@@ -363,10 +385,26 @@ export const UNISWAP_V2_FACTORY_ADDRESS: { [chainId in ChainId]: string } = {
   [ChainId.KOVAN]: '0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f'
 }
 
+export const SUSHISWAP_V2_FACTORY_ADDRESS: { [chainId in ChainId]: string } = {
+  [ChainId.MAINNET]: '0xC0AEe478e3658e2610c5F7A4A2E1777cE9e4f2Ac',
+  [ChainId.RINKEBY]: '0xc35DADB65012eC5796536bD9864eD8773aBc74C4',
+  [ChainId.ROPSTEN]: '0xc35DADB65012eC5796536bD9864eD8773aBc74C4',
+  [ChainId.GÖRLI]: '0xc35DADB65012eC5796536bD9864eD8773aBc74C4',
+  [ChainId.KOVAN]: '0xc35DADB65012eC5796536bD9864eD8773aBc74C4'
+}
+
 export const UNISWAP_V2_BRIDGE_TOKEN: { [chainId in ChainId]: string } = {
-  [ChainId.MAINNET]: WETH[ChainId.MAINNET].address,
-  [ChainId.RINKEBY]: WETH[ChainId.RINKEBY].address,
-  [ChainId.ROPSTEN]: WETH[ChainId.ROPSTEN].address,
-  [ChainId.GÖRLI]: WETH[ChainId.GÖRLI].address,
-  [ChainId.KOVAN]: WETH[ChainId.KOVAN].address
+  [ChainId.MAINNET]: UNISWAP_WETH[ChainId.MAINNET].address,
+  [ChainId.RINKEBY]: UNISWAP_WETH[ChainId.RINKEBY].address,
+  [ChainId.ROPSTEN]: UNISWAP_WETH[ChainId.ROPSTEN].address,
+  [ChainId.GÖRLI]: UNISWAP_WETH[ChainId.GÖRLI].address,
+  [ChainId.KOVAN]: UNISWAP_WETH[ChainId.KOVAN].address
+}
+
+export const SUSHISWAP_V2_BRIDGE_TOKEN: { [chainId in ChainId]: string } = {
+  [ChainId.MAINNET]: SUSHISWAP_WETH[ChainId.MAINNET].address,
+  [ChainId.RINKEBY]: SUSHISWAP_WETH[ChainId.RINKEBY].address,
+  [ChainId.ROPSTEN]: SUSHISWAP_WETH[ChainId.ROPSTEN].address,
+  [ChainId.GÖRLI]: SUSHISWAP_WETH[ChainId.GÖRLI].address,
+  [ChainId.KOVAN]: SUSHISWAP_WETH[ChainId.KOVAN].address
 }
