@@ -134,10 +134,7 @@ function useUniswapBatchSwapCallArguments(
         value: value
       })
     }
-
-    console.log('************************************')
-    console.log('*** batchSwapMethodsUniswap: ', batchSwapMethods)
-
+    
     return batchSwapMethods.map(parameters => ({
       parameters: parameters,
       contract: contract

@@ -152,9 +152,6 @@ function useBatchSwapCallArguments(
       })
     }
 
-    console.log('************************************')
-    console.log('*** batchSwapMethods: ', batchSwapMethods)
-
     return batchSwapMethods.map(parameters => ({
       parameters: parameters,
       contract: contract

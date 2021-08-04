@@ -344,9 +344,6 @@ export function useSushiswapTradeExactIn(
   const sushiswapCurrencyOut = wrappedCurrencySushiswap(currencyOut as SushiswapCurrency, chainId)
   const allowedPairs = useSushiswapAllCommonPairs(sushiswapCurrencyAmountIn?.currency, sushiswapCurrencyOut)
 
-  console.log('************************************')
-  console.log('*** allowedPairs: ', allowedPairs)
-
   return useMemo(() => {
     if (sushiswapCurrencyAmountIn && sushiswapCurrencyOut && allowedPairs.length > 0) {
       return (

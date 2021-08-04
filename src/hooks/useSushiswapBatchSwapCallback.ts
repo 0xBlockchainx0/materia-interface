@@ -135,9 +135,6 @@ function useSushiswapBatchSwapCallArguments(
       })
     }
 
-    // console.log('************************************')
-    // console.log('*** batchSwapMethodsSushiswap: ', batchSwapMethods)
-
     return batchSwapMethods.map(parameters => ({
       parameters: parameters,
       contract: contract
