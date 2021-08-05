@@ -16,7 +16,7 @@ export function wrappedCurrencySushiswap(
   currency: SushiswapCurrency | undefined,
   chainId: SushiswapChainId | undefined
 ): SushiswapToken | undefined {
-  return chainId && (currency === SushiswapCurrency.ETHER || currency === ETHER)
+  return chainId && (currency === SushiswapCurrency.getNativeCurrency(chainId) || currency === ETHER)
     ? SUSHISWAP_WETH[chainId]
     : materiaToSushiswapToken(currency)
 }
@@ -25,7 +25,7 @@ export function wrappedCurrencySushiswapObject(
   currency: SushiswapCurrency | undefined,
   chainId: SushiswapChainId | undefined
 ): SushiswapToken | undefined {
-  return chainId && (currency === SushiswapCurrency.ETHER || currency === ETHER)
+  return chainId && (currency === SushiswapCurrency.getNativeCurrency(chainId) || currency === ETHER)
     ? SUSHISWAP_WETH[chainId]
     : currency instanceof SushiswapToken
     ? currency
@@ -41,7 +41,7 @@ export function wrappedCurrencyAmountSushiswap(
 }
 
 export function unwrappedTokenSushiswap(token: SushiswapToken): SushiswapCurrency {
-  if (token?.equals(SUSHISWAP_WETH[token.chainId])) return SushiswapCurrency.ETHER
+  if (token?.equals(SUSHISWAP_WETH[token.chainId])) return SushiswapCurrency.getNativeCurrency(token.chainId)
   return token
 }
 
@@ -118,10 +118,10 @@ export function sushiswapToMateriaToken(
 }
 
 export function sushiswapToMateriaChainId(chainId: SushiswapChainId): ChainId {
-  if(chainId == ChainId.ROPSTEN) return ChainId.ROPSTEN
-  if(chainId == ChainId.GÖRLI) return ChainId.GÖRLI
-  if(chainId == ChainId.KOVAN) return ChainId.KOVAN
-  if(chainId == ChainId.RINKEBY) return ChainId.RINKEBY
+  if (chainId == ChainId.ROPSTEN) return ChainId.ROPSTEN
+  if (chainId == ChainId.GÖRLI) return ChainId.GÖRLI
+  if (chainId == ChainId.KOVAN) return ChainId.KOVAN
+  if (chainId == ChainId.RINKEBY) return ChainId.RINKEBY
 
   return ChainId.MAINNET
 }
