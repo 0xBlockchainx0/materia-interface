@@ -1,5 +1,5 @@
 import useENS from '../../hooks/useENS'
-import { ChainId, Currency, CurrencyAmount, ETHER, Token, Trade } from '@materia-dex/sdk'
+import { ChainId, Currency, CurrencyAmount, ETHER, IETH, Token, Trade } from '@materia-dex/sdk'
 import { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useActiveWeb3React } from '../../hooks'
@@ -362,17 +362,17 @@ export function useBatchSwapDefaults(): { inputCurrencyId: string | undefined } 
   useEffect(() => {
     if (!chainId) return
 
-    const token = WUSD[chainId]
-    const currency = unwrappedToken(WUSD[chainId])
+    const token = 'ETH'
+    const currency = unwrappedToken(IETH[chainId])
 
     dispatch(
       setInitialState({
         inputCurrency: currency,
-        inputCurrencyId: token.address
+        inputCurrencyId: token
       })
     )
 
-    setResult({ inputCurrencyId: token.address })
+    setResult({ inputCurrencyId: token })
   }, [dispatch, chainId])
 
   return result
