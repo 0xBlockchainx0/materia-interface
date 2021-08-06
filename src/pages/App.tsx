@@ -5,7 +5,7 @@ import GoogleAnalyticsReporter from '../components/analytics/GoogleAnalyticsRepo
 import Footer from '../components/Footer/Footer'
 import Header from '../components/Header'
 import FooterControls from '../components/FooterControls'
-import Polling from '../components/Header/Polling'
+// import Polling from '../components/Header/Polling'
 import URLWarning from '../components/Header/URLWarning'
 import Popups from '../components/Popups'
 import Web3ReactManager from '../components/Web3ReactManager'
@@ -55,7 +55,7 @@ export default function App() {
         </HeaderWrapper>
         <BodyWrapper>
           <Popups />
-          <Polling />
+          {/* <Polling /> */}
           <TopLevelModals />
           <Web3ReactManager>
             <Switch>

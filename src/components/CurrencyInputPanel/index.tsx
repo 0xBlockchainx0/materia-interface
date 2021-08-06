@@ -193,15 +193,15 @@ export default function CurrencyInputPanel({
             </div>
           )}
           {percentage ? (
-          <RowBetween>
-            <DynamicGrid className={"percentage-grid"} columns={4}>
-              <MainOperationButton className={`width80 ${theme.name} customPercentage`} onClick={() => onUserInput('25')}>25%</MainOperationButton>
-              <MainOperationButton className={`width80 ${theme.name} customPercentage`} onClick={() => onUserInput('50')}>50%</MainOperationButton>
-              <MainOperationButton className={`width80 ${theme.name} customPercentage`} onClick={() => onUserInput('75')}>75%</MainOperationButton>
-              <MainOperationButton className={`width80 ${theme.name} customPercentage`} onClick={() => onUserInput('100')}>100%</MainOperationButton>
-            </DynamicGrid>
-          </RowBetween>
-          ):(<></>)}
+            <RowBetween>
+              <DynamicGrid className={"percentage-grid"} columns={4}>
+                <MainOperationButton className={`width80 ${theme.name} customPercentage`} onClick={() => onUserInput('10')}>10%</MainOperationButton>
+                <MainOperationButton className={`width80 ${theme.name} customPercentage`} onClick={() => onUserInput('25')}>25%</MainOperationButton>
+                <MainOperationButton className={`width80 ${theme.name} customPercentage`} onClick={() => onUserInput('50')}>50%</MainOperationButton>
+                <MainOperationButton className={`width80 ${theme.name} customPercentage`} onClick={() => onUserInput('75')}>75%</MainOperationButton>
+              </DynamicGrid>
+            </RowBetween>
+          ) : (<></>)}
           <InputRow style={hideInput ? { padding: '0', borderRadius: '8px' } : {}} selected={disableCurrencySelect}>
             {!hideInput && (
               <>
