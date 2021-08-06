@@ -5,8 +5,8 @@ import { useCurrencyBalance } from '../../state/wallet/hooks'
 import CurrencySearchModal from '../SearchModal/CurrencySearchModal'
 import CurrencyLogo from '../CurrencyLogo'
 import DoubleCurrencyLogo from '../DoubleLogo'
-import { RowBetween } from '../Row'
-import { CurrencyFormPanel, ActionButton, DropDownButton, Erc20Badge, EthItemBadge } from '../../theme'
+import { AutoRow, RowBetween } from '../Row'
+import { CurrencyFormPanel, ActionButton, DropDownButton, Erc20Badge, EthItemBadge, DynamicGrid, MainOperationButton } from '../../theme'
 import { Input as NumericalInput } from '../NumericalInput'
 import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
 
@@ -71,7 +71,7 @@ const TokenImageContainer = styled.div`
   }
 `
 
-const StyledDropDown = styled(DropDown)<{ selected: boolean }>`
+const StyledDropDown = styled(DropDown) <{ selected: boolean }>`
   margin: 0 0.25rem 0 0.5rem;
   height: 35%;
 
@@ -192,6 +192,16 @@ export default function CurrencyInputPanel({
               </RowBetween>
             </div>
           )}
+          {percentage ? (
+          <RowBetween>
+            <DynamicGrid className={"percentage-grid"} columns={4}>
+              <MainOperationButton className={`width80 ${theme.name} customPercentage`} onClick={() => onUserInput('25')}>25%</MainOperationButton>
+              <MainOperationButton className={`width80 ${theme.name} customPercentage`} onClick={() => onUserInput('50')}>50%</MainOperationButton>
+              <MainOperationButton className={`width80 ${theme.name} customPercentage`} onClick={() => onUserInput('75')}>75%</MainOperationButton>
+              <MainOperationButton className={`width80 ${theme.name} customPercentage`} onClick={() => onUserInput('100')}>100%</MainOperationButton>
+            </DynamicGrid>
+          </RowBetween>
+          ):(<></>)}
           <InputRow style={hideInput ? { padding: '0', borderRadius: '8px' } : {}} selected={disableCurrencySelect}>
             {!hideInput && (
               <>
@@ -260,8 +270,8 @@ export default function CurrencyInputPanel({
                   >
                     {(currency && currency.symbol && currency.symbol.length > 20
                       ? currency.symbol.slice(0, 4) +
-                        '...' +
-                        currency.symbol.slice(currency.symbol.length - 5, currency.symbol.length)
+                      '...' +
+                      currency.symbol.slice(currency.symbol.length - 5, currency.symbol.length)
                       : currency?.symbol) || t('selectToken')}
                   </StyledTokenName>
                 )}

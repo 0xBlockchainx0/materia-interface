@@ -482,6 +482,10 @@ html, input, textarea, button {
   } 
 };
 
+.percentage-grid{
+  padding: 0 0.75rem;
+}
+
 /* galaxy animation */
     .galaxy-header {
         overflow: hidden;
@@ -3190,6 +3194,27 @@ export const MainOperationButton = styled(ActionButton) <{
   &.dark.width-auto,
   &.light.width-auto {
     width: auto !important;
+  }
+
+  &.dark.customPercentage {
+    font-size: 0.7rem !important;
+    padding: 0.4rem !important;
+    margin-top: 1rem;
+    width: auto !important;
+    margin-right: 0.5rem;
+    border: 0px !important;
+    color: white !important;
+    background: transparent;
+  }
+  &.light.customPercentage {
+    font-size: 0.7rem !important;
+    padding: 0.4rem !important;
+    margin-top: 1rem;
+    width: auto !important;
+    margin-right: 0.5rem;
+    border: 0px !important;
+    color: black !important;
+    background: transparent;
   }
 `
 export const TradePriceContainer = styled.div`
